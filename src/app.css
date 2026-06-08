@@ -1,48 +1,45 @@
-@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,700;1,400&display=swap');
+/* ── Tailwind v4 ─────────────────────────────────────────────────── */
+@import url("https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,700;1,400&display=swap");
+@import "tailwindcss";
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+/*
+ * @theme génère automatiquement toutes les classes utilitaires :
+ *   --color-terminal-green → text-terminal-green, bg-terminal-green, border-terminal-green…
+ *   --font-mono            → font-mono
+ */
+@theme {
+    --color-terminal-green: #00ff46;
+    --color-terminal-amber: #ffb000;
+    --color-terminal-cyan:  #00e5ff;
+    --color-terminal-white: #e8ffe8;
+    --color-terminal-dim:   #3a6b3a;
+    --color-terminal-bg:    #050e05;
 
-:root {
-	--terminal-green:  #00ff46;
-	--terminal-amber:  #ffb000;
-	--terminal-cyan:   #00e5ff;
-	--terminal-white:  #e8ffe8;
-	--terminal-dim:    #3a6b3a;
-	--terminal-bg:     #050e05;
+    --font-mono: "JetBrains Mono", "Courier New", monospace;
 }
 
-* {
-	box-sizing: border-box;
+/* ── Base ────────────────────────────────────────────────────────── */
+*, *::before, *::after {
+    box-sizing: border-box;
 }
 
 html, body {
-	margin: 0;
-	padding: 0;
-	width: 100%;
-	height: 100%;
-	overflow: hidden;
-	background: #000;
-	font-family: 'JetBrains Mono', 'Courier New', monospace;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background: #000;
+    font-family: var(--font-mono);
 }
 
-/* Utility classes (mirrored in tailwind config) */
-.text-terminal-green  { color: var(--terminal-green); }
-.text-terminal-amber  { color: var(--terminal-amber); }
-.text-terminal-cyan   { color: var(--terminal-cyan); }
-.text-terminal-white  { color: var(--terminal-white); }
-.text-terminal-dim    { color: var(--terminal-dim); }
-.bg-terminal-green    { background-color: var(--terminal-green); }
-.border-terminal-dim  { border-color: var(--terminal-dim); }
-
-/* Selection */
+/* ── Sélection ───────────────────────────────────────────────────── */
 ::selection {
-	background: var(--terminal-green);
-	color: #000;
+    background: var(--color-terminal-green);
+    color: #000;
 }
 
-/* Scrollbar global */
+/* ── Scrollbar globale ───────────────────────────────────────────── */
 ::-webkit-scrollbar       { width: 4px; }
 ::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: var(--terminal-dim); border-radius: 2px; }
+::-webkit-scrollbar-thumb { background: var(--color-terminal-dim); border-radius: 2px; }
