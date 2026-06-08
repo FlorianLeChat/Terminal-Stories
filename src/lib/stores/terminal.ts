@@ -1,222 +1,267 @@
-import { writable, get } from 'svelte/store';
-import type { GameState, Story, Scene, Choice } from '$lib/types/story';
-import { getStory } from '$lib/data';
+import { writable, get } from "svelte/store";
+import type { GameState, Story, Scene, Choice } from "$lib/types/story";
+import { getStory } from "$lib/data";
 
-export type TerminalView = 'boot' | 'menu' | 'story-info' | 'story';
+export type TerminalView = "boot" | "menu" | "story-info" | "story";
 
 interface TerminalStore {
-	view: TerminalView;
-	selectedStoryIndex: number;
-	gameState: GameState | null;
-	currentStory: Story | null;
-	lines: TerminalLine[];
-	awaitingInput: boolean;
+    view: TerminalView;
+    selectedStoryIndex: number;
+    gameState: GameState | null;
+    currentStory: Story | null;
+    lines: TerminalLine[];
+    awaitingInput: boolean;
 }
 
 export interface TerminalLine {
-	id: number;
-	text: string;
-	type: 'system' | 'narrator' | 'speaker' | 'choice' | 'action' | 'consequence' | 'ending' | 'error' | 'title' | 'separator';
-	speaker?: string;
-	choiceIndex?: number;
+    id: number;
+    text: string;
+    type:
+      | "system"
+      | "narrator"
+      | "speaker"
+      | "choice"
+      | "action"
+      | "consequence"
+      | "ending"
+      | "error"
+      | "title"
+      | "separator";
+    speaker?: string;
+    choiceIndex?: number;
 }
 
 let lineId = 0;
-function nextId() { return ++lineId; }
 
-function getAvailableChoices(scene: Scene, state: GameState): Choice[] {
-	return scene.choices.filter(c => {
-		return !(c.requiresFlag && !state.flags.has(c.requiresFlag));
-	});
+function nextId()
+{
+    return ++lineId;
 }
 
-function createTerminalStore() {
-	const initial: TerminalStore = {
-		view: 'boot',
-		selectedStoryIndex: 0,
-		gameState: null,
-		currentStory: null,
-		lines: [],
-		awaitingInput: false
-	};
+function getAvailableChoices( scene: Scene, state: GameState ): Choice[]
+{
+    return scene.choices.filter( ( c ) =>
+    {
+        return !( c.requiresFlag && !state.flags.has( c.requiresFlag ) );
+    } );
+}
 
-	const { subscribe, update } = writable<TerminalStore>(initial);
+function createTerminalStore()
+{
+    const initial: TerminalStore = {
+        view: "boot",
+        selectedStoryIndex: 0,
+        gameState: null,
+        currentStory: null,
+        lines: [],
+        awaitingInput: false
+    };
 
-	function addLine(line: Omit<TerminalLine, 'id'>) {
-		update(s => ({ ...s, lines: [...s.lines, { ...line, id: nextId() }] }));
-	}
+    const { subscribe, update } = writable<TerminalStore>( initial );
 
-	function addLines(newLines: Omit<TerminalLine, 'id'>[]) {
-		update(s => ({
-			...s,
-			lines: [...s.lines, ...newLines.map(l => ({ ...l, id: nextId() }))]
-		}));
-	}
+    function addLine( line: Omit<TerminalLine, "id"> )
+    {
+        update( ( s ) => ( { ...s, lines: [ ...s.lines, { ...line, id: nextId() } ] } ) );
+    }
 
-	function clearLines() {
-		update(s => ({ ...s, lines: [] }));
-	}
+    function addLines( newLines: Omit<TerminalLine, "id">[] )
+    {
+        update( ( s ) => ( {
+            ...s,
+            lines: [ ...s.lines, ...newLines.map( ( l ) => ( { ...l, id: nextId() } ) ) ]
+        } ) );
+    }
 
-	function startMenu() {
-		clearLines();
-		update(s => ({ ...s, view: 'menu', selectedStoryIndex: 0, awaitingInput: true }));
-	}
+    function clearLines()
+    {
+        update( ( s ) => ( { ...s, lines: [] } ) );
+    }
 
-	function selectStory(id: string) {
-		const story = getStory(id);
-		if (!story) return;
+    function startMenu()
+    {
+        clearLines();
+        update( ( s ) => ( { ...s, view: "menu", selectedStoryIndex: 0, awaitingInput: true } ) );
+    }
 
-		clearLines();
-		update(s => ({
-			...s,
-			view: 'story-info',
-			currentStory: story,
-			awaitingInput: true
-		}));
+    function selectStory( id: string )
+    {
+        const story = getStory( id );
+        if ( !story ) return;
 
-		addLines([
-			{ text: '═'.repeat(60), type: 'separator' },
-			{ text: story.title, type: 'title' },
-			{ text: `${story.genre} — ${story.universe}`, type: 'system' },
-			{ text: '─'.repeat(60), type: 'separator' },
-			{ text: story.description, type: 'narrator' },
-			{ text: '', type: 'narrator' },
-			{ text: `Personnages : ${story.characters.map(c => c.name).join(', ')}`, type: 'system' },
-			{ text: `Tags : ${story.tags.join(', ')}`, type: 'system' },
-			{ text: '═'.repeat(60), type: 'separator' },
-			{ text: '[ENTRÉE] Commencer l\'histoire   [ÉCHAP] Retour au menu', type: 'system' }
-		]);
-	}
+        clearLines();
+        update( ( s ) => ( {
+            ...s,
+            view: "story-info",
+            currentStory: story,
+            awaitingInput: true
+        } ) );
 
-	function startStory(storyId: string) {
-		const story = getStory(storyId);
-		if (!story) return;
+        addLines( [
+            { text: "═".repeat( 60 ), type: "separator" },
+            { text: story.title, type: "title" },
+            { text: `${ story.genre } — ${ story.universe }`, type: "system" },
+            { text: "─".repeat( 60 ), type: "separator" },
+            { text: story.description, type: "narrator" },
+            { text: "", type: "narrator" },
+            { text: `Personnages : ${ story.characters.map( ( c ) => c.name ).join( ", " ) }`, type: "system" },
+            { text: `Tags : ${ story.tags.join( ", " ) }`, type: "system" },
+            { text: "═".repeat( 60 ), type: "separator" },
+            { text: "[ENTRÉE] Commencer l'histoire   [ÉCHAP] Retour au menu", type: "system" }
+        ] );
+    }
 
-		const gameState: GameState = {
-			storyId,
-			currentScene: story.startScene,
-			flags: new Set(),
-			history: []
-		};
+    function startStory( storyId: string )
+    {
+        const story = getStory( storyId );
+        if ( !story ) return;
 
-		clearLines();
-		update(s => ({
-			...s,
-			view: 'story',
-			currentStory: story,
-			gameState,
-			awaitingInput: true
-		}));
+        const gameState: GameState = {
+            storyId,
+            currentScene: story.startScene,
+            flags: new Set(),
+            history: []
+        };
 
-		renderScene(story, story.startScene, gameState);
-	}
+        clearLines();
 
-	function renderScene(story: Story, sceneId: string, state: GameState) {
-		const scene = story.scenes[sceneId];
-		if (!scene) return;
+        update( ( s ) => ( {
+            ...s,
+            view: "story",
+            currentStory: story,
+            gameState,
+            awaitingInput: true
+        } ) );
 
-		const texts = Array.isArray(scene.text) ? scene.text : [scene.text];
+        renderScene( story, story.startScene, gameState );
+    }
 
-		const lines: Omit<TerminalLine, 'id'>[] = [];
+    function renderScene( story: Story, sceneId: string, state: GameState )
+    {
+        const scene = story.scenes[ sceneId ];
+        if ( !scene ) return;
 
-		lines.push({ text: '─'.repeat(60), type: 'separator' });
+        const texts = Array.isArray( scene.text ) ? scene.text : [ scene.text ];
+        const lines: Omit<TerminalLine, "id">[] = [];
 
-		if (scene.speaker) {
-			const char = story.characters.find(c => c.id === scene.speaker);
-			const name = char ? char.name : scene.speaker;
-			lines.push({ text: `[ ${name} ]`, type: 'speaker', speaker: name });
-		}
+        lines.push( { text: "─".repeat( 60 ), type: "separator" } );
 
-		for (const t of texts) {
-			if (t === '') {
-				lines.push({ text: '', type: 'narrator' });
-			} else {
-				lines.push({ text: t, type: scene.isEnding ? 'ending' : 'narrator' });
-			}
-		}
+        if ( scene.speaker )
+        {
+            const char = story.characters.find( ( c ) => c.id === scene.speaker );
+            const name = char ? char.name : scene.speaker;
 
-		if (!scene.isEnding && scene.choices.length > 0) {
-			lines.push({ text: '', type: 'narrator' }, {text: '> Que faites-vous ?', type: 'system'}, {
-				text: '',
-				type: 'narrator'
-			});
+            lines.push( { text: `[ ${ name } ]`, type: "speaker", speaker: name } );
+        }
 
-			const available = getAvailableChoices(scene, state);
-			available.forEach((choice, i) => {
-				lines.push({
-					text: `  [${i + 1}] ${choice.text}`,
-					type: 'choice',
-					choiceIndex: i + 1
-				});
-			});
+        for ( const t of texts )
+        {
+            if ( t === "" )
+            {
+                lines.push( { text: "", type: "narrator" } );
+            }
+            else
+            {
+                lines.push( { text: t, type: scene.isEnding ? "ending" : "narrator" } );
+            }
+        }
 
-			lines.push({ text: '', type: 'narrator' }, {text: '[ÉCHAP] Menu principal', type: 'system'});
-		} else if (scene.isEnding) {
-			lines.push({ text: '', type: 'narrator' }, {text: '[ENTRÉE] Revenir au menu', type: 'system'});
-		}
+        if ( !scene.isEnding && scene.choices.length > 0 )
+        {
+            lines.push(
+                { text: "", type: "narrator" },
+                { text: "> Que faites-vous ?", type: "system" },
+                {
+                    text: "",
+                    type: "narrator"
+                }
+            );
 
-		update(s => ({ ...s, lines: [...s.lines, ...lines.map(l => ({ ...l, id: nextId() }))] }));
-	}
+            const available = getAvailableChoices( scene, state );
 
-	function makeChoice(choiceIndex: number) {
-		const state = get({ subscribe });
-		if (!state.gameState || !state.currentStory) return;
+            available.forEach( ( choice, i ) =>
+            {
+                lines.push( {
+                    text: `  [${ i + 1 }] ${ choice.text }`,
+                    type: "choice",
+                    choiceIndex: i + 1
+                } );
+            } );
 
-		const scene = state.currentStory.scenes[state.gameState.currentScene];
-		if (!scene) return;
+            lines.push( { text: "", type: "narrator" }, { text: "[ÉCHAP] Menu principal", type: "system" } );
+        }
+        else if ( scene.isEnding )
+        {
+            lines.push( { text: "", type: "narrator" }, { text: "[ENTRÉE] Revenir au menu", type: "system" } );
+        }
 
-		const available = getAvailableChoices(scene, state.gameState);
-		const choice = available[choiceIndex - 1];
-		if (!choice) return;
+        update( ( s ) => ( { ...s, lines: [ ...s.lines, ...lines.map( ( l ) => ( { ...l, id: nextId() } ) ) ] } ) );
+    }
 
-		const actionLines: Omit<TerminalLine, 'id'>[] = [
-			{ text: '', type: 'narrator' },
-			{ text: `> ${choice.text}`, type: 'action' },
-			{ text: choice.action, type: 'action' },
-			{ text: choice.consequence, type: 'consequence' },
-		];
+    function makeChoice( choiceIndex: number )
+    {
+        const state = get( { subscribe } );
+        if ( !state.gameState || !state.currentStory ) return;
 
-		update(s => {
-			if (!s.gameState || !s.currentStory) return s;
+        const scene = state.currentStory.scenes[ state.gameState.currentScene ];
+        if ( !scene ) return;
 
-			const newFlags = new Set(s.gameState.flags);
-			if (choice.setsFlag) newFlags.add(choice.setsFlag);
+        const available = getAvailableChoices( scene, state.gameState );
+        const choice = available[ choiceIndex - 1 ];
+        if ( !choice ) return;
 
-			const newState: GameState = {
-				...s.gameState,
-				currentScene: choice.nextScene,
-				flags: newFlags,
-				history: [...s.gameState.history, s.gameState.currentScene]
-			};
+        const actionLines: Omit<TerminalLine, "id">[] = [
+            { text: "", type: "narrator" },
+            { text: `> ${ choice.text }`, type: "action" },
+            { text: choice.action, type: "action" },
+            { text: choice.consequence, type: "consequence" }
+        ];
 
-			return {
-				...s,
-				gameState: newState,
-				lines: [...s.lines, ...actionLines.map(l => ({ ...l, id: nextId() }))]
-			};
-		});
+        update( ( s ) =>
+        {
+            if ( !s.gameState || !s.currentStory ) return s;
 
-		const freshState = get({ subscribe });
-		if (freshState.currentStory && freshState.gameState) {
-			renderScene(freshState.currentStory, choice.nextScene, freshState.gameState);
-		}
-	}
+            const newFlags = new Set( s.gameState.flags );
 
-	function goBack() {
-		update(s => ({ ...s, view: 'menu', currentStory: null, gameState: null }));
-		startMenu();
-	}
+            if ( choice.setsFlag ) newFlags.add( choice.setsFlag );
 
-	return {
-		subscribe,
-		update,
-		addLine,
-		startMenu,
-		selectStory,
-		startStory,
-		makeChoice,
-		goBack
-	};
+            const newState: GameState = {
+                ...s.gameState,
+                currentScene: choice.nextScene,
+                flags: newFlags,
+                history: [ ...s.gameState.history, s.gameState.currentScene ]
+            };
+
+            return {
+                ...s,
+                gameState: newState,
+                lines: [ ...s.lines, ...actionLines.map( ( l ) => ( { ...l, id: nextId() } ) ) ]
+            };
+        } );
+
+        const freshState = get( { subscribe } );
+
+        if ( freshState.currentStory && freshState.gameState )
+        {
+            renderScene( freshState.currentStory, choice.nextScene, freshState.gameState );
+        }
+    }
+
+    function goBack()
+    {
+        update( ( s ) => ( { ...s, view: "menu", currentStory: null, gameState: null } ) );
+        startMenu();
+    }
+
+    return {
+        subscribe,
+        update,
+        addLine,
+        startMenu,
+        selectStory,
+        startStory,
+        makeChoice,
+        goBack
+    };
 }
 
 export const terminal = createTerminalStore();

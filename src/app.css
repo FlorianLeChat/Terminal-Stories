@@ -1,12 +1,6 @@
-/* ── Tailwind v4 ─────────────────────────────────────────────────── */
 @import url("https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,700;1,400&display=swap");
 @import "tailwindcss";
 
-/*
- * @theme génère automatiquement toutes les classes utilitaires :
- *   --color-terminal-green → text-terminal-green, bg-terminal-green, border-terminal-green…
- *   --font-mono            → font-mono
- */
 @theme {
     --color-terminal-green: #00ff46;
     --color-terminal-amber: #ffb000;
@@ -14,32 +8,17 @@
     --color-terminal-white: #e8ffe8;
     --color-terminal-dim:   #3a6b3a;
     --color-terminal-bg:    #050e05;
-
-    --font-mono: "JetBrains Mono", "Courier New", monospace;
-}
-
-/* ── Base ────────────────────────────────────────────────────────── */
-*, *::before, *::after {
-    box-sizing: border-box;
 }
 
 html, body {
-    margin: 0;
-    padding: 0;
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
-    background: #000;
-    font-family: var(--font-mono);
+    font-family: "JetBrains Mono", "Courier New", monospace;
 }
 
-/* ── Sélection ───────────────────────────────────────────────────── */
 ::selection {
     background: var(--color-terminal-green);
     color: #000;
 }
 
-/* ── Scrollbar globale ───────────────────────────────────────────── */
-::-webkit-scrollbar       { width: 4px; }
+::-webkit-scrollbar { width: 4px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: var(--color-terminal-dim); border-radius: 2px; }
