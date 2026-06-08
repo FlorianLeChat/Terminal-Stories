@@ -1,0 +1,463 @@
+{
+  "id": "dernier-appel",
+  "title": "Le Dernier Appel",
+  "genre": "Thriller",
+  "universe": "Paris Contemporain",
+  "description": "23h47. Un appel anonyme. Une voix qui dit savoir quelque chose que tu aurais voulu enterrer. Tu as jusqu'à minuit.",
+  "tags": ["crime", "thriller", "tension", "contemporain", "choix moraux"],
+  "author": "Terminal Stories",
+  "characters": [
+    {
+      "id": "joueur",
+      "name": "Inspecteur(rice) Morel",
+      "description": "Dix ans de brigade criminelle. Tu as vu des choses. Tu en as fait aussi.",
+      "role": "protagonist"
+    },
+    {
+      "id": "voix",
+      "name": "La Voix",
+      "description": "Modifiée. Neutre. Elle sait trop de choses.",
+      "role": "antagonist"
+    },
+    {
+      "id": "partenaire",
+      "name": "Inspecteur Durand",
+      "description": "Ton partenaire depuis six ans. Loyal. Ou l'était-il ?",
+      "role": "ally"
+    }
+  ],
+  "startScene": "telephone",
+  "scenes": {
+    "telephone": {
+      "id": "telephone",
+      "text": [
+        "23:47. Ton téléphone vibre sur la table de nuit.",
+        "Numéro masqué.",
+        "Tu décroches parce que les inspecteurs décrochent toujours.",
+        "«  Inspecteur Morel. Vous avez 13 minutes avant que tout s'effondre.  »"
+      ],
+      "speaker": "voix",
+      "choices": [
+        {
+          "id": "qui-etes-vous",
+          "text": "\"Qui êtes-vous ?\"",
+          "action": "Ta voix est calme. Professionnelle. C'est un réflexe.",
+          "consequence": "«  Quelqu'un qui sait ce qui s'est passé le 14 novembre 2019.  »",
+          "nextScene": "reference-nov"
+        },
+        {
+          "id": "raccrocher",
+          "text": "Raccrocher",
+          "action": "Tu poses le téléphone.",
+          "consequence": "Il rappelle immédiatement. «  La prochaine fois que vous raccrochez, l'enveloppe part au journal.  »",
+          "nextScene": "reference-nov"
+        },
+        {
+          "id": "tracer-appel",
+          "text": "Garder en ligne et tenter de tracer",
+          "action": "Tu attrapes ton second téléphone et commences à tracer.",
+          "consequence": "«  Ne perdez pas de temps avec ça. VPN sur VPN. Vous avez 12 minutes.  »",
+          "nextScene": "reference-nov"
+        }
+      ]
+    },
+    "reference-nov": {
+      "id": "reference-nov",
+      "text": [
+        "14 novembre 2019.",
+        "L'affaire Leclerc. Un suspect mort en garde à vue. Officiellement : malaise cardiaque.",
+        "Tu sais ce qui s'est vraiment passé. Toi et Durand.",
+        "«  Vous vous souvenez ? Bien sûr que oui.  »"
+      ],
+      "speaker": "voix",
+      "choices": [
+        {
+          "id": "nier",
+          "text": "\"Je ne sais pas de quoi vous parlez.\"",
+          "action": "Réflexe d'autoprotection. Vieux, usé.",
+          "consequence": "«  La caméra du couloir. Numéro 4. Celle que vous pensiez hors service.  »",
+          "nextScene": "camera-revele"
+        },
+        {
+          "id": "ecouter",
+          "text": "Écouter sans répondre",
+          "action": "Tu gardes le silence. Tu laisses parler.",
+          "consequence": "«  Intelligent. Voilà ce que je veux : allez au 12 rue de la Roquette. Seul(e). Maintenant.  »",
+          "nextScene": "rendez-vous"
+        }
+      ]
+    },
+    "camera-revele": {
+      "id": "camera-revele",
+      "text": [
+        "Caméra numéro 4. Couloir B. Vous aviez vérifié toutes les caméras.",
+        "«  Enfin... Durand avait vérifié. Vous lui faisiez confiance, n'est-ce pas ?  »",
+        "Le sol se dérobe légèrement sous tes pieds.",
+        "«  12 rue de la Roquette. Venez seul(e). Vous avez 11 minutes.  »"
+      ],
+      "speaker": "voix",
+      "choices": [
+        {
+          "id": "appeler-durand",
+          "text": "Appeler Durand avant d'aller",
+          "action": "Tu composes le numéro de Durand.",
+          "consequence": "Messagerie. Tu laisses un message vague. Il rappellera ou non.",
+          "nextScene": "rendez-vous",
+          "setsFlag": "durand-prevenu"
+        },
+        {
+          "id": "y-aller-seul",
+          "text": "Y aller seul(e) sans prévenir personne",
+          "action": "Tu t'habilles rapidement. Tu prends ton arme.",
+          "consequence": "Dans la rue, l'air est froid. Paris est calme à cette heure.",
+          "nextScene": "rendez-vous"
+        }
+      ]
+    },
+    "rendez-vous": {
+      "id": "rendez-vous",
+      "text": [
+        "12 rue de la Roquette. Un immeuble Haussmann. Un code sur la porte : 1419.",
+        "Tu montes. Troisième étage. La porte est entrouverte.",
+        "À l'intérieur : une chaise, une lampe, une enveloppe sur une table.",
+        "Et une voix dans ton oreillette — car ton téléphone est encore en ligne.",
+        "«  L'enveloppe. Ouvrez-la.  »"
+      ],
+      "speaker": "voix",
+      "choices": [
+        {
+          "id": "ouvrir-enveloppe",
+          "text": "Ouvrir l'enveloppe",
+          "action": "Tes mains ne tremblent pas. C'est important.",
+          "consequence": "Des photos. La caméra numéro 4. Toi. Durand. Et la vérité, en JPEG haute résolution.",
+          "nextScene": "photos"
+        },
+        {
+          "id": "fouiller-appartement",
+          "text": "Fouiller l'appartement d'abord",
+          "action": "Tu vérifies chaque pièce avant de toucher quoi que ce soit.",
+          "consequence": "La chambre est vide. Mais dans la salle de bain : un homme, ligoté, bâillonné. Conscient.",
+          "nextScene": "homme-baillon",
+          "setsFlag": "temoin-trouve"
+        }
+      ]
+    },
+    "photos": {
+      "id": "photos",
+      "text": [
+        "Les photos sont nettes. Damnatoires.",
+        "«  Il y a une clé USB dans l'enveloppe. La vidéo complète est dessus. En plusieurs copies, en sécurité.  »",
+        "«  Ce que je veux n'est pas de l'argent. Je veux que vous fassiez quelque chose pour moi.  »",
+        "«  Rencontrez Durand demain. Dites-lui ce que vous savez. Et enregistrez la conversation.  »"
+      ],
+      "speaker": "voix",
+      "choices": [
+        {
+          "id": "accepter-piege-durand",
+          "text": "\"Pourquoi Durand ?\"",
+          "action": "Tu poses la question que tu n'aurais pas dû avoir besoin de poser.",
+          "consequence": "«  Parce que c'est lui qui a laissé la caméra allumée. Demandez-vous pourquoi.  »",
+          "nextScene": "doute-durand"
+        },
+        {
+          "id": "refuser",
+          "text": "\"Je ne ferai pas ça. Publiez ce que vous voulez.\"",
+          "action": "Tu poses les photos. Tu te lèves.",
+          "consequence": "Un silence. Puis : «  Intéressant. Je pensais que vous aviez plus à perdre.  »",
+          "nextScene": "bluff"
+        }
+      ]
+    },
+    "homme-baillon": {
+      "id": "homme-baillon",
+      "text": [
+        "Tu retires le bâillon. L'homme respire vite. La quarantaine, costume défait.",
+        "«  Ils m'ont dit... que si je parlais... » Il avale sa salive. «  Je suis le technicien. De la caméra numéro 4.  »",
+        "Dans ton oreillette : «  Ah. Vous l'avez trouvé. Bien. Ça simplifie les choses.  »"
+      ],
+      "speaker": "voix",
+      "choices": [
+        {
+          "id": "liberer-technicien",
+          "text": "Libérer le technicien et le faire parler",
+          "action": "Tu défais ses liens. Il se redresse avec difficulté.",
+          "consequence": "\"C'est Durand qui m'a payé. Pour conserver les fichiers de la caméra 4. Pendant cinq ans.\"",
+          "nextScene": "verite-durand"
+        },
+        {
+          "id": "attendre-voix",
+          "text": "Attendre les instructions de la Voix",
+          "action": "\"Qu'est-ce que vous voulez que je fasse de lui ?\"",
+          "consequence": "«  C'est à vous de décider, Inspecteur. Vous avez toujours su décider.  »",
+          "nextScene": "decision-technicien"
+        }
+      ]
+    },
+    "doute-durand": {
+      "id": "doute-durand",
+      "text": [
+        "Si Durand a laissé la caméra allumée sciemment...",
+        "Six ans de partenariat. Six ans où il aurait pu t'exposer. Et il ne l'a pas fait.",
+        "Ou il attendait le bon moment.",
+        "«  Vous avez 6 minutes. L'enregistrement ou l'enveloppe part au journal.  »"
+      ],
+      "choices": [
+        {
+          "id": "appeler-durand-2",
+          "text": "Appeler Durand maintenant",
+          "action": "Tu composes son numéro. Cette fois il répond.",
+          "consequence": "\"Morel ? Il est minuit. Qu'est-ce qui se...\" Sa voix change. \"Tu es à la Roquette ?\"",
+          "nextScene": "durand-sait"
+        },
+        {
+          "id": "accepter-mission",
+          "text": "Accepter de piéger Durand",
+          "action": "\"D'accord. Je ferai l'enregistrement.\"",
+          "consequence": "«  Sage décision. L'enveloppe restera scellée... tant que vous coopérerez.  »",
+          "nextScene": "fin-collaboration"
+        }
+      ]
+    },
+    "verite-durand": {
+      "id": "verite-durand",
+      "text": [
+        "Le technicien te regarde avec des yeux qui en ont trop vu.",
+        "\"Durand voulait une assurance. Contre vous. Au cas où vous le trahiriez d'abord.\"",
+        "La logique perverse de ça t'atteint lentement.",
+        "Dans l'oreillette : «  Vous comprenez maintenant. Deux personnes qui se protègent mutuellement en se tenant mutuellement en otage.  »"
+      ],
+      "choices": [
+        {
+          "id": "aller-voir-durand",
+          "text": "Aller voir Durand ce soir",
+          "action": "\"Donnez-moi son adresse.\" Le technicien hésite. \"Je la connais déjà.\"",
+          "consequence": "Tu sors dans la nuit. La voix dans ton oreillette se tait enfin.",
+          "nextScene": "fin-confrontation"
+        },
+        {
+          "id": "appeler-igt",
+          "text": "Appeler l'Inspection Générale des Territoires",
+          "action": "Tu composes le numéro de l'IGT. Les mains fermes.",
+          "consequence": "«  Vous vous dénoncez vous-même ?  » La Voix semble... presque admirative.",
+          "nextScene": "fin-confession"
+        }
+      ]
+    },
+    "bluff": {
+      "id": "bluff",
+      "text": [
+        "Silence.",
+        "Puis : «  Vous bluffez. Mais c'est courageux.  »",
+        "«  D'accord. Nouvelle proposition.  »",
+        "«  Je ne veux pas vous détruire. Je veux la vérité exposée. Aidez-moi à le faire proprement.  »"
+      ],
+      "speaker": "voix",
+      "choices": [
+        {
+          "id": "que-voulez-vous",
+          "text": "\"Qu'entendez-vous par 'proprement' ?\"",
+          "action": "Tu te rassieds. Tu écoutes.",
+          "consequence": "«  Une déposition. Complète. Contre vous et Durand. En échange : aucune poursuite pour vous.  »",
+          "nextScene": "accord-deposition"
+        },
+        {
+          "id": "maintenir-refus",
+          "text": "Maintenir le refus",
+          "action": "\"Non.\"",
+          "consequence": "La ligne coupe. Le silence est total.",
+          "nextScene": "fin-silence"
+        }
+      ]
+    },
+    "durand-sait": {
+      "id": "durand-sait",
+      "text": [
+        "\"Comment tu sais que je suis à la Roquette ?\"",
+        "Pause de deux secondes. Trop longue.",
+        "\"Je... j'ai reçu un message. Anonyme. Avec ton adresse.\"",
+        "Il savait. Il savait depuis le début de cette nuit."
+      ],
+      "choices": [
+        {
+          "id": "confronter-durand-tel",
+          "text": "\"C'est toi qui as laissé la caméra allumée.\"",
+          "action": "Tu le dis à voix haute pour la première fois.",
+          "consequence": "Long silence. \"Oui.\" Juste ça. Un seul mot qui change tout.",
+          "nextScene": "aveu-durand"
+        },
+        {
+          "id": "feindre-ignorance",
+          "text": "\"J'ai besoin de ton aide. Viens.\"",
+          "action": "Tu ne montres pas ce que tu sais encore.",
+          "consequence": "\"J'arrive.\" Il raccroche. Tu attends. L'enveloppe est toujours sur la table.",
+          "nextScene": "arrivee-durand"
+        }
+      ]
+    },
+    "decision-technicien": {
+      "id": "decision-technicien",
+      "text": [
+        "Le technicien te regarde. Il n'a pas l'air dangereux.",
+        "Mais il sait. Il a su pendant cinq ans.",
+        "La Voix attend. Le technicien attend.",
+        "Tout le monde attend que tu décides."
+      ],
+      "choices": [
+        {
+          "id": "liberer-et-partir",
+          "text": "Libérer le technicien et partir sans rien faire d'autre",
+          "action": "\"Allez. Partez. Et oubliez cette nuit.\"",
+          "consequence": "Il part vite. Très vite. La Voix : «  Vous le laisserez parler, un jour.  »",
+          "nextScene": "fin-confrontation"
+        }
+      ]
+    },
+    "aveu-durand": {
+      "id": "aveu-durand",
+      "text": [
+        "Sa voix est fatiguée. Vieille.",
+        "\"J'avais besoin d'une assurance. Tu sais comment ça marche. On ne peut pas se permettre de faire confiance.\"",
+        "\"Même aux gens qu'on respecte.\"",
+        "Dehors, Paris continue de dormir. Ici, quelque chose se termine."
+      ],
+      "choices": [
+        {
+          "id": "fin-avec-aveu",
+          "text": "\"Retrouve-moi demain. On règle ça ensemble.\"",
+          "action": "Tu lui donnes une dernière chance.",
+          "consequence": "Il accepte. Il viendra, ou il ne viendra pas. Tu le sauras demain.",
+          "nextScene": "fin-incertitude"
+        }
+      ]
+    },
+    "arrivee-durand": {
+      "id": "arrivee-durand",
+      "text": [
+        "Durand arrive dix minutes plus tard. Il voit les photos sur la table.",
+        "Il ne dit rien pendant longtemps.",
+        "«  Alors maintenant vous savez tous les deux.  »",
+        "La Voix est toujours dans ton oreillette. Elle observe."
+      ],
+      "choices": [
+        {
+          "id": "demander-explication-durand",
+          "text": "\"Pourquoi tu as conservé ça, Durand ?\"",
+          "action": "Ta voix est calme. Professionnelle. Malgré tout.",
+          "consequence": "\"Pour les mêmes raisons que tu l'aurais fait, à ma place.\"",
+          "nextScene": "fin-miroir"
+        }
+      ]
+    },
+    "accord-deposition": {
+      "id": "accord-deposition",
+      "text": [
+        "«  Demain matin. Bureau du procureur. Tout dire.  »",
+        "«  En échange, je témoigne que vous avez coopéré. Et l'enveloppe reste scellée.  »",
+        "Tu regardes les photos. Ta carrière. Dix ans.",
+        "«  Vous avez 2 minutes pour décider.  »"
+      ],
+      "choices": [
+        {
+          "id": "accepter-deposition",
+          "text": "Accepter",
+          "action": "\"D'accord.\"",
+          "consequence": "La ligne coupe. Tu es seul(e) dans l'appartement vide.",
+          "nextScene": "fin-confession"
+        }
+      ]
+    },
+    "fin-confrontation": {
+      "id": "fin-confrontation",
+      "isEnding": true,
+      "endingType": "neutral",
+      "text": [
+        "Tu te retrouves devant la porte de Durand à 1h du matin.",
+        "Il t'ouvre avant que tu frappes. Il t'attendait.",
+        "Vous parlez jusqu'à l'aube. Tout est dit. Rien n'est résolu.",
+        "Mais parfois, nommer les choses est un début.",
+        "La Voix ne rappelle plus jamais.",
+        "Tu ne sauras jamais qui c'était.",
+        "",
+        "— FIN : Entre Eux —"
+      ],
+      "choices": []
+    },
+    "fin-confession": {
+      "id": "fin-confession",
+      "isEnding": true,
+      "endingType": "good",
+      "text": [
+        "Le lendemain matin, tu entres dans le bureau du procureur.",
+        "Durand t'attend déjà là. Il a fait la même chose de son côté.",
+        "Vous vous regardez sans un mot avant que la porte s'ouvre.",
+        "Ce qui suit est long. Douloureux. Juste.",
+        "Tu perds ton badge. Tu gardes quelque chose d'autre — que tu n'avais plus depuis longtemps.",
+        "",
+        "— FIN : Le Prix de la Vérité —"
+      ],
+      "choices": []
+    },
+    "fin-collaboration": {
+      "id": "fin-collaboration",
+      "isEnding": true,
+      "endingType": "bad",
+      "text": [
+        "L'enregistrement est fait. Durand est arrêté.",
+        "La Voix disparaît. L'enveloppe aussi.",
+        "Tu gardes ton badge. Tu perds ton partenaire.",
+        "Et chaque nuit, tu te demandes si tu as agi par justice",
+        "ou par peur.",
+        "La différence entre les deux est plus petite qu'on ne le pense.",
+        "",
+        "— FIN : La Délation —"
+      ],
+      "choices": []
+    },
+    "fin-silence": {
+      "id": "fin-silence",
+      "isEnding": true,
+      "endingType": "neutral",
+      "text": [
+        "Rien ne se passe.",
+        "Une semaine passe. Puis un mois.",
+        "L'enveloppe n'est jamais publiée.",
+        "La Voix n'avait peut-être jamais eu l'intention de le faire.",
+        "Tu vivras avec cette incertitude.",
+        "Elle est peut-être plus légère que la vérité.",
+        "",
+        "— FIN : L'Incertitude Comme Refuge —"
+      ],
+      "choices": []
+    },
+    "fin-incertitude": {
+      "id": "fin-incertitude",
+      "isEnding": true,
+      "endingType": "neutral",
+      "text": [
+        "Il vient.",
+        "Vous êtes assis l'un en face de l'autre, les photos entre vous.",
+        "Vous décidez ensemble. Ce que vous allez faire. Ce que vous allez dire.",
+        "Si c'est la bonne décision, tu le sauras dans dix ans.",
+        "Ou peut-être jamais.",
+        "",
+        "— FIN : Le Choix à Deux —"
+      ],
+      "choices": []
+    },
+    "fin-miroir": {
+      "id": "fin-miroir",
+      "isEnding": true,
+      "endingType": "neutral",
+      "text": [
+        "Tu regardes Durand. Tu te vois.",
+        "Deux personnes qui ont fait la même chose. Pour les mêmes raisons.",
+        "La Voix dans ton oreillette : «  Voilà. Maintenant vous comprenez.  »",
+        "Et la ligne coupe pour toujours.",
+        "Ce que vous faites de cette nuit vous appartient.",
+        "",
+        "— FIN : Face au Miroir —"
+      ],
+      "choices": []
+    }
+  }
+}

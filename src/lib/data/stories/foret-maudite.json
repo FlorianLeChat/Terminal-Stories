@@ -1,0 +1,394 @@
+{
+  "id": "foret-maudite",
+  "title": "La Forêt Maudite",
+  "genre": "Fantasy",
+  "universe": "Royaume d'Elarion",
+  "description": "Un voyageur solitaire s'enfonce dans une forêt dont nul n'est revenu. Des murmures, des ombres, et un choix qui changera tout.",
+  "tags": ["magie", "survie", "mystère", "solitude"],
+  "author": "Terminal Stories",
+  "characters": [
+    {
+      "id": "voyageur",
+      "name": "Le Voyageur",
+      "description": "Un aventurier usé par les routes, portant un vieux manteau et une lame rouillée.",
+      "role": "protagonist"
+    },
+    {
+      "id": "esprit",
+      "name": "L'Esprit de la Forêt",
+      "description": "Une présence ancienne qui veille sur chaque arbre, chaque racine, chaque ombre.",
+      "role": "antagonist"
+    },
+    {
+      "id": "vieille",
+      "name": "La Vieille Tisserande",
+      "description": "Une sorcière exilée vivant au cœur des bois. Elle sait des choses que les autres ont oubliées.",
+      "role": "ally"
+    }
+  ],
+  "startScene": "entree",
+  "scenes": {
+    "entree": {
+      "id": "entree",
+      "text": [
+        "Les arbres se referment derrière toi comme des mâchoires.",
+        "La lumière du jour disparaît en quelques pas. Ici, il fait toujours crépuscule.",
+        "Une pancarte à moitié rongée par le temps gît au sol : 'FORÊT DE MIREVAL — DANGER — DEMI-TOUR'.",
+        "Trop tard pour faire demi-tour. Tu l'as déjà décidé avant même de partir."
+      ],
+      "choices": [
+        {
+          "id": "suivre-sentier",
+          "text": "Suivre le sentier principal vers le nord",
+          "action": "Tu poses le pied sur le vieux sentier de pierre, à peine visible sous la mousse.",
+          "consequence": "Le chemin semble connu... comme si quelqu'un l'avait préparé pour toi.",
+          "nextScene": "sentier"
+        },
+        {
+          "id": "explorer-lisiere",
+          "text": "Explorer la lisière avant d'aller plus loin",
+          "action": "Tu longer prudemment le bord de la forêt, scrutant les ombres.",
+          "consequence": "Une lueur pâle clignote au loin, entre les racines d'un vieux chêne.",
+          "nextScene": "lisiere"
+        },
+        {
+          "id": "appeler",
+          "text": "Appeler à voix haute pour signaler ta présence",
+          "action": "Tu cries ton nom dans les ténèbres végétales.",
+          "consequence": "Silence. Puis un écho... mais ce n'est pas ta voix qui répond.",
+          "nextScene": "echo"
+        }
+      ]
+    },
+    "echo": {
+      "id": "echo",
+      "text": [
+        "«  ...je t'attendais.  »",
+        "La voix vient de partout à la fois. Grave, ancienne, comme du bois qui craque sous la neige.",
+        "Les branches au-dessus de toi s'entrelacent lentement, formant quelque chose qui ressemble à un visage."
+      ],
+      "speaker": "esprit",
+      "choices": [
+        {
+          "id": "defier-esprit",
+          "text": "\"Qui es-tu ? Montre-toi !\"",
+          "action": "Tu tires ta lame, malgré la rouille.",
+          "consequence": "Un rire murmure dans chaque feuille. 'La peur rend les hommes courageux. Ou stupides.'",
+          "nextScene": "confrontation-esprit"
+        },
+        {
+          "id": "negocier",
+          "text": "\"Je ne cherche que passage. Je ne veux pas de trouble.\"",
+          "action": "Tu rangers ta lame et ouvres les mains, paumes en avant.",
+          "consequence": "Un long silence. Puis : 'Peu ont su demander. Suis l'eau.'",
+          "nextScene": "ruisseau",
+          "setsFlag": "esprit-pacifie"
+        }
+      ]
+    },
+    "sentier": {
+      "id": "sentier",
+      "text": [
+        "Le sentier serpente entre des chênes centenaires dont les racines ont dévoré les anciennes dalles.",
+        "Des champignons luminescents poussent en cercles parfaits. Mauvais signe.",
+        "Au détour d'un virage, tu trouves une cabane. De la fumée s'échappe de la cheminée."
+      ],
+      "choices": [
+        {
+          "id": "frapper-porte",
+          "text": "Frapper à la porte de la cabane",
+          "action": "Tu frappes trois coups secs sur le vieux bois.",
+          "consequence": "Une voix chevrotante : 'Entrez, voyageur. Le thé est chaud.'",
+          "nextScene": "cabane-vieille"
+        },
+        {
+          "id": "contourner",
+          "text": "Contourner la cabane et continuer",
+          "action": "Tu passes discrètement derrière la cabane.",
+          "consequence": "Quelque chose te regarde depuis la fenêtre. Tu ne te retournes pas.",
+          "nextScene": "profondeur"
+        }
+      ]
+    },
+    "lisiere": {
+      "id": "lisiere",
+      "text": [
+        "La lueur vient d'un insecte de la taille de ton poing. Une luciole géante, aux ailes translucides.",
+        "Elle vole vers toi, hésite, puis part en direction du nord-est.",
+        "Ces créatures n'existent pas dans les forêts normales."
+      ],
+      "choices": [
+        {
+          "id": "suivre-luciole",
+          "text": "Suivre la luciole",
+          "action": "Tu la suis au travers des buissons épineux.",
+          "consequence": "Elle te guide jusqu'à un ruisseau d'eau noire qui chante doucement.",
+          "nextScene": "ruisseau"
+        },
+        {
+          "id": "ignorer-luciole",
+          "text": "Ignorer la luciole et trouver ton propre chemin",
+          "action": "Tu t'enfonces dans les bois sans guide.",
+          "consequence": "La forêt t'avale. Tu marches pendant ce qui semble des heures.",
+          "nextScene": "perdu"
+        }
+      ]
+    },
+    "cabane-vieille": {
+      "id": "cabane-vieille",
+      "text": [
+        "L'intérieur est encombré d'herbes séchées, de fioles et de livres dont les titres se lisent à l'envers.",
+        "La vieille femme te tend une tasse sans te regarder. Ses yeux sont entièrement blancs.",
+        "«  Assieds-toi. Je vais te dire ce que tu es venu chercher, et ce que tu risques de perdre.  »"
+      ],
+      "speaker": "vieille",
+      "choices": [
+        {
+          "id": "ecouter-vieille",
+          "text": "\"Je vous écoute.\"",
+          "action": "Tu t'assieds et prends la tasse. Elle sent le pin et le soufre.",
+          "consequence": "Elle parle pendant longtemps. Tu apprends l'emplacement du cœur de la forêt — et son gardien.",
+          "nextScene": "revelations",
+          "setsFlag": "connait-le-coeur"
+        },
+        {
+          "id": "refuser-vieille",
+          "text": "\"Je n'ai besoin de rien. Juste du passage.\"",
+          "action": "Tu recules vers la porte.",
+          "consequence": "Elle sourit pour la première fois. 'C'est ce que disent tous ceux qui ne reviennent pas.'",
+          "nextScene": "profondeur"
+        }
+      ]
+    },
+    "ruisseau": {
+      "id": "ruisseau",
+      "text": [
+        "L'eau est noire comme de l'encre mais parfaitement claire. Tu vois le fond — des pièces de monnaie, des os, des miroirs brisés.",
+        "De l'autre côté du ruisseau, la forêt change. Les arbres sont blancs. Morts depuis longtemps.",
+        "Un pont de bois ancien enjambe l'eau. Sur chaque pilier, un visage est sculpté."
+      ],
+      "choices": [
+        {
+          "id": "traverser-pont",
+          "text": "Traverser le pont",
+          "action": "Tu avances sur le pont. Les planches grincent à chaque pas.",
+          "consequence": "Les visages tournent leurs yeux de pierre vers toi. Ils attendent quelque chose.",
+          "nextScene": "coeur-foret"
+        },
+        {
+          "id": "longer-ruisseau",
+          "text": "Longer le ruisseau vers sa source",
+          "action": "Tu suis le courant vers le nord.",
+          "consequence": "La source est un arbre creux dont le tronc pleure une sève noire.",
+          "nextScene": "arbre-source"
+        }
+      ]
+    },
+    "confrontation-esprit": {
+      "id": "confrontation-esprit",
+      "text": [
+        "Les arbres se resserrent. Le sol se soulève. Des racines émergent comme des bras.",
+        "L'Esprit se matérialise — non pas un être, mais une forme : feuilles, ombre et vents entrelacés.",
+        "«  Tu voulais me voir ? Me voilà, petit humain.  »"
+      ],
+      "speaker": "esprit",
+      "choices": [
+        {
+          "id": "fuir",
+          "text": "Fuir à toutes jambes",
+          "action": "Tu cours sans regarder en arrière.",
+          "consequence": "La forêt te laisse fuir. Pour l'instant.",
+          "nextScene": "perdu"
+        },
+        {
+          "id": "tenir-bon",
+          "text": "Tenir bon et planter ta lame dans le sol",
+          "action": "Tu enfonces ta lame dans la terre. Un geste de défi — ou d'offrande.",
+          "consequence": "L'Esprit s'arrête. «  Intéressant.  »",
+          "nextScene": "pacte"
+        }
+      ]
+    },
+    "perdu": {
+      "id": "perdu",
+      "text": [
+        "Tu marches. Tu marches encore. La forêt se répète en boucle.",
+        "Le même arbre tordu. La même pierre couverte de mousse. Le même corbeau qui te regarde.",
+        "La fatigue s'installe. La nuit tombe — ou peut-être est-ce toujours la nuit ici."
+      ],
+      "choices": [
+        {
+          "id": "dormir",
+          "text": "T'allonger et dormir",
+          "action": "Tu poses ta tête sur les racines d'un arbre.",
+          "consequence": "Des rêves te montrent un chemin. Quand tu te réveilles, le sol a changé.",
+          "nextScene": "cabane-vieille"
+        },
+        {
+          "id": "continuer-aveugle",
+          "text": "Continuer quoi qu'il arrive",
+          "action": "Tu avances en ligne droite, refusant de te laisser désorienter.",
+          "consequence": "Après une heure, tu tombes dans le ruisseau noir.",
+          "nextScene": "ruisseau"
+        }
+      ]
+    },
+    "revelations": {
+      "id": "revelations",
+      "text": [
+        "«  Le cœur de la forêt est un arbre unique — blanc comme un os, vieux comme la mémoire.  »",
+        "«  Il garde quelque chose. Quelque chose qui t'appartient, ou qui a appartenu à quelqu'un que tu aimais.  »",
+        "Elle pose une main sur ton bras. Sa peau est froide. «  Prends ceci.  »",
+        "Elle te tend une petite fiole remplie de lumière dorée. «  Pour apprivoiser ce qui garde.  »"
+      ],
+      "speaker": "vieille",
+      "choices": [
+        {
+          "id": "prendre-fiole",
+          "text": "Prendre la fiole et remercier",
+          "action": "Tu glisses la fiole dans ta poche avec soin.",
+          "consequence": "La lumière se réchauffe contre ta peau. Tu sais maintenant où aller.",
+          "nextScene": "coeur-foret",
+          "setsFlag": "possede-fiole"
+        }
+      ]
+    },
+    "profondeur": {
+      "id": "profondeur",
+      "text": [
+        "La forêt se fait plus dense. Le sol disparaît sous un tapis de racines enchevêtrées.",
+        "Des sons te suivent — pas d'animaux. Plutôt des souffles. Des présences.",
+        "Tu arrives enfin à une clairière. Au centre : un arbre blanc, colossal, dont les branches touchent les nuages bas."
+      ],
+      "choices": [
+        {
+          "id": "approcher-arbre",
+          "text": "Approcher de l'arbre blanc",
+          "action": "Tu traverses la clairière lentement.",
+          "consequence": "Quelque chose se réveille dans l'écorce.",
+          "nextScene": "coeur-foret"
+        }
+      ]
+    },
+    "arbre-source": {
+      "id": "arbre-source",
+      "text": [
+        "L'arbre creux est immense. Trois hommes ne pourraient pas l'encercler.",
+        "La sève noire qui coule de son tronc forme des mots dans la terre : 'SOUVIENS-TOI'.",
+        "À l'intérieur du creux, quelque chose brille d'une lumière que tu reconnaîs."
+      ],
+      "choices": [
+        {
+          "id": "entrer-arbre",
+          "text": "Entrer dans le creux de l'arbre",
+          "action": "Tu te glisses à l'intérieur.",
+          "consequence": "L'espace est impossible — bien plus grand à l'intérieur. Tu te retrouves face au cœur de la forêt.",
+          "nextScene": "coeur-foret"
+        }
+      ]
+    },
+    "pacte": {
+      "id": "pacte",
+      "text": [
+        "L'Esprit s'accroupit. Une forme humaine, presque.",
+        "«  Tu n'as pas fui. Les hommes fuient toujours. Dis-moi — que cherches-tu vraiment ?  »",
+        "Pour la première fois depuis que tu as pénétré dans la forêt, le vent s'arrête."
+      ],
+      "speaker": "esprit",
+      "choices": [
+        {
+          "id": "dire-verite",
+          "text": "Dire la vérité sur ce que tu cherches",
+          "action": "Tu parles. Les mots sortent seuls — des choses que tu n'avais pas dites depuis longtemps.",
+          "consequence": "L'Esprit écoute. «  Suis le ruisseau. Je serai derrière toi.  »",
+          "nextScene": "ruisseau",
+          "setsFlag": "esprit-allie"
+        },
+        {
+          "id": "mentir",
+          "text": "Mentir — inventer une quête noble",
+          "action": "Tu inventes une histoire de mission royale.",
+          "consequence": "«  Les arbres ne mentent pas. Ils me disent tout.  » Un long silence. «  Va. Mais sans mon aide.  »",
+          "nextScene": "coeur-foret"
+        }
+      ]
+    },
+    "coeur-foret": {
+      "id": "coeur-foret",
+      "text": [
+        "L'arbre blanc pulse comme un cœur. Son écorce est couverte de visages — des centaines.",
+        "Tu reconnais certains d'entre eux.",
+        "Une voix sort de l'arbre lui-même. Ou peut-être de ta mémoire.",
+        "«  Tu es arrivé. Maintenant, choisis : prendre ce qui t'appartient, ou laisser la forêt garder ses secrets.  »"
+      ],
+      "choices": [
+        {
+          "id": "prendre-secret",
+          "text": "Tendre la main vers la lumière dans l'arbre",
+          "action": "Ta main touche l'écorce. Elle est chaude.",
+          "consequence": "Une mémoire te revient — complète, douloureuse, vraie.",
+          "nextScene": "fin-verite"
+        },
+        {
+          "id": "laisser-secret",
+          "text": "Faire demi-tour et laisser la forêt à ses secrets",
+          "action": "Tu recules lentement, les yeux toujours sur l'arbre.",
+          "consequence": "L'arbre semble... soulagé. Un chemin s'ouvre entre les racines.",
+          "nextScene": "fin-retrait"
+        },
+        {
+          "id": "utiliser-fiole",
+          "text": "[FIOLE] Verser la fiole dorée sur les racines",
+          "action": "Tu débouches la fiole et laisses la lumière s'écouler dans la terre.",
+          "consequence": "L'arbre s'illumine entièrement. Les visages dans l'écorce sourient.",
+          "nextScene": "fin-lumiere",
+          "requiresFlag": "possede-fiole"
+        }
+      ]
+    },
+    "fin-verite": {
+      "id": "fin-verite",
+      "isEnding": true,
+      "endingType": "neutral",
+      "text": [
+        "Tu te souviens de tout.",
+        "Pourquoi tu es venu. Ce que tu as perdu. Ce que tu as fait.",
+        "La forêt te laisse partir, mais tu n'es plus le même qui est entré.",
+        "Parfois, les forêts maudites ne font que garder ce que les hommes refusent d'affronter.",
+        "",
+        "— FIN : Le Poids de la Mémoire —"
+      ],
+      "choices": []
+    },
+    "fin-retrait": {
+      "id": "fin-retrait",
+      "isEnding": true,
+      "endingType": "good",
+      "text": [
+        "Tu sors de la forêt à l'aube.",
+        "La pancarte est derrière toi. Le soleil devant.",
+        "Tu n'as pas trouvé ce que tu cherchais. Mais tu as refusé de te perdre pour l'obtenir.",
+        "Parfois, revenir vivant est la meilleure victoire.",
+        "",
+        "— FIN : La Sagesse du Renoncement —"
+      ],
+      "choices": []
+    },
+    "fin-lumiere": {
+      "id": "fin-lumiere",
+      "isEnding": true,
+      "endingType": "good",
+      "text": [
+        "La lumière se répand dans chaque racine, chaque branche, chaque feuille.",
+        "Les visages dans l'écorce disparaissent — libérés.",
+        "L'Esprit de la Forêt pousse un soupir long comme un siècle.",
+        "«  Cela faisait longtemps que personne n'avait su donner sans prendre.  »",
+        "La forêt de Mireval n'est plus maudite.",
+        "Et toi, tu rentres chez toi, la fiole vide mais le cœur plein.",
+        "",
+        "— FIN : La Lumière Donnée —"
+      ],
+      "choices": []
+    }
+  }
+}
