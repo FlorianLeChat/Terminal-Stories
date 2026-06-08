@@ -8,8 +8,8 @@
     let { ondone }: Props = $props();
 
     const bootLines: { text: string; delay: number; blink?: boolean }[] = [
-        { text: "TERMINAL-STORIES OS v1.0.0", delay: 0 },
-        { text: "Copyright (c) 2024 — Tous droits réservés", delay: 120 },
+        { text: "Raven Green 2026.07.1 LTS v1.0.0 (GNU/Linux 7.0.2-7-generic x86_64)", delay: 0 },
+        { text: "An Open Source Operating System made with love by Raven Industries © 2026", delay: 120 },
         { text: "", delay: 200 },
         { text: "Initialisation du système narratif...", delay: 350 },
         { text: "[OK] Chargement du moteur d'histoires", delay: 600 },
@@ -32,6 +32,7 @@
             setTimeout( () =>
             {
                 visible[ i ] = true;
+
                 if ( i === bootLines.length - 1 )
                 {
                     done = true;
@@ -53,7 +54,7 @@
 
 <svelte:window onkeydown={handleKey} />
 
-<div class="flex-1 flex flex-col justify-center px-8 font-mono cursor-pointer select-none" onclick={handleClick}>
+<button class="flex-1 text-left flex flex-col justify-center px-8 font-mono cursor-pointer select-none" onclick={handleClick}>
     {#each bootLines as line, i ( i )}
         {#if visible[ i ]}
             <div
@@ -70,7 +71,7 @@
             </div>
         {/if}
     {/each}
-</div>
+</button>
 
 <style>
     .animate-fadein {

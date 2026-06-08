@@ -122,7 +122,7 @@
 
         <div class="screen flex flex-col h-full overflow-hidden">
             <div class="status-bar flex items-center justify-between px-4 py-1 text-xs font-mono text-terminal-dim border-b border-terminal-dim/30 select-none shrink-0">
-                <span>TERMINAL-STORIES OS</span>
+                <span>TERMINAL STORIES</span>
 
                 <span class="flex items-center gap-4">
                     {#if view === "story" && $terminal.currentStory}
@@ -163,7 +163,7 @@
                     {/if}
                 </span>
 
-                <span class="opacity-40">v1.0.0</span>
+                <span class="opacity-40">1.0.0</span>
             </div>
         </div>
     </div>
