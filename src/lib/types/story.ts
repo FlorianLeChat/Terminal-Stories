@@ -30,6 +30,7 @@ export interface Story {
     id: string;
     title: string;
     genre: string;
+    language: string;
     universe: string;
     description: string;
     tags: string[];
@@ -43,9 +44,15 @@ export interface StoryMeta {
     id: string;
     title: string;
     genre: string;
+    language: string;
     universe: string;
     description: string;
     tags: string[];
+}
+
+export interface StoryFilters {
+    genre: string | null;
+    language: string | null;
 }
 
 export interface GameState {

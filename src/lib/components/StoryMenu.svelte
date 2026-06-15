@@ -1,5 +1,6 @@
 <script lang="ts">
-    import { storiesMeta } from "$lib/data";
+    import { terminal } from "$lib/stores/terminal";
+    import { storiesMeta, filterStories, availableGenres, availableLanguages } from "$lib/data";
 
     interface Props {
         selectedIndex?: number;
@@ -8,6 +9,10 @@
     }
 
     let { selectedIndex = 0, onselect, onnavigate }: Props = $props();
+
+    let filters = $derived( $terminal.filters );
+    let visibleStories = $derived( filterStories( storiesMeta, filters ) );
+    let hasFilters = $derived( filters.genre !== null || filters.language !== null );
 
     const genreColors: Record<string, string> = {
         "Fantasy": "text-emerald-400",
@@ -43,53 +48,107 @@
         <p class="text-terminal-dim text-xs mt-2 tracking-widest">— SYSTÈME D'HISTOIRES INTERACTIVES v1.0 —</p>
     </div>
 
+    <div class="border border-terminal-dim/40 rounded px-3 py-2 mb-4 space-y-1.5">
+        <div class="flex items-center gap-2 flex-wrap">
+            <span class="text-terminal-dim text-xs w-16 shrink-0 select-none">GENRE</span>
+
+            {#each availableGenres as genre ( genre )}
+                <button
+                    class="text-xs px-2 py-0.5 rounded border transition-colors duration-100 {filters.genre === genre
+                        ? `border-terminal-green bg-terminal-green/15 ${ genreColor( genre ) }`
+                        : "border-terminal-dim/40 text-terminal-dim hover:border-terminal-dim hover:text-terminal-white"}"
+                    onclick={() => terminal.setFilter( "genre", genre )}
+                >
+                    {genre}
+                </button>
+            {/each}
+        </div>
+
+        <div class="flex items-center gap-2 flex-wrap">
+            <span class="text-terminal-dim text-xs w-16 shrink-0 select-none">LANGUE</span>
+            {#each availableLanguages as language ( language )}
+                <button
+                    class="text-xs px-2 py-0.5 rounded border transition-colors duration-100 {filters.language
+                      === language
+                        ? "border-terminal-green bg-terminal-green/15 text-terminal-white"
+                        : "border-terminal-dim/40 text-terminal-dim hover:border-terminal-dim hover:text-terminal-white"}"
+                    onclick={() => terminal.setFilter( "language", language )}
+                >
+                    {language}
+                </button>
+            {/each}
+
+            {#if hasFilters}
+                <button
+                    class="text-xs px-2 py-0.5 rounded border border-terminal-amber/50 text-terminal-amber hover:bg-terminal-amber/10 transition-colors duration-100 ml-auto"
+                    onclick={() => terminal.clearFilters()}
+                >
+                    ✕ Réinitialiser
+                </button>
+            {/if}
+        </div>
+    </div>
+
     <div class="text-terminal-dim text-xs mb-4 text-center">
         ↑ ↓ Naviguer &nbsp;|&nbsp; ENTRÉE Sélectionner &nbsp;|&nbsp; Numéro Accès direct
     </div>
 
-    <div class="border border-terminal-dim rounded px-2 py-1 mb-4">
-        {#each storiesMeta as story, i ( story.id )}
-            <button
-                class="w-full text-left px-3 py-3 rounded transition-all duration-100 block {i === selectedIndex
-                    ? "bg-terminal-green/15 border-l-2 border-terminal-green"
-                    : "border-l-2 border-transparent hover:bg-white/5"
-                }"
-                onclick={() => onselect( story.id )}
-                onmouseenter={() => onnavigate( i )}
-            >
-                <div class="flex items-baseline gap-3">
-                    <span class="text-terminal-dim text-xs w-4 shrink-0">{i + 1}.</span>
+    {#if visibleStories.length === 0}
+        <div class="border border-terminal-dim/40 rounded px-3 py-8 mb-4 text-center text-terminal-dim text-sm">
+            <p>Aucune histoire ne correspond à ces filtres.</p>
 
-                    <div class="flex-1 min-w-0">
-                        <div class="flex items-baseline gap-2 flex-wrap">
-                            <span class="text-terminal-white font-bold text-sm">{story.title}</span>
-                            <span class="text-xs {genreColor( story.genre )} shrink-0">[{story.genre}]</span>
-                        </div>
-
-                        <div class="text-terminal-dim text-xs mt-0.5">{story.universe}</div>
-
-                        {#if i === selectedIndex}
-                            <div class="text-terminal-green text-xs mt-1 opacity-80 leading-relaxed">
-                                {story.description}
-                            </div>
-
-                            <div class="flex gap-1 mt-1 flex-wrap">
-                                {#each story.tags as tag ( tag )}
-                                    <span class="text-terminal-dim text-xs opacity-60">#{tag}</span>
-                                {/each}
-                            </div>
-                        {/if}
-                    </div>
-                </div>
+            <button class="mt-3 text-terminal-amber text-xs underline" onclick={() => terminal.clearFilters()}>
+                Réinitialiser les filtres
             </button>
+        </div>
+    {:else}
+        <div class="border border-terminal-dim rounded px-2 py-1 mb-4">
+            {#each visibleStories as story, i ( story.id )}
+                <button
+                    class="w-full text-left px-3 py-3 rounded transition-all duration-100 block {i === selectedIndex
+                        ? "bg-terminal-green/15 border-l-2 border-terminal-green"
+                        : "border-l-2 border-transparent hover:bg-white/5"}"
+                    onclick={() => onselect( story.id )}
+                    onmouseenter={() => onnavigate( i )}
+                >
+                    <div class="flex items-baseline gap-3">
+                        <span class="text-terminal-dim text-xs w-4 shrink-0">{i + 1}.</span>
 
-            {#if i < storiesMeta.length - 1}
-                <div class="border-t border-terminal-dim/20 mx-3"></div>
-            {/if}
-        {/each}
-    </div>
+                        <div class="flex-1 min-w-0">
+                            <div class="flex items-baseline gap-2 flex-wrap">
+                                <span class="text-terminal-white font-bold text-sm">{story.title}</span>
+                                <span class="text-xs {genreColor( story.genre )} shrink-0">[{story.genre}]</span>
+                                <span class="text-terminal-dim text-xs shrink-0">· {story.language}</span>
+                            </div>
+
+                            <div class="text-terminal-dim text-xs mt-0.5">{story.universe}</div>
+
+                            {#if i === selectedIndex}
+                                <div class="text-terminal-green text-xs mt-1 opacity-80 leading-relaxed">
+                                    {story.description}
+                                </div>
+
+                                <div class="flex gap-1 mt-1 flex-wrap">
+                                    {#each story.tags as tag ( tag )}
+                                        <span class="text-terminal-dim text-xs opacity-60">#{tag}</span>
+                                    {/each}
+                                </div>
+                            {/if}
+                        </div>
+                    </div>
+                </button>
+
+                {#if i < visibleStories.length - 1}
+                    <div class="border-t border-terminal-dim/20 mx-3"></div>
+                {/if}
+            {/each}
+        </div>
+    {/if}
 
     <div class="text-terminal-dim text-xs text-center opacity-50 pb-4">
-        {storiesMeta.length} histoire{storiesMeta.length > 1 ? "s" : ""} disponible{storiesMeta.length > 1 ? "s" : ""}
+        {visibleStories.length} / {storiesMeta.length} histoire{storiesMeta.length > 1 ? "s" : ""}
+        {hasFilters
+            ? "filtrée" + ( visibleStories.length > 1 ? "s" : "" )
+            : "disponible" + ( storiesMeta.length > 1 ? "s" : "" )}
     </div>
 </div>

@@ -1,7 +1,7 @@
 <script lang="ts">
     import { onMount } from "svelte";
     import { terminal } from "$lib/stores/terminal";
-    import { storiesMeta } from "$lib/data";
+    import { storiesMeta, filterStories } from "$lib/data";
     import BootSequence from "./BootSequence.svelte";
     import StoryMenu from "./StoryMenu.svelte";
     import TerminalOutput from "./TerminalOutput.svelte";
@@ -9,6 +9,7 @@
     let view = $derived( $terminal.view );
     let lines = $derived( $terminal.lines );
     let selectedIndex = $derived( $terminal.selectedStoryIndex );
+    let visibleStories = $derived( filterStories( storiesMeta, $terminal.filters ) );
 
     function handleBoot()
     {
@@ -48,7 +49,31 @@
 
     function handleMenuKey( e: KeyboardEvent )
     {
-        const count = storiesMeta.length;
+        const key = e.key.toLowerCase();
+
+        if ( key === "g" )
+        {
+            e.preventDefault();
+            terminal.cycleGenre();
+            return;
+        }
+
+        if ( key === "l" )
+        {
+            e.preventDefault();
+            terminal.cycleLanguage();
+            return;
+        }
+
+        if ( key === "c" )
+        {
+            e.preventDefault();
+            terminal.clearFilters();
+            return;
+        }
+
+        const count = visibleStories.length;
+        if ( count === 0 ) return;
 
         if ( e.key === "ArrowDown" )
         {
@@ -62,7 +87,7 @@
         }
         else if ( e.key === "Enter" )
         {
-            terminal.selectStory( storiesMeta[ $terminal.selectedStoryIndex ].id );
+            terminal.selectStory( visibleStories[ $terminal.selectedStoryIndex ].id );
         }
         else
         {
@@ -70,7 +95,7 @@
 
             if ( !isNaN( num ) && num >= 1 && num <= count )
             {
-                terminal.selectStory( storiesMeta[ num - 1 ].id );
+                terminal.selectStory( visibleStories[ num - 1 ].id );
             }
         }
     }
@@ -158,8 +183,8 @@
                     {:else if view === "story-info"}
                         [ENTRÉE] Commencer &nbsp;|&nbsp; [ÉCHAP] Retour
                     {:else if view === "menu"}
-                        [↑↓] Naviguer &nbsp;|&nbsp; [ENTRÉE] Sélectionner &nbsp;|&nbsp; [1-{storiesMeta.length}] Accès
-                        direct
+                        [↑↓] Naviguer &nbsp;|&nbsp; [ENTRÉE] Sélectionner &nbsp;|&nbsp; [G] Genre &nbsp;|&nbsp; [L]
+                        Langue &nbsp;|&nbsp; [C] Réinitialiser
                     {/if}
                 </span>
 
