@@ -5,6 +5,7 @@
     import BootSequence from "./BootSequence.svelte";
     import StoryMenu from "./StoryMenu.svelte";
     import TerminalOutput from "./TerminalOutput.svelte";
+    import WikiBrowser from "./WikiBrowser.svelte";
 
     let view = $derived( $terminal.view );
     let lines = $derived( $terminal.lines );
@@ -45,6 +46,11 @@
             handleStoryKey( e );
             return;
         }
+        if ( view === "wiki" )
+        {
+            handleWikiKey( e );
+            return;
+        }
     }
 
     function handleMenuKey( e: KeyboardEvent )
@@ -69,6 +75,13 @@
         {
             e.preventDefault();
             terminal.clearFilters();
+            return;
+        }
+
+        if ( key === "w" )
+        {
+            e.preventDefault();
+            terminal.openWiki();
             return;
         }
 
@@ -109,6 +122,55 @@
         else if ( e.key === "Escape" )
         {
             terminal.startMenu();
+        }
+    }
+
+    function handleWikiKey( e: KeyboardEvent )
+    {
+        const wiki = $terminal.wiki;
+
+        if ( e.key === "Escape" )
+        {
+            e.preventDefault();
+
+            if ( wiki.selectedEntryId )
+            {
+                terminal.backToWikiList();
+            }
+            else
+            {
+                terminal.closeWiki();
+            }
+
+            return;
+        }
+
+        if ( wiki.selectedEntryId ) return;
+
+        if ( e.key === "ArrowRight" )
+        {
+            e.preventDefault();
+            terminal.cycleWikiCategory( 1 );
+        }
+        else if ( e.key === "ArrowLeft" )
+        {
+            e.preventDefault();
+            terminal.cycleWikiCategory( -1 );
+        }
+        else if ( e.key === "ArrowDown" )
+        {
+            e.preventDefault();
+            terminal.moveWikiSelection( 1 );
+        }
+        else if ( e.key === "ArrowUp" )
+        {
+            e.preventDefault();
+            terminal.moveWikiSelection( -1 );
+        }
+        else if ( e.key === "Enter" )
+        {
+            e.preventDefault();
+            terminal.selectWikiEntryAt( wiki.selectedIndex );
         }
     }
 
@@ -160,6 +222,7 @@
                         {#if view === "menu"}MENU PRINCIPAL{/if}
                         {#if view === "story-info"}INFO HISTOIRE{/if}
                         {#if view === "story"}LECTURE EN COURS{/if}
+                        {#if view === "wiki"}BASE DE CONNAISSANCES{/if}
                     </span>
                 </span>
 
@@ -173,6 +236,8 @@
                     <StoryMenu {selectedIndex} onselect={handleMenuSelect} onnavigate={handleMenuNavigate} />
                 {:else if view === "story-info" || view === "story"}
                     <TerminalOutput {lines} />
+                {:else if view === "wiki"}
+                    <WikiBrowser />
                 {/if}
             </div>
 
@@ -184,7 +249,14 @@
                         [ENTRÉE] Commencer &nbsp;|&nbsp; [ÉCHAP] Retour
                     {:else if view === "menu"}
                         [↑↓] Naviguer &nbsp;|&nbsp; [ENTRÉE] Sélectionner &nbsp;|&nbsp; [G] Genre &nbsp;|&nbsp; [L]
-                        Langue &nbsp;|&nbsp; [C] Réinitialiser
+                        Langue &nbsp;|&nbsp; [C] Réinitialiser &nbsp;|&nbsp; [W] Encyclopédie
+                    {:else if view === "wiki"}
+                        {#if $terminal.wiki.selectedEntryId}
+                            [ÉCHAP] Retour à la liste
+                        {:else}
+                            [←→] Rubrique &nbsp;|&nbsp; [↑↓] Naviguer &nbsp;|&nbsp; [ENTRÉE] Consulter &nbsp;|&nbsp;
+                            [ÉCHAP] Menu
+                        {/if}
                     {/if}
                 </span>
 

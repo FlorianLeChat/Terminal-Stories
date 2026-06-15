@@ -1,0 +1,147 @@
+{
+  "universe": "Paris Contemporain",
+  "storyId": "dernier-appel",
+  "entries": [
+    {
+      "id": "dernier-appel--universe--paris-contemporain",
+      "category": "universe",
+      "name": "Paris Contemporain",
+      "summary": "Le Paris d'aujourd'hui, vu depuis l'envers du décor : celui de la brigade criminelle et de ses secrets.",
+      "description": [
+        "Pas de magie, pas d'étoiles : seulement une ville qui dort pendant que d'autres veillent.",
+        "C'est le Paris des commissariats, des gardes à vue, des caméras de couloir et des dossiers qu'on préférerait voir disparaître.",
+        "Un univers de thriller moral où la frontière entre justice et survie personnelle est plus mince qu'on ne l'admet — et où un seul appel anonyme peut faire s'effondrer dix ans de carrière."
+      ],
+      "tags": ["thriller", "contemporain", "polar", "lore"],
+      "related": ["dernier-appel--location--roquette", "dernier-appel--era--nuit-presente"]
+    },
+    {
+      "id": "dernier-appel--character--morel",
+      "category": "character",
+      "name": "Inspecteur(rice) Morel",
+      "summary": "Dix ans de brigade criminelle. A vu des choses. En a fait aussi.",
+      "description": [
+        "Rôle : Protagoniste.",
+        "Inspecteur(rice) chevronné(e) de la brigade criminelle, réveillé(e) à 23h47 par un appel anonyme.",
+        "La voix au bout du fil connaît un secret enterré : ce qui s'est vraiment passé le 14 novembre 2019, dans l'affaire Leclerc.",
+        "Calme, professionnel(le), Morel doit décider en une nuit ce qui vaut le plus : son badge, son partenaire, ou la vérité."
+      ],
+      "aliases": ["Morel"],
+      "tags": ["protagoniste", "police"],
+      "related": ["dernier-appel--character--voix", "dernier-appel--character--durand", "dernier-appel--event--affaire-leclerc"]
+    },
+    {
+      "id": "dernier-appel--character--voix",
+      "category": "character",
+      "name": "La Voix",
+      "summary": "Modifiée, neutre, anonyme. Elle sait trop de choses — et n'en veut peut-être pas l'argent.",
+      "description": [
+        "Rôle : Antagoniste.",
+        "Un interlocuteur sans visage, dont la voix passe par une chaîne de VPN impossible à tracer.",
+        "Elle détient les preuves de l'affaire Leclerc : la vidéo de la caméra numéro 4, en plusieurs copies sécurisées.",
+        "Ce qu'elle réclame n'est pas une rançon mais une mise en scène — exposer la vérité « proprement ». On ne saura jamais qui elle était."
+      ],
+      "aliases": ["La voix au téléphone", "L'anonyme"],
+      "tags": ["antagoniste", "anonyme"],
+      "related": ["dernier-appel--location--roquette", "dernier-appel--event--dernier-appel"]
+    },
+    {
+      "id": "dernier-appel--character--durand",
+      "category": "character",
+      "name": "Inspecteur Durand",
+      "summary": "Le partenaire de Morel depuis six ans. Loyal. Ou l'était-il ?",
+      "description": [
+        "Rôle : Allié — ou complice, selon ce que la nuit révèle.",
+        "Partenaire de Morel à la brigade criminelle depuis six ans, lié(e) à lui/elle par l'affaire Leclerc.",
+        "C'est lui qui avait « vérifié » les caméras du couloir B — et lui qui a laissé la numéro 4 allumée.",
+        "Assurance contre une trahison future, ou simple lâcheté ? « Pour les mêmes raisons que tu l'aurais fait, à ma place. »"
+      ],
+      "aliases": ["Durand"],
+      "tags": ["allié", "police", "ambigu"],
+      "related": ["dernier-appel--character--morel", "dernier-appel--event--affaire-leclerc"]
+    },
+    {
+      "id": "dernier-appel--character--technicien",
+      "category": "character",
+      "name": "Le Technicien",
+      "summary": "L'homme de la caméra numéro 4, payé pendant cinq ans pour conserver un fichier.",
+      "description": [
+        "Rôle : Témoin clé.",
+        "La quarantaine, costume défait, retrouvé ligoté et bâillonné dans l'appartement de la rue de la Roquette.",
+        "Technicien chargé de la caméra numéro 4 du commissariat, il a été payé par Durand pour en conserver les fichiers — pendant cinq ans.",
+        "Il sait. Il a su tout ce temps. Son sort dépend entièrement des choix de Morel."
+      ],
+      "aliases": ["Le technicien de la caméra 4"],
+      "tags": ["npc", "témoin"],
+      "related": ["dernier-appel--character--durand", "dernier-appel--location--roquette"]
+    },
+    {
+      "id": "dernier-appel--location--roquette",
+      "category": "location",
+      "name": "12 rue de la Roquette",
+      "summary": "Un appartement haussmannien vide, théâtre du rendez-vous imposé par la Voix.",
+      "description": [
+        "Un immeuble Haussmann dont la porte s'ouvre au code 1419 — comme une date qui n'en finit pas.",
+        "Au troisième étage, une porte entrouverte ; à l'intérieur, une chaise, une lampe, et une enveloppe posée sur une table.",
+        "L'enveloppe contient des photographies damnatoires et une clé USB. Le piège, ou la délivrance.",
+        "Dans la salle de bain, parfois, un homme ligoté attend d'être trouvé."
+      ],
+      "aliases": ["L'appartement de la Roquette"],
+      "tags": ["appartement", "lieu clé"],
+      "related": ["dernier-appel--character--voix", "dernier-appel--character--technicien"]
+    },
+    {
+      "id": "dernier-appel--location--commissariat",
+      "category": "location",
+      "name": "Le Commissariat — Couloir B",
+      "summary": "Le couloir où, en 2019, la caméra numéro 4 n'était pas hors service comme on le croyait.",
+      "description": [
+        "Lieu du point de bascule : le couloir B du commissariat, et sa caméra numéro 4.",
+        "Tout le monde pensait cette caméra hors service le 14 novembre 2019. Tout le monde, sauf celui qui l'avait laissée tourner.",
+        "Les images de ce couloir constituent l'unique preuve de ce qui est arrivé au suspect Leclerc en garde à vue."
+      ],
+      "aliases": ["Couloir B", "Caméra numéro 4"],
+      "tags": ["lieu", "police", "preuve"],
+      "related": ["dernier-appel--event--affaire-leclerc", "dernier-appel--character--durand"]
+    },
+    {
+      "id": "dernier-appel--era--nuit-presente",
+      "category": "era",
+      "name": "La Nuit du Présent",
+      "summary": "De 23h47 à minuit : treize minutes qui valent dix ans de carrière.",
+      "description": [
+        "L'histoire se déroule presque en temps réel, dans le présent contemporain, entre 23h47 et minuit.",
+        "Le compte à rebours est constant : « Vous avez 13 minutes avant que tout s'effondre. »",
+        "Cette ère n'a pas de date dans les livres d'histoire — c'est l'époque intime et brève d'une décision impossible, prise au cœur de la nuit parisienne."
+      ],
+      "tags": ["époque", "temps réel", "contemporain"],
+      "related": ["dernier-appel--event--dernier-appel"]
+    },
+    {
+      "id": "dernier-appel--event--affaire-leclerc",
+      "category": "event",
+      "name": "L'Affaire Leclerc (14 novembre 2019)",
+      "summary": "Un suspect mort en garde à vue. Officiellement : malaise cardiaque.",
+      "description": [
+        "Le 14 novembre 2019, le suspect Leclerc meurt en garde à vue au commissariat.",
+        "La version officielle parle d'un malaise cardiaque. Morel et Durand savent ce qui s'est réellement passé.",
+        "La caméra numéro 4 du couloir B a tout filmé — et ce fichier, conservé en secret pendant cinq ans, est l'épée de Damoclès de toute l'intrigue."
+      ],
+      "tags": ["événement", "bavure", "passé"],
+      "related": ["dernier-appel--location--commissariat", "dernier-appel--character--durand", "dernier-appel--character--morel"]
+    },
+    {
+      "id": "dernier-appel--event--dernier-appel",
+      "category": "event",
+      "name": "Le Dernier Appel",
+      "summary": "L'appel anonyme de 23h47 qui rouvre l'affaire Leclerc et force Morel à choisir.",
+      "description": [
+        "Tout commence par une vibration sur la table de nuit : numéro masqué, 23h47.",
+        "La Voix donne treize minutes, puis un rendez-vous, puis une enveloppe — et un choix qui n'a pas de bonne réponse.",
+        "Selon les décisions de Morel, la nuit s'achève en confession, en délation, en confrontation, ou dans le silence d'une vérité jamais publiée."
+      ],
+      "tags": ["événement", "déclencheur"],
+      "related": ["dernier-appel--character--voix", "dernier-appel--era--nuit-presente"]
+    }
+  ]
+}

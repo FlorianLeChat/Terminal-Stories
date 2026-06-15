@@ -89,8 +89,15 @@
         </div>
     </div>
 
-    <div class="text-terminal-dim text-xs mb-4 text-center">
-        ↑ ↓ Naviguer &nbsp;|&nbsp; ENTRÉE Sélectionner &nbsp;|&nbsp; Numéro Accès direct
+    <div class="flex items-center justify-center gap-3 mb-4 text-xs">
+        <span class="text-terminal-dim">↑ ↓ Naviguer &nbsp;|&nbsp; ENTRÉE Sélectionner &nbsp;|&nbsp; Numéro Accès direct</span>
+
+        <button
+            class="px-2 py-0.5 rounded border border-terminal-cyan/50 text-terminal-cyan hover:bg-terminal-cyan/10 transition-colors duration-100"
+            onclick={() => terminal.openWiki()}
+        >
+            ✦ [W] Encyclopédie
+        </button>
     </div>
 
     {#if visibleStories.length === 0}

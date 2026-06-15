@@ -1,8 +1,10 @@
 import { writable, get } from "svelte/store";
 import type { GameState, Story, Scene, Choice, StoryFilters } from "$lib/types/story";
+import type { KnowledgeCategory, WikiState } from "$lib/types/knowledge";
 import { getStory, storiesMeta, filterStories, availableGenres, availableLanguages } from "$lib/data";
+import { categories, filterEntries, getEntry } from "$lib/data/knowledge";
 
-export type TerminalView = "boot" | "menu" | "story-info" | "story";
+export type TerminalView = "boot" | "menu" | "story-info" | "story" | "wiki";
 
 interface TerminalStore {
     view: TerminalView;
@@ -12,6 +14,7 @@ interface TerminalStore {
     currentStory: Story | null;
     lines: TerminalLine[];
     awaitingInput: boolean;
+    wiki: WikiState;
 }
 
 export interface TerminalLine {
@@ -56,7 +59,8 @@ function createTerminalStore()
         gameState: null,
         currentStory: null,
         lines: [],
-        awaitingInput: false
+        awaitingInput: false,
+        wiki: { category: "universe", universe: null, selectedIndex: 0, selectedEntryId: null }
     };
 
     const { subscribe, update } = writable<TerminalStore>( initial );
@@ -296,6 +300,114 @@ function createTerminalStore()
         startMenu();
     }
 
+    function wikiVisibleEntries()
+    {
+        const { wiki } = get( { subscribe } );
+
+        return filterEntries( wiki.category, wiki.universe );
+    }
+
+    function openWiki()
+    {
+        clearLines();
+        update( ( s ) => ( {
+            ...s,
+            view: "wiki",
+            awaitingInput: true,
+            wiki: { ...s.wiki, selectedIndex: 0, selectedEntryId: null }
+        } ) );
+    }
+
+    function closeWiki()
+    {
+        update( ( s ) => ( { ...s, view: "menu" } ) );
+        startMenu();
+    }
+
+    function setWikiCategory( category: KnowledgeCategory )
+    {
+        update( ( s ) => ( {
+            ...s,
+            wiki: { ...s.wiki, category, selectedIndex: 0, selectedEntryId: null }
+        } ) );
+    }
+
+    function cycleWikiCategory( direction: 1 | -1 )
+    {
+        update( ( s ) =>
+        {
+            const ids = categories.map( ( c ) => c.id );
+            const idx = ids.indexOf( s.wiki.category );
+            const next = ids[ ( idx + direction + ids.length ) % ids.length ];
+
+            return { ...s, wiki: { ...s.wiki, category: next, selectedIndex: 0, selectedEntryId: null } };
+        } );
+    }
+
+    function setWikiUniverse( universe: string | null )
+    {
+        update( ( s ) =>
+        {
+            const next = s.wiki.universe === universe ? null : universe;
+
+            return { ...s, wiki: { ...s.wiki, universe: next, selectedIndex: 0, selectedEntryId: null } };
+        } );
+    }
+
+    function navigateWiki( index: number )
+    {
+        update( ( s ) => ( { ...s, wiki: { ...s.wiki, selectedIndex: index } } ) );
+    }
+
+    function moveWikiSelection( direction: 1 | -1 )
+    {
+        const count = wikiVisibleEntries().length;
+        if ( count === 0 ) return;
+
+        update( ( s ) => ( {
+            ...s,
+            wiki: { ...s.wiki, selectedIndex: ( s.wiki.selectedIndex + direction + count ) % count }
+        } ) );
+    }
+
+    function openWikiEntry( id: string )
+    {
+        if ( !getEntry( id ) ) return;
+
+        update( ( s ) => ( { ...s, wiki: { ...s.wiki, selectedEntryId: id } } ) );
+    }
+
+    function selectWikiEntryAt( index: number )
+    {
+        const entries = wikiVisibleEntries();
+        const entry = entries[ index ];
+        if ( entry ) openWikiEntry( entry.id );
+    }
+
+    function backToWikiList()
+    {
+        update( ( s ) => ( { ...s, wiki: { ...s.wiki, selectedEntryId: null } } ) );
+    }
+
+    function openRelatedEntry( id: string )
+    {
+        const entry = getEntry( id );
+        if ( !entry ) return;
+
+        const entries = filterEntries( entry.category, get( { subscribe } ).wiki.universe );
+        const idx = entries.findIndex( ( e ) => e.id === id );
+
+        update( ( s ) => ( {
+            ...s,
+            wiki: {
+                ...s.wiki,
+                category: entry.category,
+                selectedIndex: idx >= 0 ? idx : s.wiki.selectedIndex,
+                selectedEntryId: id
+            }
+        } ) );
+    }
+
     return {
         subscribe,
         update,
@@ -309,7 +421,19 @@ function createTerminalStore()
         selectStory,
         startStory,
         makeChoice,
-        goBack
+        goBack,
+        wikiVisibleEntries,
+        openWiki,
+        closeWiki,
+        setWikiCategory,
+        cycleWikiCategory,
+        setWikiUniverse,
+        navigateWiki,
+        moveWikiSelection,
+        openWikiEntry,
+        selectWikiEntryAt,
+        backToWikiList,
+        openRelatedEntry
     };
 }
 
