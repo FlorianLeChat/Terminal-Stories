@@ -1,12 +1,13 @@
 import { writable, get } from "svelte/store";
-import type { GameState, Story, Scene, Choice } from "$lib/types/story";
-import { getStory } from "$lib/data";
+import type { GameState, Story, Scene, Choice, StoryFilters } from "$lib/types/story";
+import { getStory, storiesMeta, filterStories, availableGenres, availableLanguages } from "$lib/data";
 
 export type TerminalView = "boot" | "menu" | "story-info" | "story";
 
 interface TerminalStore {
     view: TerminalView;
     selectedStoryIndex: number;
+    filters: StoryFilters;
     gameState: GameState | null;
     currentStory: Story | null;
     lines: TerminalLine[];
@@ -51,6 +52,7 @@ function createTerminalStore()
     const initial: TerminalStore = {
         view: "boot",
         selectedStoryIndex: 0,
+        filters: { genre: null, language: null },
         gameState: null,
         currentStory: null,
         lines: [],
@@ -58,6 +60,11 @@ function createTerminalStore()
     };
 
     const { subscribe, update } = writable<TerminalStore>( initial );
+
+    function visibleStories()
+    {
+        return filterStories( storiesMeta, get( { subscribe } ).filters );
+    }
 
     function addLine( line: Omit<TerminalLine, "id"> )
     {
@@ -81,6 +88,43 @@ function createTerminalStore()
     {
         clearLines();
         update( ( s ) => ( { ...s, view: "menu", selectedStoryIndex: 0, awaitingInput: true } ) );
+    }
+
+    function setFilter( key: keyof StoryFilters, value: string | null )
+    {
+        update( ( s ) =>
+        {
+            const next = s.filters[ key ] === value ? null : value;
+
+            return { ...s, filters: { ...s.filters, [ key ]: next }, selectedStoryIndex: 0 };
+        } );
+    }
+
+    function cycleFilter( key: keyof StoryFilters, values: string[] )
+    {
+        update( ( s ) =>
+        {
+            const cycle = [ null, ...values ];
+            const idx = cycle.indexOf( s.filters[ key ] );
+            const next = cycle[ ( idx + 1 ) % cycle.length ];
+
+            return { ...s, filters: { ...s.filters, [ key ]: next }, selectedStoryIndex: 0 };
+        } );
+    }
+
+    function cycleGenre()
+    {
+        cycleFilter( "genre", availableGenres );
+    }
+
+    function cycleLanguage()
+    {
+        cycleFilter( "language", availableLanguages );
+    }
+
+    function clearFilters()
+    {
+        update( ( s ) => ( { ...s, filters: { genre: null, language: null }, selectedStoryIndex: 0 } ) );
     }
 
     function selectStory( id: string )
@@ -257,6 +301,11 @@ function createTerminalStore()
         update,
         addLine,
         startMenu,
+        visibleStories,
+        setFilter,
+        cycleGenre,
+        cycleLanguage,
+        clearFilters,
         selectStory,
         startStory,
         makeChoice,
