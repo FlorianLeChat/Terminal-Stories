@@ -31,7 +31,8 @@
             ending: "text-terminal-amber",
             error: "text-red-500",
             title: "text-terminal-white text-xl font-bold tracking-widest",
-            separator: "text-terminal-dim"
+            separator: "text-terminal-dim",
+            image: ""
         };
 
         return map[ type ] ?? "text-terminal-green";
@@ -43,7 +44,11 @@
     class="flex-1 overflow-y-auto px-4 py-2 font-mono text-sm leading-relaxed scrollbar-terminal"
 >
     {#each lines as line ( line.id )}
-        {#if line.text === ""}
+        {#if line.type === "image" && line.imageSrc}
+            <div class="my-3 border border-terminal-dim/30 rounded overflow-hidden max-w-xl animate-fadein">
+                <img src={line.imageSrc} alt="" class="w-full max-h-44 object-cover grayscale opacity-75" />
+            </div>
+        {:else if line.text === ""}
             <div class="h-3"></div>
         {:else}
             <div class="line {lineClass( line.type )} animate-fadein">

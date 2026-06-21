@@ -1,0 +1,149 @@
+{
+  "universe": "Royaume d'Elarion",
+  "storyId": "foret-maudite",
+  "entries": [
+    {
+      "id": "foret-maudite--universe--elarion",
+      "category": "universe",
+      "name": "Royaume d'Elarion",
+      "summary": "Un royaume médiéval où la magie ancienne dort encore dans la pierre, l'eau et les racines.",
+      "description": [
+        "Elarion est un vieux royaume de collines brumeuses et de villages de bois, bâti en lisière de forêts que les cartes royales préfèrent laisser en blanc.",
+        "Ici, la magie n'est pas un art que l'on apprend : c'est une présence ancienne, tapie dans la nature, qu'on respecte ou qu'on ignore à ses risques.",
+        "Les routes contournent toujours les bois profonds. Les anciens disent que certaines forêts se souviennent — et que la mémoire des arbres n'oublie ni les promesses, ni les trahisons.",
+        "La Forêt de Mireval, au nord du royaume, est le plus craint de ces lieux."
+      ],
+      "tags": ["fantasy", "médiéval", "magie", "lore"],
+      "related": ["foret-maudite--location--mireval", "foret-maudite--era--age-murmures"]
+    },
+    {
+      "id": "foret-maudite--character--voyageur",
+      "category": "character",
+      "name": "Le Voyageur",
+      "summary": "Un aventurier usé par les routes, venu chercher dans la forêt ce qu'il a perdu ailleurs.",
+      "description": [
+        "Rôle : Protagoniste.",
+        "Un homme dont le manteau a connu trop d'hivers et dont la lame a depuis longtemps rendu son tranchant à la rouille.",
+        "Personne ne sait ce qu'il est venu chercher à Mireval — pas même lui, jusqu'à ce que la forêt le lui rappelle.",
+        "Son voyage n'est pas une quête d'or ni de gloire, mais une confrontation avec une mémoire qu'il a fuie."
+      ],
+      "aliases": ["Le voyageur solitaire"],
+      "tags": ["protagoniste", "humain"],
+      "related": ["foret-maudite--location--mireval", "foret-maudite--character--esprit", "foret-maudite--character--vieille"]
+    },
+    {
+      "id": "foret-maudite--character--esprit",
+      "category": "character",
+      "name": "L'Esprit de la Forêt",
+      "summary": "Présence ancienne qui veille sur chaque arbre, chaque racine, chaque ombre de Mireval.",
+      "description": [
+        "Rôle : Gardien — antagoniste ou allié, selon ce que le visiteur lui offre.",
+        "L'Esprit n'a pas de forme fixe : il se compose de feuilles, d'ombre et de vent entrelacés, et sa voix vient de partout à la fois, grave comme du bois qui craque sous la neige.",
+        "Il entend tout ce que la forêt entend. « Les arbres ne mentent pas. Ils me disent tout. »",
+        "Il méprise ceux qui fuient et s'intéresse à ceux qui osent rester. À qui sait demander un passage plutôt que de l'exiger, il accorde parfois sa protection."
+      ],
+      "aliases": ["Le Gardien", "La voix de Mireval"],
+      "tags": ["antagoniste", "esprit", "gardien"],
+      "related": ["foret-maudite--location--coeur-foret", "foret-maudite--event--malediction"]
+    },
+    {
+      "id": "foret-maudite--character--vieille",
+      "category": "character",
+      "name": "La Vieille Tisserande",
+      "summary": "Sorcière exilée vivant au cœur des bois ; elle sait des choses que les autres ont oubliées.",
+      "description": [
+        "Rôle : Alliée ambiguë.",
+        "Aveugle aux yeux entièrement blancs, elle habite une cabane encombrée d'herbes séchées, de fioles et de livres dont les titres se lisent à l'envers.",
+        "Elle connaît l'emplacement du cœur de la forêt et la nature de son gardien.",
+        "À qui sait l'écouter, elle confie une fiole de lumière dorée — « pour apprivoiser ce qui garde ». À qui la repousse, elle rappelle que « c'est ce que disent tous ceux qui ne reviennent pas »."
+      ],
+      "aliases": ["La Tisserande", "La sorcière exilée"],
+      "tags": ["allié", "sorcière", "magie"],
+      "related": ["foret-maudite--location--cabane", "foret-maudite--location--coeur-foret"]
+    },
+    {
+      "id": "foret-maudite--location--mireval",
+      "category": "location",
+      "name": "La Forêt de Mireval",
+      "summary": "Une forêt dont nul n'est revenu, où il fait toujours crépuscule.",
+      "description": [
+        "Au nord d'Elarion s'étend Mireval, signalée par une seule pancarte rongée par le temps : « FORÊT DE MIREVAL — DANGER — DEMI-TOUR ».",
+        "La lumière du jour y disparaît en quelques pas ; les voyageurs y avancent dans un crépuscule perpétuel.",
+        "Des champignons luminescents poussent en cercles parfaits, des lucioles géantes guident — ou égarent — les marcheurs, et le paysage se répète en boucle pour ceux qui s'y perdent.",
+        "La forêt ne tue pas toujours. Parfois, elle se contente de garder ce que les hommes refusent d'affronter."
+      ],
+      "aliases": ["Mireval"],
+      "tags": ["forêt", "lieu maudit"],
+      "related": ["foret-maudite--location--coeur-foret", "foret-maudite--location--ruisseau-noir", "foret-maudite--event--malediction"]
+    },
+    {
+      "id": "foret-maudite--location--coeur-foret",
+      "category": "location",
+      "name": "Le Cœur de la Forêt",
+      "summary": "Un arbre blanc colossal, vieux comme la mémoire, dont l'écorce porte des centaines de visages.",
+      "description": [
+        "Au centre d'une clairière se dresse un arbre unique, blanc comme un os, dont les branches touchent les nuages bas.",
+        "Son écorce est couverte de visages — des centaines — que les visiteurs reconnaissent parfois.",
+        "L'arbre pulse comme un cœur et garde « quelque chose qui t'appartient, ou qui a appartenu à quelqu'un que tu aimais ».",
+        "C'est là que se joue le choix final : prendre ce qui est gardé, renoncer, ou offrir la lumière dorée pour libérer la forêt."
+      ],
+      "aliases": ["L'Arbre Blanc", "L'arbre-cœur"],
+      "tags": ["arbre", "sanctuaire", "lieu clé"],
+      "related": ["foret-maudite--character--esprit", "foret-maudite--location--mireval"]
+    },
+    {
+      "id": "foret-maudite--location--ruisseau-noir",
+      "category": "location",
+      "name": "Le Ruisseau Noir",
+      "summary": "Une eau d'encre, claire jusqu'au fond, qu'enjambe un pont aux visages sculptés.",
+      "description": [
+        "L'eau est noire comme de l'encre mais parfaitement transparente : on y voit le fond jonché de pièces, d'os et de miroirs brisés.",
+        "Au-delà du ruisseau, la forêt change — les arbres deviennent blancs, morts depuis longtemps.",
+        "Un vieux pont de bois l'enjambe ; sur chaque pilier, un visage est sculpté, et ces visages tournent leurs yeux de pierre vers ceux qui traversent.",
+        "L'Esprit conseille parfois aux voyageurs pacifiques de « suivre l'eau »."
+      ],
+      "aliases": ["Le pont aux visages"],
+      "tags": ["eau", "frontière", "passage"],
+      "related": ["foret-maudite--location--mireval", "foret-maudite--location--coeur-foret"]
+    },
+    {
+      "id": "foret-maudite--location--cabane",
+      "category": "location",
+      "name": "La Cabane de la Tisserande",
+      "summary": "Un refuge dissimulé dans les bois, d'où s'échappe toujours un peu de fumée.",
+      "description": [
+        "Au détour d'un sentier serpentant entre des chênes centenaires se trouve une cabane dont la cheminée fume en permanence.",
+        "L'intérieur déborde d'herbes séchées, de fioles et de grimoires aux titres inversés ; le thé y sent le pin et le soufre.",
+        "C'est la demeure de la Vieille Tisserande, l'un des rares endroits de Mireval où un voyageur peut s'asseoir et entendre la vérité."
+      ],
+      "tags": ["refuge", "habitation"],
+      "related": ["foret-maudite--character--vieille"]
+    },
+    {
+      "id": "foret-maudite--era--age-murmures",
+      "category": "era",
+      "name": "L'Âge des Murmures",
+      "summary": "L'époque lointaine où la forêt cessa d'être une forêt ordinaire pour devenir gardienne.",
+      "description": [
+        "Avant l'Âge des Murmures, Mireval n'était qu'un bois comme les autres aux confins d'Elarion.",
+        "Puis vint le temps où les arbres commencèrent à retenir les voix, les visages et les souvenirs de ceux qui s'y aventuraient.",
+        "Depuis, on ne mesure plus le temps à Mireval en années mais en silences : ici, il fait toujours crépuscule, et la mémoire ne vieillit pas."
+      ],
+      "tags": ["époque", "lore"],
+      "related": ["foret-maudite--event--malediction", "foret-maudite--location--mireval"]
+    },
+    {
+      "id": "foret-maudite--event--malediction",
+      "category": "event",
+      "name": "La Malédiction de Mireval",
+      "summary": "Le pacte ancien par lequel la forêt se mit à garder les mémoires des hommes.",
+      "description": [
+        "Nul ne raconte la malédiction de la même manière, mais tous s'accordent sur le résultat : la Forêt de Mireval avale ceux qui entrent, et conserve dans son cœur ce qu'ils tentaient d'oublier.",
+        "Les visages gravés dans l'écorce de l'Arbre Blanc seraient ceux des voyageurs qui ne sont jamais ressortis.",
+        "On dit que la malédiction peut être levée — non par la force, mais par un don sans contrepartie. « Cela faisait longtemps que personne n'avait su donner sans prendre. »"
+      ],
+      "tags": ["événement", "malédiction", "lore"],
+      "related": ["foret-maudite--character--esprit", "foret-maudite--location--coeur-foret"]
+    }
+  ]
+}
