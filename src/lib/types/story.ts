@@ -21,6 +21,7 @@ export interface Scene {
     id: string;
     text: string | string[];
     speaker?: string;
+    image?: string;
     choices: Choice[];
     isEnding?: boolean;
     endingType?: "good" | "bad" | "neutral";

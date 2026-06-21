@@ -8,6 +8,7 @@ export interface KnowledgeEntry {
     description: string | string[];
     universe: string;
     storyId?: string;
+    image?: string;
     aliases?: string[];
     tags?: string[];
     related?: string[];

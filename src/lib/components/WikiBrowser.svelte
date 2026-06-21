@@ -169,6 +169,16 @@
                 </p>
             {/if}
 
+            {#if currentEntry.image}
+                <div class="my-3 border border-terminal-dim/40 rounded overflow-hidden">
+                    <img
+                        src={currentEntry.image}
+                        alt={currentEntry.name}
+                        class="w-full max-h-56 object-cover grayscale opacity-80"
+                    />
+                </div>
+            {/if}
+
             <div class="space-y-2 text-sm leading-relaxed text-terminal-green mt-3">
                 {#each descriptionLines( currentEntry.description ) as paragraph ( paragraph )}
                     <p class="whitespace-pre-wrap">{paragraph}</p>

@@ -30,9 +30,11 @@ export interface TerminalLine {
       | "ending"
       | "error"
       | "title"
-      | "separator";
+      | "separator"
+      | "image";
     speaker?: string;
     choiceIndex?: number;
+    imageSrc?: string;
 }
 
 let lineId = 0;
@@ -183,6 +185,11 @@ function createTerminalStore()
 
         lines.push( { text: "─".repeat( 60 ), type: "separator" } );
 
+        if ( scene.image )
+        {
+            lines.push( { text: "", type: "image", imageSrc: scene.image } );
+        }
+
         if ( scene.speaker )
         {
             const char = story.characters.find( ( c ) => c.id === scene.speaker );
@@ -203,7 +210,11 @@ function createTerminalStore()
             }
         }
 
-        if ( !scene.isEnding && scene.choices.length > 0 )
+        if ( scene.isEnding )
+        {
+            lines.push( { text: "", type: "narrator" }, { text: "[ENTRÉE] Revenir au menu", type: "system" } );
+        }
+        else if ( scene.choices.length > 0 )
         {
             lines.push(
                 { text: "", type: "narrator" },
@@ -226,10 +237,6 @@ function createTerminalStore()
             } );
 
             lines.push( { text: "", type: "narrator" }, { text: "[ÉCHAP] Menu principal", type: "system" } );
-        }
-        else if ( scene.isEnding )
-        {
-            lines.push( { text: "", type: "narrator" }, { text: "[ENTRÉE] Revenir au menu", type: "system" } );
         }
 
         update( ( s ) => ( { ...s, lines: [ ...s.lines, ...lines.map( ( l ) => ( { ...l, id: nextId() } ) ) ] } ) );
