@@ -1,7 +1,7 @@
 import { writable, get } from "svelte/store";
 import type { GameState, Story, Scene, Choice, StoryFilters } from "$lib/types/story";
 import type { KnowledgeCategory, WikiState } from "$lib/types/knowledge";
-import { getStory, storiesMeta, filterStories, availableGenres, availableLanguages } from "$lib/data";
+import { getStory, availableGenres, availableLanguages } from "$lib/data";
 import { categories, filterEntries, getEntry } from "$lib/data/knowledge";
 
 export type TerminalView = "boot" | "menu" | "story-info" | "story" | "wiki";
@@ -60,20 +60,10 @@ function createTerminalStore()
         currentStory: null,
         lines: [],
         awaitingInput: false,
-        wiki: { category: "universe", universe: null, selectedIndex: 0, selectedEntryId: null }
+        wiki: { category: "universe", language: null, universe: null, selectedIndex: 0, selectedEntryId: null }
     };
 
     const { subscribe, update } = writable<TerminalStore>( initial );
-
-    function visibleStories()
-    {
-        return filterStories( storiesMeta, get( { subscribe } ).filters );
-    }
-
-    function addLine( line: Omit<TerminalLine, "id"> )
-    {
-        update( ( s ) => ( { ...s, lines: [ ...s.lines, { ...line, id: nextId() } ] } ) );
-    }
 
     function addLines( newLines: Omit<TerminalLine, "id">[] )
     {
@@ -304,7 +294,7 @@ function createTerminalStore()
     {
         const { wiki } = get( { subscribe } );
 
-        return filterEntries( wiki.category, wiki.universe );
+        return filterEntries( wiki.category, wiki.language, wiki.universe );
     }
 
     function openWiki()
@@ -341,6 +331,16 @@ function createTerminalStore()
             const next = ids[ ( idx + direction + ids.length ) % ids.length ];
 
             return { ...s, wiki: { ...s.wiki, category: next, selectedIndex: 0, selectedEntryId: null } };
+        } );
+    }
+
+    function setWikiLanguage( language: string )
+    {
+        update( ( s ) =>
+        {
+            const next = s.wiki.language === language ? null : language;
+
+            return { ...s, wiki: { ...s.wiki, language: next, universe: null, selectedIndex: 0, selectedEntryId: null } };
         } );
     }
 
@@ -394,7 +394,8 @@ function createTerminalStore()
         const entry = getEntry( id );
         if ( !entry ) return;
 
-        const entries = filterEntries( entry.category, get( { subscribe } ).wiki.universe );
+        const { wiki } = get( { subscribe } );
+        const entries = filterEntries( entry.category, wiki.language, wiki.universe );
         const idx = entries.findIndex( ( e ) => e.id === id );
 
         update( ( s ) => ( {
@@ -411,9 +412,7 @@ function createTerminalStore()
     return {
         subscribe,
         update,
-        addLine,
         startMenu,
-        visibleStories,
         setFilter,
         cycleGenre,
         cycleLanguage,
@@ -422,11 +421,11 @@ function createTerminalStore()
         startStory,
         makeChoice,
         goBack,
-        wikiVisibleEntries,
         openWiki,
         closeWiki,
         setWikiCategory,
         cycleWikiCategory,
+        setWikiLanguage,
         setWikiUniverse,
         navigateWiki,
         moveWikiSelection,

@@ -2,14 +2,19 @@
     import { terminal } from "$lib/stores/terminal";
     import { categories,
         availableUniverses,
+        availableWikiLanguages,
         filterEntries,
         getEntry,
         countByCategory,
-        categoryLabel } from "$lib/data/knowledge";
+        categoryLabel,
+        getLanguageForUniverse } from "$lib/data/knowledge";
 
     let wiki = $derived( $terminal.wiki );
-    let entries = $derived( filterEntries( wiki.category, wiki.universe ) );
+    let entries = $derived( filterEntries( wiki.category, wiki.language, wiki.universe ) );
     let currentEntry = $derived( wiki.selectedEntryId ? getEntry( wiki.selectedEntryId ) : null );
+    let filteredUniverses = $derived( wiki.language
+        ? availableUniverses.filter( ( u ) => getLanguageForUniverse( u ) === wiki.language )
+        : availableUniverses );
 
     const categoryColors: Record<string, string> = {
         universe: "text-terminal-cyan",
@@ -33,11 +38,18 @@
 <div class="flex-1 overflow-y-auto px-4 py-2 font-mono scrollbar-terminal">
     <div class="mb-4 text-center select-none">
         <pre class="text-terminal-cyan text-xs leading-tight opacity-80">
- ____    _    ____  _____   ____  _____   ____    _    ___ ____
-| __ )  / \  / ___|| ____| |  _ \| ____| / ___|  / \  |_ _/ ___|
-|  _ \ / _ \ \___ \|  _|   | | | |  _|  | |     / _ \  | |\___ \
-| |_) / ___ \ ___) | |___  | |_| | |___ | |___ / ___ \ | | ___) |
-|____/_/   \_\____/|_____| |____/|_____| \____/_/   \_\___|____/
+ _____ _____ ____  __  __ ___ _   _    _    _
+|_   _| ____|  _ \|  \/  |_ _| \ | |  / \  | |
+  | | |  _| | |_) | |\/| || ||  \| | / _ \ | |
+     | | | |___|  _ &lt;| |  | || || |\  |/ ___ \| |___
+      |_| |_____|_| \_\_|  |_|___|_| \_/_/   \_\_____|
+       </pre>
+        <pre class="text-terminal-cyan text-xs leading-tight opacity-80">
+     ____ _____ ___  ____  ___ _____ ____
+    / ___|_   _/ _ \|  _ \|_ _| ____/ ___|
+    \___ \ | || | | | |_) || ||  _| \___ \
+      ___) || || |_| |  _ &lt; | || |___ ___) |
+    |____/ |_| \___/|_| \_\___|_____|____/
         </pre>
 
         <p class="text-terminal-dim text-xs mt-2 tracking-widest">— ENCYCLOPÉDIE DES UNIVERS INTERACTIFS —</p>
@@ -56,7 +68,22 @@
                         onclick={() => terminal.setWikiCategory( cat.id )}
                     >
                         {cat.icon} {cat.label}
-                        <span class="opacity-50">({countByCategory( cat.id, wiki.universe )})</span>
+                        <span class="opacity-50">({countByCategory( cat.id, wiki.language, wiki.universe )})</span>
+                    </button>
+                {/each}
+            </div>
+
+            <div class="flex items-center gap-2 flex-wrap">
+                <span class="text-terminal-dim text-xs w-20 shrink-0 select-none">LANGUE</span>
+
+                {#each availableWikiLanguages as language ( language )}
+                    <button
+                        class="text-xs px-2 py-0.5 rounded border transition-colors duration-100 {wiki.language === language
+                            ? "border-terminal-green bg-terminal-green/15 text-terminal-white"
+                            : "border-terminal-dim/40 text-terminal-dim hover:border-terminal-dim hover:text-terminal-white"}"
+                        onclick={() => terminal.setWikiLanguage( language )}
+                    >
+                        {language}
                     </button>
                 {/each}
             </div>
@@ -64,7 +91,7 @@
             <div class="flex items-center gap-2 flex-wrap">
                 <span class="text-terminal-dim text-xs w-20 shrink-0 select-none">UNIVERS</span>
 
-                {#each availableUniverses as universe ( universe )}
+                {#each filteredUniverses as universe ( universe )}
                     <button
                         class="text-xs px-2 py-0.5 rounded border transition-colors duration-100 {wiki.universe === universe
                             ? "border-terminal-green bg-terminal-green/15 text-terminal-white"

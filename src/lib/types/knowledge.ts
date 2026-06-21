@@ -27,6 +27,7 @@ export interface CategoryMeta {
 
 export interface WikiState {
     category: KnowledgeCategory;
+    language: string | null;
     universe: string | null;
     selectedIndex: number;
     selectedEntryId: string | null;
