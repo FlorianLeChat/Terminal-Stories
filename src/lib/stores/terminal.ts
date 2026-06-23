@@ -4,7 +4,7 @@ import type { KnowledgeCategory, WikiState } from "$lib/types/knowledge";
 import { getStory, availableGenres, availableLanguages } from "$lib/data";
 import { categories, filterEntries, getEntry } from "$lib/data/knowledge";
 import { computeStoryStats } from "$lib/utilities/readingTime";
-import { saveProgress, loadSave, deleteSave, hasSave, saveDiscoveredEnding } from "$lib/utilities/saveService";
+import { saveProgress, loadSave, deleteSave, hasSave, saveDiscoveredEnding, saveActiveSession, clearActiveSession } from "$lib/utilities/saveService";
 
 export type TerminalView = "boot" | "menu" | "story-info" | "story" | "wiki";
 
@@ -126,6 +126,7 @@ const createTerminalStore = () =>
      */
     const startMenu = () =>
     {
+        clearActiveSession();
         clearLines();
         update( ( s ) => ( { ...s, view: "menu", selectedStoryIndex: 0, awaitingInput: true } ) );
     };
@@ -285,6 +286,7 @@ const createTerminalStore = () =>
             awaitingInput: true
         } ) );
 
+        saveActiveSession( storyId );
         renderScene( story, story.startScene, gameState );
     };
 
@@ -325,6 +327,7 @@ const createTerminalStore = () =>
             awaitingInput: true
         } ) );
 
+        saveActiveSession( storyId );
         renderScene( story, save.currentScene, gameState );
     };
 
@@ -480,6 +483,7 @@ const createTerminalStore = () =>
             deleteSave( state.gameState.storyId );
         }
 
+        clearActiveSession();
         update( ( s ) => ( { ...s, view: "menu", currentStory: null, gameState: null } ) );
         startMenu();
     };

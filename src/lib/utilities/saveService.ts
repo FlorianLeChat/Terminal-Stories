@@ -138,3 +138,48 @@ export const saveDiscoveredEnding = ( storyId: string, sceneId: string ): void =
     discovered.add( sceneId );
     localStorage.setItem( endingsKey( storyId ), JSON.stringify( Array.from( discovered ) ) );
 };
+
+// sessionStorage key tracking which story is currently being played.
+// sessionStorage is intentional: survives F5 but clears when the tab is closed.
+const activeSessionKey = "terminal-stories:active-session";
+
+/**
+ * Records the story currently being played so the session can be restored on
+ * page refresh.
+ *
+ * @param storyId - The id of the active story.
+ * @author Claude
+ */
+export const saveActiveSession = ( storyId: string ): void =>
+{
+    if ( globalThis.window === undefined ) return;
+
+    sessionStorage.setItem( activeSessionKey, storyId );
+};
+
+/**
+ * Returns the id of the story that was active when the page was last loaded,
+ * or `null` if no session is recorded.
+ *
+ * @returns The active story id, or `null`.
+ * @author Claude
+ */
+export const loadActiveSession = (): string | null =>
+{
+    if ( globalThis.window === undefined ) return null;
+
+    return sessionStorage.getItem( activeSessionKey );
+};
+
+/**
+ * Clears the active session record (call when the player voluntarily leaves a
+ * story and returns to the menu).
+ *
+ * @author Claude
+ */
+export const clearActiveSession = (): void =>
+{
+    if ( globalThis.window === undefined ) return;
+
+    sessionStorage.removeItem( activeSessionKey );
+};

@@ -2,7 +2,7 @@
     import { onMount } from "svelte";
     import { terminal } from "$lib/stores/terminal";
     import { storiesMeta, filterStories } from "$lib/data";
-    import { hasSave } from "$lib/utilities/saveService";
+    import { hasSave, loadActiveSession } from "$lib/utilities/saveService";
     import BootSequence from "./BootSequence.svelte";
     import StoryMenu from "./StoryMenu.svelte";
     import TerminalOutput from "./TerminalOutput.svelte";
@@ -28,13 +28,24 @@
     );
 
     /**
-     * Leaves the boot screen and shows the main menu.
+     * Leaves the boot screen: resumes the active story if one was interrupted by
+     * a page refresh, otherwise shows the main menu.
      *
      * @author Claude
      */
     const handleBoot = () =>
     {
-        terminal.startMenu();
+        const activeStoryId = loadActiveSession();
+        const canResume = activeStoryId !== null && hasSave( activeStoryId );
+
+        if ( canResume )
+        {
+            terminal.selectStory( activeStoryId );
+        }
+        else
+        {
+            terminal.startMenu();
+        }
     };
 
     /**
