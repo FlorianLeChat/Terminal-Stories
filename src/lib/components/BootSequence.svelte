@@ -69,7 +69,7 @@
 
 <svelte:window onkeydown={handleKey} />
 
-<button class="flex-1 text-left flex flex-col justify-center px-8 font-mono cursor-pointer select-none" onclick={handleClick}>
+<button class="flex-1 text-left flex flex-col justify-center px-8 font-mono select-none" onclick={handleClick}>
     {#each bootLines as line, i ( i )}
         {#if visible[ i ]}
             <div
