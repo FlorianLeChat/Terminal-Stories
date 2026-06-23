@@ -24,11 +24,25 @@
         event: "text-red-400"
     };
 
+    /**
+     * Returns the Tailwind text-color class for a knowledge category.
+     *
+     * @param category - The category identifier.
+     * @returns The CSS class used to color that category.
+     * @author Claude
+     */
     function color( category: string ): string
     {
         return categoryColors[ category ] ?? "text-terminal-green";
     }
 
+    /**
+     * Normalizes an entry description into a list of paragraphs.
+     *
+     * @param text - The description, as a single string or already split.
+     * @returns The description as an array of paragraphs.
+     * @author Claude
+     */
     function descriptionLines( text: string | string[] ): string[]
     {
         return Array.isArray( text ) ? text : [ text ];

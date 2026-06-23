@@ -9,6 +9,8 @@
 
     let container: HTMLElement;
 
+    // Auto-scroll to the bottom whenever new lines are appended, so the latest
+    // narration stays in view like a real terminal.
     $effect( () =>
     {
         void lines.length;
@@ -19,6 +21,13 @@
         }
     } );
 
+    /**
+     * Maps a terminal line type to its Tailwind styling classes.
+     *
+     * @param type - The kind of line being rendered.
+     * @returns The CSS classes for that line type.
+     * @author Claude
+     */
     function lineClass( type: TerminalLine[ "type" ] ): string
     {
         const map: Record<TerminalLine[ "type" ], string> = {

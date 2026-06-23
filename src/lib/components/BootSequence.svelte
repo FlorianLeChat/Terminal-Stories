@@ -22,9 +22,12 @@
         { text: "Appuyez sur ENTRÉE pour commencer.", delay: 1600, blink: true }
     ];
 
+    // Reveal flag per boot line, and whether the whole sequence has finished.
     let visible = $state( bootLines.map( () => false ) );
     let done = $state( false );
 
+    // Reveal each boot line on its own delay to fake a system booting up; the
+    // last line flips `done`, after which input is accepted.
     onMount( () =>
     {
         bootLines.forEach( ( _line, i ) =>
@@ -41,11 +44,23 @@
         } );
     } );
 
+    /**
+     * Advances past the boot screen when ENTER is pressed, once the sequence
+     * has finished.
+     *
+     * @param e - The keyboard event.
+     * @author Claude
+     */
     function handleKey( e: KeyboardEvent )
     {
         if ( done && e.key === "Enter" ) ondone();
     }
 
+    /**
+     * Advances past the boot screen on click, once the sequence has finished.
+     *
+     * @author Claude
+     */
     function handleClick()
     {
         if ( done ) ondone();

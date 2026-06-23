@@ -12,21 +12,45 @@
     let selectedIndex = $derived( $terminal.selectedStoryIndex );
     let visibleStories = $derived( filterStories( storiesMeta, $terminal.filters ) );
 
+    /**
+     * Leaves the boot screen and shows the main menu.
+     *
+     * @author Claude
+     */
     function handleBoot()
     {
         terminal.startMenu();
     }
 
+    /**
+     * Opens the info screen for the chosen story.
+     *
+     * @param id - The id of the selected story.
+     * @author Claude
+     */
     function handleMenuSelect( id: string )
     {
         terminal.selectStory( id );
     }
 
+    /**
+     * Updates the highlighted story in the menu (e.g. on hover).
+     *
+     * @param index - The index of the story to highlight.
+     * @author Claude
+     */
     function handleMenuNavigate( index: number )
     {
         terminal.update( ( s ) => ( { ...s, selectedStoryIndex: index } ) );
     }
 
+    /**
+     * Global key handler: dispatches the event to the handler for the current
+     * view. Boot input is handled by the boot component itself.
+     *
+     * @param e - The keyboard event.
+     * @author Claude
+     */
     function handleKeydown( e: KeyboardEvent )
     {
         if ( view === "boot" ) return;
@@ -53,6 +77,13 @@
         }
     }
 
+    /**
+     * Handles keys on the main menu: filter shortcuts (G/L/C/W), arrow
+     * navigation, ENTER to open a story, and number keys for direct access.
+     *
+     * @param e - The keyboard event.
+     * @author Claude
+     */
     function handleMenuKey( e: KeyboardEvent )
     {
         const key = e.key.toLowerCase();
@@ -113,6 +144,13 @@
         }
     }
 
+    /**
+     * Handles keys on the story-info screen: ENTER starts the story, ESC
+     * returns to the menu.
+     *
+     * @param e - The keyboard event.
+     * @author Claude
+     */
     function handleInfoKey( e: KeyboardEvent )
     {
         if ( e.key === "Enter" && $terminal.currentStory )
@@ -125,6 +163,13 @@
         }
     }
 
+    /**
+     * Handles keys in the wiki: ESC steps back (entry → list → menu), arrows
+     * change category and navigate entries, ENTER opens the highlighted entry.
+     *
+     * @param e - The keyboard event.
+     * @author Claude
+     */
     function handleWikiKey( e: KeyboardEvent )
     {
         const wiki = $terminal.wiki;
@@ -174,6 +219,13 @@
         }
     }
 
+    /**
+     * Handles keys during story playback: number keys pick a choice, ESC
+     * returns to the menu, and ENTER on an ending returns to the menu.
+     *
+     * @param e - The keyboard event.
+     * @author Claude
+     */
     function handleStoryKey( e: KeyboardEvent )
     {
         if ( e.key === "Escape" )
@@ -195,6 +247,7 @@
         }
     }
 
+    // Grab focus on mount so keyboard input is captured without a click first.
     onMount( () =>
     {
         window.focus();

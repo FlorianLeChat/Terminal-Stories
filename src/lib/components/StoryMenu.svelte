@@ -23,6 +23,14 @@
         "Detective": "text-yellow-400"
     };
 
+    /**
+     * Returns the Tailwind text-color class for a genre, falling back to the
+     * dim terminal color for unknown genres.
+     *
+     * @param genre - The story genre.
+     * @returns The CSS class to color the genre label.
+     * @author Claude
+     */
     function genreColor( genre: string ): string
     {
         return genreColors[ genre ] ?? "text-terminal-dim";
