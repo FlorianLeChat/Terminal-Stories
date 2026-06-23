@@ -220,7 +220,7 @@
                                 {/if}
 
                                 <span class="text-terminal-cyan text-xs shrink-0 ml-auto" title="Temps de lecture estimé d'une partie">
-                                    ⏱ {formatReadingTime( story.stats.minutes )}
+                                    ⏱ {formatReadingTime( story.stats.minutes )} / partie
                                 </span>
                             </span>
 
@@ -233,7 +233,7 @@
 
                                 <span class="flex items-center gap-3 mt-1 text-terminal-dim text-xs opacity-70">
                                     <span title="Nombre de scènes">⌬ {story.stats.scenes} entrées</span>
-                                    <span title="Temps pour explorer tout le contenu">⧉ {formatReadingTime( story.stats.fullMinutes )} au total</span>
+                                    <span title="Temps pour explorer tout le contenu">⧉ {formatReadingTime( story.stats.fullMinutes )} pour tout explorer</span>
 
                                     {#if storyCompletion( story.id, story.stats.scenes ) !== null}
                                         {@const pct = storyCompletion( story.id, story.stats.scenes ) ?? 0}
@@ -247,11 +247,13 @@
                                 </span>
 
                                 <span
-                                    class="flex items-center gap-1 mt-1 font-mono text-2xl"
+                                    class="flex items-center gap-1 mt-1 font-mono"
                                     title="Fins découvertes : {found.size} / {story.endingIds.length}"
                                 >
+                                    <span class="text-terminal-dim text-xs opacity-70 mr-1">{story.endingIds.length} fin{story.endingIds.length > 1 ? "s" : ""} :</span>
+
                                     {#each story.endingIds as endingId, idx ( endingId )}
-                                        <span class="{found.has( endingId ) ? "text-terminal-green" : "text-terminal-dim"}">{endingGlyph( idx + 1 )}</span>
+                                        <span class="text-2xl {found.has( endingId ) ? "text-terminal-green" : "text-terminal-dim"}">{endingGlyph( idx + 1 )}</span>
                                     {/each}
                                 </span>
 

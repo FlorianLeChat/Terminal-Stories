@@ -3,7 +3,7 @@ import type { GameState, Story, Scene, Choice, StoryFilters } from "$lib/types/s
 import type { KnowledgeCategory, WikiState } from "$lib/types/knowledge";
 import { getStory, availableGenres, availableLanguages } from "$lib/data";
 import { categories, filterEntries, getEntry } from "$lib/data/knowledge";
-import { computeStoryStats, formatReadingTime } from "$lib/utilities/readingTime";
+import { computeStoryStats } from "$lib/utilities/readingTime";
 import { saveProgress, loadSave, deleteSave, hasSave, saveDiscoveredEnding } from "$lib/utilities/saveService";
 
 export type TerminalView = "boot" | "menu" | "story-info" | "story" | "wiki";
@@ -232,14 +232,7 @@ const createTerminalStore = () =>
             { text: story.title, type: "title" },
             { text: `${ story.genre } — ${ story.universe }`, type: "system" },
             { text: "─".repeat( 60 ), type: "separator" },
-            { text: story.description, type: "narrator" },
-            { text: "", type: "narrator" },
-            { text: `Personnages : ${ story.characters.map( ( c ) => c.name ).join( ", " ) }`, type: "system" },
-            { text: `Tags : ${ story.tags.join( ", " ) }`, type: "system" },
-            {
-                text: `Lecture : ${ formatReadingTime( stats.minutes ) } / partie · ${ stats.scenes } entrées · ${ stats.endings } fin${ stats.endings > 1 ? "s" : "" } · ${ formatReadingTime( stats.fullMinutes ) } pour tout explorer`,
-                type: "system"
-            }
+            { text: story.description, type: "narrator" }
         ];
 
         if ( saveExists )
