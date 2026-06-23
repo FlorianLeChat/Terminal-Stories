@@ -3,6 +3,7 @@ import type { GameState, Story, Scene, Choice, StoryFilters } from "$lib/types/s
 import type { KnowledgeCategory, WikiState } from "$lib/types/knowledge";
 import { getStory, availableGenres, availableLanguages } from "$lib/data";
 import { categories, filterEntries, getEntry } from "$lib/data/knowledge";
+import { computeStoryStats, formatReadingTime } from "$lib/utilities/readingTime";
 
 export type TerminalView = "boot" | "menu" | "story-info" | "story" | "wiki";
 
@@ -136,6 +137,8 @@ function createTerminalStore()
             awaitingInput: true
         } ) );
 
+        const stats = computeStoryStats( story );
+
         addLines( [
             { text: "═".repeat( 60 ), type: "separator" },
             { text: story.title, type: "title" },
@@ -145,6 +148,10 @@ function createTerminalStore()
             { text: "", type: "narrator" },
             { text: `Personnages : ${ story.characters.map( ( c ) => c.name ).join( ", " ) }`, type: "system" },
             { text: `Tags : ${ story.tags.join( ", " ) }`, type: "system" },
+            {
+                text: `Lecture : ${ formatReadingTime( stats.minutes ) } / partie · ${ stats.scenes } entrées · ${ stats.endings } fin${ stats.endings > 1 ? "s" : "" } · ${ formatReadingTime( stats.fullMinutes ) } pour tout explorer`,
+                type: "system"
+            },
             { text: "═".repeat( 60 ), type: "separator" },
             { text: "[ENTRÉE] Commencer l'histoire   [ÉCHAP] Retour au menu", type: "system" }
         ] );

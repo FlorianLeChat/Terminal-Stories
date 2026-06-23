@@ -37,14 +37,14 @@
 
 <div class="flex-1 overflow-y-auto px-4 py-2 font-mono scrollbar-terminal">
     <div class="mb-4 text-center select-none">
-        <pre class="text-terminal-cyan text-xs leading-tight opacity-80">
+        <pre class="text-terminal-green text-xs leading-tight opacity-80">
  _____ _____ ____  __  __ ___ _   _    _    _
 |_   _| ____|  _ \|  \/  |_ _| \ | |  / \  | |
   | | |  _| | |_) | |\/| || ||  \| | / _ \ | |
      | | | |___|  _ &lt;| |  | || || |\  |/ ___ \| |___
       |_| |_____|_| \_\_|  |_|___|_| \_/_/   \_\_____|
        </pre>
-        <pre class="text-terminal-cyan text-xs leading-tight opacity-80">
+        <pre class="text-terminal-green text-xs leading-tight opacity-80">
      ____ _____ ___  ____  ___ _____ ____
     / ___|_   _/ _ \|  _ \|_ _| ____/ ___|
     \___ \ | || | | | |_) || ||  _| \___ \

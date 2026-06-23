@@ -1,4 +1,5 @@
 import type { Story, StoryMeta, StoryFilters } from "$lib/types/story";
+import { computeStoryStats } from "$lib/utilities/readingTime";
 
 import foretMaudite from "./stories/foret-maudite.json";
 import stationTerminus from "./stories/station-terminus.json";
@@ -6,15 +7,21 @@ import dernierAppel from "./stories/dernier-appel.json";
 
 export const stories: Story[] = [ foretMaudite as Story, stationTerminus as Story, dernierAppel as Story ];
 
-export const storiesMeta: StoryMeta[] = stories.map( ( { id, title, genre, language, universe, description, tags } ) => ( {
-    id,
-    title,
-    genre,
-    language,
-    universe,
-    description,
-    tags
-} ) );
+export const storiesMeta: StoryMeta[] = stories.map( ( story ) =>
+{
+    const { id, title, genre, language, universe, description, tags } = story;
+
+    return {
+        id,
+        title,
+        genre,
+        language,
+        universe,
+        description,
+        tags,
+        stats: computeStoryStats( story )
+    };
+} );
 
 export function getStory( id: string ): Story | undefined
 {

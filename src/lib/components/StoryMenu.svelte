@@ -1,6 +1,7 @@
 <script lang="ts">
     import { terminal } from "$lib/stores/terminal";
     import { storiesMeta, filterStories, availableGenres, availableLanguages } from "$lib/data";
+    import { formatReadingTime } from "$lib/utilities/readingTime";
 
     interface Props {
         selectedIndex?: number;
@@ -126,6 +127,9 @@
                                 <span class="text-terminal-white font-bold text-sm">{story.title}</span>
                                 <span class="text-xs {genreColor( story.genre )} shrink-0">[{story.genre}]</span>
                                 <span class="text-terminal-dim text-xs shrink-0">· {story.language}</span>
+                                <span class="text-terminal-cyan text-xs shrink-0 ml-auto" title="Temps de lecture estimé d'une partie">
+                                    ⏱ {formatReadingTime( story.stats.minutes )}
+                                </span>
                             </div>
 
                             <div class="text-terminal-dim text-xs mt-0.5">{story.universe}</div>
@@ -133,6 +137,12 @@
                             {#if i === selectedIndex}
                                 <div class="text-terminal-green text-xs mt-1 opacity-80 leading-relaxed">
                                     {story.description}
+                                </div>
+
+                                <div class="flex items-center gap-3 mt-1 text-terminal-dim text-xs opacity-70">
+                                    <span title="Nombre de scènes">⌬ {story.stats.scenes} entrées</span>
+                                    <span title="Nombre de fins possibles">✦ {story.stats.endings} fin{story.stats.endings > 1 ? "s" : ""}</span>
+                                    <span title="Temps pour explorer tout le contenu">⧉ {formatReadingTime( story.stats.fullMinutes )} au total</span>
                                 </div>
 
                                 <div class="flex gap-1 mt-1 flex-wrap">
