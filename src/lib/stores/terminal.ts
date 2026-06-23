@@ -4,6 +4,7 @@ import type { KnowledgeCategory, WikiState } from "$lib/types/knowledge";
 import { getStory, availableGenres, availableLanguages } from "$lib/data";
 import { categories, filterEntries, getEntry } from "$lib/data/knowledge";
 import { computeStoryStats, formatReadingTime } from "$lib/utilities/readingTime";
+import { saveProgress, loadSave, deleteSave, hasSave } from "$lib/utilities/saveService";
 
 export type TerminalView = "boot" | "menu" | "story-info" | "story" | "wiki";
 
@@ -32,10 +33,13 @@ export interface TerminalLine {
       | "error"
       | "title"
       | "separator"
-      | "image";
+      | "image"
+      | "save";
     speaker?: string;
     choiceIndex?: number;
     imageSrc?: string;
+    /** Completion percentage (0–100) carried by lines of type "save". */
+    savePercent?: number;
 }
 
 // Monotonic counter giving every rendered terminal line a stable, unique key.
@@ -197,6 +201,8 @@ const createTerminalStore = () =>
     /**
      * Opens the info screen for a story, rendering its summary, characters,
      * tags, and reading statistics before the player commits to playing it.
+     * When a save exists for the story, shows resume and new-game options
+     * instead of the default start prompt.
      *
      * @param id - The id of the story to present.
      * @author Claude
@@ -215,8 +221,13 @@ const createTerminalStore = () =>
         } ) );
 
         const stats = computeStoryStats( story );
+        const saveExists = hasSave( id );
 
-        addLines( [
+        const actionPrompt = saveExists
+            ? "[ENTRÉE] Reprendre   [N] Nouvelle partie   [ÉCHAP] Retour au menu"
+            : "[ENTRÉE] Commencer l'histoire   [ÉCHAP] Retour au menu";
+
+        const lines: Omit<TerminalLine, "id">[] = [
             { text: "═".repeat( 60 ), type: "separator" },
             { text: story.title, type: "title" },
             { text: `${ story.genre } — ${ story.universe }`, type: "system" },
@@ -228,15 +239,30 @@ const createTerminalStore = () =>
             {
                 text: `Lecture : ${ formatReadingTime( stats.minutes ) } / partie · ${ stats.scenes } entrées · ${ stats.endings } fin${ stats.endings > 1 ? "s" : "" } · ${ formatReadingTime( stats.fullMinutes ) } pour tout explorer`,
                 type: "system"
-            },
+            }
+        ];
+
+        if ( saveExists )
+        {
+            const save = loadSave( id );
+            const savePercent = save
+                ? Math.min( 100, Math.round( ( save.history.length + 1 ) / stats.scenes * 100 ) )
+                : 0;
+
+            lines.push( { text: "SAUVEGARDE TROUVÉE", type: "save", savePercent } );
+        }
+
+        lines.push(
             { text: "═".repeat( 60 ), type: "separator" },
-            { text: "[ENTRÉE] Commencer l'histoire   [ÉCHAP] Retour au menu", type: "system" }
-        ] );
+            { text: actionPrompt, type: "system" }
+        );
+
+        addLines( lines );
     };
 
     /**
-     * Starts a fresh playthrough of a story: resets the game state and renders
-     * the opening scene.
+     * Starts a fresh playthrough of a story: clears any existing save, resets
+     * the game state, and renders the opening scene.
      *
      * @param storyId - The id of the story to play.
      * @author Claude
@@ -245,6 +271,9 @@ const createTerminalStore = () =>
     {
         const story = getStory( storyId );
         if ( !story ) return;
+
+        // Erase any prior save so a fresh run doesn't trigger the resume prompt.
+        deleteSave( storyId );
 
         const gameState: GameState = {
             storyId,
@@ -264,6 +293,46 @@ const createTerminalStore = () =>
         } ) );
 
         renderScene( story, story.startScene, gameState );
+    };
+
+    /**
+     * Resumes a story from the last saved checkpoint. Falls back to a fresh
+     * start when no valid save is found.
+     *
+     * @param storyId - The id of the story to resume.
+     * @author Claude
+     */
+    const resumeStory = ( storyId: string ) =>
+    {
+        const story = getStory( storyId );
+        const save = loadSave( storyId );
+
+        const canResume = story !== undefined && save !== null;
+
+        if ( !canResume )
+        {
+            startStory( storyId );
+            return;
+        }
+
+        const gameState: GameState = {
+            storyId,
+            currentScene: save.currentScene,
+            flags: new Set( save.flags ),
+            history: save.history
+        };
+
+        clearLines();
+
+        update( ( s ) => ( {
+            ...s,
+            view: "story",
+            currentStory: story,
+            gameState,
+            awaitingInput: true
+        } ) );
+
+        renderScene( story, save.currentScene, gameState );
     };
 
     /**
@@ -392,17 +461,31 @@ const createTerminalStore = () =>
 
         if ( freshState.currentStory && freshState.gameState )
         {
+            // Auto-save after every transition so progress survives a page close.
+            saveProgress( freshState.gameState );
             renderScene( freshState.currentStory, choice.nextScene, freshState.gameState );
         }
     };
 
     /**
-     * Abandons the current story and returns to the main menu.
+     * Abandons the current story and returns to the main menu. When leaving
+     * from an ending scene the save is erased — the story is complete and the
+     * next visit should offer a fresh start.
      *
      * @author Claude
      */
     const goBack = () =>
     {
+        const state = get( { subscribe } );
+        const currentSceneId = state.gameState?.currentScene ?? "";
+        const currentScene = state.currentStory?.scenes[ currentSceneId ];
+        const isLeavingFromEnding = currentScene?.isEnding === true;
+
+        if ( isLeavingFromEnding && state.gameState )
+        {
+            deleteSave( state.gameState.storyId );
+        }
+
         update( ( s ) => ( { ...s, view: "menu", currentStory: null, gameState: null } ) );
         startMenu();
     };
@@ -617,6 +700,7 @@ const createTerminalStore = () =>
         clearFilters,
         selectStory,
         startStory,
+        resumeStory,
         makeChoice,
         goBack,
         openWiki,

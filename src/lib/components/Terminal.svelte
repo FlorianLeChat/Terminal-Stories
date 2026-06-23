@@ -2,6 +2,7 @@
     import { onMount } from "svelte";
     import { terminal } from "$lib/stores/terminal";
     import { storiesMeta, filterStories } from "$lib/data";
+    import { hasSave } from "$lib/utilities/saveService";
     import BootSequence from "./BootSequence.svelte";
     import StoryMenu from "./StoryMenu.svelte";
     import TerminalOutput from "./TerminalOutput.svelte";
@@ -11,6 +12,14 @@
     let lines = $derived( $terminal.lines );
     let selectedIndex = $derived( $terminal.selectedStoryIndex );
     let visibleStories = $derived( filterStories( storiesMeta, $terminal.filters ) );
+
+    // Re-evaluated each time the story-info screen opens (view or story changes),
+    // reading from localStorage to know whether to offer the resume option.
+    let currentStoryHasSave = $derived(
+        $terminal.view === "story-info" && $terminal.currentStory
+            ? hasSave( $terminal.currentStory.id )
+            : false
+    );
 
     /**
      * Leaves the boot screen and shows the main menu.
@@ -145,7 +154,8 @@
     };
 
     /**
-     * Handles keys on the story-info screen: ENTER starts the story, ESC
+     * Handles keys on the story-info screen. When a save exists: ENTER resumes,
+     * N starts a new game. Without a save: ENTER starts a new game. ESC always
      * returns to the menu.
      *
      * @param e - The keyboard event.
@@ -153,9 +163,23 @@
      */
     const handleInfoKey = ( e: KeyboardEvent ) =>
     {
-        if ( e.key === "Enter" && $terminal.currentStory )
+        const storyId = $terminal.currentStory?.id;
+        if ( !storyId ) return;
+
+        if ( e.key === "Enter" )
         {
-            terminal.startStory( $terminal.currentStory.id );
+            if ( currentStoryHasSave )
+            {
+                terminal.resumeStory( storyId );
+            }
+            else
+            {
+                terminal.startStory( storyId );
+            }
+        }
+        else if ( e.key.toLowerCase() === "n" && currentStoryHasSave )
+        {
+            terminal.startStory( storyId );
         }
         else if ( e.key === "Escape" )
         {
@@ -299,7 +323,11 @@
                     {#if view === "story"}
                         Touches : [1-9] Choix &nbsp;|&nbsp; [ÉCHAP] Menu
                     {:else if view === "story-info"}
-                        [ENTRÉE] Commencer &nbsp;|&nbsp; [ÉCHAP] Retour
+                        {#if currentStoryHasSave}
+                            [ENTRÉE] Reprendre &nbsp;|&nbsp; [N] Nouvelle partie &nbsp;|&nbsp; [ÉCHAP] Retour
+                        {:else}
+                            [ENTRÉE] Commencer &nbsp;|&nbsp; [ÉCHAP] Retour
+                        {/if}
                     {:else if view === "menu"}
                         [↑↓] Naviguer &nbsp;|&nbsp; [ENTRÉE] Sélectionner &nbsp;|&nbsp; [G] Genre &nbsp;|&nbsp; [L]
                         Langue &nbsp;|&nbsp; [C] Réinitialiser &nbsp;|&nbsp; [W] Encyclopédie

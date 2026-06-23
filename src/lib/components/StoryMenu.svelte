@@ -2,6 +2,7 @@
     import { terminal } from "$lib/stores/terminal";
     import { storiesMeta, filterStories, availableGenres, availableLanguages } from "$lib/data";
     import { formatReadingTime } from "$lib/utilities/readingTime";
+    import { loadSave } from "$lib/utilities/saveService";
 
     interface Props {
         selectedIndex?: number;
@@ -34,6 +35,42 @@
     const genreColor = ( genre: string ): string =>
     {
         return genreColors[ genre ] ?? "text-terminal-dim";
+    };
+
+    /**
+     * Returns the completion percentage (0–100) for a story based on its save,
+     * or `null` when no save slot exists.
+     *
+     * @param storyId - The story to look up.
+     * @param totalScenes - Total number of scenes in that story.
+     * @returns The rounded percentage, or `null` if there is no save.
+     * @author Claude
+     */
+    const storyCompletion = ( storyId: string, totalScenes: number ): number | null =>
+    {
+        const save = loadSave( storyId );
+        if ( !save ) return null;
+
+        return Math.min( 100, Math.round( ( save.history.length + 1 ) / totalScenes * 100 ) );
+    };
+
+    /**
+     * Splits a percentage into filled / empty block counts for a compact bar.
+     * Both parts use the same `█` glyph so every block is identical width.
+     *
+     * @param percent - Value between 0 and 100.
+     * @param blocks - Total number of characters in the bar (default 6).
+     * @returns An object with the two repeated strings.
+     * @author Claude
+     */
+    const miniBar = ( percent: number, blocks = 6 ): { filled: string; empty: string } =>
+    {
+        const filledCount = Math.round( ( percent / 100 ) * blocks );
+
+        return {
+            filled: "█".repeat( filledCount ),
+            empty: "█".repeat( blocks - filledCount )
+        };
     };
 </script>
 
@@ -135,6 +172,16 @@
                                 <span class="text-terminal-white font-bold text-sm">{story.title}</span>
                                 <span class="text-xs {genreColor( story.genre )} shrink-0">[{story.genre}]</span>
                                 <span class="text-terminal-dim text-xs shrink-0">· {story.language}</span>
+
+                                {#if storyCompletion( story.id, story.stats.scenes ) !== null}
+                                    <span
+                                        class="text-terminal-amber text-xs shrink-0 font-mono"
+                                        title="Sauvegarde — {storyCompletion( story.id, story.stats.scenes )}% explorés"
+                                    >
+                                        ◉
+                                    </span>
+                                {/if}
+
                                 <span class="text-terminal-cyan text-xs shrink-0 ml-auto" title="Temps de lecture estimé d'une partie">
                                     ⏱ {formatReadingTime( story.stats.minutes )}
                                 </span>
@@ -151,6 +198,16 @@
                                     <span title="Nombre de scènes">⌬ {story.stats.scenes} entrées</span>
                                     <span title="Nombre de fins possibles">✦ {story.stats.endings} fin{story.stats.endings > 1 ? "s" : ""}</span>
                                     <span title="Temps pour explorer tout le contenu">⧉ {formatReadingTime( story.stats.fullMinutes )} au total</span>
+
+                                    {#if storyCompletion( story.id, story.stats.scenes ) !== null}
+                                        {@const pct = storyCompletion( story.id, story.stats.scenes ) ?? 0}
+                                        {@const bar = miniBar( pct )}
+
+                                        <span class="font-mono ml-auto text-xs" title="Progression sauvegardée">
+                                            <span class="text-terminal-amber">◉ {bar.filled}</span><span class="text-terminal-dim/50">{bar.empty}</span>
+                                            <span class="text-terminal-amber"> {pct}%</span>
+                                        </span>
+                                    {/if}
                                 </div>
 
                                 <div class="flex gap-1 mt-1 flex-wrap">
