@@ -72,8 +72,8 @@
 <button class="flex-1 text-left flex flex-col justify-center px-8 font-mono select-none" onclick={handleClick}>
     {#each bootLines as line, i ( i )}
         {#if visible[ i ]}
-            <div
-                class="leading-relaxed animate-fadein text-sm"
+            <span
+                class="block leading-relaxed animate-fadein text-sm"
                 class:text-terminal-green={!line.blink}
                 class:text-terminal-amber={line.blink}
                 class:blink-text={line.blink}
@@ -83,7 +83,7 @@
                 {:else}
                     {line.text}
                 {/if}
-            </div>
+            </span>
         {/if}
     {/each}
 </button>

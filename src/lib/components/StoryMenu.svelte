@@ -164,11 +164,11 @@
                     onclick={() => onselect( story.id )}
                     onmouseenter={() => onnavigate( i )}
                 >
-                    <div class="flex items-baseline gap-3">
+                    <span class="flex items-baseline gap-3">
                         <span class="text-terminal-dim text-xs w-4 shrink-0">{i + 1}.</span>
 
-                        <div class="flex-1 min-w-0">
-                            <div class="flex items-baseline gap-2 flex-wrap">
+                        <span class="block flex-1 min-w-0">
+                            <span class="flex items-baseline gap-2 flex-wrap">
                                 <span class="text-terminal-white font-bold text-sm">{story.title}</span>
                                 <span class="text-xs {genreColor( story.genre )} shrink-0">[{story.genre}]</span>
                                 <span class="text-terminal-dim text-xs shrink-0">· {story.language}</span>
@@ -185,16 +185,16 @@
                                 <span class="text-terminal-cyan text-xs shrink-0 ml-auto" title="Temps de lecture estimé d'une partie">
                                     ⏱ {formatReadingTime( story.stats.minutes )}
                                 </span>
-                            </div>
+                            </span>
 
-                            <div class="text-terminal-dim text-xs mt-0.5">{story.universe}</div>
+                            <span class="block text-terminal-dim text-xs mt-0.5">{story.universe}</span>
 
                             {#if i === selectedIndex}
-                                <div class="text-terminal-green text-xs mt-1 opacity-80 leading-relaxed">
+                                <span class="block text-terminal-green text-xs mt-1 opacity-80 leading-relaxed">
                                     {story.description}
-                                </div>
+                                </span>
 
-                                <div class="flex items-center gap-3 mt-1 text-terminal-dim text-xs opacity-70">
+                                <span class="flex items-center gap-3 mt-1 text-terminal-dim text-xs opacity-70">
                                     <span title="Nombre de scènes">⌬ {story.stats.scenes} entrées</span>
                                     <span title="Nombre de fins possibles">✦ {story.stats.endings} fin{story.stats.endings > 1 ? "s" : ""}</span>
                                     <span title="Temps pour explorer tout le contenu">⧉ {formatReadingTime( story.stats.fullMinutes )} au total</span>
@@ -208,16 +208,16 @@
                                             <span class="text-terminal-amber"> {pct}%</span>
                                         </span>
                                     {/if}
-                                </div>
+                                </span>
 
-                                <div class="flex gap-1 mt-1 flex-wrap">
+                                <span class="flex gap-1 mt-1 flex-wrap">
                                     {#each story.tags as tag ( tag )}
                                         <span class="text-terminal-dim text-xs opacity-60">#{tag}</span>
                                     {/each}
-                                </div>
+                                </span>
                             {/if}
-                        </div>
-                    </div>
+                        </span>
+                    </span>
                 </button>
 
                 {#if i < visibleStories.length - 1}

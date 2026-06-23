@@ -136,21 +136,21 @@
                         onclick={() => terminal.openWikiEntry( entry.id )}
                         onmouseenter={() => terminal.navigateWiki( i )}
                     >
-                        <div class="flex items-baseline gap-3">
+                        <span class="flex items-baseline gap-3">
                             <span class="text-xs shrink-0 {color( entry.category )}">{categories.find( ( c ) => c.id
                               === entry.category )?.icon}</span>
 
-                            <div class="flex-1 min-w-0">
-                                <div class="flex items-baseline gap-2 flex-wrap">
+                            <span class="block flex-1 min-w-0">
+                                <span class="flex items-baseline gap-2 flex-wrap">
                                     <span class="text-terminal-white font-bold text-sm">{entry.name}</span>
                                     <span class="text-terminal-dim text-xs shrink-0">· {entry.universe}</span>
-                                </div>
+                                </span>
 
-                                <div class="text-terminal-green text-xs mt-0.5 opacity-80 leading-relaxed">
+                                <span class="block text-terminal-green text-xs mt-0.5 opacity-80 leading-relaxed">
                                     {entry.summary}
-                                </div>
-                            </div>
-                        </div>
+                                </span>
+                            </span>
+                        </span>
                     </button>
 
                     {#if i < entries.length - 1}
