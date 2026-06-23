@@ -1,24 +1,216 @@
 <script lang="ts">
+    import { untrack } from "svelte";
+    import { SvelteSet } from "svelte/reactivity";
     import type { TerminalLine } from "$lib/stores/terminal";
 
     interface Props {
         lines?: TerminalLine[];
+        /** When false, all lines appear instantly with no typewriter effect. */
+        animated?: boolean;
+        /** Increment to skip the current animation and flush all pending lines. */
+        skipSignal?: number;
+        /** True while lines are being typed out; bound to the parent for hint display. */
+        isAnimating?: boolean;
     }
 
-    let { lines = [] }: Props = $props();
+    let { lines = [], animated = true, skipSignal = 0, isAnimating = $bindable( false ) }: Props = $props();
 
     let container: HTMLElement;
 
-    // Auto-scroll to the bottom whenever new lines are appended, so the latest
-    // narration stays in view like a real terminal.
+    /** Lines fully rendered to the terminal. */
+    let displayed = $state<TerminalLine[]>( [] );
+    /** The line currently being typed out character by character. */
+    let typingLine = $state<TerminalLine | null>( null );
+    /** Characters of the typing line revealed so far. */
+    let typingText = $state( "" );
+
+    /**
+     * Non-reactive processing state — plain JS vars so the $effect only
+     * re-runs when `lines` changes, not when these internal flags flip.
+     */
+    let pendingQueue: TerminalLine[] = [];
+    let isProcessing = false;
+    /** Monotonic counter — incremented on reset to cancel stale timeouts. */
+    let generation = 0;
+    /** IDs already queued or rendered; prevents double-processing. */
+    const knownIds = new SvelteSet<number>();
+    /** IDs of lines that were revealed via typewriter — no fade-in on transfer to displayed. */
+    const typedIds = new SvelteSet<number>();
+
+    /** Line types that receive a character-by-character typing effect. */
+    const TYPED_TYPES = new Set( [ "narrator", "speaker", "ending", "action", "consequence" ] );
+    /** Milliseconds between each revealed character. */
+    const TYPING_SPEED = 18;
+
     $effect( () =>
     {
-        void lines.length;
+        // Only `lines` is tracked — everything inside untrack is side-effect only.
+        const incoming = lines;
 
+        untrack( () =>
+        {
+            if ( incoming.length === 0 )
+            {
+                // Full reset — also invalidate any running timeout via generation bump.
+                generation++;
+                displayed = [];
+                typingLine = null;
+                typingText = "";
+                pendingQueue = [];
+                isProcessing = false;
+                isAnimating = false;
+                knownIds.clear();
+                typedIds.clear();
+                return;
+            }
+
+            const newLines = incoming.filter( ( l ) => !knownIds.has( l.id ) );
+            if ( newLines.length === 0 ) return;
+
+            newLines.forEach( ( l ) => knownIds.add( l.id ) );
+            pendingQueue.push( ...newLines );
+
+            if ( !isProcessing )
+            {
+                processNext( generation );
+            }
+        } );
+    } );
+
+    $effect( () =>
+    {
+        // Only `skipSignal` is tracked.
+        const sig = skipSignal;
+
+        untrack( () =>
+        {
+            if ( sig > 0 ) flushAll();
+        } );
+    } );
+
+    /**
+     * Instantly moves all queued and in-progress lines to `displayed`, cancelling
+     * any running typewriter animation.
+     *
+     * @author Claude
+     */
+    const flushAll = () =>
+    {
+        generation++;
+
+        const remaining = [ ...pendingQueue ];
+        pendingQueue = [];
+
+        if ( typingLine )
+        {
+            typedIds.add( typingLine.id );
+            displayed = [ ...displayed, typingLine ];
+            typingLine = null;
+            typingText = "";
+        }
+
+        remaining.forEach( ( l ) => typedIds.add( l.id ) );
+        displayed = [ ...displayed, ...remaining ];
+        isProcessing = false;
+        isAnimating = false;
+        scrollToBottom();
+    };
+
+    /**
+     * Pops lines from the queue and renders them. Instant lines are batched
+     * and flushed together; animated lines kick off `typeChar` asynchronously.
+     *
+     * @param gen - Generation at dispatch time; stale calls exit early.
+     * @author Claude
+     */
+    const processNext = ( gen: number ) =>
+    {
+        if ( gen !== generation ) return;
+
+        const instantBatch: TerminalLine[] = [];
+
+        while ( pendingQueue.length > 0 )
+        {
+            const next = pendingQueue[ 0 ];
+            const needsTyping = animated && TYPED_TYPES.has( next.type ) && next.text.length > 0;
+
+            if ( needsTyping ) break;
+
+            pendingQueue.shift();
+            instantBatch.push( next );
+        }
+
+        if ( instantBatch.length > 0 )
+        {
+            displayed = [ ...displayed, ...instantBatch ];
+        }
+
+        if ( pendingQueue.length === 0 )
+        {
+            isProcessing = false;
+            isAnimating = false;
+            scrollToBottom();
+            return;
+        }
+
+        isProcessing = true;
+        isAnimating = true;
+        const next = pendingQueue.shift();
+
+        if ( !next )
+        {
+            isProcessing = false;
+            return;
+        }
+
+        typingLine = next;
+        typingText = "";
+        typeChar( next, 0, gen );
+    };
+
+    /**
+     * Reveals one more character of `line`, then schedules itself for the
+     * next character. Moves the line to `displayed` when all chars are shown.
+     *
+     * @param line - The line being animated.
+     * @param i - Index of the next character to reveal.
+     * @param gen - Generation guard; stale timeouts exit early.
+     * @author Claude
+     */
+    const typeChar = ( line: TerminalLine, i: number, gen: number ) =>
+    {
+        if ( gen !== generation ) return;
+
+        if ( i >= line.text.length )
+        {
+            typedIds.add( line.id );
+            displayed = [ ...displayed, line ];
+            typingLine = null;
+            typingText = "";
+            scrollToBottom();
+            processNext( gen );
+            return;
+        }
+
+        typingText = line.text.slice( 0, i + 1 );
+        scrollToBottom();
+        setTimeout( () => typeChar( line, i + 1, gen ), TYPING_SPEED );
+    };
+
+    const scrollToBottom = () =>
+    {
         if ( container )
         {
             container.scrollTop = container.scrollHeight;
         }
+    };
+
+    // Keep the view scrolled to the bottom when displayed or typing text changes.
+    $effect( () =>
+    {
+        void displayed.length;
+        void typingText;
+        scrollToBottom();
     } );
 
     /**
@@ -72,7 +264,7 @@
     bind:this={container}
     class="flex-1 overflow-y-auto px-4 py-2 font-mono text-sm leading-relaxed scrollbar-terminal"
 >
-    {#each lines as line ( line.id )}
+    {#each displayed as line ( line.id )}
         {#if line.type === "image" && line.imageSrc}
             <div class="my-3 border border-terminal-dim/30 rounded overflow-hidden max-w-xl animate-fadein">
                 <img src={line.imageSrc} alt="" class="w-full max-h-44 object-cover grayscale opacity-75" />
@@ -96,7 +288,7 @@
         {:else if line.text === ""}
             <div class="h-3"></div>
         {:else}
-            <div class="line {lineClass( line.type )} animate-fadein">
+            <div class="line {lineClass( line.type )} {typedIds.has( line.id ) ? "" : "animate-fadein"}">
                 {#if line.type === "separator"}
                     <span class="select-none opacity-40">{line.text}</span>
                 {:else}
@@ -105,6 +297,12 @@
             </div>
         {/if}
     {/each}
+
+    {#if typingLine && isAnimating}
+        <div class="line {lineClass( typingLine.type )}">
+            {typingText}<span class="cursor-blink">▋</span>
+        </div>
+    {/if}
 </div>
 
 <style>
@@ -120,11 +318,27 @@
     @keyframes fadein {
         from {
             opacity: 0;
-            transform: translateY(2px);
+            transform: translateY( 2px );
         }
         to {
             opacity: 1;
-            transform: translateY(0);
+            transform: translateY( 0 );
+        }
+    }
+
+    .cursor-blink {
+        display: inline-block;
+        margin-left: 1px;
+        animation: blink 0.7s step-start infinite;
+    }
+
+    @keyframes blink {
+        0%,
+        100% {
+            opacity: 1;
+        }
+        50% {
+            opacity: 0;
         }
     }
 

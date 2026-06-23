@@ -7,11 +7,17 @@
     import StoryMenu from "./StoryMenu.svelte";
     import TerminalOutput from "./TerminalOutput.svelte";
     import WikiBrowser from "./WikiBrowser.svelte";
+    import TerminalControls from "./TerminalControls.svelte";
 
     let view = $derived( $terminal.view );
     let lines = $derived( $terminal.lines );
     let selectedIndex = $derived( $terminal.selectedStoryIndex );
     let visibleStories = $derived( filterStories( storiesMeta, $terminal.filters ) );
+
+    /** Incremented each time the user requests an animation skip. */
+    let skipAnimationSignal = $state( 0 );
+    /** Bound to TerminalOutput — true while lines are being typed out. */
+    let isAnimating = $state( false );
 
     // Re-evaluated each time the story-info screen opens (view or story changes),
     // reading from localStorage to know whether to offer the resume option.
@@ -252,6 +258,13 @@
      */
     const handleStoryKey = ( e: KeyboardEvent ) =>
     {
+        if ( e.key === " " && isAnimating )
+        {
+            e.preventDefault();
+            skipAnimationSignal++;
+            return;
+        }
+
         if ( e.key === "Escape" )
         {
             terminal.goBack();
@@ -312,37 +325,18 @@
                 {:else if view === "menu"}
                     <StoryMenu {selectedIndex} onselect={handleMenuSelect} onnavigate={handleMenuNavigate} />
                 {:else if view === "story-info" || view === "story"}
-                    <TerminalOutput {lines} />
+                    <TerminalOutput {lines} animated={view === "story"} skipSignal={skipAnimationSignal} bind:isAnimating />
                 {:else if view === "wiki"}
                     <WikiBrowser />
                 {/if}
             </div>
 
-            <div class="shrink-0 border-t border-terminal-dim/30 px-4 py-1 text-xs font-mono text-terminal-dim flex justify-between select-none">
-                <span>
-                    {#if view === "story"}
-                        Touches : [1-9] Choix &nbsp;|&nbsp; [ÉCHAP] Menu
-                    {:else if view === "story-info"}
-                        {#if currentStoryHasSave}
-                            [ENTRÉE] Reprendre &nbsp;|&nbsp; [N] Nouvelle partie &nbsp;|&nbsp; [ÉCHAP] Retour
-                        {:else}
-                            [ENTRÉE] Commencer &nbsp;|&nbsp; [ÉCHAP] Retour
-                        {/if}
-                    {:else if view === "menu"}
-                        [↑↓] Naviguer &nbsp;|&nbsp; [ENTRÉE] Sélectionner &nbsp;|&nbsp; [G] Genre &nbsp;|&nbsp; [L]
-                        Langue &nbsp;|&nbsp; [C] Réinitialiser &nbsp;|&nbsp; [W] Encyclopédie
-                    {:else if view === "wiki"}
-                        {#if $terminal.wiki.selectedEntryId}
-                            [ÉCHAP] Retour à la liste
-                        {:else}
-                            [←→] Rubrique &nbsp;|&nbsp; [↑↓] Naviguer &nbsp;|&nbsp; [ENTRÉE] Consulter &nbsp;|&nbsp;
-                            [ÉCHAP] Menu
-                        {/if}
-                    {/if}
-                </span>
-
-                <span class="opacity-40">1.0.0</span>
-            </div>
+            <TerminalControls
+                {view}
+                hasSave={currentStoryHasSave}
+                {isAnimating}
+                wikiEntryOpen={!!$terminal.wiki.selectedEntryId}
+            />
         </div>
     </div>
 </div>

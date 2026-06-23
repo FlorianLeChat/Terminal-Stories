@@ -100,6 +100,10 @@ if ( scene?.isEnding === true ) terminal.goBack();
   1. `npm run check` — TypeScript + Svelte type checking
   2. `npm run lint` — ESLint rules
 
+## Preview / dev server
+
+**Never start a preview or dev server.** Do not call `preview_start`, `npm run dev`, or any equivalent. The user runs the server manually. Verification is limited to `npm run check` and `npm run lint`.
+
 ## Commits
 
 - Conventional Commits (commitlint): `type(scope): description` in lowercase, no trailing period. e.g. `feat(story): add reading time estimation`.
@@ -110,6 +114,14 @@ Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
 ```
 
 Replace `Claude Sonnet 4.6` with the actual model name for this session (Opus, Sonnet, Haiku, etc.).
+
+## Component decomposition
+
+Prefer splitting into smaller components rather than growing a single file. Extract a sub-component when:
+- a section of a component has its own clear responsibility, or
+- the file is getting long enough that navigation becomes awkward.
+
+New components go in `src/lib/components/`.
 
 ## Structure
 
