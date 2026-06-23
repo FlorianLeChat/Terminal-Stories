@@ -45,10 +45,10 @@ export const availableWikiLanguages: string[] = [ ...new Set( universeLanguageMa
  * @returns The matching entry, or `undefined` if none exists.
  * @author Claude
  */
-export function getEntry( id: string ): KnowledgeEntry | undefined
+export const getEntry = ( id: string ): KnowledgeEntry | undefined =>
 {
     return knowledgeEntries.find( ( e ) => e.id === id );
-}
+};
 
 /**
  * Resolves the human-readable label of a knowledge category.
@@ -57,10 +57,10 @@ export function getEntry( id: string ): KnowledgeEntry | undefined
  * @returns The localized label, falling back to the raw id if unknown.
  * @author Claude
  */
-export function categoryLabel( category: KnowledgeCategory ): string
+export const categoryLabel = ( category: KnowledgeCategory ): string =>
 {
     return categories.find( ( c ) => c.id === category )?.label ?? category;
-}
+};
 
 /**
  * Returns the language associated with a universe, derived from the story it
@@ -70,10 +70,10 @@ export function categoryLabel( category: KnowledgeCategory ): string
  * @returns The language, or `null` if the universe is unknown.
  * @author Claude
  */
-export function getLanguageForUniverse( universe: string ): string | null
+export const getLanguageForUniverse = ( universe: string ): string | null =>
 {
     return universeLanguageMap.get( universe ) ?? null;
-}
+};
 
 /**
  * Filters the knowledge entries by category and, optionally, by language and
@@ -85,7 +85,7 @@ export function getLanguageForUniverse( universe: string ): string | null
  * @returns The entries matching all of the provided criteria.
  * @author Claude
  */
-export function filterEntries( category: KnowledgeCategory, language: string | null, universe: string | null ): KnowledgeEntry[]
+export const filterEntries = ( category: KnowledgeCategory, language: string | null, universe: string | null ): KnowledgeEntry[] =>
 {
     return knowledgeEntries.filter( ( e ) =>
     {
@@ -95,7 +95,7 @@ export function filterEntries( category: KnowledgeCategory, language: string | n
 
         return true;
     } );
-}
+};
 
 /**
  * Counts the entries in a category for the given language/universe filter.
@@ -107,7 +107,7 @@ export function filterEntries( category: KnowledgeCategory, language: string | n
  * @returns The number of matching entries.
  * @author Claude
  */
-export function countByCategory( category: KnowledgeCategory, language: string | null, universe: string | null ): number
+export const countByCategory = ( category: KnowledgeCategory, language: string | null, universe: string | null ): number =>
 {
     return filterEntries( category, language, universe ).length;
-}
+};

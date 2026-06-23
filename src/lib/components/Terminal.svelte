@@ -17,10 +17,10 @@
      *
      * @author Claude
      */
-    function handleBoot()
+    const handleBoot = () =>
     {
         terminal.startMenu();
-    }
+    };
 
     /**
      * Opens the info screen for the chosen story.
@@ -28,10 +28,10 @@
      * @param id - The id of the selected story.
      * @author Claude
      */
-    function handleMenuSelect( id: string )
+    const handleMenuSelect = ( id: string ) =>
     {
         terminal.selectStory( id );
-    }
+    };
 
     /**
      * Updates the highlighted story in the menu (e.g. on hover).
@@ -39,10 +39,10 @@
      * @param index - The index of the story to highlight.
      * @author Claude
      */
-    function handleMenuNavigate( index: number )
+    const handleMenuNavigate = ( index: number ) =>
     {
         terminal.update( ( s ) => ( { ...s, selectedStoryIndex: index } ) );
-    }
+    };
 
     /**
      * Global key handler: dispatches the event to the handler for the current
@@ -51,7 +51,7 @@
      * @param e - The keyboard event.
      * @author Claude
      */
-    function handleKeydown( e: KeyboardEvent )
+    const handleKeydown = ( e: KeyboardEvent ) =>
     {
         if ( view === "boot" ) return;
 
@@ -75,7 +75,7 @@
             handleWikiKey( e );
             return;
         }
-    }
+    };
 
     /**
      * Handles keys on the main menu: filter shortcuts (G/L/C/W), arrow
@@ -84,7 +84,7 @@
      * @param e - The keyboard event.
      * @author Claude
      */
-    function handleMenuKey( e: KeyboardEvent )
+    const handleMenuKey = ( e: KeyboardEvent ) =>
     {
         const key = e.key.toLowerCase();
 
@@ -142,7 +142,7 @@
                 terminal.selectStory( visibleStories[ num - 1 ].id );
             }
         }
-    }
+    };
 
     /**
      * Handles keys on the story-info screen: ENTER starts the story, ESC
@@ -151,7 +151,7 @@
      * @param e - The keyboard event.
      * @author Claude
      */
-    function handleInfoKey( e: KeyboardEvent )
+    const handleInfoKey = ( e: KeyboardEvent ) =>
     {
         if ( e.key === "Enter" && $terminal.currentStory )
         {
@@ -161,7 +161,7 @@
         {
             terminal.startMenu();
         }
-    }
+    };
 
     /**
      * Handles keys in the wiki: ESC steps back (entry → list → menu), arrows
@@ -170,7 +170,7 @@
      * @param e - The keyboard event.
      * @author Claude
      */
-    function handleWikiKey( e: KeyboardEvent )
+    const handleWikiKey = ( e: KeyboardEvent ) =>
     {
         const wiki = $terminal.wiki;
 
@@ -217,7 +217,7 @@
             e.preventDefault();
             terminal.selectWikiEntryAt( wiki.selectedIndex );
         }
-    }
+    };
 
     /**
      * Handles keys during story playback: number keys pick a choice, ESC
@@ -226,7 +226,7 @@
      * @param e - The keyboard event.
      * @author Claude
      */
-    function handleStoryKey( e: KeyboardEvent )
+    const handleStoryKey = ( e: KeyboardEvent ) =>
     {
         if ( e.key === "Escape" )
         {
@@ -245,7 +245,7 @@
             const scene = $terminal.currentStory?.scenes[ $terminal.gameState?.currentScene ?? "" ];
             if ( scene?.isEnding ) terminal.goBack();
         }
-    }
+    };
 
     // Grab focus on mount so keyboard input is captured without a click first.
     onMount( () =>

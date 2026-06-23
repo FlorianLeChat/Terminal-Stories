@@ -33,10 +33,10 @@ export const storiesMeta: StoryMeta[] = stories.map( ( story ) =>
  * @returns The matching story, or `undefined` if none exists.
  * @author Claude
  */
-export function getStory( id: string ): Story | undefined
+export const getStory = ( id: string ): Story | undefined =>
 {
     return stories.find( ( s ) => s.id === id );
-}
+};
 
 /** Distinct genres across all stories, for the genre filter. */
 export const availableGenres: string[] = [ ...new Set( storiesMeta.map( ( s ) => s.genre ) ) ];
@@ -53,7 +53,7 @@ export const availableLanguages: string[] = [ ...new Set( storiesMeta.map( ( s )
  * @returns The stories matching every active filter.
  * @author Claude
  */
-export function filterStories( meta: StoryMeta[], filters: StoryFilters ): StoryMeta[]
+export const filterStories = ( meta: StoryMeta[], filters: StoryFilters ): StoryMeta[] =>
 {
     return meta.filter( ( s ) =>
     {
@@ -62,4 +62,4 @@ export function filterStories( meta: StoryMeta[], filters: StoryFilters ): Story
 
         return true;
     } );
-}
+};

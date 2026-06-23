@@ -31,10 +31,10 @@
      * @returns The CSS class used to color that category.
      * @author Claude
      */
-    function color( category: string ): string
+    const color = ( category: string ): string =>
     {
         return categoryColors[ category ] ?? "text-terminal-green";
-    }
+    };
 
     /**
      * Normalizes an entry description into a list of paragraphs.
@@ -43,10 +43,10 @@
      * @returns The description as an array of paragraphs.
      * @author Claude
      */
-    function descriptionLines( text: string | string[] ): string[]
+    const descriptionLines = ( text: string | string[] ): string[] =>
     {
         return Array.isArray( text ) ? text : [ text ];
-    }
+    };
 </script>
 
 <div class="flex-1 overflow-y-auto px-4 py-2 font-mono scrollbar-terminal">

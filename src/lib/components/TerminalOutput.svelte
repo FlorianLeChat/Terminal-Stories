@@ -28,7 +28,7 @@
      * @returns The CSS classes for that line type.
      * @author Claude
      */
-    function lineClass( type: TerminalLine[ "type" ] ): string
+    const lineClass = ( type: TerminalLine[ "type" ] ): string =>
     {
         const map: Record<TerminalLine[ "type" ], string> = {
             system: "text-terminal-dim",
@@ -45,7 +45,7 @@
         };
 
         return map[ type ] ?? "text-terminal-green";
-    }
+    };
 </script>
 
 <div

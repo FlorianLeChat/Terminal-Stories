@@ -10,13 +10,13 @@ const WORDS_PER_MINUTE = 200;
  * @returns The number of whitespace-separated words.
  * @author Claude
  */
-function countWords( value: string ): number
+const countWords = ( value: string ): number =>
 {
     const trimmed = value.trim();
     if ( trimmed === "" ) return 0;
 
     return trimmed.split( /\s+/ ).length;
-}
+};
 
 /**
  * Counts the words of a scene text, which may be a single string or a list of
@@ -26,12 +26,12 @@ function countWords( value: string ): number
  * @returns The total number of words across every paragraph.
  * @author Claude
  */
-function textWords( text: string | string[] ): number
+const textWords = ( text: string | string[] ): number =>
 {
     const parts = Array.isArray( text ) ? text : [ text ];
 
     return parts.reduce( ( sum, t ) => sum + countWords( t ), 0 );
-}
+};
 
 /**
  * Words shown when reaching a scene: the narration plus the labels of every
@@ -41,7 +41,7 @@ function textWords( text: string | string[] ): number
  * @returns The number of words read upon arriving on the scene.
  * @author Claude
  */
-function sceneNarrationWords( scene: Scene ): number
+const sceneNarrationWords = ( scene: Scene ): number =>
 {
     let words = textWords( scene.text );
 
@@ -52,7 +52,7 @@ function sceneNarrationWords( scene: Scene ): number
     }
 
     return words;
-}
+};
 
 /**
  * Words read once a choice is committed: its action and its consequence.
@@ -61,10 +61,10 @@ function sceneNarrationWords( scene: Scene ): number
  * @returns The number of words revealed after picking the choice.
  * @author Claude
  */
-function choiceWords( choice: Choice ): number
+const choiceWords = ( choice: Choice ): number =>
 {
     return countWords( choice.action ) + countWords( choice.consequence );
-}
+};
 
 /**
  * Expected number of words for a single playthrough, averaging over the choices
@@ -79,7 +79,7 @@ function choiceWords( choice: Choice ): number
  * @returns The expected word count from this scene to an ending.
  * @author Claude
  */
-function expectedWords( story: Story, sceneId: string, memo: Map<string, number>, stack: Set<string> ): number
+const expectedWords = ( story: Story, sceneId: string, memo: Map<string, number>, stack: Set<string> ): number =>
 {
     // Scene already on the current path: stop here to avoid counting a loop.
     if ( stack.has( sceneId ) ) return 0;
@@ -93,7 +93,9 @@ function expectedWords( story: Story, sceneId: string, memo: Map<string, number>
     const narration = sceneNarrationWords( scene );
 
     // Endings (or dead ends) contribute only their narration.
-    if ( scene.isEnding || scene.choices.length === 0 )
+    const isTerminal = scene.isEnding || scene.choices.length === 0;
+
+    if ( isTerminal )
     {
         memo.set( sceneId, narration );
 
@@ -116,7 +118,7 @@ function expectedWords( story: Story, sceneId: string, memo: Map<string, number>
     memo.set( sceneId, result );
 
     return result;
-}
+};
 
 /**
  * Total number of words across every scene of the story, regardless of the
@@ -126,7 +128,7 @@ function expectedWords( story: Story, sceneId: string, memo: Map<string, number>
  * @returns The full word count of all scenes and choices.
  * @author Claude
  */
-function totalWords( story: Story ): number
+const totalWords = ( story: Story ): number =>
 {
     let words = 0;
 
@@ -141,7 +143,7 @@ function totalWords( story: Story ): number
     }
 
     return words;
-}
+};
 
 /**
  * Converts a word count to a reading time in minutes, never below one minute.
@@ -150,10 +152,10 @@ function totalWords( story: Story ): number
  * @returns The rounded reading time in minutes (minimum 1).
  * @author Claude
  */
-function toMinutes( words: number ): number
+const toMinutes = ( words: number ): number =>
 {
     return Math.max( 1, Math.round( words / WORDS_PER_MINUTE ) );
-}
+};
 
 /**
  * Computes the reading statistics of a story: number of scenes ("entries") and
@@ -164,7 +166,7 @@ function toMinutes( words: number ): number
  * @returns The aggregated reading statistics.
  * @author Claude
  */
-export function computeStoryStats( story: Story ): StoryStats
+export const computeStoryStats = ( story: Story ): StoryStats =>
 {
     const scenes = Object.values( story.scenes );
     const endings = scenes.filter( ( s ) => s.isEnding ).length;
@@ -178,7 +180,7 @@ export function computeStoryStats( story: Story ): StoryStats
         minutes: toMinutes( playthroughWords ),
         fullMinutes: toMinutes( words )
     };
-}
+};
 
 /**
  * Formats a duration in minutes for display in the UI.
@@ -187,7 +189,7 @@ export function computeStoryStats( story: Story ): StoryStats
  * @returns A human-readable label such as "≈ 5 min".
  * @author Claude
  */
-export function formatReadingTime( minutes: number ): string
+export const formatReadingTime = ( minutes: number ): string =>
 {
     return `≈ ${ minutes } min`;
-}
+};

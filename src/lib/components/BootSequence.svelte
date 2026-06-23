@@ -51,20 +51,20 @@
      * @param e - The keyboard event.
      * @author Claude
      */
-    function handleKey( e: KeyboardEvent )
+    const handleKey = ( e: KeyboardEvent ) =>
     {
         if ( done && e.key === "Enter" ) ondone();
-    }
+    };
 
     /**
      * Advances past the boot screen on click, once the sequence has finished.
      *
      * @author Claude
      */
-    function handleClick()
+    const handleClick = () =>
     {
         if ( done ) ondone();
-    }
+    };
 </script>
 
 <svelte:window onkeydown={handleKey} />

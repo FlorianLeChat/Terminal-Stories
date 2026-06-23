@@ -31,10 +31,10 @@
      * @returns The CSS class to color the genre label.
      * @author Claude
      */
-    function genreColor( genre: string ): string
+    const genreColor = ( genre: string ): string =>
     {
         return genreColors[ genre ] ?? "text-terminal-dim";
-    }
+    };
 </script>
 
 <div class="flex-1 overflow-y-auto px-4 py-2 font-mono">

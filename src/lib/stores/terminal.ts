@@ -47,10 +47,10 @@ let lineId = 0;
  * @returns A new, never-reused line identifier.
  * @author Claude
  */
-function nextId()
+const nextId = (): number =>
 {
     return ++lineId;
-}
+};
 
 /**
  * Keeps only the choices the player is allowed to take given their current
@@ -61,13 +61,13 @@ function nextId()
  * @returns The choices available from this scene.
  * @author Claude
  */
-function getAvailableChoices( scene: Scene, state: GameState ): Choice[]
+const getAvailableChoices = ( scene: Scene, state: GameState ): Choice[] =>
 {
     return scene.choices.filter( ( c ) =>
     {
         return !( c.requiresFlag && !state.flags.has( c.requiresFlag ) );
     } );
-}
+};
 
 /**
  * Creates the terminal store: a single Svelte store driving the whole UI
@@ -76,7 +76,7 @@ function getAvailableChoices( scene: Scene, state: GameState ): Choice[]
  * @returns The store's `subscribe` plus its action API.
  * @author Claude
  */
-function createTerminalStore()
+const createTerminalStore = () =>
 {
     const initial: TerminalStore = {
         view: "boot",
@@ -97,34 +97,34 @@ function createTerminalStore()
      * @param newLines - The lines to append (without their id).
      * @author Claude
      */
-    function addLines( newLines: Omit<TerminalLine, "id">[] )
+    const addLines = ( newLines: Omit<TerminalLine, "id">[] ) =>
     {
         update( ( s ) => ( {
             ...s,
             lines: [ ...s.lines, ...newLines.map( ( l ) => ( { ...l, id: nextId() } ) ) ]
         } ) );
-    }
+    };
 
     /**
      * Clears all rendered terminal lines.
      *
      * @author Claude
      */
-    function clearLines()
+    const clearLines = () =>
     {
         update( ( s ) => ( { ...s, lines: [] } ) );
-    }
+    };
 
     /**
      * Switches to the main menu, resetting the selection and clearing output.
      *
      * @author Claude
      */
-    function startMenu()
+    const startMenu = () =>
     {
         clearLines();
         update( ( s ) => ( { ...s, view: "menu", selectedStoryIndex: 0, awaitingInput: true } ) );
-    }
+    };
 
     /**
      * Sets a story filter, toggling it off when the same value is selected
@@ -134,7 +134,7 @@ function createTerminalStore()
      * @param value - The value to apply, or `null` to clear.
      * @author Claude
      */
-    function setFilter( key: keyof StoryFilters, value: string | null )
+    const setFilter = ( key: keyof StoryFilters, value: string | null ) =>
     {
         update( ( s ) =>
         {
@@ -142,7 +142,7 @@ function createTerminalStore()
 
             return { ...s, filters: { ...s.filters, [ key ]: next }, selectedStoryIndex: 0 };
         } );
-    }
+    };
 
     /**
      * Advances a filter to the next value in `[none, ...values]`, wrapping
@@ -152,7 +152,7 @@ function createTerminalStore()
      * @param values - The ordered list of possible values.
      * @author Claude
      */
-    function cycleFilter( key: keyof StoryFilters, values: string[] )
+    const cycleFilter = ( key: keyof StoryFilters, values: string[] ) =>
     {
         update( ( s ) =>
         {
@@ -162,37 +162,37 @@ function createTerminalStore()
 
             return { ...s, filters: { ...s.filters, [ key ]: next }, selectedStoryIndex: 0 };
         } );
-    }
+    };
 
     /**
      * Cycles the genre filter (bound to the [G] key).
      *
      * @author Claude
      */
-    function cycleGenre()
+    const cycleGenre = () =>
     {
         cycleFilter( "genre", availableGenres );
-    }
+    };
 
     /**
      * Cycles the language filter (bound to the [L] key).
      *
      * @author Claude
      */
-    function cycleLanguage()
+    const cycleLanguage = () =>
     {
         cycleFilter( "language", availableLanguages );
-    }
+    };
 
     /**
      * Clears every active filter and resets the menu selection.
      *
      * @author Claude
      */
-    function clearFilters()
+    const clearFilters = () =>
     {
         update( ( s ) => ( { ...s, filters: { genre: null, language: null }, selectedStoryIndex: 0 } ) );
-    }
+    };
 
     /**
      * Opens the info screen for a story, rendering its summary, characters,
@@ -201,7 +201,7 @@ function createTerminalStore()
      * @param id - The id of the story to present.
      * @author Claude
      */
-    function selectStory( id: string )
+    const selectStory = ( id: string ) =>
     {
         const story = getStory( id );
         if ( !story ) return;
@@ -232,7 +232,7 @@ function createTerminalStore()
             { text: "═".repeat( 60 ), type: "separator" },
             { text: "[ENTRÉE] Commencer l'histoire   [ÉCHAP] Retour au menu", type: "system" }
         ] );
-    }
+    };
 
     /**
      * Starts a fresh playthrough of a story: resets the game state and renders
@@ -241,7 +241,7 @@ function createTerminalStore()
      * @param storyId - The id of the story to play.
      * @author Claude
      */
-    function startStory( storyId: string )
+    const startStory = ( storyId: string ) =>
     {
         const story = getStory( storyId );
         if ( !story ) return;
@@ -264,7 +264,7 @@ function createTerminalStore()
         } ) );
 
         renderScene( story, story.startScene, gameState );
-    }
+    };
 
     /**
      * Renders a scene into terminal lines: optional image and speaker, the
@@ -276,7 +276,7 @@ function createTerminalStore()
      * @param state - The current game state (used to gate choices).
      * @author Claude
      */
-    function renderScene( story: Story, sceneId: string, state: GameState )
+    const renderScene = ( story: Story, sceneId: string, state: GameState ) =>
     {
         const scene = story.scenes[ sceneId ];
         if ( !scene ) return;
@@ -320,10 +320,7 @@ function createTerminalStore()
             lines.push(
                 { text: "", type: "narrator" },
                 { text: "> Que faites-vous ?", type: "system" },
-                {
-                    text: "",
-                    type: "narrator"
-                }
+                { text: "", type: "narrator" }
             );
 
             const available = getAvailableChoices( scene, state );
@@ -341,7 +338,7 @@ function createTerminalStore()
         }
 
         update( ( s ) => ( { ...s, lines: [ ...s.lines, ...lines.map( ( l ) => ( { ...l, id: nextId() } ) ) ] } ) );
-    }
+    };
 
     /**
      * Applies the player's choice: echoes the action and consequence, sets any
@@ -350,7 +347,7 @@ function createTerminalStore()
      * @param choiceIndex - The 1-based index of the chosen option as displayed.
      * @author Claude
      */
-    function makeChoice( choiceIndex: number )
+    const makeChoice = ( choiceIndex: number ) =>
     {
         const state = get( { subscribe } );
         if ( !state.gameState || !state.currentStory ) return;
@@ -397,18 +394,18 @@ function createTerminalStore()
         {
             renderScene( freshState.currentStory, choice.nextScene, freshState.gameState );
         }
-    }
+    };
 
     /**
      * Abandons the current story and returns to the main menu.
      *
      * @author Claude
      */
-    function goBack()
+    const goBack = () =>
     {
         update( ( s ) => ( { ...s, view: "menu", currentStory: null, gameState: null } ) );
         startMenu();
-    }
+    };
 
     /**
      * Returns the wiki entries currently visible under the active category and
@@ -417,19 +414,19 @@ function createTerminalStore()
      * @returns The filtered list of knowledge entries.
      * @author Claude
      */
-    function wikiVisibleEntries()
+    const wikiVisibleEntries = () =>
     {
         const { wiki } = get( { subscribe } );
 
         return filterEntries( wiki.category, wiki.language, wiki.universe );
-    }
+    };
 
     /**
      * Opens the knowledge base (wiki), resetting its selection.
      *
      * @author Claude
      */
-    function openWiki()
+    const openWiki = () =>
     {
         clearLines();
         update( ( s ) => ( {
@@ -438,18 +435,18 @@ function createTerminalStore()
             awaitingInput: true,
             wiki: { ...s.wiki, selectedIndex: 0, selectedEntryId: null }
         } ) );
-    }
+    };
 
     /**
      * Closes the wiki and returns to the main menu.
      *
      * @author Claude
      */
-    function closeWiki()
+    const closeWiki = () =>
     {
         update( ( s ) => ( { ...s, view: "menu" } ) );
         startMenu();
-    }
+    };
 
     /**
      * Selects a wiki category, resetting the selection within it.
@@ -457,13 +454,13 @@ function createTerminalStore()
      * @param category - The category to display.
      * @author Claude
      */
-    function setWikiCategory( category: KnowledgeCategory )
+    const setWikiCategory = ( category: KnowledgeCategory ) =>
     {
         update( ( s ) => ( {
             ...s,
             wiki: { ...s.wiki, category, selectedIndex: 0, selectedEntryId: null }
         } ) );
-    }
+    };
 
     /**
      * Steps to the next/previous wiki category, wrapping around (bound to the
@@ -472,7 +469,7 @@ function createTerminalStore()
      * @param direction - `1` for the next category, `-1` for the previous one.
      * @author Claude
      */
-    function cycleWikiCategory( direction: 1 | -1 )
+    const cycleWikiCategory = ( direction: 1 | -1 ) =>
     {
         update( ( s ) =>
         {
@@ -482,7 +479,7 @@ function createTerminalStore()
 
             return { ...s, wiki: { ...s.wiki, category: next, selectedIndex: 0, selectedEntryId: null } };
         } );
-    }
+    };
 
     /**
      * Toggles the wiki language filter. Changing language also clears the
@@ -491,7 +488,7 @@ function createTerminalStore()
      * @param language - The language to toggle.
      * @author Claude
      */
-    function setWikiLanguage( language: string )
+    const setWikiLanguage = ( language: string ) =>
     {
         update( ( s ) =>
         {
@@ -499,7 +496,7 @@ function createTerminalStore()
 
             return { ...s, wiki: { ...s.wiki, language: next, universe: null, selectedIndex: 0, selectedEntryId: null } };
         } );
-    }
+    };
 
     /**
      * Toggles the wiki universe filter.
@@ -507,7 +504,7 @@ function createTerminalStore()
      * @param universe - The universe to toggle, or `null` to clear.
      * @author Claude
      */
-    function setWikiUniverse( universe: string | null )
+    const setWikiUniverse = ( universe: string | null ) =>
     {
         update( ( s ) =>
         {
@@ -515,7 +512,7 @@ function createTerminalStore()
 
             return { ...s, wiki: { ...s.wiki, universe: next, selectedIndex: 0, selectedEntryId: null } };
         } );
-    }
+    };
 
     /**
      * Sets the highlighted wiki entry by index (e.g. on hover).
@@ -523,10 +520,10 @@ function createTerminalStore()
      * @param index - The index of the entry to highlight.
      * @author Claude
      */
-    function navigateWiki( index: number )
+    const navigateWiki = ( index: number ) =>
     {
         update( ( s ) => ( { ...s, wiki: { ...s.wiki, selectedIndex: index } } ) );
-    }
+    };
 
     /**
      * Moves the wiki highlight up or down, wrapping around the visible list
@@ -535,7 +532,7 @@ function createTerminalStore()
      * @param direction - `1` to move down, `-1` to move up.
      * @author Claude
      */
-    function moveWikiSelection( direction: 1 | -1 )
+    const moveWikiSelection = ( direction: 1 | -1 ) =>
     {
         const count = wikiVisibleEntries().length;
         if ( count === 0 ) return;
@@ -544,7 +541,7 @@ function createTerminalStore()
             ...s,
             wiki: { ...s.wiki, selectedIndex: ( s.wiki.selectedIndex + direction + count ) % count }
         } ) );
-    }
+    };
 
     /**
      * Opens the detailed view of a wiki entry by id.
@@ -552,12 +549,12 @@ function createTerminalStore()
      * @param id - The id of the entry to open.
      * @author Claude
      */
-    function openWikiEntry( id: string )
+    const openWikiEntry = ( id: string ) =>
     {
         if ( !getEntry( id ) ) return;
 
         update( ( s ) => ( { ...s, wiki: { ...s.wiki, selectedEntryId: id } } ) );
-    }
+    };
 
     /**
      * Opens the wiki entry at the given position in the visible list (used when
@@ -566,22 +563,22 @@ function createTerminalStore()
      * @param index - The index of the entry within the visible list.
      * @author Claude
      */
-    function selectWikiEntryAt( index: number )
+    const selectWikiEntryAt = ( index: number ) =>
     {
         const entries = wikiVisibleEntries();
         const entry = entries[ index ];
         if ( entry ) openWikiEntry( entry.id );
-    }
+    };
 
     /**
      * Returns from a wiki entry's detail view back to the entry list.
      *
      * @author Claude
      */
-    function backToWikiList()
+    const backToWikiList = () =>
     {
         update( ( s ) => ( { ...s, wiki: { ...s.wiki, selectedEntryId: null } } ) );
-    }
+    };
 
     /**
      * Jumps to a related wiki entry, switching to its category and selecting it
@@ -590,7 +587,7 @@ function createTerminalStore()
      * @param id - The id of the related entry to open.
      * @author Claude
      */
-    function openRelatedEntry( id: string )
+    const openRelatedEntry = ( id: string ) =>
     {
         const entry = getEntry( id );
         if ( !entry ) return;
@@ -608,7 +605,7 @@ function createTerminalStore()
                 selectedEntryId: id
             }
         } ) );
-    }
+    };
 
     return {
         subscribe,
@@ -635,6 +632,6 @@ function createTerminalStore()
         backToWikiList,
         openRelatedEntry
     };
-}
+};
 
 export const terminal = createTerminalStore();
