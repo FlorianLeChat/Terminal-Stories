@@ -96,7 +96,9 @@ if ( scene?.isEnding === true ) terminal.goBack();
 ## Code style
 
 - Follow the existing formatting (Prettier + ESLint): inner spacing inside parentheses `( x )`, 4-space indentation.
-- Verify with `npm run check` (svelte-check) before wrapping up.
+- Before wrapping up, run both checks in order and fix any error before committing:
+  1. `npm run check` — TypeScript + Svelte type checking
+  2. `npm run lint` — ESLint rules
 
 ## Commits
 

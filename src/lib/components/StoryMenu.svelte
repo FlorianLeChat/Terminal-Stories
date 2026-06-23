@@ -2,7 +2,7 @@
     import { terminal } from "$lib/stores/terminal";
     import { storiesMeta, filterStories, availableGenres, availableLanguages } from "$lib/data";
     import { formatReadingTime } from "$lib/utilities/readingTime";
-    import { loadSave } from "$lib/utilities/saveService";
+    import { loadSave, loadDiscoveredEndings } from "$lib/utilities/saveService";
 
     interface Props {
         selectedIndex?: number;
@@ -71,6 +71,33 @@
             filled: "█".repeat( filledCount ),
             empty: "█".repeat( blocks - filledCount )
         };
+    };
+
+    /**
+     * Returns the Unicode circled number glyph for a 1-based ending index.
+     * Supports indices 1–20 (the Unicode range for circled digits).
+     *
+     * @param index - 1-based position of the ending (e.g. 1 → ①).
+     * @returns The matching circled-number character.
+     * @author Claude
+     */
+    const endingGlyph = ( index: number ): string =>
+    {
+        // U+2460 is ①; adding (index - 1) walks through ②③… up to ⑳ (U+2473).
+        return String.fromCodePoint( 0x245f + index );
+    };
+
+    /**
+     * Returns the set of discovered ending scene IDs for a story, or an empty
+     * set when none have been found yet.
+     *
+     * @param storyId - The story to query.
+     * @returns The set of discovered ending scene IDs.
+     * @author Claude
+     */
+    const discoveredEndings = ( storyId: string ): Set<string> =>
+    {
+        return loadDiscoveredEndings( storyId );
     };
 </script>
 
@@ -157,6 +184,9 @@
     {:else}
         <div class="border border-terminal-dim rounded px-2 py-1 mb-4">
             {#each visibleStories as story, i ( story.id )}
+                {@const found = discoveredEndings( story.id )}
+                {@const allFound = found.size === story.endingIds.length && story.endingIds.length > 0}
+
                 <button
                     class="w-full text-left px-3 py-3 rounded transition-all duration-100 block {i === selectedIndex
                         ? "bg-terminal-green/15 border-l-2 border-terminal-green"
@@ -182,6 +212,10 @@
                                     </span>
                                 {/if}
 
+                                {#if allFound}
+                                    <span class="text-terminal-amber text-xs shrink-0" title="Toutes les fins découvertes">★</span>
+                                {/if}
+
                                 <span class="text-terminal-cyan text-xs shrink-0 ml-auto" title="Temps de lecture estimé d'une partie">
                                     ⏱ {formatReadingTime( story.stats.minutes )}
                                 </span>
@@ -196,7 +230,6 @@
 
                                 <span class="flex items-center gap-3 mt-1 text-terminal-dim text-xs opacity-70">
                                     <span title="Nombre de scènes">⌬ {story.stats.scenes} entrées</span>
-                                    <span title="Nombre de fins possibles">✦ {story.stats.endings} fin{story.stats.endings > 1 ? "s" : ""}</span>
                                     <span title="Temps pour explorer tout le contenu">⧉ {formatReadingTime( story.stats.fullMinutes )} au total</span>
 
                                     {#if storyCompletion( story.id, story.stats.scenes ) !== null}
@@ -208,6 +241,15 @@
                                             <span class="text-terminal-amber"> {pct}%</span>
                                         </span>
                                     {/if}
+                                </span>
+
+                                <span
+                                    class="flex items-center gap-1 mt-1 font-mono text-2xl"
+                                    title="Fins découvertes : {found.size} / {story.endingIds.length}"
+                                >
+                                    {#each story.endingIds as endingId, idx ( endingId )}
+                                        <span class="{found.has( endingId ) ? "text-terminal-green" : "text-terminal-dim"}">{endingGlyph( idx + 1 )}</span>
+                                    {/each}
                                 </span>
 
                                 <span class="flex gap-1 mt-1 flex-wrap">

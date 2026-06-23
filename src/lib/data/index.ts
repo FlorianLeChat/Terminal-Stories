@@ -14,6 +14,10 @@ export const storiesMeta: StoryMeta[] = stories.map( ( story ) =>
 {
     const { id, title, genre, language, universe, description, tags } = story;
 
+    const endingIds = Object.entries( story.scenes )
+        .filter( ( [ , s ] ) => s.isEnding )
+        .map( ( [ id ] ) => id );
+
     return {
         id,
         title,
@@ -22,7 +26,8 @@ export const storiesMeta: StoryMeta[] = stories.map( ( story ) =>
         universe,
         description,
         tags,
-        stats: computeStoryStats( story )
+        stats: computeStoryStats( story ),
+        endingIds
     };
 } );
 

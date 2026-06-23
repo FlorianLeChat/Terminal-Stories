@@ -89,3 +89,52 @@ export const hasSave = ( storyId: string ): boolean =>
 
     return localStorage.getItem( saveKey( storyId ) ) !== null;
 };
+
+/**
+ * Builds the localStorage key for the set of discovered endings of a story.
+ *
+ * @param storyId - The story identifier.
+ * @returns The namespaced key string.
+ * @author Claude
+ */
+const endingsKey = ( storyId: string ): string => `terminal-stories:endings:${ storyId }`;
+
+/**
+ * Loads the set of discovered ending scene IDs for a given story.
+ *
+ * @param storyId - The story to query.
+ * @returns A set of ending scene IDs the player has reached at least once.
+ * @author Claude
+ */
+export const loadDiscoveredEndings = ( storyId: string ): Set<string> =>
+{
+    if ( globalThis.window === undefined ) return new Set();
+
+    const raw = localStorage.getItem( endingsKey( storyId ) );
+    if ( !raw ) return new Set();
+
+    try
+    {
+        return new Set( JSON.parse( raw ) as string[] );
+    }
+    catch
+    {
+        return new Set();
+    }
+};
+
+/**
+ * Marks a single ending scene as discovered and persists the updated set.
+ *
+ * @param storyId - The story the ending belongs to.
+ * @param sceneId - The scene ID of the reached ending.
+ * @author Claude
+ */
+export const saveDiscoveredEnding = ( storyId: string, sceneId: string ): void =>
+{
+    if ( globalThis.window === undefined ) return;
+
+    const discovered = loadDiscoveredEndings( storyId );
+    discovered.add( sceneId );
+    localStorage.setItem( endingsKey( storyId ), JSON.stringify( Array.from( discovered ) ) );
+};

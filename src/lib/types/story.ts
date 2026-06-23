@@ -42,15 +42,10 @@ export interface Story {
 }
 
 export interface StoryStats {
-    /** Number of scenes ("entries") in the story. */
     scenes: number;
-    /** Number of possible endings. */
     endings: number;
-    /** Total number of words across all content. */
     words: number;
-    /** Estimated reading time for a single playthrough (average path), in minutes. */
     minutes: number;
-    /** Reading time to explore all the content, in minutes. */
     fullMinutes: number;
 }
 
@@ -63,6 +58,7 @@ export interface StoryMeta {
     description: string;
     tags: string[];
     stats: StoryStats;
+    endingIds: string[];
 }
 
 export interface StoryFilters {

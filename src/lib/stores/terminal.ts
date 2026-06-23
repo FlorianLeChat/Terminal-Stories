@@ -4,7 +4,7 @@ import type { KnowledgeCategory, WikiState } from "$lib/types/knowledge";
 import { getStory, availableGenres, availableLanguages } from "$lib/data";
 import { categories, filterEntries, getEntry } from "$lib/data/knowledge";
 import { computeStoryStats, formatReadingTime } from "$lib/utilities/readingTime";
-import { saveProgress, loadSave, deleteSave, hasSave } from "$lib/utilities/saveService";
+import { saveProgress, loadSave, deleteSave, hasSave, saveDiscoveredEnding } from "$lib/utilities/saveService";
 
 export type TerminalView = "boot" | "menu" | "story-info" | "story" | "wiki";
 
@@ -483,6 +483,7 @@ const createTerminalStore = () =>
 
         if ( isLeavingFromEnding && state.gameState )
         {
+            saveDiscoveredEnding( state.gameState.storyId, currentSceneId );
             deleteSave( state.gameState.storyId );
         }
 
