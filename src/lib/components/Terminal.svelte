@@ -297,8 +297,12 @@
     <div class="monitor relative w-full max-w-4xl h-full max-h-screen flex flex-col">
         <div class="scanlines pointer-events-none"></div>
 
-        <div class="screen flex flex-col h-full overflow-hidden">
-            <div class="status-bar flex items-center justify-between px-4 py-1 text-xs font-mono text-terminal-dim border-b border-terminal-dim/30 select-none shrink-0">
+        <div class="screen flex flex-col h-full overflow-hidden" role="main">
+            <div
+                class="status-bar flex items-center justify-between px-4 py-1 text-xs font-mono text-terminal-dim border-b border-terminal-dim/30 select-none shrink-0"
+                role="banner"
+                aria-label="Barre d'état"
+            >
                 <span>TERMINAL STORIES</span>
 
                 <span class="flex items-center gap-4">
@@ -325,7 +329,7 @@
                 {:else if view === "menu"}
                     <StoryMenu {selectedIndex} onselect={handleMenuSelect} onnavigate={handleMenuNavigate} />
                 {:else if view === "story-info" || view === "story"}
-                    <TerminalOutput {lines} animated={view === "story"} skipSignal={skipAnimationSignal} bind:isAnimating />
+                    <TerminalOutput {lines} animated={view === "story"} skipSignal={skipAnimationSignal} bind:isAnimating onchoice={terminal.makeChoice} />
                 {:else if view === "wiki"}
                     <WikiBrowser />
                 {/if}
@@ -385,6 +389,12 @@
         }
         50% {
             opacity: 0;
+        }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .cursor-blink {
+            animation: none;
         }
     }
 </style>

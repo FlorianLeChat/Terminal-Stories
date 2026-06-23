@@ -11,9 +11,11 @@
         skipSignal?: number;
         /** True while lines are being typed out; bound to the parent for hint display. */
         isAnimating?: boolean;
+        /** Called when the user clicks a choice button; receives the 1-based choice index. */
+        onchoice?: ( choiceIndex: number ) => void;
     }
 
-    let { lines = [], animated = true, skipSignal = 0, isAnimating = $bindable( false ) }: Props = $props();
+    let { lines = [], animated = true, skipSignal = 0, isAnimating = $bindable( false ), onchoice }: Props = $props();
 
     let container: HTMLElement;
 
@@ -41,6 +43,10 @@
     const TYPED_TYPES = new Set( [ "narrator", "speaker", "ending", "action", "consequence" ] );
     /** Milliseconds between each revealed character. */
     const TYPING_SPEED = 18;
+    /** True when the OS requests reduced motion — disables the typewriter effect. */
+    const prefersReducedMotion = typeof window !== "undefined"
+        ? window.matchMedia( "(prefers-reduced-motion: reduce)" ).matches
+        : false;
 
     $effect( () =>
     {
@@ -132,7 +138,7 @@
         while ( pendingQueue.length > 0 )
         {
             const next = pendingQueue[ 0 ];
-            const needsTyping = animated && TYPED_TYPES.has( next.type ) && next.text.length > 0;
+            const needsTyping = animated && !prefersReducedMotion && TYPED_TYPES.has( next.type ) && next.text.length > 0;
 
             if ( needsTyping ) break;
 
@@ -263,6 +269,8 @@
 <div
     bind:this={container}
     class="flex-1 overflow-y-auto px-4 py-2 font-mono text-sm leading-relaxed scrollbar-terminal"
+    aria-live="polite"
+    aria-label="Sortie du terminal"
 >
     {#each displayed as line ( line.id )}
         {#if line.type === "image" && line.imageSrc}
@@ -287,6 +295,13 @@
             </div>
         {:else if line.text === ""}
             <div class="h-3"></div>
+        {:else if line.type === "choice"}
+            <button
+                class="line {lineClass( line.type )} {typedIds.has( line.id ) ? "" : "animate-fadein"} w-full text-left"
+                onclick={() => onchoice?.( line.choiceIndex ?? 0 )}
+            >
+                {line.text}
+            </button>
         {:else}
             <div class="line {lineClass( line.type )} {typedIds.has( line.id ) ? "" : "animate-fadein"}">
                 {#if line.type === "separator"}
@@ -353,5 +368,12 @@
     .scrollbar-terminal::-webkit-scrollbar-thumb {
         background: #1a4a1a;
         border-radius: 2px;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .animate-fadein,
+        .cursor-blink {
+            animation: none;
+        }
     }
 </style>

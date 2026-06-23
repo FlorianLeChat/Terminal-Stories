@@ -51,14 +51,14 @@
 
 <div class="flex-1 overflow-y-auto px-4 py-2 font-mono scrollbar-terminal">
     <div class="mb-4 text-center select-none">
-        <pre class="text-terminal-green text-xs leading-tight opacity-80">
+        <pre class="text-terminal-green text-xs leading-tight opacity-80" aria-hidden="true">
  _____ _____ ____  __  __ ___ _   _    _    _
 |_   _| ____|  _ \|  \/  |_ _| \ | |  / \  | |
   | | |  _| | |_) | |\/| || ||  \| | / _ \ | |
      | | | |___|  _ &lt;| |  | || || |\  |/ ___ \| |___
       |_| |_____|_| \_\_|  |_|___|_| \_/_/   \_\_____|
        </pre>
-        <pre class="text-terminal-green text-xs leading-tight opacity-80">
+        <pre class="text-terminal-green text-xs leading-tight opacity-80" aria-hidden="true">
      ____ _____ ___  ____  ___ _____ ____
     / ___|_   _/ _ \|  _ \|_ _| ____/ ___|
     \___ \ | || | | | |_) || ||  _| \___ \
@@ -76,9 +76,10 @@
 
                 {#each categories as cat ( cat.id )}
                     <button
-                        class="text-xs px-2 py-0.5 rounded border transition-colors duration-100 {wiki.category === cat.id
+                        class="text-xs px-2 py-0.5 rounded border motion-safe:transition-colors motion-safe:duration-100 {wiki.category === cat.id
                             ? `border-terminal-green bg-terminal-green/15 ${ color( cat.id ) }`
                             : "border-terminal-dim/40 text-terminal-dim hover:border-terminal-dim hover:text-terminal-white"}"
+                        aria-pressed={wiki.category === cat.id}
                         onclick={() => terminal.setWikiCategory( cat.id )}
                     >
                         {cat.icon} {cat.label}
@@ -92,9 +93,10 @@
 
                 {#each availableWikiLanguages as language ( language )}
                     <button
-                        class="text-xs px-2 py-0.5 rounded border transition-colors duration-100 {wiki.language === language
+                        class="text-xs px-2 py-0.5 rounded border motion-safe:transition-colors motion-safe:duration-100 {wiki.language === language
                             ? "border-terminal-green bg-terminal-green/15 text-terminal-white"
                             : "border-terminal-dim/40 text-terminal-dim hover:border-terminal-dim hover:text-terminal-white"}"
+                        aria-pressed={wiki.language === language}
                         onclick={() => terminal.setWikiLanguage( language )}
                     >
                         {language}
@@ -107,9 +109,10 @@
 
                 {#each filteredUniverses as universe ( universe )}
                     <button
-                        class="text-xs px-2 py-0.5 rounded border transition-colors duration-100 {wiki.universe === universe
+                        class="text-xs px-2 py-0.5 rounded border motion-safe:transition-colors motion-safe:duration-100 {wiki.universe === universe
                             ? "border-terminal-green bg-terminal-green/15 text-terminal-white"
                             : "border-terminal-dim/40 text-terminal-dim hover:border-terminal-dim hover:text-terminal-white"}"
+                        aria-pressed={wiki.universe === universe}
                         onclick={() => terminal.setWikiUniverse( universe )}
                     >
                         {universe}
@@ -130,9 +133,10 @@
             <div class="border border-terminal-dim rounded px-2 py-1 mb-4">
                 {#each entries as entry, i ( entry.id )}
                     <button
-                        class="w-full text-left px-3 py-2.5 rounded transition-all duration-100 block {i === wiki.selectedIndex
+                        class="w-full text-left px-3 py-2.5 rounded motion-safe:transition-all motion-safe:duration-100 block {i === wiki.selectedIndex
                             ? "bg-terminal-green/15 border-l-2 border-terminal-green"
                             : "border-l-2 border-transparent hover:bg-white/5"}"
+                        aria-current={i === wiki.selectedIndex ? "true" : undefined}
                         onclick={() => terminal.openWikiEntry( entry.id )}
                         onmouseenter={() => terminal.navigateWiki( i )}
                     >
@@ -217,7 +221,7 @@
 
                             {#if related}
                                 <button
-                                    class="text-left text-terminal-cyan text-xs hover:text-terminal-white transition-colors duration-100"
+                                    class="text-left text-terminal-cyan text-xs hover:text-terminal-white motion-safe:transition-colors motion-safe:duration-100"
                                     onclick={() => terminal.openRelatedEntry( relatedId )}
                                 >
                                     → {categories.find( ( c ) => c.id === related.category )?.icon}

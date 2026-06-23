@@ -6,7 +6,7 @@
     --color-terminal-amber: #ffb000;
     --color-terminal-cyan:  #00e5ff;
     --color-terminal-white: #e8ffe8;
-    --color-terminal-dim:   #3a6b3a;
+    --color-terminal-dim:   #4d8f4d;
     --color-terminal-bg:    #050e05;
 }
 
@@ -15,6 +15,11 @@
     button:not(:disabled),
     [role="button"]:not(:disabled) {
         @apply cursor-pointer;
+    }
+
+    :focus-visible {
+        outline: 2px solid var(--color-terminal-green);
+        outline-offset: 2px;
     }
 }
 

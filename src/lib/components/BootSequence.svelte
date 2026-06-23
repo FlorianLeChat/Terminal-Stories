@@ -28,8 +28,18 @@
 
     // Reveal each boot line on its own delay to fake a system booting up; the
     // last line flips `done`, after which input is accepted.
+    // When the OS requests reduced motion, all lines are shown immediately.
     onMount( () =>
     {
+        const prefersReducedMotion = window.matchMedia( "(prefers-reduced-motion: reduce)" ).matches;
+
+        if ( prefersReducedMotion )
+        {
+            visible = bootLines.map( () => true );
+            done = true;
+            return;
+        }
+
         bootLines.forEach( ( _line, i ) =>
         {
             setTimeout( () =>
@@ -69,7 +79,11 @@
 
 <svelte:window onkeydown={handleKey} />
 
-<button class="flex-1 text-left flex flex-col justify-center px-8 font-mono select-none" onclick={handleClick}>
+<button
+    class="flex-1 text-left flex flex-col justify-center px-8 font-mono select-none"
+    aria-label="Démarrage du système — appuyez sur Entrée pour continuer"
+    onclick={handleClick}
+>
     {#each bootLines as line, i ( i )}
         {#if visible[ i ]}
             <span
@@ -113,6 +127,13 @@
         }
         50% {
             opacity: 0.2;
+        }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .animate-fadein,
+        .blink-text {
+            animation: none;
         }
     }
 </style>

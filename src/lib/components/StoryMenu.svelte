@@ -103,14 +103,14 @@
 
 <div class="flex-1 overflow-y-auto px-4 py-2 font-mono">
     <div class="mb-6 text-center select-none">
-        <pre class="text-terminal-green text-xs leading-tight opacity-80">
+        <pre class="text-terminal-green text-xs leading-tight opacity-80" aria-hidden="true">
  _____ _____ ____  __  __ ___ _   _    _    _
 |_   _| ____|  _ \|  \/  |_ _| \ | |  / \  | |
   | | |  _| | |_) | |\/| || ||  \| | / _ \ | |
      | | | |___|  _ &lt;| |  | || || |\  |/ ___ \| |___
       |_| |_____|_| \_\_|  |_|___|_| \_/_/   \_\_____|
        </pre>
-        <pre class="text-terminal-green text-xs leading-tight opacity-80">
+        <pre class="text-terminal-green text-xs leading-tight opacity-80" aria-hidden="true">
      ____ _____ ___  ____  ___ _____ ____
     / ___|_   _/ _ \|  _ \|_ _| ____/ ___|
     \___ \ | || | | | |_) || ||  _| \___ \
@@ -127,9 +127,10 @@
 
             {#each availableGenres as genre ( genre )}
                 <button
-                    class="text-xs px-2 py-0.5 rounded border transition-colors duration-100 {filters.genre === genre
+                    class="text-xs px-2 py-0.5 rounded border motion-safe:transition-colors motion-safe:duration-100 {filters.genre === genre
                         ? `border-terminal-green bg-terminal-green/15 ${ genreColor( genre ) }`
                         : "border-terminal-dim/40 text-terminal-dim hover:border-terminal-dim hover:text-terminal-white"}"
+                    aria-pressed={filters.genre === genre}
                     onclick={() => terminal.setFilter( "genre", genre )}
                 >
                     {genre}
@@ -141,10 +142,11 @@
             <span class="text-terminal-dim text-xs w-16 shrink-0 select-none">LANGUE</span>
             {#each availableLanguages as language ( language )}
                 <button
-                    class="text-xs px-2 py-0.5 rounded border transition-colors duration-100 {filters.language
+                    class="text-xs px-2 py-0.5 rounded border motion-safe:transition-colors motion-safe:duration-100 {filters.language
                       === language
                         ? "border-terminal-green bg-terminal-green/15 text-terminal-white"
                         : "border-terminal-dim/40 text-terminal-dim hover:border-terminal-dim hover:text-terminal-white"}"
+                    aria-pressed={filters.language === language}
                     onclick={() => terminal.setFilter( "language", language )}
                 >
                     {language}
@@ -153,7 +155,7 @@
 
             {#if hasFilters}
                 <button
-                    class="text-xs px-2 py-0.5 rounded border border-terminal-amber/50 text-terminal-amber hover:bg-terminal-amber/10 transition-colors duration-100 ml-auto"
+                    class="text-xs px-2 py-0.5 rounded border border-terminal-amber/50 text-terminal-amber hover:bg-terminal-amber/10 motion-safe:transition-colors motion-safe:duration-100 ml-auto"
                     onclick={() => terminal.clearFilters()}
                 >
                     ✕ Réinitialiser
@@ -166,7 +168,7 @@
         <span class="text-terminal-dim">↑ ↓ Naviguer &nbsp;|&nbsp; ENTRÉE Sélectionner &nbsp;|&nbsp; Numéro Accès direct</span>
 
         <button
-            class="px-2 py-0.5 rounded border border-terminal-cyan/50 text-terminal-cyan hover:bg-terminal-cyan/10 transition-colors duration-100"
+            class="px-2 py-0.5 rounded border border-terminal-cyan/50 text-terminal-cyan hover:bg-terminal-cyan/10 motion-safe:transition-colors motion-safe:duration-100"
             onclick={() => terminal.openWiki()}
         >
             ✦ [W] Encyclopédie
@@ -188,9 +190,10 @@
                 {@const allFound = found.size === story.endingIds.length && story.endingIds.length > 0}
 
                 <button
-                    class="w-full text-left px-3 py-3 rounded transition-all duration-100 block {i === selectedIndex
+                    class="w-full text-left px-3 py-3 rounded motion-safe:transition-all motion-safe:duration-100 block {i === selectedIndex
                         ? "bg-terminal-green/15 border-l-2 border-terminal-green"
                         : "border-l-2 border-transparent hover:bg-white/5"}"
+                    aria-current={i === selectedIndex ? "true" : undefined}
                     onclick={() => onselect( story.id )}
                     onmouseenter={() => onnavigate( i )}
                 >
@@ -206,14 +209,14 @@
                                 {#if storyCompletion( story.id, story.stats.scenes ) !== null}
                                     <span
                                         class="text-terminal-amber text-xs shrink-0 font-mono"
-                                        title="Sauvegarde — {storyCompletion( story.id, story.stats.scenes )}% explorés"
+                                        aria-label="Sauvegarde — {storyCompletion( story.id, story.stats.scenes )}% explorés"
                                     >
                                         ◉
                                     </span>
                                 {/if}
 
                                 {#if allFound}
-                                    <span class="text-terminal-amber text-xs shrink-0" title="Toutes les fins découvertes">★</span>
+                                    <span class="text-terminal-amber text-xs shrink-0" aria-label="Toutes les fins découvertes">★</span>
                                 {/if}
 
                                 <span class="text-terminal-cyan text-xs shrink-0 ml-auto" title="Temps de lecture estimé d'une partie">
