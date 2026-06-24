@@ -2,8 +2,9 @@ import { writable, get } from "svelte/store";
 import type { GameState, Story, Scene, Choice, StoryFilters } from "$lib/types/story";
 import type { KnowledgeCategory, WikiState } from "$lib/types/knowledge";
 import { getStory, availableGenres, availableLanguages } from "$lib/data";
-import { categories, filterEntries, getEntry } from "$lib/data/knowledge";
+import { categories, filterEntries, getEntry, getLanguageForUniverse } from "$lib/data/knowledge";
 import { computeStoryStats } from "$lib/utilities/readingTime";
+import { searchWikiEntries } from "$lib/utilities/searchIndex";
 import { saveProgress, loadSave, deleteSave, hasSave, saveDiscoveredEnding, saveActiveSession, clearActiveSession } from "$lib/utilities/saveService";
 
 export type TerminalView = "boot" | "menu" | "story-info" | "story" | "wiki";
@@ -17,6 +18,8 @@ interface TerminalStore {
     lines: TerminalLine[];
     awaitingInput: boolean;
     wiki: WikiState;
+    searchQuery: string;
+    searchActive: boolean;
 }
 
 export interface TerminalLine {
@@ -90,7 +93,9 @@ const createTerminalStore = () =>
         currentStory: null,
         lines: [],
         awaitingInput: false,
-        wiki: { category: "universe", language: null, universe: null, selectedIndex: 0, selectedEntryId: null }
+        wiki: { category: "universe", language: null, universe: null, selectedIndex: 0, selectedEntryId: null },
+        searchQuery: "",
+        searchActive: false
     };
 
     const { subscribe, update } = writable<TerminalStore>( initial );
@@ -128,7 +133,7 @@ const createTerminalStore = () =>
     {
         clearActiveSession();
         clearLines();
-        update( ( s ) => ( { ...s, view: "menu", selectedStoryIndex: 0, awaitingInput: true } ) );
+        update( ( s ) => ( { ...s, view: "menu", selectedStoryIndex: 0, awaitingInput: true, searchQuery: "", searchActive: false } ) );
     };
 
     /**
@@ -218,7 +223,9 @@ const createTerminalStore = () =>
             ...s,
             view: "story-info",
             currentStory: story,
-            awaitingInput: true
+            awaitingInput: true,
+            searchQuery: "",
+            searchActive: false
         } ) );
 
         const stats = computeStoryStats( story );
@@ -489,15 +496,29 @@ const createTerminalStore = () =>
     };
 
     /**
-     * Returns the wiki entries currently visible under the active category and
-     * language/universe filters.
+     * Returns wiki entries visible under the current filters, respecting the
+     * active search query. When a query is set, searches across all categories
+     * (ignoring the category tab) and keeps language/universe filters only.
      *
-     * @returns The filtered list of knowledge entries.
+     * @returns The filtered and/or ranked list of knowledge entries.
      * @author Claude
      */
     const wikiVisibleEntries = () =>
     {
-        const { wiki } = get( { subscribe } );
+        const { wiki, searchActive, searchQuery } = get( { subscribe } );
+
+        const hasQuery = searchActive && searchQuery !== "";
+
+        if ( hasQuery )
+        {
+            return searchWikiEntries( searchQuery ).filter( ( e ) =>
+            {
+                if ( wiki.language && getLanguageForUniverse( e.universe ) !== wiki.language ) return false;
+                if ( wiki.universe && e.universe !== wiki.universe ) return false;
+
+                return true;
+            } );
+        }
 
         return filterEntries( wiki.category, wiki.language, wiki.universe );
     };
@@ -514,6 +535,8 @@ const createTerminalStore = () =>
             ...s,
             view: "wiki",
             awaitingInput: true,
+            searchQuery: "",
+            searchActive: false,
             wiki: { ...s.wiki, selectedIndex: 0, selectedEntryId: null }
         } ) );
     };
@@ -688,6 +711,58 @@ const createTerminalStore = () =>
         } ) );
     };
 
+    /**
+     * Activates the search mode: shows the search input and resets the
+     * selection to the top. Any open wiki entry is closed so the list is
+     * visible.
+     *
+     * @author Claude
+     */
+    const activateSearch = () =>
+    {
+        update( ( s ) => ( {
+            ...s,
+            searchActive: true,
+            searchQuery: "",
+            selectedStoryIndex: 0,
+            wiki: { ...s.wiki, selectedIndex: 0, selectedEntryId: null }
+        } ) );
+    };
+
+    /**
+     * Updates the live search query and resets the item selection so the
+     * highlight always starts at the top of the new results list.
+     *
+     * @param query - The current value of the search input.
+     * @author Claude
+     */
+    const setSearchQuery = ( query: string ) =>
+    {
+        update( ( s ) => ( {
+            ...s,
+            searchQuery: query,
+            selectedStoryIndex: 0,
+            wiki: { ...s.wiki, selectedIndex: 0 }
+        } ) );
+    };
+
+    /**
+     * Deactivates search mode and clears the query, restoring normal
+     * filter-based navigation.
+     *
+     * @author Claude
+     */
+    const deactivateSearch = () =>
+    {
+        update( ( s ) => ( {
+            ...s,
+            searchActive: false,
+            searchQuery: "",
+            selectedStoryIndex: 0,
+            wiki: { ...s.wiki, selectedIndex: 0 }
+        } ) );
+    };
+
     return {
         subscribe,
         update,
@@ -712,7 +787,10 @@ const createTerminalStore = () =>
         openWikiEntry,
         selectWikiEntryAt,
         backToWikiList,
-        openRelatedEntry
+        openRelatedEntry,
+        activateSearch,
+        setSearchQuery,
+        deactivateSearch
     };
 };
 

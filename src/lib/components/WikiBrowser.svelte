@@ -8,13 +8,33 @@
         countByCategory,
         categoryLabel,
         getLanguageForUniverse } from "$lib/data/knowledge";
+    import { searchWikiEntries } from "$lib/utilities/searchIndex";
 
     let wiki = $derived( $terminal.wiki );
-    let entries = $derived( filterEntries( wiki.category, wiki.language, wiki.universe ) );
+    let searchActive = $derived( $terminal.searchActive );
+    let searchQuery = $derived( $terminal.searchQuery );
+    let entries = $derived(
+        searchActive && searchQuery !== ""
+            ? searchWikiEntries( searchQuery ).filter( ( e ) =>
+                ( !wiki.language || getLanguageForUniverse( e.universe ) === wiki.language )
+                && ( !wiki.universe || e.universe === wiki.universe )
+            )
+            : filterEntries( wiki.category, wiki.language, wiki.universe )
+    );
     let currentEntry = $derived( wiki.selectedEntryId ? getEntry( wiki.selectedEntryId ) : null );
     let filteredUniverses = $derived( wiki.language
         ? availableUniverses.filter( ( u ) => getLanguageForUniverse( u ) === wiki.language )
         : availableUniverses );
+
+    let searchInputEl: HTMLInputElement | undefined = $state();
+
+    $effect( () =>
+    {
+        if ( searchActive )
+        {
+            searchInputEl?.focus();
+        }
+    } );
 
     const categoryColors: Record<string, string> = {
         universe: "text-terminal-cyan",
@@ -121,13 +141,46 @@
             </div>
         </div>
 
+        {#if searchActive}
+            <div class="border border-terminal-green/40 bg-terminal-green/5 rounded px-3 py-2 mb-3 flex items-center gap-2">
+                <span class="text-terminal-dim text-xs select-none shrink-0">RECHERCHE</span>
+                <span class="text-terminal-green text-xs shrink-0">›</span>
+
+                <input
+                    bind:this={searchInputEl}
+                    type="text"
+                    class="flex-1 bg-transparent text-terminal-green text-xs outline-none font-mono placeholder-terminal-dim/50 caret-terminal-green"
+                    placeholder="Nom, résumé, description, alias..."
+                    value={searchQuery}
+                    oninput={( e ) => terminal.setSearchQuery( e.currentTarget.value )}
+                    aria-label="Rechercher une entrée encyclopédique"
+                    autocomplete="off"
+                    spellcheck={false}
+                />
+
+                <span class="text-terminal-dim text-xs shrink-0 select-none">[ÉCHAP] Annuler</span>
+            </div>
+        {/if}
+
         <div class="text-terminal-dim text-xs mb-3 text-center">
-            [←→] Rubrique &nbsp;|&nbsp; [↑↓] Naviguer &nbsp;|&nbsp; [ENTRÉE] Consulter &nbsp;|&nbsp; [ÉCHAP] Menu
+            {#if searchActive}
+                [↑↓] Naviguer &nbsp;|&nbsp; [ENTRÉE] Consulter &nbsp;|&nbsp; [ÉCHAP] Annuler
+            {:else}
+                [←→] Rubrique &nbsp;|&nbsp; [↑↓] Naviguer &nbsp;|&nbsp; [ENTRÉE] Consulter &nbsp;|&nbsp; [ÉCHAP] Menu
+            {/if}
         </div>
 
         {#if entries.length === 0}
             <div class="border border-terminal-dim/40 rounded px-3 py-8 mb-4 text-center text-terminal-dim text-sm">
-                Aucune entrée dans cette rubrique pour ce filtre.
+                {#if searchActive && searchQuery !== ""}
+                    <p>Aucune histoire ne correspond à « {searchQuery} ».</p>
+
+                    <button class="block mx-auto mt-3 text-terminal-amber text-xs underline" onclick={() => terminal.deactivateSearch()}>
+                        Effacer la recherche
+                    </button>
+                {:else}
+                    Aucune entrée dans cette rubrique pour ce filtre.
+                {/if}
             </div>
         {:else}
             <div class="border border-terminal-dim rounded px-2 py-1 mb-4">
@@ -165,8 +218,12 @@
         {/if}
 
         <div class="text-terminal-dim text-xs text-center opacity-50 pb-4">
-            {entries.length} entrée{entries.length > 1 ? "s" : ""} — {categoryLabel( wiki.category )}
-            {wiki.universe ? `· ${ wiki.universe }` : ""}
+            {#if searchActive && searchQuery !== ""}
+                {entries.length} résultat{entries.length > 1 ? "s" : ""} pour « {searchQuery} »
+            {:else}
+                {entries.length} entrée{entries.length > 1 ? "s" : ""} — {categoryLabel( wiki.category )}
+                {wiki.universe ? `· ${ wiki.universe }` : ""}
+            {/if}
         </div>
     {:else}
         <div class="border border-terminal-dim rounded px-4 py-3 mb-4 max-w-2xl mx-auto">
