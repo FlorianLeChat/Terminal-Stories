@@ -115,6 +115,18 @@ Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
 
 Replace `Claude Sonnet 4.6` with the actual model name for this session (Opus, Sonnet, Haiku, etc.).
 
+## Semantic HTML
+
+Prefer semantic HTML elements over `<div>` and `<span>`. Use the element that best describes the content's role:
+
+- `<main>`, `<header>`, `<footer>`, `<nav>`, `<aside>`, `<section>`, `<article>` for page regions
+- `<ul>` / `<ol>` / `<li>` for lists of items (menu entries, wiki entries, choices…)
+- `<button>` for interactive controls (already enforced), `<a>` for navigation links
+- `<p>` for paragraphs of text, `<h1>`–`<h6>` for headings
+- `<output>` for dynamically updated values, `<time>` for dates/durations
+
+Reserve `<div>` and `<span>` for purely structural or styling wrappers that carry no semantic meaning of their own. When in doubt, ask: *does an element exist for this purpose?* If yes, use it.
+
 ## Component decomposition
 
 Prefer splitting into smaller components rather than growing a single file. Extract a sub-component when:

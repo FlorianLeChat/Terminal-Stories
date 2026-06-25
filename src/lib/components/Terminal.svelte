@@ -354,10 +354,9 @@
     <div class="monitor relative w-full max-w-4xl h-full max-h-screen flex flex-col">
         <div class="scanlines pointer-events-none"></div>
 
-        <div class="screen flex flex-col h-full overflow-hidden" role="main">
-            <div
+        <main class="screen flex flex-col h-full overflow-hidden">
+            <header
                 class="status-bar flex items-center justify-between px-4 py-1 text-xs font-mono text-terminal-dim border-b border-terminal-dim/30 select-none shrink-0"
-                role="banner"
                 aria-label="Barre d'état"
             >
                 <span>TERMINAL STORIES</span>
@@ -378,7 +377,7 @@
                 </span>
 
                 <span class="cursor-blink">█</span>
-            </div>
+            </header>
 
             <div class="flex-1 flex flex-col overflow-hidden">
                 {#if view === "boot"}
@@ -399,7 +398,7 @@
                 wikiEntryOpen={!!$terminal.wiki.selectedEntryId}
                 searchActive={$terminal.searchActive}
             />
-        </div>
+        </main>
     </div>
 </div>
 

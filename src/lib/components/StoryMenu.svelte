@@ -139,8 +139,8 @@
     </div>
 
     <div class="border border-terminal-dim/40 rounded px-3 py-2 mb-4 space-y-1.5">
-        <div class="flex items-center gap-2 flex-wrap">
-            <span class="text-terminal-dim text-xs w-16 shrink-0 select-none">GENRE</span>
+        <div class="flex items-center gap-2 flex-wrap" role="group" aria-labelledby="filter-genre-label">
+            <span id="filter-genre-label" class="text-terminal-dim text-xs w-16 shrink-0 select-none">GENRE</span>
 
             {#each availableGenres as genre ( genre )}
                 <button
@@ -155,8 +155,9 @@
             {/each}
         </div>
 
-        <div class="flex items-center gap-2 flex-wrap">
-            <span class="text-terminal-dim text-xs w-16 shrink-0 select-none">LANGUE</span>
+        <div class="flex items-center gap-2 flex-wrap" role="group" aria-labelledby="filter-language-label">
+            <span id="filter-language-label" class="text-terminal-dim text-xs w-16 shrink-0 select-none">LANGUE</span>
+
             {#each availableLanguages as language ( language )}
                 <button
                     class="text-xs px-2 py-0.5 rounded border motion-safe:transition-colors motion-safe:duration-100 {filters.language
@@ -232,94 +233,100 @@
             {/if}
         </div>
     {:else}
-        <div class="border border-terminal-dim rounded px-2 py-1 mb-4">
+        <ol class="border border-terminal-dim rounded px-2 py-1 mb-4">
             {#each visibleStories as story, i ( story.id )}
                 {@const found = discoveredEndings( story.id )}
                 {@const allFound = found.size === story.endingIds.length && story.endingIds.length > 0}
 
-                <button
-                    class="w-full text-left px-3 py-3 rounded motion-safe:transition-all motion-safe:duration-100 block {i === selectedIndex
-                        ? "bg-terminal-green/15 border-l-2 border-terminal-green"
-                        : "border-l-2 border-transparent hover:bg-white/5"}"
-                    aria-current={i === selectedIndex ? "true" : undefined}
-                    onclick={() => onselect( story.id )}
-                    onmouseenter={() => onnavigate( i )}
-                >
-                    <span class="flex items-baseline gap-3">
-                        <span class="text-terminal-dim text-xs w-4 shrink-0">{i + 1}.</span>
+                <li>
+                    <button
+                        class="w-full text-left px-3 py-3 rounded motion-safe:transition-all motion-safe:duration-100 block {i === selectedIndex
+                            ? "bg-terminal-green/15 border-l-2 border-terminal-green"
+                            : "border-l-2 border-transparent hover:bg-white/5"}"
+                        aria-current={i === selectedIndex ? "true" : undefined}
+                        onclick={() => onselect( story.id )}
+                        onmouseenter={() => onnavigate( i )}
+                    >
+                        <div class="flex items-baseline gap-3">
+                            <span class="text-terminal-dim text-xs w-4 shrink-0">{i + 1}.</span>
 
-                        <span class="block flex-1 min-w-0">
-                            <span class="flex items-baseline gap-2 flex-wrap">
-                                <span class="text-terminal-white font-bold text-sm">{story.title}</span>
-                                <span class="text-xs {genreColor( story.genre )} shrink-0">[{story.genre}]</span>
-                                <span class="text-terminal-dim text-xs shrink-0">· {story.language}</span>
-
-                                {#if storyCompletion( story.id, story.stats.scenes ) !== null}
-                                    <span
-                                        class="text-terminal-amber text-xs shrink-0 font-mono"
-                                        aria-label="Sauvegarde — {storyCompletion( story.id, story.stats.scenes )}% explorés"
-                                    >
-                                        ◉
-                                    </span>
-                                {/if}
-
-                                {#if allFound}
-                                    <span class="text-terminal-amber text-xs shrink-0" aria-label="Toutes les fins découvertes">★</span>
-                                {/if}
-
-                                <span class="text-terminal-cyan text-xs shrink-0 ml-auto" title="Temps de lecture estimé d'une partie">
-                                    ⏱ {formatReadingTime( story.stats.minutes )} / partie
-                                </span>
-                            </span>
-
-                            <span class="block text-terminal-dim text-xs mt-0.5">{story.universe}</span>
-
-                            {#if i === selectedIndex}
-                                <span class="block text-terminal-green text-xs mt-1 opacity-80 leading-relaxed">
-                                    {story.description}
-                                </span>
-
-                                <span class="flex items-center gap-3 mt-1 text-terminal-dim text-xs opacity-70">
-                                    <span title="Nombre de scènes">⌬ {story.stats.scenes} entrées</span>
-                                    <span title="Temps pour explorer tout le contenu">⧉ {formatReadingTime( story.stats.fullMinutes )} pour tout explorer</span>
+                            <div class="flex-1 min-w-0">
+                                <div class="flex items-baseline gap-2 flex-wrap">
+                                    <span class="text-terminal-white font-bold text-sm">{story.title}</span>
+                                    <span class="text-xs {genreColor( story.genre )} shrink-0">[{story.genre}]</span>
+                                    <span class="text-terminal-dim text-xs shrink-0">· {story.language}</span>
 
                                     {#if storyCompletion( story.id, story.stats.scenes ) !== null}
-                                        {@const pct = storyCompletion( story.id, story.stats.scenes ) ?? 0}
-                                        {@const bar = miniBar( pct )}
-
-                                        <span class="font-mono ml-auto text-xs" title="Progression sauvegardée">
-                                            <span class="text-terminal-amber">◉ {bar.filled}</span><span class="text-terminal-dim/50">{bar.empty}</span>
-                                            <span class="text-terminal-amber"> {pct}%</span>
+                                        <span
+                                            class="text-terminal-amber text-xs shrink-0 font-mono"
+                                            aria-label="Sauvegarde — {storyCompletion( story.id, story.stats.scenes )}% explorés"
+                                        >
+                                            ◉
                                         </span>
                                     {/if}
-                                </span>
 
-                                <span
-                                    class="flex items-center gap-1 mt-1 font-mono"
-                                    title="Fins découvertes : {found.size} / {story.endingIds.length}"
-                                >
-                                    <span class="text-terminal-dim text-xs opacity-70 mr-1">{story.endingIds.length} fin{story.endingIds.length > 1 ? "s" : ""} :</span>
+                                    {#if allFound}
+                                        <span class="text-terminal-amber text-xs shrink-0" aria-label="Toutes les fins découvertes">★</span>
+                                    {/if}
 
-                                    {#each story.endingIds as endingId, idx ( endingId )}
-                                        <span class="text-2xl {found.has( endingId ) ? "text-terminal-green" : "text-terminal-dim"}">{endingGlyph( idx + 1 )}</span>
-                                    {/each}
-                                </span>
+                                    <span class="text-terminal-cyan text-xs shrink-0 ml-auto" title="Temps de lecture estimé d'une partie">
+                                        ⏱ {formatReadingTime( story.stats.minutes )} / partie
+                                    </span>
+                                </div>
 
-                                <span class="flex gap-1 mt-1 flex-wrap">
-                                    {#each story.tags as tag ( tag )}
-                                        <span class="text-terminal-dim text-xs opacity-60">#{tag}</span>
-                                    {/each}
-                                </span>
-                            {/if}
-                        </span>
-                    </span>
-                </button>
+                                <p class="text-terminal-dim text-xs mt-0.5">{story.universe}</p>
 
-                {#if i < visibleStories.length - 1}
-                    <div class="border-t border-terminal-dim/20 mx-3"></div>
-                {/if}
+                                {#if i === selectedIndex}
+                                    <p class="text-terminal-green text-xs mt-1 opacity-80 leading-relaxed">
+                                        {story.description}
+                                    </p>
+
+                                    <div class="flex items-center gap-3 mt-1 text-terminal-dim text-xs opacity-70">
+                                        <span title="Nombre de scènes">⌬ {story.stats.scenes} entrées</span>
+                                        <span title="Temps pour explorer tout le contenu">⧉ {formatReadingTime( story.stats.fullMinutes )} pour tout explorer</span>
+
+                                        {#if storyCompletion( story.id, story.stats.scenes ) !== null}
+                                            {@const pct = storyCompletion( story.id, story.stats.scenes ) ?? 0}
+                                            {@const bar = miniBar( pct )}
+
+                                            <span class="font-mono ml-auto text-xs" title="Progression sauvegardée">
+                                                <span class="text-terminal-amber">◉ {bar.filled}</span><span class="text-terminal-dim/50">{bar.empty}</span>
+                                                <span class="text-terminal-amber"> {pct}%</span>
+                                            </span>
+                                        {/if}
+                                    </div>
+
+                                    <div
+                                        class="flex items-center gap-1 mt-1 font-mono"
+                                        title="Fins découvertes : {found.size} / {story.endingIds.length}"
+                                    >
+                                        <span class="text-terminal-dim text-xs opacity-70 mr-1">
+                                            {story.endingIds.length} fin{story.endingIds.length > 1 ? "s" : ""} :
+                                        </span>
+
+                                        {#each story.endingIds as endingId, idx ( endingId )}
+                                            <span class="text-2xl {found.has( endingId ) ? "text-terminal-green" : "text-terminal-dim"}">
+                                                {endingGlyph( idx + 1 )}
+                                            </span>
+                                        {/each}
+                                    </div>
+
+                                    <ul class="flex gap-1 mt-1 flex-wrap">
+                                        {#each story.tags as tag ( tag )}
+                                            <li class="text-terminal-dim text-xs opacity-60">#{tag}</li>
+                                        {/each}
+                                    </ul>
+                                {/if}
+                            </div>
+                        </div>
+                    </button>
+
+                    {#if i < visibleStories.length - 1}
+                        <div class="border-t border-terminal-dim/20 mx-3" aria-hidden="true"></div>
+                    {/if}
+                </li>
             {/each}
-        </div>
+        </ol>
     {/if}
 
     <div class="text-terminal-dim text-xs text-center opacity-50 pb-4">

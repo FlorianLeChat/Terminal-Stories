@@ -16,7 +16,7 @@
     let { view, hasSave, isAnimating, wikiEntryOpen, searchActive }: Props = $props();
 </script>
 
-<div class="shrink-0 border-t border-terminal-dim/30 px-4 py-1 text-xs font-mono text-terminal-dim flex justify-between select-none">
+<footer class="shrink-0 border-t border-terminal-dim/30 px-4 py-1 text-xs font-mono text-terminal-dim flex justify-between select-none">
     <span>
         {#if view === "story"}
             [1-9] Choix &nbsp;|&nbsp; {#if isAnimating}[ESPACE] Passer &nbsp;|&nbsp; {/if}[ÉCHAP] Menu
@@ -45,5 +45,5 @@
         {/if}
     </span>
 
-    <span class="opacity-40">1.0.0</span>
-</div>
+    <small class="opacity-40">1.0.0</small>
+</footer>

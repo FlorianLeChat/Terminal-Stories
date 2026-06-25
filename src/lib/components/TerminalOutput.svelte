@@ -274,27 +274,27 @@
 >
     {#each displayed as line ( line.id )}
         {#if line.type === "image" && line.imageSrc}
-            <div class="my-3 border border-terminal-dim/30 rounded overflow-hidden max-w-xl animate-fadein">
+            <figure class="my-3 border border-terminal-dim/30 rounded overflow-hidden max-w-xl animate-fadein">
                 <img src={line.imageSrc} alt="" class="w-full max-h-44 object-cover grayscale opacity-75" />
-            </div>
+            </figure>
         {:else if line.type === "save"}
-            <div class="my-2 border border-terminal-amber rounded px-3 py-2 bg-terminal-amber/8 animate-fadein select-none">
-                <div class="flex items-center gap-2 text-terminal-amber font-bold text-xs tracking-widest">
+            <aside class="my-2 border border-terminal-amber rounded px-3 py-2 bg-terminal-amber/8 animate-fadein select-none" aria-label="Sauvegarde trouvée">
+                <p class="flex items-center gap-2 text-terminal-amber font-bold text-xs tracking-widest">
                     <span>◉</span>
                     <span>SAUVEGARDE TROUVÉE</span>
-                </div>
+                </p>
 
                 <div class="flex items-center gap-2 mt-1.5">
                     <span class="text-xs font-mono">
                         <span class="text-terminal-amber">{buildProgressBar( line.savePercent ?? 0 ).filled}</span><span class="text-terminal-dim/50">{buildProgressBar( line.savePercent ?? 0 ).empty}</span>
                     </span>
 
-                    <span class="text-terminal-amber text-xs font-bold">{line.savePercent ?? 0}%</span>
+                    <output class="text-terminal-amber text-xs font-bold">{line.savePercent ?? 0}%</output>
                     <span class="text-terminal-dim text-xs">progression</span>
                 </div>
-            </div>
+            </aside>
         {:else if line.text === ""}
-            <div class="h-3"></div>
+            <div class="h-3" aria-hidden="true"></div>
         {:else if line.type === "choice"}
             <button
                 class="line {lineClass( line.type )} {typedIds.has( line.id ) ? "" : "animate-fadein"} w-full text-left"
@@ -314,9 +314,9 @@
     {/each}
 
     {#if typingLine && isAnimating}
-        <div class="line {lineClass( typingLine.type )}">
+        <output class="line block {lineClass( typingLine.type )}">
             {typingText}<span class="cursor-blink">▋</span>
-        </div>
+        </output>
     {/if}
 </div>
 

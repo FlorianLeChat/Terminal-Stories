@@ -91,8 +91,8 @@
 
     {#if !currentEntry}
         <div class="border border-terminal-dim/40 rounded px-3 py-2 mb-3 space-y-2">
-            <div class="flex items-center gap-2 flex-wrap">
-                <span class="text-terminal-dim text-xs w-20 shrink-0 select-none">RUBRIQUE</span>
+            <div class="flex items-center gap-2 flex-wrap" role="group" aria-labelledby="wiki-filter-category-label">
+                <span id="wiki-filter-category-label" class="text-terminal-dim text-xs w-20 shrink-0 select-none">RUBRIQUE</span>
 
                 {#each categories as cat ( cat.id )}
                     <button
@@ -108,8 +108,8 @@
                 {/each}
             </div>
 
-            <div class="flex items-center gap-2 flex-wrap">
-                <span class="text-terminal-dim text-xs w-20 shrink-0 select-none">LANGUE</span>
+            <div class="flex items-center gap-2 flex-wrap" role="group" aria-labelledby="wiki-filter-language-label">
+                <span id="wiki-filter-language-label" class="text-terminal-dim text-xs w-20 shrink-0 select-none">LANGUE</span>
 
                 {#each availableWikiLanguages as language ( language )}
                     <button
@@ -124,8 +124,8 @@
                 {/each}
             </div>
 
-            <div class="flex items-center gap-2 flex-wrap">
-                <span class="text-terminal-dim text-xs w-20 shrink-0 select-none">UNIVERS</span>
+            <div class="flex items-center gap-2 flex-wrap" role="group" aria-labelledby="wiki-filter-universe-label">
+                <span id="wiki-filter-universe-label" class="text-terminal-dim text-xs w-20 shrink-0 select-none">UNIVERS</span>
 
                 {#each filteredUniverses as universe ( universe )}
                     <button
@@ -183,38 +183,40 @@
                 {/if}
             </div>
         {:else}
-            <div class="border border-terminal-dim rounded px-2 py-1 mb-4">
+            <ol class="border border-terminal-dim rounded px-2 py-1 mb-4">
                 {#each entries as entry, i ( entry.id )}
-                    <button
-                        class="w-full text-left px-3 py-2.5 rounded motion-safe:transition-all motion-safe:duration-100 block {i === wiki.selectedIndex
-                            ? "bg-terminal-green/15 border-l-2 border-terminal-green"
-                            : "border-l-2 border-transparent hover:bg-white/5"}"
-                        aria-current={i === wiki.selectedIndex ? "true" : undefined}
-                        onclick={() => terminal.openWikiEntry( entry.id )}
-                        onmouseenter={() => terminal.navigateWiki( i )}
-                    >
-                        <span class="flex items-baseline gap-3">
-                            <span class="text-xs shrink-0 {color( entry.category )}">{categories.find( ( c ) => c.id
-                              === entry.category )?.icon}</span>
+                    <li>
+                        <button
+                            class="w-full text-left px-3 py-2.5 rounded motion-safe:transition-all motion-safe:duration-100 block {i === wiki.selectedIndex
+                                ? "bg-terminal-green/15 border-l-2 border-terminal-green"
+                                : "border-l-2 border-transparent hover:bg-white/5"}"
+                            aria-current={i === wiki.selectedIndex ? "true" : undefined}
+                            onclick={() => terminal.openWikiEntry( entry.id )}
+                            onmouseenter={() => terminal.navigateWiki( i )}
+                        >
+                            <span class="flex items-baseline gap-3">
+                                <span class="text-xs shrink-0 {color( entry.category )}">{categories.find( ( c ) => c.id
+                                  === entry.category )?.icon}</span>
 
-                            <span class="block flex-1 min-w-0">
-                                <span class="flex items-baseline gap-2 flex-wrap">
-                                    <span class="text-terminal-white font-bold text-sm">{entry.name}</span>
-                                    <span class="text-terminal-dim text-xs shrink-0">· {entry.universe}</span>
-                                </span>
+                                <span class="block flex-1 min-w-0">
+                                    <span class="flex items-baseline gap-2 flex-wrap">
+                                        <span class="text-terminal-white font-bold text-sm">{entry.name}</span>
+                                        <span class="text-terminal-dim text-xs shrink-0">· {entry.universe}</span>
+                                    </span>
 
-                                <span class="block text-terminal-green text-xs mt-0.5 opacity-80 leading-relaxed">
-                                    {entry.summary}
+                                    <span class="block text-terminal-green text-xs mt-0.5 opacity-80 leading-relaxed">
+                                        {entry.summary}
+                                    </span>
                                 </span>
                             </span>
-                        </span>
-                    </button>
+                        </button>
 
-                    {#if i < entries.length - 1}
-                        <div class="border-t border-terminal-dim/20 mx-3"></div>
-                    {/if}
+                        {#if i < entries.length - 1}
+                            <div class="border-t border-terminal-dim/20 mx-3" aria-hidden="true"></div>
+                        {/if}
+                    </li>
                 {/each}
-            </div>
+            </ol>
         {/if}
 
         <div class="text-terminal-dim text-xs text-center opacity-50 pb-4">
@@ -226,15 +228,15 @@
             {/if}
         </div>
     {:else}
-        <div class="border border-terminal-dim rounded px-4 py-3 mb-4 max-w-2xl mx-auto">
-            <div class="flex items-baseline gap-2 flex-wrap border-b border-terminal-dim/30 pb-2 mb-3">
+        <article class="border border-terminal-dim rounded px-4 py-3 mb-4 max-w-2xl mx-auto">
+            <header class="flex items-baseline gap-2 flex-wrap border-b border-terminal-dim/30 pb-2 mb-3">
                 <span class="text-xs {color( currentEntry.category )}">
                     {categories.find( ( c ) => c.id === currentEntry.category )?.icon}
                     {categoryLabel( currentEntry.category )}
                 </span>
                 <span class="text-terminal-dim text-xs">·</span>
                 <span class="text-terminal-dim text-xs">{currentEntry.universe}</span>
-            </div>
+            </header>
 
             <h2 class="text-terminal-white text-lg font-bold tracking-wide mb-1">{currentEntry.name}</h2>
 
@@ -245,13 +247,13 @@
             {/if}
 
             {#if currentEntry.image}
-                <div class="my-3 border border-terminal-dim/40 rounded overflow-hidden">
+                <figure class="my-3 border border-terminal-dim/40 rounded overflow-hidden">
                     <img
                         src={currentEntry.image}
                         alt={currentEntry.name}
                         class="w-full max-h-56 object-cover grayscale opacity-80"
                     />
-                </div>
+                </figure>
             {/if}
 
             <div class="space-y-2 text-sm leading-relaxed text-terminal-green mt-3">
@@ -261,36 +263,38 @@
             </div>
 
             {#if currentEntry.tags && currentEntry.tags.length > 0}
-                <div class="flex gap-1 mt-4 flex-wrap">
+                <ul class="flex gap-1 mt-4 flex-wrap">
                     {#each currentEntry.tags as tag ( tag )}
-                        <span class="text-terminal-dim text-xs opacity-60">#{tag}</span>
+                        <li class="text-terminal-dim text-xs opacity-60">#{tag}</li>
                     {/each}
-                </div>
+                </ul>
             {/if}
 
             {#if currentEntry.related && currentEntry.related.length > 0}
-                <div class="border-t border-terminal-dim/30 mt-4 pt-3">
-                    <p class="text-terminal-dim text-xs mb-2 select-none">VOIR AUSSI</p>
+                <aside class="border-t border-terminal-dim/30 mt-4 pt-3">
+                    <h3 class="text-terminal-dim text-xs mb-2 select-none">VOIR AUSSI</h3>
 
-                    <div class="flex flex-col gap-1">
+                    <ul class="flex flex-col gap-1">
                         {#each currentEntry.related as relatedId ( relatedId )}
                             {@const related = getEntry( relatedId )}
 
                             {#if related}
-                                <button
-                                    class="text-left text-terminal-cyan text-xs hover:text-terminal-white motion-safe:transition-colors motion-safe:duration-100"
-                                    onclick={() => terminal.openRelatedEntry( relatedId )}
-                                >
-                                    → {categories.find( ( c ) => c.id === related.category )?.icon}
-                                    {related.name}
-                                    <span class="text-terminal-dim opacity-60">({categoryLabel( related.category )})</span>
-                                </button>
+                                <li>
+                                    <button
+                                        class="text-left text-terminal-cyan text-xs hover:text-terminal-white motion-safe:transition-colors motion-safe:duration-100"
+                                        onclick={() => terminal.openRelatedEntry( relatedId )}
+                                    >
+                                        → {categories.find( ( c ) => c.id === related.category )?.icon}
+                                        {related.name}
+                                        <span class="text-terminal-dim opacity-60">({categoryLabel( related.category )})</span>
+                                    </button>
+                                </li>
                             {/if}
                         {/each}
-                    </div>
-                </div>
+                    </ul>
+                </aside>
             {/if}
-        </div>
+        </article>
 
         <div class="text-terminal-dim text-xs text-center opacity-60 pb-4">
             [ÉCHAP] Retour à la liste

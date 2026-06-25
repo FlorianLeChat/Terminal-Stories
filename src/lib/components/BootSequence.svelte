@@ -86,8 +86,8 @@
 >
     {#each bootLines as line, i ( i )}
         {#if visible[ i ]}
-            <span
-                class="block leading-relaxed animate-fadein text-sm"
+            <div
+                class="leading-relaxed animate-fadein text-sm"
                 class:text-terminal-green={!line.blink}
                 class:text-terminal-amber={line.blink}
                 class:blink-text={line.blink}
@@ -97,7 +97,7 @@
                 {:else}
                     {line.text}
                 {/if}
-            </span>
+            </div>
         {/if}
     {/each}
 </button>
