@@ -17,6 +17,7 @@
         "husky": "~9.1",
         "eslint": "~10.2",
         "svelte": "~5.55",
+        "cspell": "~9.8",
         "globals": "~16.5",
         "prettier": "~3.8",
         "typescript": "~6.0",
@@ -30,6 +31,7 @@
         "@tsconfig/svelte": "~5.0",
         "@tailwindcss/vite": "~4.2",
         "typescript-eslint": "~8.59",
+        "@cspell/dict-fr-fr": "~2.3",
         "eslint-plugin-svelte": "~3.17",
         "prettier-plugin-svelte": "~3.5",
         "eslint-formatter-gitlab": "~7.1",
@@ -50,7 +52,8 @@
         "preview": "vite preview",
         "prepare": "husky && svelte-kit sync || echo ''",
         "commitlint": "commitlint --edit",
-        "lint-staged": "lint-staged"
+        "lint-staged": "lint-staged",
+        "check-spell": "cspell src/lib/data/** --show-context --show-suggestions"
     },
     "browserslist": [
         "defaults"

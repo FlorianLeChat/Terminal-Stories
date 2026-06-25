@@ -1,0 +1,16 @@
+{
+	"import": ["./node_modules/@cspell/dict-fr-fr/cspell-ext.json"],
+	"version": "0.2",
+	"language": "fr, en",
+    "ignoreRegExpList": [
+        "\"(id|nextScene|setsFlag|requiresFlag|endingType|role|startScene|speaker|genre|universe|author|storyId|category|name|tags|related|aliases)\"\\s*:\\s*(\"[^\"]*\"|\\[[^\\]]*\\])",
+        "\"[a-z][a-z0-9-]*\"\\s*:"
+    ],
+    "words": [
+        "Vasiliev",
+        "Mireval",
+        "Elarion", "d'Elarion",
+        "Damnatoires", "damnatoires",
+        "xénobiologique"
+    ]
+}
