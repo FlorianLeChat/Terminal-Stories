@@ -82,7 +82,7 @@ export const getLanguageForUniverse = ( universe: string ): string | null =>
  * @param category - The category to keep.
  * @param language - The language to keep, or `null` for any.
  * @param universe - The universe to keep, or `null` for any.
- * @returns The entries matching all of the provided criteria.
+ * @returns The entries matching all the provided criteria.
  * @author Claude
  */
 export const filterEntries = ( category: KnowledgeCategory, language: string | null, universe: string | null ): KnowledgeEntry[] =>
