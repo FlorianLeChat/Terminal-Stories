@@ -32,6 +32,7 @@
         "@tailwindcss/vite": "~4.2",
         "typescript-eslint": "~8.59",
         "@cspell/dict-fr-fr": "~2.3",
+        "@inlang/paraglide-js": "~2.18",
         "eslint-plugin-svelte": "~3.17",
         "prettier-plugin-svelte": "~3.5",
         "eslint-formatter-gitlab": "~7.1",

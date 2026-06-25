@@ -1,4 +1,5 @@
 <script lang="ts">
+    import * as m from "$lib/locales/messages";
     import { terminal } from "$lib/stores/terminal";
 
     interface Props {
@@ -12,7 +13,7 @@
 
 <header
     class="status-bar flex items-center justify-between px-4 py-1 text-xs font-mono text-terminal-dim border-b border-terminal-dim/30 select-none shrink-0"
-    aria-label="Barre d'état"
+    aria-label={m.header_aria()}
 >
     <span>TERMINAL STORIES</span>
 
@@ -23,11 +24,11 @@
         {/if}
 
         <span class="text-terminal-green">
-            {#if view === "boot"}DÉMARRAGE{/if}
-            {#if view === "menu"}MENU PRINCIPAL{/if}
-            {#if view === "story-info"}INFO HISTOIRE{/if}
-            {#if view === "story"}LECTURE EN COURS{/if}
-            {#if view === "wiki"}BASE DE CONNAISSANCES{/if}
+            {#if view === "boot"}{m.header_view_boot()}{/if}
+            {#if view === "menu"}{m.header_view_menu()}{/if}
+            {#if view === "story-info"}{m.header_view_story_info()}{/if}
+            {#if view === "story"}{m.header_view_story()}{/if}
+            {#if view === "wiki"}{m.header_view_wiki()}{/if}
         </span>
     </span>
 

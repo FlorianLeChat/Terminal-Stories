@@ -1,4 +1,5 @@
 <script lang="ts">
+    import * as m from "$lib/locales/messages";
     import { terminal } from "$lib/stores/terminal";
     import TerminalLogo from "./TerminalLogo.svelte";
     import WikiEntryDetail from "./WikiEntryDetail.svelte";
@@ -61,12 +62,14 @@
 </script>
 
 <div class="flex-1 overflow-y-auto px-4 py-2 font-mono scrollbar-terminal">
-    <TerminalLogo subtitle="— ENCYCLOPÉDIE DES UNIVERS INTERACTIFS —" />
+    <TerminalLogo subtitle={m.wiki_subtitle()} />
 
     {#if !currentEntry}
         <div class="border border-terminal-dim/40 rounded px-3 py-2 mb-3 space-y-2">
             <div class="flex items-center gap-2 flex-wrap" role="group" aria-labelledby="wiki-filter-category-label">
-                <span id="wiki-filter-category-label" class="text-terminal-dim text-xs w-20 shrink-0 select-none">RUBRIQUE</span>
+                <span id="wiki-filter-category-label" class="text-terminal-dim text-xs w-20 shrink-0 select-none">
+                    {m.wiki_filter_category()}
+                </span>
 
                 {#each categories as cat ( cat.id )}
                     <button
@@ -83,7 +86,9 @@
             </div>
 
             <div class="flex items-center gap-2 flex-wrap" role="group" aria-labelledby="wiki-filter-language-label">
-                <span id="wiki-filter-language-label" class="text-terminal-dim text-xs w-20 shrink-0 select-none">LANGUE</span>
+                <span id="wiki-filter-language-label" class="text-terminal-dim text-xs w-20 shrink-0 select-none">
+                    {m.wiki_filter_language()}
+                </span>
 
                 {#each availableWikiLanguages as language ( language )}
                     <button
@@ -99,7 +104,9 @@
             </div>
 
             <div class="flex items-center gap-2 flex-wrap" role="group" aria-labelledby="wiki-filter-universe-label">
-                <span id="wiki-filter-universe-label" class="text-terminal-dim text-xs w-20 shrink-0 select-none">UNIVERS</span>
+                <span id="wiki-filter-universe-label" class="text-terminal-dim text-xs w-20 shrink-0 select-none">
+                    {m.wiki_filter_universe()}
+                </span>
 
                 {#each filteredUniverses as universe ( universe )}
                     <button
@@ -117,43 +124,43 @@
 
         {#if searchActive}
             <div class="border border-terminal-green/40 bg-terminal-green/5 rounded px-3 py-2 mb-3 flex items-center gap-2">
-                <span class="text-terminal-dim text-xs select-none shrink-0">RECHERCHE</span>
+                <span class="text-terminal-dim text-xs select-none shrink-0">{m.wiki_search_label()}</span>
                 <span class="text-terminal-green text-xs shrink-0">›</span>
 
                 <input
                     bind:this={searchInputEl}
                     type="text"
                     class="flex-1 bg-transparent text-terminal-green text-xs outline-none font-mono placeholder-terminal-dim/50 caret-terminal-green"
-                    placeholder="Nom, résumé, description, alias..."
+                    placeholder={m.wiki_search_placeholder()}
                     value={searchQuery}
                     oninput={( e ) => terminal.setSearchQuery( e.currentTarget.value )}
-                    aria-label="Rechercher une entrée encyclopédique"
+                    aria-label={m.wiki_search_aria()}
                     autocomplete="off"
                     spellcheck={false}
                 />
 
-                <span class="text-terminal-dim text-xs shrink-0 select-none">[ÉCHAP] Annuler</span>
+                <span class="text-terminal-dim text-xs shrink-0 select-none">{m.wiki_search_cancel()}</span>
             </div>
         {/if}
 
         <div class="text-terminal-dim text-xs mb-3 text-center">
             {#if searchActive}
-                [↑↓] Naviguer &nbsp;|&nbsp; [ENTRÉE] Consulter &nbsp;|&nbsp; [ÉCHAP] Annuler
+                {m.wiki_nav_search_active()}
             {:else}
-                [←→] Rubrique &nbsp;|&nbsp; [↑↓] Naviguer &nbsp;|&nbsp; [ENTRÉE] Consulter &nbsp;|&nbsp; [ÉCHAP] Menu
+                {m.wiki_nav_default()}
             {/if}
         </div>
 
         {#if entries.length === 0}
             <div class="border border-terminal-dim/40 rounded px-3 py-8 mb-4 text-center text-terminal-dim text-sm">
                 {#if searchActive && searchQuery !== ""}
-                    <p>Aucune histoire ne correspond à « {searchQuery} ».</p>
+                    <p>{m.wiki_empty_search( { query: searchQuery } )}</p>
 
                     <button class="block mx-auto mt-3 text-terminal-amber text-xs underline" onclick={() => terminal.deactivateSearch()}>
-                        Effacer la recherche
+                        {m.wiki_empty_search_clear()}
                     </button>
                 {:else}
-                    Aucune entrée dans cette rubrique pour ce filtre.
+                    {m.wiki_empty_category()}
                 {/if}
             </div>
         {:else}
@@ -195,9 +202,9 @@
 
         <div class="text-terminal-dim text-xs text-center opacity-50 pb-4">
             {#if searchActive && searchQuery !== ""}
-                {entries.length} résultat{entries.length > 1 ? "s" : ""} pour « {searchQuery} »
+                {m.wiki_count_results( { count: entries.length, query: searchQuery } )}
             {:else}
-                {entries.length} entrée{entries.length > 1 ? "s" : ""} — {categoryLabel( wiki.category )}
+                {m.wiki_count_entries( { count: entries.length } )} — {categoryLabel( wiki.category )}
                 {wiki.universe ? `· ${ wiki.universe }` : ""}
             {/if}
         </div>

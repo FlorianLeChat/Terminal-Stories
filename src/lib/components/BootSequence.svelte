@@ -1,5 +1,7 @@
 <script lang="ts">
+    import * as m from "$lib/locales/messages";
     import { onMount } from "svelte";
+    import { storiesMeta } from "$lib/data";
 
     interface Props {
         ondone: () => void;
@@ -11,15 +13,15 @@
         { text: "Raven Green 2026.07.1 LTS v1.0.0 (GNU/Linux 7.0.2-7-generic x86_64)", delay: 0 },
         { text: "An Open Source Operating System made with love by Raven Industries © 2026", delay: 120 },
         { text: "", delay: 200 },
-        { text: "Initialisation du système narratif...", delay: 350 },
-        { text: "[OK] Chargement du moteur d'histoires", delay: 600 },
-        { text: "[OK] Lecture des données de scénario", delay: 800 },
-        { text: "[OK] Validation des arbres de choix", delay: 950 },
-        { text: "[OK] Chargement des personnages", delay: 1100 },
+        { text: m.boot_init(), delay: 350 },
+        { text: m.boot_engine(), delay: 600 },
+        { text: m.boot_scenario(), delay: 800 },
+        { text: m.boot_choices(), delay: 950 },
+        { text: m.boot_characters(), delay: 1100 },
         { text: "", delay: 1200 },
-        { text: "3 histoires chargées.", delay: 1350 },
+        { text: m.boot_loaded( { count: storiesMeta.length } ), delay: 1350 },
         { text: "", delay: 1450 },
-        { text: "Appuyez sur ENTRÉE pour commencer.", delay: 1600, blink: true }
+        { text: m.boot_press_enter(), delay: 1600, blink: true }
     ];
 
     // Reveal flag per boot line, and whether the whole sequence has finished.
@@ -81,7 +83,7 @@
 
 <button
     class="flex-1 text-left flex flex-col justify-center px-8 font-mono select-none"
-    aria-label="Démarrage du système — appuyez sur Entrée pour continuer"
+    aria-label={m.boot_aria()}
     onclick={handleClick}
 >
     {#each bootLines as line, i ( i )}

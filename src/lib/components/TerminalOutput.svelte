@@ -1,4 +1,5 @@
 <script lang="ts">
+    import * as m from "$lib/locales/messages";
     import { untrack } from "svelte";
     import { SvelteSet } from "svelte/reactivity";
     import { buildProgressBar } from "$lib/utilities/progressBar";
@@ -253,7 +254,7 @@
     bind:this={container}
     class="flex-1 overflow-y-auto px-4 py-2 font-mono text-sm leading-relaxed scrollbar-terminal"
     aria-live="polite"
-    aria-label="Sortie du terminal"
+    aria-label={m.terminal_output_aria()}
 >
     {#each displayed as line ( line.id )}
         {#if line.type === "image" && line.imageSrc}
@@ -261,10 +262,10 @@
                 <img src={line.imageSrc} alt="" class="w-full max-h-44 object-cover grayscale opacity-75" />
             </figure>
         {:else if line.type === "save"}
-            <aside class="my-2 border border-terminal-amber rounded px-3 py-2 bg-terminal-amber/8 animate-fadein select-none" aria-label="Sauvegarde trouvée">
+            <aside class="my-2 border border-terminal-amber rounded px-3 py-2 bg-terminal-amber/8 animate-fadein select-none" aria-label={m.terminal_save_aria()}>
                 <p class="flex items-center gap-2 text-terminal-amber font-bold text-xs tracking-widest">
                     <span>◉</span>
-                    <span>SAUVEGARDE TROUVÉE</span>
+                    <span>{m.terminal_save_label()}</span>
                 </p>
 
                 <div class="flex items-center gap-2 mt-1.5">
@@ -272,8 +273,8 @@
                         <span class="text-terminal-amber">{buildProgressBar( line.savePercent ?? 0 ).filled}</span><span class="text-terminal-dim/50">{buildProgressBar( line.savePercent ?? 0 ).empty}</span>
                     </span>
 
-                    <output class="text-terminal-amber text-xs font-bold">{line.savePercent ?? 0}%</output>
-                    <span class="text-terminal-dim text-xs">progression</span>
+                    <output class="text-terminal-amber text-xs font-bold">{m.story_item_progress_value( { value: ( line.savePercent ?? 0 ) / 100 } )}</output>
+                    <span class="text-terminal-dim text-xs">{m.terminal_save_progress()}</span>
                 </div>
             </aside>
         {:else if line.text === ""}
