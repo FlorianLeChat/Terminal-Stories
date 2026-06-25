@@ -1,6 +1,6 @@
 <script lang="ts">
-    import type { TerminalView } from "$lib/stores/terminal";
     import * as m from "$lib/locales/messages";
+    import type { TerminalView } from "$lib/stores/terminal";
 
     interface Props {
         view: TerminalView;

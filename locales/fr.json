@@ -1,4 +1,4 @@
-{
+﻿{
 	"$schema": "https://inlang.com/schema/inlang-message-format",
 
 	"boot_init": "Initialisation du système narratif...",
@@ -47,11 +47,11 @@
 	"menu_search_placeholder": "Titre, genre, univers, personnage, tag...",
 	"menu_search_aria": "Rechercher une histoire",
 	"menu_search_cancel": "[ÉCHAP] Annuler",
-	"menu_empty_search": "Aucune histoire ne correspond à « {query} ».",
+	"menu_empty_search": "Aucune histoire ne correspond à « {query} ».",
 	"menu_empty_search_clear": "Effacer la recherche",
 	"menu_empty_filters": "Aucune histoire ne correspond à ces filtres.",
 	"menu_empty_filters_reset": "Réinitialiser les filtres",
-	"menu_count_results": [{"declarations": ["input count", "input query", "local countPlural = count: plural"], "selectors": ["countPlural"], "match": {"countPlural=one": "{count} résultat pour « {query} »", "countPlural=other": "{count} résultats pour « {query} »"}}],
+	"menu_count_results": [{"declarations": ["input count", "input query", "local countPlural = count: plural"], "selectors": ["countPlural"], "match": {"countPlural=one": "{count} résultat pour « {query} »", "countPlural=other": "{count} résultats pour « {query} »"}}],
 	"menu_count_stories": [{"declarations": ["input visible", "input total", "local totalPlural = total: plural"], "selectors": ["totalPlural"], "match": {"totalPlural=one": "{visible} / {total} histoire", "totalPlural=other": "{visible} / {total} histoires"}}],
 	"menu_count_filtered": " filtrées",
 	"menu_count_available": " disponibles",
@@ -66,10 +66,10 @@
 	"wiki_search_cancel": "[ÉCHAP] Annuler",
 	"wiki_nav_search_active": "[↑↓] Naviguer | [ENTRÉE] Consulter | [ÉCHAP] Annuler",
 	"wiki_nav_default": "[←→] Rubrique | [↑↓] Naviguer | [ENTRÉE] Consulter | [ÉCHAP] Menu",
-	"wiki_empty_search": "Aucune entrée ne correspond à « {query} ».",
+	"wiki_empty_search": "Aucune entrée ne correspond à « {query} ».",
 	"wiki_empty_search_clear": "Effacer la recherche",
 	"wiki_empty_category": "Aucune entrée dans cette rubrique pour ce filtre.",
-	"wiki_count_results": [{"declarations": ["input count", "input query", "local countPlural = count: plural"], "selectors": ["countPlural"], "match": {"countPlural=one": "{count} résultat pour « {query} »", "countPlural=other": "{count} résultats pour « {query} »"}}],
+	"wiki_count_results": [{"declarations": ["input count", "input query", "local countPlural = count: plural"], "selectors": ["countPlural"], "match": {"countPlural=one": "{count} résultat pour « {query} »", "countPlural=other": "{count} résultats pour « {query} »"}}],
 	"wiki_count_entries": [{"declarations": ["input count", "local countPlural = count: plural"], "selectors": ["countPlural"], "match": {"countPlural=one": "{count} entrée", "countPlural=other": "{count} entrées"}}],
 	"wiki_entry_also_known": "Aussi connu sous : ",
 	"wiki_entry_see_also": "VOIR AUSSI",
