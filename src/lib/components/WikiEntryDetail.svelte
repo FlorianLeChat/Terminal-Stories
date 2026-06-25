@@ -1,4 +1,5 @@
 <script lang="ts">
+    import * as m from "$lib/locales/messages";
     import { terminal } from "$lib/stores/terminal";
     import { categories, categoryLabel, getEntry } from "$lib/data/knowledge";
     import type { KnowledgeEntry } from "$lib/types/knowledge";
@@ -57,7 +58,7 @@
 
     {#if entry.aliases && entry.aliases.length > 0}
         <p class="text-terminal-dim text-xs italic mb-3">
-            Aussi connu sous : {entry.aliases.join( ", " )}
+            {m.wiki_entry_also_known()}{entry.aliases.join( ", " )}
         </p>
     {/if}
 
@@ -87,7 +88,9 @@
 
     {#if entry.related && entry.related.length > 0}
         <aside class="border-t border-terminal-dim/30 mt-4 pt-3">
-            <h3 class="text-terminal-dim text-xs mb-2 select-none">VOIR AUSSI</h3>
+            <h3 class="text-terminal-dim text-xs mb-2 select-none">
+                {m.wiki_entry_see_also()}
+            </h3>
 
             <ul class="flex flex-col gap-1">
                 {#each entry.related as relatedId ( relatedId )}
@@ -112,5 +115,5 @@
 </article>
 
 <p class="text-terminal-dim text-xs text-center opacity-60 pb-4">
-    [ÉCHAP] Retour à la liste
+    {m.wiki_entry_back()}
 </p>

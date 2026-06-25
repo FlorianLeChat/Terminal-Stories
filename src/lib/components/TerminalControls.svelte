@@ -1,4 +1,5 @@
 <script lang="ts">
+    import * as m from "$lib/locales/messages";
     import type { TerminalView } from "$lib/stores/terminal";
 
     interface Props {
@@ -19,28 +20,28 @@
 <footer class="shrink-0 border-t border-terminal-dim/30 px-4 py-1 text-xs font-mono text-terminal-dim flex justify-between select-none">
     <span>
         {#if view === "story"}
-            [1-9] Choix &nbsp;|&nbsp; {#if isAnimating}[ESPACE] Passer &nbsp;|&nbsp; {/if}[ÉCHAP] Menu
+            {m.controls_story_choices()} &nbsp;|&nbsp; {#if isAnimating}{m.controls_story_skip()} &nbsp;|&nbsp; {/if}{m.controls_story_menu()}
         {:else if view === "story-info"}
             {#if hasSave}
-                [ENTRÉE] Reprendre &nbsp;|&nbsp; [N] Nouvelle partie &nbsp;|&nbsp; [ÉCHAP] Retour
+                {m.controls_story_info_resume()} &nbsp;|&nbsp; {m.controls_story_info_new()} &nbsp;|&nbsp; {m.controls_story_info_back()}
             {:else}
-                [ENTRÉE] Commencer &nbsp;|&nbsp; [ÉCHAP] Retour
+                {m.controls_story_info_start()} &nbsp;|&nbsp; {m.controls_story_info_back()}
             {/if}
         {:else if view === "menu"}
             {#if searchActive}
-                [↑↓] Naviguer &nbsp;|&nbsp; [ENTRÉE] Sélectionner &nbsp;|&nbsp; [ÉCHAP] Annuler la recherche
+                {m.controls_menu_navigate()} &nbsp;|&nbsp; {m.controls_menu_select()} &nbsp;|&nbsp; {m.controls_menu_cancel_search()}
             {:else}
-                [↑↓] Naviguer &nbsp;|&nbsp; [ENTRÉE] Sélectionner &nbsp;|&nbsp; [G] Genre &nbsp;|&nbsp; [L]
-                Langue &nbsp;|&nbsp; [C] Réinitialiser &nbsp;|&nbsp; [W] Encyclopédie &nbsp;|&nbsp; [/] Recherche
+                {m.controls_menu_navigate()} &nbsp;|&nbsp; {m.controls_menu_select()} &nbsp;|&nbsp; {m.controls_menu_genre()} &nbsp;|&nbsp; {m.controls_menu_language()}
+                &nbsp;|&nbsp; {m.controls_menu_reset()} &nbsp;|&nbsp; {m.controls_menu_wiki()} &nbsp;|&nbsp; {m.controls_menu_search()}
             {/if}
         {:else if view === "wiki"}
             {#if wikiEntryOpen}
-                [ÉCHAP] Retour à la liste
+                {m.controls_wiki_back()}
             {:else if searchActive}
-                [↑↓] Naviguer &nbsp;|&nbsp; [ENTRÉE] Consulter &nbsp;|&nbsp; [ÉCHAP] Annuler la recherche
+                {m.controls_menu_navigate()} &nbsp;|&nbsp; {m.controls_wiki_consult()} &nbsp;|&nbsp; {m.controls_menu_cancel_search()}
             {:else}
-                [←→] Rubrique &nbsp;|&nbsp; [↑↓] Naviguer &nbsp;|&nbsp; [ENTRÉE] Consulter &nbsp;|&nbsp;
-                [ÉCHAP] Menu &nbsp;|&nbsp; [/] Recherche
+                {m.controls_wiki_category()} &nbsp;|&nbsp; {m.controls_menu_navigate()} &nbsp;|&nbsp; {m.controls_wiki_consult()} &nbsp;|&nbsp;
+                {m.controls_story_menu()} &nbsp;|&nbsp; {m.controls_menu_search()}
             {/if}
         {/if}
     </span>

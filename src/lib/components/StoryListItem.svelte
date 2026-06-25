@@ -1,4 +1,5 @@
 <script lang="ts">
+    import * as m from "$lib/locales/messages";
     import { formatReadingTime } from "$lib/utilities/readingTime";
     import { buildProgressBar } from "$lib/utilities/progressBar";
     import { loadSave, loadDiscoveredEndings } from "$lib/utilities/saveService";
@@ -94,17 +95,19 @@
                     {#if completion !== null}
                         <span
                             class="text-terminal-amber text-xs shrink-0 font-mono"
-                            aria-label="Sauvegarde — {completion}% explorés"
+                            aria-label={m.story_item_save_aria( { completion: completion / 100 } )}
                         >
                             ◉
                         </span>
                     {/if}
 
                     {#if allFound}
-                        <span class="text-terminal-amber text-xs shrink-0" aria-label="Toutes les fins découvertes">★</span>
+                        <span class="text-terminal-amber text-xs shrink-0" aria-label={m.story_item_all_endings_aria()}>
+                            ★
+                        </span>
                     {/if}
 
-                    <span class="text-terminal-cyan text-xs shrink-0 ml-auto" title="Temps de lecture estimé d'une partie">
+                    <span class="text-terminal-cyan text-xs shrink-0 ml-auto" title={m.story_item_reading_time_title()}>
                         ⏱ {formatReadingTime( story.stats.minutes )} / partie
                     </span>
                 </span>
@@ -117,25 +120,25 @@
                     </span>
 
                     <span class="flex items-center gap-3 mt-1 text-terminal-dim text-xs opacity-70">
-                        <span title="Nombre de scènes">⌬ {story.stats.scenes} entrées</span>
-                        <span title="Temps pour explorer tout le contenu">⧉ {formatReadingTime( story.stats.fullMinutes )} pour tout explorer</span>
+                        <span title={m.story_item_scenes_title()}>⌬ {story.stats.scenes} {m.story_item_scenes_entries()}</span>
+                        <span title={m.story_item_explore_time_title()}>⧉ {formatReadingTime( story.stats.fullMinutes )} pour tout explorer</span>
 
                         {#if completion !== null}
                             {@const bar = buildProgressBar( completion, 6 )}
 
-                            <span class="font-mono ml-auto text-xs" title="Progression sauvegardée">
+                            <span class="font-mono ml-auto text-xs" title={m.story_item_progress_title()}>
                                 <span class="text-terminal-amber">◉ {bar.filled}</span><span class="text-terminal-dim/50">{bar.empty}</span>
-                                <span class="text-terminal-amber"> {completion}%</span>
+                                <span class="text-terminal-amber"> {m.story_item_progress_value( { value: completion / 100 } )}</span>
                             </span>
                         {/if}
                     </span>
 
                     <span
                         class="flex items-center gap-1 mt-1 font-mono"
-                        title="Fins découvertes : {found.size} / {story.endingIds.length}"
+                        title={m.story_item_endings_title( { found: found.size, total: story.endingIds.length } )}
                     >
                         <span class="text-terminal-dim text-xs opacity-70 mr-1">
-                            {story.endingIds.length} fin{story.endingIds.length > 1 ? "s" : ""} :
+                            {m.story_item_endings_count( { count: story.endingIds.length } )}
                         </span>
 
                         {#each story.endingIds as endingId, idx ( endingId )}

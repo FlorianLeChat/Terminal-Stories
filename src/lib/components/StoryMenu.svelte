@@ -1,4 +1,5 @@
 <script lang="ts">
+    import * as m from "$lib/locales/messages";
     import { terminal } from "$lib/stores/terminal";
     import TerminalLogo from "./TerminalLogo.svelte";
     import StoryListItem from "./StoryListItem.svelte";
@@ -56,11 +57,13 @@
 </script>
 
 <div class="flex-1 overflow-y-auto px-4 py-2 font-mono">
-    <TerminalLogo subtitle="— SYSTÈME D'HISTOIRES INTERACTIVES —" />
+    <TerminalLogo subtitle={m.menu_subtitle()} />
 
     <div class="border border-terminal-dim/40 rounded px-3 py-2 mb-4 space-y-1.5">
         <div class="flex items-center gap-2 flex-wrap" role="group" aria-labelledby="filter-genre-label">
-            <span id="filter-genre-label" class="text-terminal-dim text-xs w-16 shrink-0 select-none">GENRE</span>
+            <span id="filter-genre-label" class="text-terminal-dim text-xs w-16 shrink-0 select-none">
+                {m.menu_filter_genre()}
+            </span>
 
             {#each availableGenres as genre ( genre )}
                 <button
@@ -76,7 +79,9 @@
         </div>
 
         <div class="flex items-center gap-2 flex-wrap" role="group" aria-labelledby="filter-language-label">
-            <span id="filter-language-label" class="text-terminal-dim text-xs w-16 shrink-0 select-none">LANGUE</span>
+            <span id="filter-language-label" class="text-terminal-dim text-xs w-16 shrink-0 select-none">
+                {m.menu_filter_language()}
+            </span>
 
             {#each availableLanguages as language ( language )}
                 <button
@@ -96,7 +101,7 @@
                     class="text-xs px-2 py-0.5 rounded border border-terminal-amber/50 text-terminal-amber hover:bg-terminal-amber/10 motion-safe:transition-colors motion-safe:duration-100 ml-auto"
                     onclick={() => terminal.clearFilters()}
                 >
-                    ✕ Réinitialiser
+                    {m.menu_filter_reset()}
                 </button>
             {/if}
         </div>
@@ -104,51 +109,53 @@
 
     <div class="flex items-center justify-center gap-3 mb-4 text-xs">
         {#if searchActive}
-            <span class="text-terminal-dim">↑ ↓ Naviguer &nbsp;|&nbsp; ENTRÉE Sélectionner &nbsp;|&nbsp; ÉCHAP Annuler</span>
+            <span class="text-terminal-dim">{m.menu_nav_search_active()}</span>
         {:else}
-            <span class="text-terminal-dim">↑ ↓ Naviguer &nbsp;|&nbsp; ENTRÉE Sélectionner &nbsp;|&nbsp; Numéro Accès direct</span>
+            <span class="text-terminal-dim">{m.menu_nav_default()}</span>
 
             <button
                 class="px-2 py-0.5 rounded border border-terminal-cyan/50 text-terminal-cyan hover:bg-terminal-cyan/10 motion-safe:transition-colors motion-safe:duration-100"
                 onclick={() => terminal.openWiki()}
             >
-                ✦ [W] Encyclopédie
+                {m.menu_wiki_button()}
             </button>
         {/if}
     </div>
 
     {#if searchActive}
         <div class="border border-terminal-green/40 bg-terminal-green/5 rounded px-3 py-2 mb-4 flex items-center gap-2">
-            <span class="text-terminal-dim text-xs select-none shrink-0">RECHERCHE</span>
+            <span class="text-terminal-dim text-xs select-none shrink-0">{m.menu_search_label()}</span>
             <span class="text-terminal-green text-xs shrink-0">›</span>
+
             <input
                 bind:this={searchInputEl}
                 type="text"
                 class="flex-1 bg-transparent text-terminal-green text-xs outline-none font-mono placeholder-terminal-dim/50 caret-terminal-green"
-                placeholder="Titre, genre, univers, personnage, tag..."
+                placeholder={m.menu_search_placeholder()}
                 value={searchQuery}
                 oninput={( e ) => terminal.setSearchQuery( e.currentTarget.value )}
-                aria-label="Rechercher une histoire"
+                aria-label={m.menu_search_aria()}
                 autocomplete="off"
                 spellcheck={false}
             />
-            <span class="text-terminal-dim text-xs shrink-0 select-none">[ÉCHAP] Annuler</span>
+
+            <span class="text-terminal-dim text-xs shrink-0 select-none">{m.menu_search_cancel()}</span>
         </div>
     {/if}
 
     {#if visibleStories.length === 0}
         <div class="border border-terminal-dim/40 rounded px-3 py-8 mb-4 text-center text-terminal-dim text-sm">
             {#if searchActive && searchQuery !== ""}
-                <p>Aucune histoire ne correspond à « {searchQuery} ».</p>
+                <p>{m.menu_empty_search( { query: searchQuery } )}</p>
 
                 <button class="mt-3 text-terminal-amber text-xs underline" onclick={() => terminal.deactivateSearch()}>
-                    Effacer la recherche
+                    {m.menu_empty_search_clear()}
                 </button>
             {:else}
-                <p>Aucune histoire ne correspond à ces filtres.</p>
+                <p>{m.menu_empty_filters()}</p>
 
                 <button class="mt-3 text-terminal-amber text-xs underline" onclick={() => terminal.clearFilters()}>
-                    Réinitialiser les filtres
+                    {m.menu_empty_filters_reset()}
                 </button>
             {/if}
         </div>
@@ -169,12 +176,11 @@
 
     <div class="text-terminal-dim text-xs text-center opacity-50 pb-4">
         {#if searchActive && searchQuery !== ""}
-            {visibleStories.length} résultat{visibleStories.length > 1 ? "s" : ""} pour « {searchQuery} »
+            {m.menu_count_results( { count: visibleStories.length, query: searchQuery } )}
         {:else}
-            {visibleStories.length} / {storiesMeta.length} histoire{storiesMeta.length > 1 ? "s" : ""}
-            {hasFilters
-                ? "filtrée" + ( visibleStories.length > 1 ? "s" : "" )
-                : "disponible" + ( storiesMeta.length > 1 ? "s" : "" )}
+            {m.menu_count_stories( { visible: visibleStories.length, total: storiesMeta.length } )}{hasFilters
+                ? m.menu_count_filtered()
+                : m.menu_count_available()}
         {/if}
     </div>
 </div>
