@@ -1,6 +1,7 @@
 <script lang="ts">
     import { terminal } from "$lib/stores/terminal";
     import { storiesMeta, filterStories, availableGenres, availableLanguages } from "$lib/data";
+    import { searchStories } from "$lib/utilities/searchIndex";
     import { formatReadingTime } from "$lib/utilities/readingTime";
     import { loadSave, loadDiscoveredEndings } from "$lib/utilities/saveService";
 
@@ -13,8 +14,24 @@
     let { selectedIndex = 0, onselect, onnavigate }: Props = $props();
 
     let filters = $derived( $terminal.filters );
-    let visibleStories = $derived( filterStories( storiesMeta, filters ) );
+    let searchActive = $derived( $terminal.searchActive );
+    let searchQuery = $derived( $terminal.searchQuery );
+    let visibleStories = $derived(
+        searchActive && searchQuery !== ""
+            ? filterStories( searchStories( searchQuery ), filters )
+            : filterStories( storiesMeta, filters )
+    );
     let hasFilters = $derived( filters.genre !== null || filters.language !== null );
+
+    let searchInputEl: HTMLInputElement | undefined = $state();
+
+    $effect( () =>
+    {
+        if ( searchActive )
+        {
+            searchInputEl?.focus();
+        }
+    } );
 
     const genreColors: Record<string, string> = {
         "Fantasy": "text-emerald-400",
@@ -83,7 +100,7 @@
      */
     const endingGlyph = ( index: number ): string =>
     {
-        // U+2460 is ①; adding (index - 1) walks through ②③… up to ⑳ (U+2473).
+        // U+2460 is ①; adding (index - 1) walks through ②③... up to ⑳ (U+2473).
         return String.fromCodePoint( 0x245f + index );
     };
 
@@ -118,7 +135,7 @@
     |____/ |_| \___/|_| \_\___|_____|____/
         </pre>
 
-        <p class="text-terminal-dim text-xs mt-2 tracking-widest">— SYSTÈME D'HISTOIRES INTERACTIVES v1.0 —</p>
+        <p class="text-terminal-dim text-xs mt-2 tracking-widest">— SYSTÈME D'HISTOIRES INTERACTIVES —</p>
     </div>
 
     <div class="border border-terminal-dim/40 rounded px-3 py-2 mb-4 space-y-1.5">
@@ -165,23 +182,54 @@
     </div>
 
     <div class="flex items-center justify-center gap-3 mb-4 text-xs">
-        <span class="text-terminal-dim">↑ ↓ Naviguer &nbsp;|&nbsp; ENTRÉE Sélectionner &nbsp;|&nbsp; Numéro Accès direct</span>
+        {#if searchActive}
+            <span class="text-terminal-dim">↑ ↓ Naviguer &nbsp;|&nbsp; ENTRÉE Sélectionner &nbsp;|&nbsp; ÉCHAP Annuler</span>
+        {:else}
+            <span class="text-terminal-dim">↑ ↓ Naviguer &nbsp;|&nbsp; ENTRÉE Sélectionner &nbsp;|&nbsp; Numéro Accès direct</span>
 
-        <button
-            class="px-2 py-0.5 rounded border border-terminal-cyan/50 text-terminal-cyan hover:bg-terminal-cyan/10 motion-safe:transition-colors motion-safe:duration-100"
-            onclick={() => terminal.openWiki()}
-        >
-            ✦ [W] Encyclopédie
-        </button>
+            <button
+                class="px-2 py-0.5 rounded border border-terminal-cyan/50 text-terminal-cyan hover:bg-terminal-cyan/10 motion-safe:transition-colors motion-safe:duration-100"
+                onclick={() => terminal.openWiki()}
+            >
+                ✦ [W] Encyclopédie
+            </button>
+        {/if}
     </div>
+
+    {#if searchActive}
+        <div class="border border-terminal-green/40 bg-terminal-green/5 rounded px-3 py-2 mb-4 flex items-center gap-2">
+            <span class="text-terminal-dim text-xs select-none shrink-0">RECHERCHE</span>
+            <span class="text-terminal-green text-xs shrink-0">›</span>
+            <input
+                bind:this={searchInputEl}
+                type="text"
+                class="flex-1 bg-transparent text-terminal-green text-xs outline-none font-mono placeholder-terminal-dim/50 caret-terminal-green"
+                placeholder="Titre, genre, univers, personnage, tag..."
+                value={searchQuery}
+                oninput={( e ) => terminal.setSearchQuery( e.currentTarget.value )}
+                aria-label="Rechercher une histoire"
+                autocomplete="off"
+                spellcheck={false}
+            />
+            <span class="text-terminal-dim text-xs shrink-0 select-none">[ÉCHAP] Annuler</span>
+        </div>
+    {/if}
 
     {#if visibleStories.length === 0}
         <div class="border border-terminal-dim/40 rounded px-3 py-8 mb-4 text-center text-terminal-dim text-sm">
-            <p>Aucune histoire ne correspond à ces filtres.</p>
+            {#if searchActive && searchQuery !== ""}
+                <p>Aucune histoire ne correspond à « {searchQuery} ».</p>
 
-            <button class="mt-3 text-terminal-amber text-xs underline" onclick={() => terminal.clearFilters()}>
-                Réinitialiser les filtres
-            </button>
+                <button class="mt-3 text-terminal-amber text-xs underline" onclick={() => terminal.deactivateSearch()}>
+                    Effacer la recherche
+                </button>
+            {:else}
+                <p>Aucune histoire ne correspond à ces filtres.</p>
+
+                <button class="mt-3 text-terminal-amber text-xs underline" onclick={() => terminal.clearFilters()}>
+                    Réinitialiser les filtres
+                </button>
+            {/if}
         </div>
     {:else}
         <div class="border border-terminal-dim rounded px-2 py-1 mb-4">
@@ -275,9 +323,13 @@
     {/if}
 
     <div class="text-terminal-dim text-xs text-center opacity-50 pb-4">
-        {visibleStories.length} / {storiesMeta.length} histoire{storiesMeta.length > 1 ? "s" : ""}
-        {hasFilters
-            ? "filtrée" + ( visibleStories.length > 1 ? "s" : "" )
-            : "disponible" + ( storiesMeta.length > 1 ? "s" : "" )}
+        {#if searchActive && searchQuery !== ""}
+            {visibleStories.length} résultat{visibleStories.length > 1 ? "s" : ""} pour « {searchQuery} »
+        {:else}
+            {visibleStories.length} / {storiesMeta.length} histoire{storiesMeta.length > 1 ? "s" : ""}
+            {hasFilters
+                ? "filtrée" + ( visibleStories.length > 1 ? "s" : "" )
+                : "disponible" + ( storiesMeta.length > 1 ? "s" : "" )}
+        {/if}
     </div>
 </div>

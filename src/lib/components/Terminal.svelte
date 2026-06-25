@@ -2,6 +2,7 @@
     import { onMount } from "svelte";
     import { terminal } from "$lib/stores/terminal";
     import { storiesMeta, filterStories } from "$lib/data";
+    import { searchStories } from "$lib/utilities/searchIndex";
     import { hasSave, loadActiveSession } from "$lib/utilities/saveService";
     import BootSequence from "./BootSequence.svelte";
     import StoryMenu from "./StoryMenu.svelte";
@@ -12,7 +13,11 @@
     let view = $derived( $terminal.view );
     let lines = $derived( $terminal.lines );
     let selectedIndex = $derived( $terminal.selectedStoryIndex );
-    let visibleStories = $derived( filterStories( storiesMeta, $terminal.filters ) );
+    let visibleStories = $derived(
+        $terminal.searchActive && $terminal.searchQuery !== ""
+            ? filterStories( searchStories( $terminal.searchQuery ), $terminal.filters )
+            : filterStories( storiesMeta, $terminal.filters )
+    );
 
     /** Incremented each time the user requests an animation skip. */
     let skipAnimationSignal = $state( 0 );
@@ -81,6 +86,42 @@
     {
         if ( view === "boot" ) return;
 
+        const isInputFocused = document.activeElement instanceof HTMLInputElement;
+
+        // When the search input is focused, intercept ESC to close search;
+        // let navigation keys fall through; swallow everything else.
+        if ( isInputFocused )
+        {
+            if ( e.key === "Escape" )
+            {
+                e.preventDefault();
+                terminal.deactivateSearch();
+            }
+            else if ( e.key !== "ArrowUp" && e.key !== "ArrowDown" && e.key !== "Enter" )
+            {
+                return;
+            }
+        }
+
+        // Global search trigger: / activates search on any searchable view.
+        if ( e.key === "/" && !isInputFocused )
+        {
+            if ( view === "menu" || view === "wiki" )
+            {
+                e.preventDefault();
+                terminal.activateSearch();
+                return;
+            }
+
+            if ( view === "story" || view === "story-info" )
+            {
+                e.preventDefault();
+                terminal.startMenu();
+                terminal.activateSearch();
+                return;
+            }
+        }
+
         if ( view === "menu" )
         {
             handleMenuKey( e );
@@ -114,32 +155,37 @@
     {
         const key = e.key.toLowerCase();
 
-        if ( key === "g" )
+        // Single-letter shortcuts are blocked while the search input is open
+        // so they don't trigger filters when the user is typing a query.
+        if ( !$terminal.searchActive )
         {
-            e.preventDefault();
-            terminal.cycleGenre();
-            return;
-        }
+            if ( key === "g" )
+            {
+                e.preventDefault();
+                terminal.cycleGenre();
+                return;
+            }
 
-        if ( key === "l" )
-        {
-            e.preventDefault();
-            terminal.cycleLanguage();
-            return;
-        }
+            if ( key === "l" )
+            {
+                e.preventDefault();
+                terminal.cycleLanguage();
+                return;
+            }
 
-        if ( key === "c" )
-        {
-            e.preventDefault();
-            terminal.clearFilters();
-            return;
-        }
+            if ( key === "c" )
+            {
+                e.preventDefault();
+                terminal.clearFilters();
+                return;
+            }
 
-        if ( key === "w" )
-        {
-            e.preventDefault();
-            terminal.openWiki();
-            return;
+            if ( key === "w" )
+            {
+                e.preventDefault();
+                terminal.openWiki();
+                return;
+            }
         }
 
         const count = visibleStories.length;
@@ -351,6 +397,7 @@
                 hasSave={currentStoryHasSave}
                 {isAnimating}
                 wikiEntryOpen={!!$terminal.wiki.selectedEntryId}
+                searchActive={$terminal.searchActive}
             />
         </div>
     </div>
