@@ -8,7 +8,8 @@
         availableWikiLanguages,
         filterEntries,
         getEntry,
-        countByCategory,
+        countAllCategories,
+        categoryIconMap,
         categoryLabel,
         getLanguageForUniverse } from "$lib/data/knowledge";
     import { searchWikiEntries } from "$lib/utilities/searchIndex";
@@ -25,6 +26,7 @@
             : filterEntries( wiki.category, wiki.language, wiki.universe )
     );
     let currentEntry = $derived( wiki.selectedEntryId ? getEntry( wiki.selectedEntryId ) : null );
+    let categoryCounts = $derived( countAllCategories( wiki.language, wiki.universe ) );
     let filteredUniverses = $derived( wiki.language
         ? availableUniverses.filter( ( u ) => getLanguageForUniverse( u ) === wiki.language )
         : availableUniverses );
@@ -80,7 +82,7 @@
                         onclick={() => terminal.setWikiCategory( cat.id )}
                     >
                         {cat.icon} {cat.label}
-                        <span class="opacity-50">({countByCategory( cat.id, wiki.language, wiki.universe )})</span>
+                        <span class="opacity-50">({categoryCounts[ cat.id ]})</span>
                     </button>
                 {/each}
             </div>
@@ -176,8 +178,9 @@
                             onmouseenter={() => terminal.navigateWiki( i )}
                         >
                             <span class="flex items-baseline gap-3">
-                                <span class="text-xs shrink-0 {color( entry.category )}">{categories.find( ( c ) => c.id
-                                  === entry.category )?.icon}</span>
+                                <span class="text-xs shrink-0 {color( entry.category )}">
+                                    {categoryIconMap[ entry.category ]}
+                                </span>
 
                                 <span class="block flex-1 min-w-0">
                                     <span class="flex items-baseline gap-2 flex-wrap">

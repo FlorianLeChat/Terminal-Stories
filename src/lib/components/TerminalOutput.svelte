@@ -5,6 +5,39 @@
     import { buildProgressBar } from "$lib/utilities/progressBar";
     import type { TerminalLine } from "$lib/stores/terminal";
 
+    /**
+     * Maps a terminal line type to its Tailwind styling classes.
+     * Defined at module level so the object is created once, not on every call.
+     *
+     * @author Claude
+     */
+    const LINE_CLASS_MAP: Record<TerminalLine[ "type" ], string> = {
+        system: "text-terminal-dim",
+        narrator: "text-terminal-green",
+        speaker: "text-terminal-amber font-bold",
+        choice: "text-terminal-cyan cursor-pointer hover:text-terminal-white",
+        action: "text-terminal-dim italic",
+        consequence: "text-terminal-green italic",
+        ending: "text-terminal-amber",
+        error: "text-red-500",
+        title: "text-terminal-white text-xl font-bold tracking-widest",
+        separator: "text-terminal-dim",
+        image: "",
+        save: ""
+    };
+
+    /**
+     * Returns the Tailwind styling classes for a terminal line type.
+     *
+     * @param type - The kind of line being rendered.
+     * @returns The CSS classes for that line type.
+     * @author Claude
+     */
+    const lineClass = ( type: TerminalLine[ "type" ] ): string =>
+    {
+        return LINE_CLASS_MAP[ type ] ?? "text-terminal-green";
+    };
+
     interface Props {
         lines?: TerminalLine[];
         /** When false, all lines appear instantly with no typewriter effect. */
@@ -121,7 +154,6 @@
         displayed = [ ...displayed, ...remaining ];
         isProcessing = false;
         isAnimating = false;
-        scrollToBottom();
     };
 
     /**
@@ -157,7 +189,6 @@
         {
             isProcessing = false;
             isAnimating = false;
-            scrollToBottom();
             return;
         }
 
@@ -195,13 +226,11 @@
             displayed = [ ...displayed, line ];
             typingLine = null;
             typingText = "";
-            scrollToBottom();
             processNext( gen );
             return;
         }
 
         typingText = line.text.slice( 0, i + 1 );
-        scrollToBottom();
         setTimeout( () => typeChar( line, i + 1, gen ), TYPING_SPEED );
     };
 
@@ -221,33 +250,6 @@
         scrollToBottom();
     } );
 
-    /**
-     * Maps a terminal line type to its Tailwind styling classes.
-     *
-     * @param type - The kind of line being rendered.
-     * @returns The CSS classes for that line type.
-     * @author Claude
-     */
-    const lineClass = ( type: TerminalLine[ "type" ] ): string =>
-    {
-        const map: Record<TerminalLine[ "type" ], string> = {
-            system: "text-terminal-dim",
-            narrator: "text-terminal-green",
-            speaker: "text-terminal-amber font-bold",
-            choice: "text-terminal-cyan cursor-pointer hover:text-terminal-white",
-            action: "text-terminal-dim italic",
-            consequence: "text-terminal-green italic",
-            ending: "text-terminal-amber",
-            error: "text-red-500",
-            title: "text-terminal-white text-xl font-bold tracking-widest",
-            separator: "text-terminal-dim",
-            image: "",
-            save: ""
-        };
-
-        return map[ type ] ?? "text-terminal-green";
-    };
-
 </script>
 
 <div
@@ -262,6 +264,8 @@
                 <img src={line.imageSrc} alt="" class="w-full max-h-44 object-cover grayscale opacity-75" />
             </figure>
         {:else if line.type === "save"}
+            {@const bar = buildProgressBar( line.savePercent ?? 0 )}
+
             <aside class="my-2 border border-terminal-amber rounded px-3 py-2 bg-terminal-amber/8 animate-fadein select-none" aria-label={m.terminal_save_aria()}>
                 <p class="flex items-center gap-2 text-terminal-amber font-bold text-xs tracking-widest">
                     <span>◉</span>
@@ -270,7 +274,7 @@
 
                 <div class="flex items-center gap-2 mt-1.5">
                     <span class="text-xs font-mono">
-                        <span class="text-terminal-amber">{buildProgressBar( line.savePercent ?? 0 ).filled}</span><span class="text-terminal-dim/50">{buildProgressBar( line.savePercent ?? 0 ).empty}</span>
+                        <span class="text-terminal-amber">{bar.filled}</span><span class="text-terminal-dim/50">{bar.empty}</span>
                     </span>
 
                     <output class="text-terminal-amber text-xs font-bold">{m.story_item_progress_value( { value: ( line.savePercent ?? 0 ) / 100 } )}</output>

@@ -2,7 +2,7 @@ import { writable, get } from "svelte/store";
 import type { GameState, Story, Scene, Choice, StoryFilters } from "$lib/types/story";
 import type { KnowledgeCategory, WikiState } from "$lib/types/knowledge";
 import { getStory, availableGenres, availableLanguages } from "$lib/data";
-import { categories, filterEntries, getEntry, getLanguageForUniverse } from "$lib/data/knowledge";
+import { categoryIds, filterEntries, getEntry, getLanguageForUniverse } from "$lib/data/knowledge";
 import { computeStoryStats } from "$lib/utilities/readingTime";
 import { searchWikiEntries } from "$lib/utilities/searchIndex";
 import { saveProgress, loadSave, deleteSave, hasSave, saveDiscoveredEnding, saveActiveSession, clearActiveSession } from "$lib/utilities/saveService";
@@ -577,9 +577,8 @@ const createTerminalStore = () =>
     {
         update( ( s ) =>
         {
-            const ids = categories.map( ( c ) => c.id );
-            const idx = ids.indexOf( s.wiki.category );
-            const next = ids[ ( idx + direction + ids.length ) % ids.length ];
+            const idx = categoryIds.indexOf( s.wiki.category );
+            const next = categoryIds[ ( idx + direction + categoryIds.length ) % categoryIds.length ];
 
             return { ...s, wiki: { ...s.wiki, category: next, selectedIndex: 0, selectedEntryId: null } };
         } );

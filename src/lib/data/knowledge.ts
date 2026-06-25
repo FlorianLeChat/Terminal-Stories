@@ -25,6 +25,14 @@ export const categories: CategoryMeta[] = [
     { id: "event", label: "Événements", icon: "✶" }
 ];
 
+/** Ordered list of category ids, precomputed to avoid recreating it on every cycle. */
+export const categoryIds: KnowledgeCategory[] = categories.map( ( c ) => c.id );
+
+/** Maps each category id to its icon for O(1) template lookups. */
+export const categoryIconMap: Record<KnowledgeCategory, string> = Object.fromEntries(
+    categories.map( ( c ) => [ c.id, c.icon ] )
+) as Record<KnowledgeCategory, string>;
+
 export const availableUniverses: string[] = [ ...new Set( knowledgeEntries.map( ( e ) => e.universe ) ) ];
 
 // Maps each universe to the language of its story, so wiki entries can be
@@ -110,4 +118,29 @@ export const filterEntries = ( category: KnowledgeCategory, language: string | n
 export const countByCategory = ( category: KnowledgeCategory, language: string | null, universe: string | null ): number =>
 {
     return filterEntries( category, language, universe ).length;
+};
+
+/**
+ * Counts entries for every category in a single pass over `knowledgeEntries`,
+ * avoiding the N separate `filterEntries` scans that `countByCategory` would
+ * trigger when called once per category tab.
+ *
+ * @param language - The language to keep, or `null` for any.
+ * @param universe - The universe to keep, or `null` for any.
+ * @returns A record mapping each category id to its entry count.
+ * @author Claude
+ */
+export const countAllCategories = ( language: string | null, universe: string | null ): Record<KnowledgeCategory, number> =>
+{
+    const counts = Object.fromEntries( categoryIds.map( ( id ) => [ id, 0 ] ) ) as Record<KnowledgeCategory, number>;
+
+    for ( const e of knowledgeEntries )
+    {
+        if ( language && universeLanguageMap.get( e.universe ) !== language ) continue;
+        if ( universe && e.universe !== universe ) continue;
+
+        counts[ e.category ]++;
+    }
+
+    return counts;
 };
