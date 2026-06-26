@@ -32,7 +32,7 @@
                 {m.controls_menu_navigate()} &nbsp;|&nbsp; {m.controls_menu_select()} &nbsp;|&nbsp; {m.controls_menu_cancel_search()}
             {:else}
                 {m.controls_menu_navigate()} &nbsp;|&nbsp; {m.controls_menu_select()} &nbsp;|&nbsp; {m.controls_menu_genre()} &nbsp;|&nbsp; {m.controls_menu_language()}
-                &nbsp;|&nbsp; {m.controls_menu_reset()} &nbsp;|&nbsp; {m.controls_menu_wiki()} &nbsp;|&nbsp; {m.controls_menu_search()}
+                &nbsp;|&nbsp; {m.controls_menu_reset()} &nbsp;|&nbsp; {m.controls_menu_wiki()} &nbsp;|&nbsp; {m.controls_menu_ai()} &nbsp;|&nbsp; {m.controls_menu_search()}
             {/if}
         {:else if view === "wiki"}
             {#if wikiEntryOpen}
@@ -43,6 +43,8 @@
                 {m.controls_wiki_category()} &nbsp;|&nbsp; {m.controls_menu_navigate()} &nbsp;|&nbsp; {m.controls_wiki_consult()} &nbsp;|&nbsp;
                 {m.controls_story_menu()} &nbsp;|&nbsp; {m.controls_menu_search()}
             {/if}
+        {:else if view === "ai-setup"}
+            {m.controls_ai_generate()} &nbsp;|&nbsp; {m.controls_story_menu()}
         {/if}
     </span>
 

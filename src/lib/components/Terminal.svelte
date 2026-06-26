@@ -8,6 +8,7 @@
     import StoryMenu from "./StoryMenu.svelte";
     import TerminalOutput from "./TerminalOutput.svelte";
     import WikiBrowser from "./WikiBrowser.svelte";
+    import AiStorySetup from "./AiStorySetup.svelte";
     import TerminalControls from "./TerminalControls.svelte";
     import TerminalHeader from "./TerminalHeader.svelte";
 
@@ -86,6 +87,19 @@
     const handleKeydown = ( e: KeyboardEvent ) =>
     {
         if ( view === "boot" ) return;
+
+        // The AI setup screen is a plain form: let typing flow to the focused
+        // field, and only intercept ESC to return to the menu.
+        if ( view === "ai-setup" )
+        {
+            if ( e.key === "Escape" )
+            {
+                e.preventDefault();
+                terminal.startMenu();
+            }
+
+            return;
+        }
 
         const isInputFocused = document.activeElement instanceof HTMLInputElement;
 
@@ -185,6 +199,13 @@
             {
                 e.preventDefault();
                 terminal.openWiki();
+                return;
+            }
+
+            if ( key === "i" )
+            {
+                e.preventDefault();
+                terminal.openAiSetup();
                 return;
             }
         }
@@ -367,6 +388,8 @@
                     <TerminalOutput {lines} animated={view === "story"} skipSignal={skipAnimationSignal} bind:isAnimating onchoice={terminal.makeChoice} />
                 {:else if view === "wiki"}
                     <WikiBrowser />
+                {:else if view === "ai-setup"}
+                    <AiStorySetup />
                 {/if}
             </div>
 

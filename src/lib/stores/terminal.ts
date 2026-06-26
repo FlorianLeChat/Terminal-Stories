@@ -1,4 +1,8 @@
 import { writable, get } from "svelte/store";
+import type { AiGenerationParams, AiStatus } from "$lib/types/ai";
+import { loadAiSettings } from "$lib/utilities/aiSettings";
+import { generateStory } from "$lib/utilities/aiService";
+import { aiErrorMessage } from "$lib/utilities/aiError";
 import type { GameState, Story, Scene, Choice, StoryFilters } from "$lib/types/story";
 import type { KnowledgeCategory, WikiState } from "$lib/types/knowledge";
 import { getStory, availableGenres, availableLanguages } from "$lib/data";
@@ -6,8 +10,7 @@ import { categoryIds, filterEntries, getEntry, getLanguageForUniverse } from "$l
 import { computeStoryStats } from "$lib/utilities/readingTime";
 import { searchWikiEntries } from "$lib/utilities/searchIndex";
 import { saveProgress, loadSave, deleteSave, hasSave, saveDiscoveredEnding, saveActiveSession, clearActiveSession } from "$lib/utilities/saveService";
-
-export type TerminalView = "boot" | "menu" | "story-info" | "story" | "wiki";
+export type TerminalView = "boot" | "menu" | "story-info" | "story" | "wiki" | "ai-setup";
 
 interface TerminalStore {
     view: TerminalView;
@@ -20,6 +23,9 @@ interface TerminalStore {
     wiki: WikiState;
     searchQuery: string;
     searchActive: boolean;
+    currentStoryIsGenerated: boolean;
+    aiStatus: AiStatus;
+    aiError: string | null;
 }
 
 export interface TerminalLine {
@@ -95,7 +101,10 @@ const createTerminalStore = () =>
         awaitingInput: false,
         wiki: { category: "universe", language: null, universe: null, selectedIndex: 0, selectedEntryId: null },
         searchQuery: "",
-        searchActive: false
+        searchActive: false,
+        currentStoryIsGenerated: false,
+        aiStatus: "idle",
+        aiError: null
     };
 
     const { subscribe, update } = writable<TerminalStore>( initial );
@@ -133,7 +142,7 @@ const createTerminalStore = () =>
     {
         clearActiveSession();
         clearLines();
-        update( ( s ) => ( { ...s, view: "menu", selectedStoryIndex: 0, awaitingInput: true, searchQuery: "", searchActive: false } ) );
+        update( ( s ) => ( { ...s, view: "menu", selectedStoryIndex: 0, awaitingInput: true, searchQuery: "", searchActive: false, currentStoryIsGenerated: false, aiStatus: "idle", aiError: null } ) );
     };
 
     /**
@@ -290,6 +299,7 @@ const createTerminalStore = () =>
             view: "story",
             currentStory: story,
             gameState,
+            currentStoryIsGenerated: false,
             awaitingInput: true
         } ) );
 
@@ -331,6 +341,7 @@ const createTerminalStore = () =>
             view: "story",
             currentStory: story,
             gameState,
+            currentStoryIsGenerated: false,
             awaitingInput: true
         } ) );
 
@@ -464,8 +475,13 @@ const createTerminalStore = () =>
 
         if ( freshState.currentStory && freshState.gameState )
         {
-            // Auto-save after every transition so progress survives a page close.
-            saveProgress( freshState.gameState );
+            // Auto-save after every transition so progress survives a page close —
+            // but never for AI-generated stories, which are intentionally ephemeral.
+            if ( !freshState.currentStoryIsGenerated )
+            {
+                saveProgress( freshState.gameState );
+            }
+
             renderScene( freshState.currentStory, choice.nextScene, freshState.gameState );
         }
     };
@@ -484,7 +500,8 @@ const createTerminalStore = () =>
         const currentScene = state.currentStory?.scenes[ currentSceneId ];
         const isLeavingFromEnding = currentScene?.isEnding === true;
 
-        if ( isLeavingFromEnding && state.gameState )
+        // Generated stories are ephemeral: skip ending tracking and save deletion.
+        if ( isLeavingFromEnding && state.gameState && !state.currentStoryIsGenerated )
         {
             saveDiscoveredEnding( state.gameState.storyId, currentSceneId );
             deleteSave( state.gameState.storyId );
@@ -762,10 +779,89 @@ const createTerminalStore = () =>
         } ) );
     };
 
+    /**
+     * Opens the AI story setup screen, clearing any prior playthrough and
+     * resetting the generation state.
+     *
+     * @author Claude
+     */
+    const openAiSetup = () =>
+    {
+        clearActiveSession();
+        clearLines();
+        update( ( s ) => ( {
+            ...s,
+            view: "ai-setup",
+            currentStory: null,
+            gameState: null,
+            currentStoryIsGenerated: false,
+            awaitingInput: true,
+            aiStatus: "idle",
+            aiError: null,
+            searchQuery: "",
+            searchActive: false
+        } ) );
+    };
+
+    /**
+     * Generates an ephemeral story from the given parameters and plays it through
+     * the standard engine. Nothing is persisted: generated stories never touch
+     * the save slots or the active-session record.
+     *
+     * @param params - The player's generation parameters.
+     * @author Claude
+     */
+    const generateAndPlay = async ( params: AiGenerationParams ) =>
+    {
+        update( ( s ) => ( { ...s, aiStatus: "generating", aiError: null } ) );
+
+        try
+        {
+            const settings = loadAiSettings();
+            const story = await generateStory( params, settings );
+
+            // If the user navigated away (e.g. ESC) while generating, don't hijack
+            // the current view with the now-stale result.
+            const wasCancelled = get( { subscribe } ).aiStatus !== "generating";
+            if ( wasCancelled ) return;
+
+            const gameState: GameState = {
+                storyId: story.id,
+                currentScene: story.startScene,
+                flags: new Set(),
+                history: []
+            };
+
+            clearLines();
+            update( ( s ) => ( {
+                ...s,
+                view: "story",
+                currentStory: story,
+                gameState,
+                currentStoryIsGenerated: true,
+                awaitingInput: true,
+                aiStatus: "idle",
+                aiError: null
+            } ) );
+
+            renderScene( story, story.startScene, gameState );
+        }
+        catch ( error )
+        {
+            // Only surface the error if the user is still waiting on this request.
+            const stillGenerating = get( { subscribe } ).aiStatus === "generating";
+            if ( !stillGenerating ) return;
+
+            update( ( s ) => ( { ...s, aiStatus: "error", aiError: aiErrorMessage( error ) } ) );
+        }
+    };
+
     return {
         subscribe,
         update,
         startMenu,
+        openAiSetup,
+        generateAndPlay,
         setFilter,
         cycleGenre,
         cycleLanguage,

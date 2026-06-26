@@ -5,7 +5,8 @@ A terminal-style interactive fiction system, built with SvelteKit + TypeScript +
 ## Language
 
 - **Comments and JSDoc: in English.**
-- **User-facing strings (UI): in French.** Never translate the interface to English.
+- **All user-facing text must be translatable.** Never hardcode a sentence shown to the user (in components, stores, services, or utilities). Define it as a Paraglide message in `locales/en.json` **and** `locales/fr.json`, then use it via `import * as m from "$lib/locales/messages"` (e.g. `m.my_key()`). Add the key to **both** locales and recompile (`npx @inlang/paraglide-js compile --project ./locales/.inlang --outdir ./src/lib/locales`).
+- **Error and status messages follow the same rule.** Non-UI layers (services, utilities) must throw or return **machine-readable codes** (not localized strings); the UI maps those codes to Paraglide messages. Never throw, return, or store a hardcoded user-facing sentence.
 - Commit messages are in English.
 
 ## Comments and JSDoc
