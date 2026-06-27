@@ -285,17 +285,17 @@
             <div class="h-3" aria-hidden="true"></div>
         {:else if line.type === "choice"}
             <button
-                class="line choice-line touch-manipulation {lineClass( line.type )} {typedIds.has( line.id ) ? "" : "animate-fadein"} w-full text-left"
+                class="wrap-break-word choice-line touch-manipulation py-1.5 px-2 -mx-2 rounded {lineClass( line.type )} {typedIds.has( line.id ) ? "" : "animate-fadein"} w-full text-left"
                 onclick={() => onchoice?.( line.choiceIndex ?? 0 )}
             >
                 {line.text}
             </button>
         {:else if line.type === "separator"}
-            <div class="line whitespace-nowrap separator-line overflow-hidden {lineClass( line.type )} {typedIds.has( line.id ) ? "" : "animate-fadein"}">
+            <div class="wrap-break-word whitespace-nowrap separator-line overflow-hidden {lineClass( line.type )} {typedIds.has( line.id ) ? "" : "animate-fadein"}">
                 <span class="select-none opacity-60">{line.text}</span>
             </div>
         {:else}
-            <div class="line {lineClass( line.type )} {typedIds.has( line.id ) ? "" : "animate-fadein"}">
+            <div class="wrap-break-word {lineClass( line.type )} {typedIds.has( line.id ) ? "" : "animate-fadein"}">
                 {line.text}
             </div>
         {/if}
@@ -309,17 +309,6 @@
 </div>
 
 <style>
-    .line {
-        word-break: break-word;
-    }
-
-    /* Larger, clearly tappable hit area for choices on touch devices. */
-    .choice-line {
-        padding: 0.35rem 0.5rem;
-        margin: 0 -0.5rem;
-        border-radius: 0.25rem;
-    }
-
     .choice-line:active {
         background: color-mix( in srgb, var( --color-terminal-green ) 12%, transparent );
     }

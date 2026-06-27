@@ -110,20 +110,24 @@ const getAvailableChoices = ( scene: Scene, state: GameState ): Choice[] =>
 };
 
 /**
- * Builds the opening lines for a scene: separator, optional image and speaker,
+ * Builds the opening lines for a scene: separator (unless first scene), optional image and speaker,
  * then the narration text (one line per paragraph, or one blank for empty ones).
  *
  * @param scene - The scene to render.
  * @param story - The story the scene belongs to (used to resolve speaker names).
+ * @param isFirst - When true, omits the leading separator (nothing precedes the scene yet).
  * @returns The base terminal lines before choices or ending messages.
  * @author Claude
  */
-const buildBaseSceneLines = ( scene: Scene, story: Story ): Omit<TerminalLine, "id">[] =>
+const buildBaseSceneLines = ( scene: Scene, story: Story, isFirst = false ): Omit<TerminalLine, "id">[] =>
 {
     const texts = Array.isArray( scene.text ) ? scene.text : [ scene.text ];
     const lines: Omit<TerminalLine, "id">[] = [];
 
-    lines.push( { text: "─".repeat( 60 ), type: "separator" } );
+    if ( !isFirst )
+    {
+        lines.push( { text: "─".repeat( 60 ), type: "separator" } );
+    }
 
     if ( scene.image )
     {
@@ -500,7 +504,7 @@ const createTerminalStore = () =>
         } ) );
 
         saveActiveSession( storyId );
-        renderScene( story, story.startScene, gameState );
+        renderScene( story, story.startScene, gameState, true );
     };
 
     /**
@@ -542,7 +546,7 @@ const createTerminalStore = () =>
         } ) );
 
         saveActiveSession( storyId );
-        renderScene( story, save.currentScene, gameState );
+        renderScene( story, save.currentScene, gameState, true );
     };
 
     /**
@@ -553,16 +557,17 @@ const createTerminalStore = () =>
      * @param story - The story being played.
      * @param sceneId - The id of the scene to render.
      * @param state - The current game state (used to gate choices).
+     * @param isFirst - When true, suppresses the leading separator (opening scene only).
      * @author Claude
      */
-    const renderScene = ( story: Story, sceneId: string, state: GameState ) =>
+    const renderScene = ( story: Story, sceneId: string, state: GameState, isFirst = false ) =>
     {
         const scene = story.scenes[ sceneId ];
         if ( !scene ) return;
 
         const { currentStoryIsGenerated, generatedEndings } = get( { subscribe } );
 
-        const lines: Omit<TerminalLine, "id">[] = buildBaseSceneLines( scene, story );
+        const lines: Omit<TerminalLine, "id">[] = buildBaseSceneLines( scene, story, isFirst );
 
         // Ending counts written here; kept as 0 for non-ending scenes so the
         // footer hides the counter when the player is mid-story.
@@ -1055,7 +1060,7 @@ const createTerminalStore = () =>
                 aiError: null
             } ) );
 
-            renderScene( story, story.startScene, gameState );
+            renderScene( story, story.startScene, gameState, true );
         }
         catch ( error )
         {
@@ -1093,7 +1098,7 @@ const createTerminalStore = () =>
         clearLines();
         update( ( s ) => ( { ...s, gameState, awaitingInput: true } ) );
 
-        renderScene( story, story.startScene, gameState );
+        renderScene( story, story.startScene, gameState, true );
     };
 
     return {
