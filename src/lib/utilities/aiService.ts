@@ -54,7 +54,7 @@ const buildSystemPrompt = (): string =>
         "- Non-ending scenes have 2-3 choices; ending scenes have an empty choices array and isEnding=true.",
         "- Provide several distinct endings (good/bad/neutral) reachable from the start.",
         "- `action` is the player's gesture; `consequence` is what immediately follows. Keep both short.",
-        "- Write ALL player-facing text (title, narration, choices, names…) in the requested language.",
+        "- Write ALL player-facing text (title, narration, choices, names...) in the requested language.",
         "- Make it atmospheric and coherent; avoid dead ends that are not flagged as endings."
     ].join( "\n" );
 };

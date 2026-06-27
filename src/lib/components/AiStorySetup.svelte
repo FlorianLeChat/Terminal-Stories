@@ -125,7 +125,7 @@
 <div class="flex-1 overflow-y-auto px-4 py-2">
     <TerminalLogo subtitle={m.ai_subtitle()} />
 
-    <p class="text-terminal-dim text-xs text-center mb-4">{m.ai_intro()}</p>
+    <p class="text-terminal-dim text-xs text-center my-4">{m.ai_intro()}</p>
 
     <form class="border border-terminal-dim/40 rounded px-4 py-3 space-y-4" onsubmit={handleSubmit}>
         <div class="space-y-1">
@@ -146,11 +146,11 @@
 
                 <button
                     type="button"
-                    class="px-2 py-1 rounded border border-terminal-cyan/50 text-terminal-cyan text-xs hover:bg-terminal-cyan/10 disabled:opacity-40 disabled:cursor-not-allowed"
+                    class="px-2 py-1 rounded border border-terminal-cyan/50 text-terminal-cyan text-xs hover:bg-terminal-cyan/10 disabled:opacity-60 disabled:cursor-not-allowed"
                     onclick={validateKey}
                     disabled={apiKey.trim() === "" || validating || keyValid}
                 >
-                    {validating ? "…" : m.ai_key_validate()}
+                    {validating ? "..." : m.ai_key_validate()}
                 </button>
             </div>
 
@@ -175,7 +175,7 @@
                 <select
                     bind:value={model}
                     id="ai-model"
-                    class="w-full bg-terminal-bg border border-terminal-dim/40 rounded px-2 py-1 text-terminal-green text-xs outline-none focus:border-terminal-green disabled:opacity-50"
+                    class="w-full bg-terminal-bg border border-terminal-dim/40 rounded px-2 py-1 text-terminal-green text-xs outline-none focus:border-terminal-green disabled:opacity-60"
                 >
                     {#each models as option ( option.id )}
                         <option value={option.id}>{option.label}</option>
@@ -240,7 +240,7 @@
         <div class="flex items-center gap-3">
             <button
                 type="submit"
-                class="px-3 py-1 rounded border border-terminal-green text-terminal-green text-xs hover:bg-terminal-green/15 disabled:opacity-50 disabled:cursor-not-allowed motion-safe:transition-colors motion-safe:duration-100"
+                class="px-3 py-1 rounded border border-terminal-green text-terminal-green text-xs hover:bg-terminal-green/15 disabled:opacity-60 disabled:cursor-not-allowed motion-safe:transition-colors motion-safe:duration-100"
                 disabled={fieldsLocked}
             >
                 {m.ai_generate()}

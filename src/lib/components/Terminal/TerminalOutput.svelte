@@ -285,18 +285,18 @@
             <div class="h-3" aria-hidden="true"></div>
         {:else if line.type === "choice"}
             <button
-                class="line {lineClass( line.type )} {typedIds.has( line.id ) ? "" : "animate-fadein"} w-full text-left"
+                class="line choice-line {lineClass( line.type )} {typedIds.has( line.id ) ? "" : "animate-fadein"} w-full text-left"
                 onclick={() => onchoice?.( line.choiceIndex ?? 0 )}
             >
                 {line.text}
             </button>
+        {:else if line.type === "separator"}
+            <div class="line separator-line {lineClass( line.type )} {typedIds.has( line.id ) ? "" : "animate-fadein"}">
+                <span class="select-none opacity-60">{line.text}</span>
+            </div>
         {:else}
             <div class="line {lineClass( line.type )} {typedIds.has( line.id ) ? "" : "animate-fadein"}">
-                {#if line.type === "separator"}
-                    <span class="select-none opacity-40">{line.text}</span>
-                {:else}
-                    {line.text}
-                {/if}
+                {line.text}
             </div>
         {/if}
     {/each}
@@ -312,6 +312,25 @@
     .line {
         white-space: pre-wrap;
         word-break: break-word;
+    }
+
+    /* Long box-drawing rules (e.g. ─×60) would wrap to several ugly lines on
+       narrow screens; clip them instead so they read as a single full-width rule. */
+    .separator-line {
+        white-space: nowrap;
+        overflow: hidden;
+    }
+
+    /* Larger, clearly tappable hit area for choices on touch devices. */
+    .choice-line {
+        padding: 0.35rem 0.5rem;
+        margin: 0 -0.5rem;
+        border-radius: 0.25rem;
+        touch-action: manipulation;
+    }
+
+    .choice-line:active {
+        background: color-mix( in srgb, var( --color-terminal-green ) 12%, transparent );
     }
 
     .animate-fadein {

@@ -121,7 +121,7 @@ Replace `Claude Sonnet 4.6` with the actual model name for this session (Opus, S
 Prefer semantic HTML elements over `<div>` and `<span>`. Use the element that best describes the content's role:
 
 - `<main>`, `<header>`, `<footer>`, `<nav>`, `<aside>`, `<section>`, `<article>` for page regions
-- `<ul>` / `<ol>` / `<li>` for lists of items (menu entries, wiki entries, choices…)
+- `<ul>` / `<ol>` / `<li>` for lists of items (menu entries, wiki entries, choices...)
 - `<button>` for interactive controls (already enforced), `<a>` for navigation links
 - `<p>` for paragraphs of text, `<h1>`–`<h6>` for headings
 - `<output>` for dynamically updated values, `<time>` for dates/durations

@@ -10,7 +10,7 @@
     let { ondone }: Props = $props();
 
     const bootLines: { text: string; delay: number; blink?: boolean }[] = [
-        { text: "Raven Green 2026.07.1 LTS v1.0.0 (GNU/Linux 7.0.2-7-generic x86_64)", delay: 0 },
+        { text: "Raven Green 2026.07.1 LTS (GNU/Linux 7.0.2-7-generic x86_64)", delay: 0 },
         { text: "An Open Source Operating System made with love by Raven Industries © 2026", delay: 120 },
         { text: "", delay: 200 },
         { text: m.boot_init(), delay: 350 },
@@ -82,14 +82,14 @@
 <svelte:window onkeydown={handleKey} />
 
 <button
-    class="flex-1 text-left flex flex-col justify-center px-8 select-none"
+    class="flex-1 text-left flex flex-col justify-center px-4 sm:px-8 select-none"
     aria-label={m.boot_aria()}
     onclick={handleClick}
 >
     {#each bootLines as line, i ( i )}
         {#if visible[ i ]}
             <div
-                class="leading-relaxed animate-fadein text-sm"
+                class="leading-relaxed animate-fadein text-xs sm:text-sm break-words"
                 class:text-terminal-green={!line.blink}
                 class:text-terminal-amber={line.blink}
                 class:blink-text={line.blink}

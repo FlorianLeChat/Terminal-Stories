@@ -61,40 +61,63 @@
         return categoryColors[ category ] ?? "text-terminal-green";
     };
 
+    /**
+     * Returns a click handler for a wiki entry. On mobile there is no hover,
+     * so the first tap selects the entry (matching the keyboard/hover state)
+     * and the second tap opens it. On desktop the hover already set
+     * selectedIndex, so the click always reaches the open branch directly.
+     *
+     * @param i - Index of the entry in the current list.
+     * @param entryId - Identifier of the entry to open on the second tap.
+     * @returns A click event handler.
+     * @author Claude
+     */
+    const handleWikiClick = ( i: number, entryId: string ) => () =>
+    {
+        if ( i !== wiki.selectedIndex )
+        {
+            terminal.navigateWiki( i );
+        }
+        else
+        {
+            terminal.openWikiEntry( entryId );
+        }
+    };
+
 </script>
 
 <div class="flex-1 overflow-y-auto px-4 py-2 scrollbar-terminal">
     <TerminalLogo subtitle={m.wiki_subtitle()} />
 
     {#if !currentEntry}
-        <div class="border border-terminal-dim/40 rounded px-3 py-2 mb-3 space-y-2">
-            <div class="flex items-center gap-2 flex-wrap" role="group" aria-labelledby="wiki-filter-category-label">
-                <span id="wiki-filter-category-label" class="text-terminal-dim text-xs w-20 shrink-0 select-none">
+        <section aria-labelledby="wiki-filter-category-label" class="border border-terminal-dim/40 rounded px-3 py-2 my-4 space-y-3 sm:space-y-2">
+            <div class="flex flex-col gap-1.5 sm:flex-row sm:items-center sm:gap-2 sm:flex-wrap" role="group" aria-labelledby="wiki-filter-category-label">
+                <span id="wiki-filter-category-label" class="text-terminal-dim text-xs sm:w-20 shrink-0 select-none">
                     {m.wiki_filter_category()}
                 </span>
 
                 {#each categories as cat ( cat.id )}
                     <button
-                        class="text-xs px-2 py-0.5 rounded border motion-safe:transition-colors motion-safe:duration-100 {wiki.category === cat.id
+                        class="text-xs px-2 py-1.5 sm:py-0.5 rounded border w-full sm:w-auto text-center sm:text-left motion-safe:transition-colors motion-safe:duration-100 {wiki.category === cat.id
                             ? `border-terminal-green bg-terminal-green/15 ${ color( cat.id ) }`
                             : "border-terminal-dim/40 text-terminal-dim hover:border-terminal-dim hover:text-terminal-white"}"
                         aria-pressed={wiki.category === cat.id}
                         onclick={() => terminal.setWikiCategory( cat.id )}
                     >
                         {cat.icon} {cat.label}
-                        <span class="opacity-50">({categoryCounts[ cat.id ]})</span>
+                        <span class="opacity-80">({categoryCounts[ cat.id ]})</span>
                     </button>
                 {/each}
             </div>
 
-            <div class="flex items-center gap-2 flex-wrap" role="group" aria-labelledby="wiki-filter-language-label">
-                <span id="wiki-filter-language-label" class="text-terminal-dim text-xs w-20 shrink-0 select-none">
+            <div class="flex flex-col gap-1.5 sm:flex-row sm:items-center sm:gap-2 sm:flex-wrap" role="group" aria-labelledby="wiki-filter-language-label">
+                <span id="wiki-filter-language-label" class="text-terminal-dim text-xs sm:w-20 shrink-0 select-none">
                     {m.wiki_filter_language()}
                 </span>
 
                 {#each availableWikiLanguages as language ( language )}
                     <button
-                        class="text-xs px-2 py-0.5 rounded border motion-safe:transition-colors motion-safe:duration-100 {wiki.language === language
+                        class="text-xs px-2 py-1.5 sm:py-0.5 rounded border w-full sm:w-auto text-center sm:text-left motion-safe:transition-colors motion-safe:duration-100 {wiki.language === language
                             ? "border-terminal-green bg-terminal-green/15 text-terminal-white"
                             : "border-terminal-dim/40 text-terminal-dim hover:border-terminal-dim hover:text-terminal-white"}"
                         aria-pressed={wiki.language === language}
@@ -105,14 +128,14 @@
                 {/each}
             </div>
 
-            <div class="flex items-center gap-2 flex-wrap" role="group" aria-labelledby="wiki-filter-universe-label">
-                <span id="wiki-filter-universe-label" class="text-terminal-dim text-xs w-20 shrink-0 select-none">
+            <div class="flex flex-col gap-1.5 sm:flex-row sm:items-center sm:gap-2 sm:flex-wrap" role="group" aria-labelledby="wiki-filter-universe-label">
+                <span id="wiki-filter-universe-label" class="text-terminal-dim text-xs sm:w-20 shrink-0 select-none">
                     {m.wiki_filter_universe()}
                 </span>
 
                 {#each filteredUniverses as universe ( universe )}
                     <button
-                        class="text-xs px-2 py-0.5 rounded border motion-safe:transition-colors motion-safe:duration-100 {wiki.universe === universe
+                        class="text-xs px-2 py-1.5 sm:py-0.5 rounded border w-full sm:w-auto text-center sm:text-left motion-safe:transition-colors motion-safe:duration-100 {wiki.universe === universe
                             ? "border-terminal-green bg-terminal-green/15 text-terminal-white"
                             : "border-terminal-dim/40 text-terminal-dim hover:border-terminal-dim hover:text-terminal-white"}"
                         aria-pressed={wiki.universe === universe}
@@ -122,7 +145,7 @@
                     </button>
                 {/each}
             </div>
-        </div>
+        </section>
 
         {#if searchActive}
             <div class="border border-terminal-green/40 bg-terminal-green/5 rounded px-3 py-2 mb-3 flex items-center gap-2">
@@ -145,7 +168,7 @@
             </div>
         {/if}
 
-        <div class="text-terminal-dim text-xs mb-3 text-center">
+        <div class="text-terminal-dim text-xs mb-4 text-center">
             {#if searchActive}
                 {m.wiki_nav_search_active()}
             {:else}
@@ -174,8 +197,8 @@
                                 ? "bg-terminal-green/15 border-l-2 border-terminal-green"
                                 : "border-l-2 border-transparent hover:bg-white/5"}"
                             aria-current={i === wiki.selectedIndex ? "true" : undefined}
-                            onclick={() => terminal.openWikiEntry( entry.id )}
-                            onmouseenter={() => terminal.navigateWiki( i )}
+                            onclick={handleWikiClick( i, entry.id )}
+                            onpointerenter={( e ) => { if ( e.pointerType === "mouse" ) terminal.navigateWiki( i ); }}
                         >
                             <span class="flex items-baseline gap-3">
                                 <span class="text-xs shrink-0 {color( entry.category )}">
@@ -183,7 +206,7 @@
                                 </span>
 
                                 <span class="block flex-1 min-w-0">
-                                    <span class="flex items-baseline gap-2 flex-wrap">
+                                    <span class="flex items-baseline gap-2 flex-wrap mb-2">
                                         <span class="text-terminal-white font-bold text-sm">{entry.name}</span>
                                         <span class="text-terminal-dim text-xs shrink-0">· {entry.universe}</span>
                                     </span>
@@ -203,7 +226,7 @@
             </ol>
         {/if}
 
-        <div class="text-terminal-dim text-xs text-center opacity-50 pb-4">
+        <div class="text-terminal-dim text-xs text-center opacity-80 pb-4">
             {#if searchActive && searchQuery !== ""}
                 {m.wiki_count_results( { count: entries.length, query: searchQuery } )}
             {:else}

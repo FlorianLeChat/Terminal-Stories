@@ -43,7 +43,7 @@
     };
 </script>
 
-<article class="border border-terminal-dim rounded px-4 py-3 mb-4 max-w-2xl mx-auto">
+<article class="border border-terminal-dim rounded px-4 py-3 my-4 max-w-2xl mx-auto">
     <header class="flex items-baseline gap-2 flex-wrap border-b border-terminal-dim/30 pb-2 mb-3">
         <span class="text-xs {color( entry.category )}">
             {categories.find( ( c ) => c.id === entry.category )?.icon}
@@ -81,7 +81,7 @@
     {#if entry.tags && entry.tags.length > 0}
         <ul class="flex gap-1 mt-4 flex-wrap">
             {#each entry.tags as tag ( tag )}
-                <li class="text-terminal-dim text-xs opacity-60">#{tag}</li>
+                <li class="text-terminal-dim text-xs opacity-80">#{tag}</li>
             {/each}
         </ul>
     {/if}
@@ -104,7 +104,7 @@
                             >
                                 → {categories.find( ( c ) => c.id === related.category )?.icon}
                                 {related.name}
-                                <span class="text-terminal-dim opacity-60">({categoryLabel( related.category )})</span>
+                                <span class="text-terminal-dim opacity-80">({categoryLabel( related.category )})</span>
                             </button>
                         </li>
                     {/if}
@@ -113,7 +113,3 @@
         </aside>
     {/if}
 </article>
-
-<p class="text-terminal-dim text-xs text-center opacity-60 pb-4">
-    {m.wiki_entry_back()}
-</p>

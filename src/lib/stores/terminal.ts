@@ -122,8 +122,6 @@ const buildBaseSceneLines = ( scene: Scene, story: Story ): Omit<TerminalLine, "
     const texts = Array.isArray( scene.text ) ? scene.text : [ scene.text ];
     const lines: Omit<TerminalLine, "id">[] = [];
 
-    lines.push( { text: "─".repeat( 60 ), type: "separator" } );
-
     if ( scene.image )
     {
         lines.push( { text: "", type: "image", imageSrc: scene.image } );
@@ -281,7 +279,6 @@ const buildStoryInfoLines = (
 ): Omit<TerminalLine, "id">[] =>
 {
     const lines: Omit<TerminalLine, "id">[] = [
-        { text: "═".repeat( 60 ), type: "separator" },
         { text: story.title, type: "title" },
         { text: `${ story.genre } — ${ story.universe }`, type: "system" },
         { text: "─".repeat( 60 ), type: "separator" },

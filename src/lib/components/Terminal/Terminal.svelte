@@ -350,6 +350,17 @@
     };
 
     /**
+     * Skips the running typewriter animation by bumping the skip signal. Shared
+     * by the SPACE shortcut and the touch control in the footer.
+     *
+     * @author Claude
+     */
+    const handleSkip = () =>
+    {
+        skipState = { count: skipState.count + 1, key: $terminal.storyKey };
+    };
+
+    /**
      * Handles keys during story playback: number keys pick a choice, ESC
      * returns to the menu, and ENTER on an ending returns to the menu.
      *
@@ -361,7 +372,7 @@
         if ( e.key === " " && isAnimating )
         {
             e.preventDefault();
-            skipState = { count: skipState.count + 1, key: $terminal.storyKey };
+            handleSkip();
             return;
         }
 
@@ -404,8 +415,8 @@
 
 <svelte:window onkeydown={handleKeydown} />
 
-<div class="crt-wrapper h-screen w-screen flex items-center justify-center bg-black overflow-hidden">
-    <div class="monitor relative w-full max-w-4xl h-full max-h-screen flex flex-col">
+<div class="crt-wrapper h-dvh w-screen flex items-center justify-center bg-black overflow-hidden">
+    <div class="monitor relative w-full max-w-4xl h-full flex flex-col">
         <div class="scanlines pointer-events-none"></div>
 
         <main class="screen flex flex-col h-full overflow-hidden">
@@ -437,6 +448,7 @@
                 {atStandardEnding}
                 endingsFound={$terminal.endingsFound}
                 endingsTotal={$terminal.endingsTotal}
+                onSkip={handleSkip}
             />
         </main>
     </div>

@@ -58,15 +58,15 @@
 <div class="flex-1 overflow-y-auto px-4 py-2">
     <TerminalLogo subtitle={m.menu_subtitle()} />
 
-    <div class="border border-terminal-dim/40 rounded px-3 py-2 mb-4 space-y-1.5">
-        <div class="flex items-center gap-2 flex-wrap" role="group" aria-labelledby="filter-genre-label">
-            <span id="filter-genre-label" class="text-terminal-dim text-xs w-16 shrink-0 select-none">
+    <section aria-labelledby="filter-genre-label" class="border border-terminal-dim/40 rounded px-3 py-2 my-4 space-y-3 sm:space-y-1.5">
+        <div class="flex flex-col gap-1.5 sm:flex-row sm:items-center sm:gap-2 sm:flex-wrap" role="group" aria-labelledby="filter-genre-label">
+            <span id="filter-genre-label" class="text-terminal-dim text-xs sm:w-16 shrink-0 select-none">
                 {m.menu_filter_genre()}
             </span>
 
             {#each availableGenres as genre ( genre )}
                 <button
-                    class="text-xs px-2 py-0.5 rounded border motion-safe:transition-colors motion-safe:duration-100 {filters.genre === genre
+                    class="text-xs px-2 py-1.5 sm:py-0.5 rounded border w-full sm:w-auto text-center sm:text-left motion-safe:transition-colors motion-safe:duration-100 {filters.genre === genre
                         ? `border-terminal-green bg-terminal-green/15 ${ genreColor( genre ) }`
                         : "border-terminal-dim/40 text-terminal-dim hover:border-terminal-dim hover:text-terminal-white"}"
                     aria-pressed={filters.genre === genre}
@@ -77,14 +77,14 @@
             {/each}
         </div>
 
-        <div class="flex items-center gap-2 flex-wrap" role="group" aria-labelledby="filter-language-label">
-            <span id="filter-language-label" class="text-terminal-dim text-xs w-16 shrink-0 select-none">
+        <div class="flex flex-col gap-1.5 sm:flex-row sm:items-center sm:gap-2 sm:flex-wrap" role="group" aria-labelledby="filter-language-label">
+            <span id="filter-language-label" class="text-terminal-dim text-xs sm:w-16 shrink-0 select-none">
                 {m.menu_filter_language()}
             </span>
 
             {#each availableLanguages as language ( language )}
                 <button
-                    class="text-xs px-2 py-0.5 rounded border motion-safe:transition-colors motion-safe:duration-100 {filters.language
+                    class="text-xs px-2 py-1.5 sm:py-0.5 rounded border w-full sm:w-auto text-center sm:text-left motion-safe:transition-colors motion-safe:duration-100 {filters.language
                       === language
                         ? "border-terminal-green bg-terminal-green/15 text-terminal-white"
                         : "border-terminal-dim/40 text-terminal-dim hover:border-terminal-dim hover:text-terminal-white"}"
@@ -97,36 +97,37 @@
 
             {#if hasFilters}
                 <button
-                    class="text-xs px-2 py-0.5 rounded border border-terminal-amber/50 text-terminal-amber hover:bg-terminal-amber/10 motion-safe:transition-colors motion-safe:duration-100 ml-auto"
+                    class="text-xs px-2 py-1.5 sm:py-0.5 rounded border border-terminal-amber/50 text-terminal-amber hover:bg-terminal-amber/10 motion-safe:transition-colors motion-safe:duration-100 w-full sm:w-auto sm:ml-auto"
                     onclick={() => terminal.clearFilters()}
                 >
                     {m.menu_filter_reset()}
                 </button>
             {/if}
         </div>
-    </div>
+    </section>
 
-    <div class="flex items-center justify-center gap-3 mb-4 text-xs">
+    <!-- Nav hint + shortcut buttons: stacked column on mobile, inline row from `sm`. -->
+    <nav class="flex flex-col items-stretch gap-3 sm:flex-row sm:items-center sm:justify-center mb-4 text-xs">
         {#if searchActive}
-            <span class="text-terminal-dim">{m.menu_nav_search_active()}</span>
+            <span class="text-terminal-dim text-center">{m.menu_nav_search_active()}</span>
         {:else}
-            <span class="text-terminal-dim">{m.menu_nav_default()}</span>
+            <span class="text-terminal-dim text-center sm:text-left">{m.menu_nav_default()}</span>
 
             <button
-                class="px-2 py-0.5 rounded border border-terminal-cyan/50 text-terminal-cyan hover:bg-terminal-cyan/10 motion-safe:transition-colors motion-safe:duration-100"
+                class="px-2 py-1.5 sm:py-0.5 rounded border border-terminal-cyan/50 text-terminal-cyan hover:bg-terminal-cyan/10 motion-safe:transition-colors motion-safe:duration-100 w-full sm:w-auto"
                 onclick={() => terminal.openWiki()}
             >
                 {m.menu_wiki_button()}
             </button>
 
             <button
-                class="px-2 py-0.5 rounded border border-terminal-amber/50 text-terminal-amber hover:bg-terminal-amber/10 motion-safe:transition-colors motion-safe:duration-100"
+                class="px-2 py-1.5 sm:py-0.5 rounded border border-terminal-amber/50 text-terminal-amber hover:bg-terminal-amber/10 motion-safe:transition-colors motion-safe:duration-100 w-full sm:w-auto"
                 onclick={() => terminal.openAiSetup()}
             >
                 {m.menu_ai_button()}
             </button>
         {/if}
-    </div>
+    </nav>
 
     {#if searchActive}
         <div class="border border-terminal-green/40 bg-terminal-green/5 rounded px-3 py-2 mb-4 flex items-center gap-2">
@@ -144,8 +145,6 @@
                 autocomplete="off"
                 spellcheck={false}
             />
-
-            <span class="text-terminal-dim text-xs shrink-0 select-none">{m.menu_search_cancel()}</span>
         </div>
     {/if}
 
@@ -180,7 +179,7 @@
         </ol>
     {/if}
 
-    <div class="text-terminal-dim text-xs text-center opacity-50 pb-4">
+    <div class="text-terminal-dim text-xs text-center opacity-80 pb-4">
         {#if searchActive && searchQuery !== ""}
             {m.menu_count_results( { count: visibleStories.length, query: searchQuery } )}
         {:else}

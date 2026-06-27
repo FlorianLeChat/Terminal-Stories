@@ -70,6 +70,27 @@
     let allFound = $derived( found.size === story.endingIds.length && story.endingIds.length > 0 );
     let isSelected = $derived( index === selectedIndex );
     let completion = $derived( storyCompletion( story.id, story.stats.scenes ) );
+
+    /**
+     * Handles a tap/click on a story item. On mobile there is no hover, so a
+     * direct click would skip the inline detail view. This two-step pattern
+     * makes the first interaction expand the item and the second open the story.
+     * On desktop the behavior is unchanged: hovering already sets isSelected,
+     * so a click always reaches the `onselect` branch immediately.
+     *
+     * @author Claude
+     */
+    const handleClick = () =>
+    {
+        if ( !isSelected )
+        {
+            onnavigate( index );
+        }
+        else
+        {
+            onselect( story.id );
+        }
+    };
 </script>
 
 <li>
@@ -78,15 +99,22 @@
             ? "bg-terminal-green/15 border-l-2 border-terminal-green"
             : "border-l-2 border-transparent hover:bg-white/5"}"
         aria-current={isSelected ? "true" : undefined}
-        onclick={() => onselect( story.id )}
-        onmouseenter={() => onnavigate( index )}
+        onclick={handleClick}
+        onpointerenter={( e ) => { if ( e.pointerType === "mouse" ) onnavigate( index ); }}
     >
         <span class="flex items-baseline gap-3">
             <span class="text-terminal-dim text-xs w-4 shrink-0">{index + 1}.</span>
 
             <span class="block flex-1 min-w-0">
-                <span class="flex items-baseline gap-2 flex-wrap">
+                <span class="flex items-baseline justify-between max-sm:flex-col gap-2 mb-2">
                     <span class="text-terminal-white font-bold text-sm">{story.title}</span>
+
+                    <span class="text-terminal-cyan text-xs shrink-0" title={m.story_item_reading_time_title()}>
+                        ⏱ {formatReadingTime( story.stats.minutes )} / partie
+                    </span>
+                </span>
+
+                <span class="flex items-center gap-2 flex-wrap mb-2">
                     <span class="text-xs {genreColor( story.genre )} shrink-0">[{story.genre}]</span>
                     <span class="text-terminal-dim text-xs shrink-0">· {story.language}</span>
 
@@ -104,53 +132,49 @@
                             ★
                         </span>
                     {/if}
-
-                    <span class="text-terminal-cyan text-xs shrink-0 ml-auto" title={m.story_item_reading_time_title()}>
-                        ⏱ {formatReadingTime( story.stats.minutes )} / partie
-                    </span>
                 </span>
 
-                <span class="block text-terminal-dim text-xs mt-0.5">{story.universe}</span>
+                <span class="block text-terminal-dim text-xs">{story.universe}</span>
 
                 {#if isSelected}
-                    <span class="block text-terminal-green text-xs mt-1 opacity-80 leading-relaxed">
+                    <span class="block text-terminal-green text-xs my-2 opacity-80 leading-relaxed">
                         {story.description}
                     </span>
 
-                    <span class="flex items-center gap-3 mt-1 text-terminal-dim text-xs opacity-70">
+                    <span class="flex items-center gap-3 flex-wrap mb-2 text-terminal-dim text-xs opacity-80">
                         <span title={m.story_item_scenes_title()}>⌬ {story.stats.scenes} {m.story_item_scenes_entries()}</span>
                         <span title={m.story_item_explore_time_title()}>⧉ {formatReadingTime( story.stats.fullMinutes )} pour tout explorer</span>
-
-                        {#if completion !== null}
-                            {@const bar = buildProgressBar( completion, 6 )}
-
-                            <span class="ml-auto text-xs" title={m.story_item_progress_title()}>
-                                <span class="text-terminal-amber">◉ {bar.filled}</span><span class="text-terminal-dim/50">{bar.empty}</span>
-                                <span class="text-terminal-amber"> {m.story_item_progress_value( { value: completion / 100 } )}</span>
-                            </span>
-                        {/if}
                     </span>
 
+                    {#if completion !== null}
+                        {@const bar = buildProgressBar( completion, 6 )}
+
+                        <span class="flex items-center mb-2 text-xs" title={m.story_item_progress_title()}>
+                            <span class="text-terminal-amber">◉ {bar.filled}</span><span class="text-terminal-dim/50">{bar.empty}</span>
+                            <span class="ml-2 text-terminal-amber">{m.story_item_progress_value( { value: completion / 100 } )}</span>
+                        </span>
+                    {/if}
+
                     <span
-                        class="flex items-center gap-1 mt-1"
+                        class="flex items-baseline gap-1 mb-2"
                         title={m.story_item_endings_title( { found: found.size, total: story.endingIds.length } )}
                     >
-                        <span class="text-terminal-dim text-xs opacity-70 mr-1">
+                        <span class="text-terminal-dim text-xs opacity-80 mr-1">
                             {m.story_item_endings_count( { count: story.endingIds.length } )}
                         </span>
 
                         {#each story.endingIds as endingId, idx ( endingId )}
-                            <span class="text-2xl {found.has( endingId ) ? "text-terminal-green" : "text-terminal-dim"}">
+                            <span class="text-xl {found.has( endingId ) ? "text-terminal-green" : "text-terminal-dim"}">
                                 {endingGlyph( idx + 1 )}
                             </span>
                         {/each}
                     </span>
 
-                    <span role="list" class="flex gap-1 mt-1 flex-wrap">
+                    <ul class="flex gap-1 flex-wrap">
                         {#each story.tags as tag ( tag )}
-                            <span role="listitem" class="text-terminal-dim text-xs opacity-60">#{tag}</span>
+                            <li class="text-terminal-dim text-xs opacity-80">#{tag}</li>
                         {/each}
-                    </span>
+                    </ul>
                 {/if}
             </span>
         </span>
