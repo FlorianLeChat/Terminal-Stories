@@ -1,9 +1,7 @@
 <script lang="ts">
     import * as m from "$lib/locales/messages";
-    import { formatReadingTime } from "$lib/utilities/readingTime";
-    import { buildProgressBar } from "$lib/utilities/progressBar";
-    import { loadSave, loadDiscoveredEndings } from "$lib/utilities/saveService";
-    import type { StoryMeta } from "$lib/types/story";
+    import type { StoryMeta } from "$lib";
+    import { formatReadingTime, buildProgressBar, loadSave, loadDiscoveredEndings } from "$lib";
 
     interface Props {
         story: StoryMeta;

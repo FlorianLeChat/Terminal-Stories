@@ -2,7 +2,7 @@
     import * as m from "$lib/locales/messages";
     import { untrack } from "svelte";
     import { SvelteSet } from "svelte/reactivity";
-    import { buildProgressBar } from "$lib/utilities/progressBar";
+    import { buildProgressBar } from "$lib";
     import type { TerminalLine } from "$lib/stores/terminal";
 
     /**

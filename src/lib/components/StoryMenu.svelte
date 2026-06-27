@@ -3,8 +3,7 @@
     import { terminal } from "$lib/stores/terminal";
     import TerminalLogo from "./TerminalLogo.svelte";
     import StoryListItem from "./StoryListItem.svelte";
-    import { searchStories } from "$lib/utilities/searchIndex";
-    import { storiesMeta, filterStories, availableGenres, availableLanguages } from "$lib/data";
+    import { storiesMeta, filterStories, availableGenres, availableLanguages, searchStories } from "$lib";
 
     interface Props {
         selectedIndex?: number;

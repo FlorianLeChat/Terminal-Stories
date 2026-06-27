@@ -1,9 +1,6 @@
 <script lang="ts">
     import { onMount } from "svelte";
     import { terminal } from "$lib/stores/terminal";
-    import { storiesMeta, filterStories } from "$lib/data";
-    import { searchStories } from "$lib/utilities/searchIndex";
-    import { hasSave, loadActiveSession } from "$lib/utilities/saveService";
     import BootSequence from "./BootSequence.svelte";
     import StoryMenu from "./StoryMenu.svelte";
     import TerminalOutput from "./TerminalOutput.svelte";
@@ -11,6 +8,7 @@
     import AiStorySetup from "./AiStorySetup.svelte";
     import TerminalControls from "./TerminalControls.svelte";
     import TerminalHeader from "./TerminalHeader.svelte";
+    import { storiesMeta, filterStories, searchStories, hasSave, loadActiveSession } from "$lib";
 
     let view = $derived( $terminal.view );
     let lines = $derived( $terminal.lines );

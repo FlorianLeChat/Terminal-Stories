@@ -3,16 +3,16 @@
     import { terminal } from "$lib/stores/terminal";
     import TerminalLogo from "./TerminalLogo.svelte";
     import WikiEntryDetail from "./WikiEntryDetail.svelte";
-    import { categories,
-        availableUniverses,
+    import { availableUniverses,
         availableWikiLanguages,
-        filterEntries,
-        getEntry,
-        countAllCategories,
+        categories,
         categoryIconMap,
         categoryLabel,
-        getLanguageForUniverse } from "$lib/data/knowledge";
-    import { searchWikiEntries } from "$lib/utilities/searchIndex";
+        countAllCategories,
+        filterEntries,
+        getEntry,
+        getLanguageForUniverse,
+        searchWikiEntries } from "$lib";
 
     let wiki = $derived( $terminal.wiki );
     let searchActive = $derived( $terminal.searchActive );

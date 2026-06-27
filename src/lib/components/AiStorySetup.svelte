@@ -3,10 +3,8 @@
     import { onMount } from "svelte";
     import { terminal } from "$lib/stores/terminal";
     import TerminalLogo from "./TerminalLogo.svelte";
-    import type { AiGenerationParams, AiModelOption } from "$lib/types/ai";
-    import { loadAiSettings, saveAiKey, saveAiModel } from "$lib/utilities/aiSettings";
-    import { listModels } from "$lib/utilities/aiService";
-    import { aiErrorMessage } from "$lib/utilities/aiError";
+    import type { AiGenerationParams, AiModelOption } from "$lib";
+    import { loadAiSettings, saveAiKey, saveAiModel, listModels, aiErrorMessage } from "$lib";
 
     // Seed the form from any previously stored settings (the key is remembered
     // across sessions; the generation parameters always start fresh).

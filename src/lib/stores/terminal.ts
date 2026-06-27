@@ -1,16 +1,38 @@
 import * as m from "$lib/locales/messages";
 import { writable, get } from "svelte/store";
-import type { AiGenerationParams, AiStatus } from "$lib/types/ai";
-import { loadAiSettings } from "$lib/utilities/aiSettings";
-import { generateStory } from "$lib/utilities/aiService";
-import { aiErrorMessage } from "$lib/utilities/aiError";
-import type { GameState, Story, Scene, Choice, StoryFilters } from "$lib/types/story";
-import type { KnowledgeCategory, WikiState } from "$lib/types/knowledge";
-import { getStory, availableGenres, availableLanguages } from "$lib/data";
-import { categoryIds, filterEntries, getEntry, getLanguageForUniverse } from "$lib/data/knowledge";
-import { computeStoryStats } from "$lib/utilities/readingTime";
-import { searchWikiEntries } from "$lib/utilities/searchIndex";
-import { saveProgress, loadSave, deleteSave, hasSave, saveDiscoveredEnding, loadDiscoveredEndings, saveActiveSession, clearActiveSession } from "$lib/utilities/saveService";
+import type { AiGenerationParams,
+    AiStatus,
+    Choice,
+    GameState,
+    KnowledgeCategory,
+    SaveData,
+    Scene,
+    Story,
+    StoryFilters,
+    StoryStats,
+    WikiState } from "$lib";
+
+import { aiErrorMessage,
+    availableGenres,
+    availableLanguages,
+    categoryIds,
+    clearActiveSession,
+    computeStoryStats,
+    deleteSave,
+    filterEntries,
+    generateStory,
+    getEntry,
+    getLanguageForUniverse,
+    getStory,
+    hasSave,
+    loadAiSettings,
+    loadDiscoveredEndings,
+    loadSave,
+    saveActiveSession,
+    saveDiscoveredEnding,
+    saveProgress,
+    searchWikiEntries } from "$lib";
+
 export type TerminalView = "boot" | "menu" | "story-info" | "story" | "wiki" | "ai-setup";
 
 interface TerminalStore {
@@ -85,6 +107,207 @@ const getAvailableChoices = ( scene: Scene, state: GameState ): Choice[] =>
     {
         return !( c.requiresFlag && !state.flags.has( c.requiresFlag ) );
     } );
+};
+
+/**
+ * Builds the opening lines for a scene: separator, optional image and speaker,
+ * then the narration text (one line per paragraph, or one blank for empty ones).
+ *
+ * @param scene - The scene to render.
+ * @param story - The story the scene belongs to (used to resolve speaker names).
+ * @returns The base terminal lines before choices or ending messages.
+ * @author Claude
+ */
+const buildBaseSceneLines = ( scene: Scene, story: Story ): Omit<TerminalLine, "id">[] =>
+{
+    const texts = Array.isArray( scene.text ) ? scene.text : [ scene.text ];
+    const lines: Omit<TerminalLine, "id">[] = [];
+
+    lines.push( { text: "─".repeat( 60 ), type: "separator" } );
+
+    if ( scene.image )
+    {
+        lines.push( { text: "", type: "image", imageSrc: scene.image } );
+    }
+
+    if ( scene.speaker )
+    {
+        const char = story.characters.find( ( c ) => c.id === scene.speaker );
+        const name = char ? char.name : scene.speaker;
+
+        lines.push( { text: `[ ${ name } ]`, type: "speaker", speaker: name } );
+    }
+
+    for ( const t of texts )
+    {
+        if ( t === "" )
+        {
+            lines.push( { text: "", type: "narrator" } );
+        }
+        else
+        {
+            lines.push( { text: t, type: scene.isEnding ? "ending" : "narrator" } );
+        }
+    }
+
+    return lines;
+};
+
+/**
+ * Computes ending counts and records a newly reached ending for an in-memory
+ * generated story (deduped against already-discovered ids).
+ *
+ * @param sceneId - The id of the ending scene just reached.
+ * @param story - The generated story.
+ * @param generatedEndings - Previously discovered ending ids from the store.
+ * @returns Updated ending tracking data.
+ * @author Claude
+ */
+const resolveGeneratedEndingData = (
+    sceneId: string,
+    story: Story,
+    generatedEndings: string[]
+): { nextEndings: string[]; endingsFound: number; endingsTotal: number; isNewEnding: boolean } =>
+{
+    const isNewEnding = !generatedEndings.includes( sceneId );
+    const nextEndings = isNewEnding ? [ ...generatedEndings, sceneId ] : generatedEndings;
+    const endingsTotal = Object.values( story.scenes ).filter( ( s ) => s.isEnding === true ).length;
+    const endingsFound = nextEndings.length;
+
+    return { nextEndings, endingsFound, endingsTotal, isNewEnding };
+};
+
+/**
+ * Computes ending counts for a catalog story, loading persisted discoveries
+ * and anticipating the save that will happen in {@link goBack}.
+ *
+ * @param sceneId - The id of the ending scene just reached.
+ * @param story - The catalog story.
+ * @param state - The current game state (used to load persisted endings by story id).
+ * @returns Ending tracking data for display.
+ * @author Claude
+ */
+const resolveCatalogEndingData = (
+    sceneId: string,
+    story: Story,
+    state: GameState
+): { endingsFound: number; endingsTotal: number; isNewEnding: boolean } =>
+{
+    const existingEndings = loadDiscoveredEndings( state.storyId );
+    const isNewEnding = !existingEndings.has( sceneId );
+    const endingsTotal = Object.values( story.scenes ).filter( ( s ) => s.isEnding === true ).length;
+    // +1 anticipates the save that will happen in goBack(); not yet persisted.
+    const endingsFound = existingEndings.size + ( isNewEnding ? 1 : 0 );
+
+    return { endingsFound, endingsTotal, isNewEnding };
+};
+
+/**
+ * Builds the discovery congratulation lines shown below an ending's text.
+ * Returns an empty array when the ending was already known.
+ *
+ * @param isNewEnding - Whether this ending has not been seen before.
+ * @param endingsFound - Total endings discovered including this one.
+ * @param endingsTotal - Total endings in the story.
+ * @returns Lines to append after the ending narration, if any.
+ * @author Claude
+ */
+const buildEndingDiscoveryLines = (
+    isNewEnding: boolean,
+    endingsFound: number,
+    endingsTotal: number
+): Omit<TerminalLine, "id">[] =>
+{
+    if ( !isNewEnding ) return [];
+
+    const allDiscovered = endingsFound >= endingsTotal;
+    const message = allDiscovered
+        ? m.ending_all_discovered( { total: endingsTotal } )
+        : m.ending_new_discovered( { found: endingsFound, total: endingsTotal } );
+
+    return [
+        { text: "", type: "narrator" },
+        { text: message, type: "system" }
+    ];
+};
+
+/**
+ * Builds the choice prompt block: the "que faites-vous" header, the indexed
+ * available choices, and the escape hint.
+ *
+ * @param scene - The scene whose choices are rendered.
+ * @param state - The current game state (used to filter locked choices).
+ * @returns Lines for the interactive choice prompt.
+ * @author Claude
+ */
+const buildChoiceLines = ( scene: Scene, state: GameState ): Omit<TerminalLine, "id">[] =>
+{
+    const available = getAvailableChoices( scene, state );
+    const lines: Omit<TerminalLine, "id">[] = [
+        { text: "", type: "narrator" },
+        { text: "> Que faites-vous ?", type: "system" },
+        { text: "", type: "narrator" }
+    ];
+
+    available.forEach( ( choice, i ) =>
+    {
+        lines.push( {
+            text: `  [${ i + 1 }] ${ choice.text }`,
+            type: "choice",
+            choiceIndex: i + 1
+        } );
+    } );
+
+    lines.push( { text: "", type: "narrator" }, { text: "[ÉCHAP] Menu principal", type: "system" } );
+
+    return lines;
+};
+
+/**
+ * Builds all lines for the story info screen: header, title, description, an
+ * optional save indicator, and the action prompt.
+ *
+ * @param story - The story being previewed.
+ * @param stats - Pre-computed story statistics.
+ * @param saveExists - Whether a saved playthrough exists for this story.
+ * @param save - The save data, used to compute the completion percentage bar.
+ * @returns The complete set of story-info lines.
+ * @author Claude
+ */
+const buildStoryInfoLines = (
+    story: Story,
+    stats: StoryStats,
+    saveExists: boolean,
+    save: SaveData | null
+): Omit<TerminalLine, "id">[] =>
+{
+    const actionPrompt = saveExists
+        ? "[ENTRÉE] Reprendre   [N] Nouvelle partie   [ÉCHAP] Retour au menu"
+        : "[ENTRÉE] Commencer l'histoire   [ÉCHAP] Retour au menu";
+
+    const lines: Omit<TerminalLine, "id">[] = [
+        { text: "═".repeat( 60 ), type: "separator" },
+        { text: story.title, type: "title" },
+        { text: `${ story.genre } — ${ story.universe }`, type: "system" },
+        { text: "─".repeat( 60 ), type: "separator" },
+        { text: story.description, type: "narrator" }
+    ];
+
+    if ( saveExists )
+    {
+        const savePercent = save
+            ? Math.min( 100, Math.round( ( save.history.length + 1 ) / stats.scenes * 100 ) )
+            : 0;
+
+        lines.push( { text: "SAUVEGARDE TROUVÉE", type: "save", savePercent } );
+    }
+
+    lines.push(
+        { text: "═".repeat( 60 ), type: "separator" },
+        { text: actionPrompt, type: "system" }
+    );
+
+    return lines;
 };
 
 /**
@@ -248,35 +471,9 @@ const createTerminalStore = () =>
 
         const stats = computeStoryStats( story );
         const saveExists = hasSave( id );
+        const save = saveExists ? loadSave( id ) : null;
 
-        const actionPrompt = saveExists
-            ? "[ENTRÉE] Reprendre   [N] Nouvelle partie   [ÉCHAP] Retour au menu"
-            : "[ENTRÉE] Commencer l'histoire   [ÉCHAP] Retour au menu";
-
-        const lines: Omit<TerminalLine, "id">[] = [
-            { text: "═".repeat( 60 ), type: "separator" },
-            { text: story.title, type: "title" },
-            { text: `${ story.genre } — ${ story.universe }`, type: "system" },
-            { text: "─".repeat( 60 ), type: "separator" },
-            { text: story.description, type: "narrator" }
-        ];
-
-        if ( saveExists )
-        {
-            const save = loadSave( id );
-            const savePercent = save
-                ? Math.min( 100, Math.round( ( save.history.length + 1 ) / stats.scenes * 100 ) )
-                : 0;
-
-            lines.push( { text: "SAUVEGARDE TROUVÉE", type: "save", savePercent } );
-        }
-
-        lines.push(
-            { text: "═".repeat( 60 ), type: "separator" },
-            { text: actionPrompt, type: "system" }
-        );
-
-        addLines( lines );
+        addLines( buildStoryInfoLines( story, stats, saveExists, save ) );
     };
 
     /**
@@ -375,42 +572,11 @@ const createTerminalStore = () =>
 
         const { currentStoryIsGenerated, generatedEndings } = get( { subscribe } );
 
-        const texts = Array.isArray( scene.text ) ? scene.text : [ scene.text ];
-        const lines: Omit<TerminalLine, "id">[] = [];
-
-        // Discovered endings of a generated story are tracked in memory so the
-        // ending screen can show progress and offer a restart, like a saved story.
-        let nextEndings = generatedEndings;
-
-        lines.push( { text: "─".repeat( 60 ), type: "separator" } );
-
-        if ( scene.image )
-        {
-            lines.push( { text: "", type: "image", imageSrc: scene.image } );
-        }
-
-        if ( scene.speaker )
-        {
-            const char = story.characters.find( ( c ) => c.id === scene.speaker );
-            const name = char ? char.name : scene.speaker;
-
-            lines.push( { text: `[ ${ name } ]`, type: "speaker", speaker: name } );
-        }
-
-        for ( const t of texts )
-        {
-            if ( t === "" )
-            {
-                lines.push( { text: "", type: "narrator" } );
-            }
-            else
-            {
-                lines.push( { text: t, type: scene.isEnding ? "ending" : "narrator" } );
-            }
-        }
+        const lines: Omit<TerminalLine, "id">[] = buildBaseSceneLines( scene, story );
 
         // Ending counts written here; kept as 0 for non-ending scenes so the
         // footer hides the counter when the player is mid-story.
+        let nextEndings = generatedEndings;
         let endingsFound = 0;
         let endingsTotal = 0;
 
@@ -418,84 +584,35 @@ const createTerminalStore = () =>
         {
             if ( currentStoryIsGenerated )
             {
-                // Record this ending (deduped).
-                nextEndings = generatedEndings.includes( sceneId )
-                    ? generatedEndings
-                    : [ ...generatedEndings, sceneId ];
-
-                endingsTotal = Object.values( story.scenes ).filter( ( s ) => s.isEnding === true ).length;
-                endingsFound = nextEndings.length;
-
-                const isNewEnding = !generatedEndings.includes( sceneId );
-                const allDiscovered = endingsFound >= endingsTotal;
-
                 // The restart/menu key hints live in the footer (TerminalControls);
                 // only the discovery congratulation is shown inline.
-                if ( isNewEnding )
-                {
-                    lines.push( { text: "", type: "narrator" } );
-
-                    if ( allDiscovered )
-                    {
-                        lines.push( { text: m.ending_all_discovered( { total: endingsTotal } ), type: "system" } );
-                    }
-                    else
-                    {
-                        lines.push( { text: m.ending_new_discovered( { found: endingsFound, total: endingsTotal } ), type: "system" } );
-                    }
-                }
+                const data = resolveGeneratedEndingData( sceneId, story, generatedEndings );
+                nextEndings = data.nextEndings;
+                endingsFound = data.endingsFound;
+                endingsTotal = data.endingsTotal;
+                lines.push( ...buildEndingDiscoveryLines( data.isNewEnding, endingsFound, endingsTotal ) );
             }
             else
             {
-                // Load persisted endings to compute the count for this session.
-                const existingEndings = loadDiscoveredEndings( state.storyId );
-                const isNewEnding = !existingEndings.has( sceneId );
-
-                endingsTotal = Object.values( story.scenes ).filter( ( s ) => s.isEnding === true ).length;
-                // +1 anticipates the save that will happen in goBack(); not yet persisted.
-                endingsFound = existingEndings.size + ( isNewEnding ? 1 : 0 );
-
-                const allDiscovered = endingsFound >= endingsTotal;
-
                 // The menu key hint lives in the footer (TerminalControls).
-                if ( isNewEnding )
-                {
-                    lines.push( { text: "", type: "narrator" } );
-
-                    if ( allDiscovered )
-                    {
-                        lines.push( { text: m.ending_all_discovered( { total: endingsTotal } ), type: "system" } );
-                    }
-                    else
-                    {
-                        lines.push( { text: m.ending_new_discovered( { found: endingsFound, total: endingsTotal } ), type: "system" } );
-                    }
-                }
+                const data = resolveCatalogEndingData( sceneId, story, state );
+                endingsFound = data.endingsFound;
+                endingsTotal = data.endingsTotal;
+                lines.push( ...buildEndingDiscoveryLines( data.isNewEnding, endingsFound, endingsTotal ) );
             }
         }
         else if ( scene.choices.length > 0 )
         {
-            lines.push(
-                { text: "", type: "narrator" },
-                { text: "> Que faites-vous ?", type: "system" },
-                { text: "", type: "narrator" }
-            );
-
-            const available = getAvailableChoices( scene, state );
-
-            available.forEach( ( choice, i ) =>
-            {
-                lines.push( {
-                    text: `  [${ i + 1 }] ${ choice.text }`,
-                    type: "choice",
-                    choiceIndex: i + 1
-                } );
-            } );
-
-            lines.push( { text: "", type: "narrator" }, { text: "[ÉCHAP] Menu principal", type: "system" } );
+            lines.push( ...buildChoiceLines( scene, state ) );
         }
 
-        update( ( s ) => ( { ...s, generatedEndings: nextEndings, endingsFound, endingsTotal, lines: [ ...s.lines, ...lines.map( ( l ) => ( { ...l, id: nextId() } ) ) ] } ) );
+        update( ( s ) => ( {
+            ...s,
+            generatedEndings: nextEndings,
+            endingsFound,
+            endingsTotal,
+            lines: [ ...s.lines, ...lines.map( ( l ) => ( { ...l, id: nextId() } ) ) ]
+        } ) );
     };
 
     /**

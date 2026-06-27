@@ -1,8 +1,8 @@
 <script lang="ts">
     import * as m from "$lib/locales/messages";
     import { terminal } from "$lib/stores/terminal";
-    import { categories, categoryLabel, getEntry } from "$lib/data/knowledge";
-    import type { KnowledgeEntry } from "$lib/types/knowledge";
+    import type { KnowledgeEntry } from "$lib";
+    import { categories, categoryLabel, getEntry } from "$lib";
 
     interface Props {
         entry: KnowledgeEntry;
