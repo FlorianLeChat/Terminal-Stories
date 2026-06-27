@@ -8,6 +8,7 @@
     import StoryMenu from "./StoryMenu.svelte";
     import TerminalOutput from "./TerminalOutput.svelte";
     import WikiBrowser from "./WikiBrowser.svelte";
+    import AiStorySetup from "./AiStorySetup.svelte";
     import TerminalControls from "./TerminalControls.svelte";
     import TerminalHeader from "./TerminalHeader.svelte";
 
@@ -20,10 +21,33 @@
             : filterStories( storiesMeta, $terminal.filters )
     );
 
-    /** Incremented each time the user requests an animation skip. */
-    let skipAnimationSignal = $state( 0 );
+    /**
+     * Tracks animation-skip requests paired with the storyKey at the time of the
+     * request. When storyKey changes (story restart), effectiveSkipSignal resets
+     * to 0 automatically so the new playthrough always starts with the typewriter.
+     */
+    let skipState = $state( { count: 0, key: -1 } );
+    let effectiveSkipSignal = $derived(
+        skipState.key === $terminal.storyKey ? skipState.count : 0
+    );
     /** Bound to TerminalOutput — true while lines are being typed out. */
     let isAnimating = $state( false );
+
+    // True when playing a generated story and sitting on an ending scene, so the
+    // footer can offer restart/menu the same way classic stories surface hints.
+    let atGeneratedEnding = $derived(
+        $terminal.view === "story"
+        && $terminal.currentStoryIsGenerated
+        && $terminal.currentStory?.scenes[ $terminal.gameState?.currentScene ?? "" ]?.isEnding === true
+    );
+
+    // True when playing a catalog story and sitting on an ending scene, so the
+    // footer switches from choice hints to the menu hint.
+    let atStandardEnding = $derived(
+        $terminal.view === "story"
+        && !$terminal.currentStoryIsGenerated
+        && $terminal.currentStory?.scenes[ $terminal.gameState?.currentScene ?? "" ]?.isEnding === true
+    );
 
     // Re-evaluated each time the story-info screen opens (view or story changes),
     // reading from localStorage to know whether to offer the resume option.
@@ -86,6 +110,19 @@
     const handleKeydown = ( e: KeyboardEvent ) =>
     {
         if ( view === "boot" ) return;
+
+        // The AI setup screen is a plain form: let typing flow to the focused
+        // field, and only intercept ESC to return to the menu.
+        if ( view === "ai-setup" )
+        {
+            if ( e.key === "Escape" )
+            {
+                e.preventDefault();
+                terminal.startMenu();
+            }
+
+            return;
+        }
 
         const isInputFocused = document.activeElement instanceof HTMLInputElement;
 
@@ -185,6 +222,13 @@
             {
                 e.preventDefault();
                 terminal.openWiki();
+                return;
+            }
+
+            if ( key === "i" )
+            {
+                e.preventDefault();
+                terminal.openAiSetup();
                 return;
             }
         }
@@ -319,7 +363,7 @@
         if ( e.key === " " && isAnimating )
         {
             e.preventDefault();
-            skipAnimationSignal++;
+            skipState = { count: skipState.count + 1, key: $terminal.storyKey };
             return;
         }
 
@@ -338,7 +382,18 @@
         if ( e.key === "Enter" )
         {
             const scene = $terminal.currentStory?.scenes[ $terminal.gameState?.currentScene ?? "" ];
-            if ( scene?.isEnding ) terminal.goBack();
+            if ( !scene?.isEnding ) return;
+
+            // ENTER replays the story from the start on any ending, whether
+            // AI-generated or catalog. ESC returns to the menu instead.
+            if ( $terminal.currentStoryIsGenerated )
+            {
+                terminal.restartGeneratedStory();
+            }
+            else
+            {
+                terminal.restartStory();
+            }
         }
     };
 
@@ -364,9 +419,13 @@
                 {:else if view === "menu"}
                     <StoryMenu {selectedIndex} onselect={handleMenuSelect} onnavigate={handleMenuNavigate} />
                 {:else if view === "story-info" || view === "story"}
-                    <TerminalOutput {lines} animated={view === "story"} skipSignal={skipAnimationSignal} bind:isAnimating onchoice={terminal.makeChoice} />
+                    {#key $terminal.storyKey}
+                        <TerminalOutput {lines} animated={view === "story"} skipSignal={effectiveSkipSignal} bind:isAnimating onchoice={terminal.makeChoice} />
+                    {/key}
                 {:else if view === "wiki"}
                     <WikiBrowser />
+                {:else if view === "ai-setup"}
+                    <AiStorySetup />
                 {/if}
             </div>
 
@@ -376,6 +435,10 @@
                 {isAnimating}
                 wikiEntryOpen={!!$terminal.wiki.selectedEntryId}
                 searchActive={$terminal.searchActive}
+                {atGeneratedEnding}
+                {atStandardEnding}
+                endingsFound={$terminal.endingsFound}
+                endingsTotal={$terminal.endingsTotal}
             />
         </main>
     </div>

@@ -119,6 +119,13 @@
             >
                 {m.menu_wiki_button()}
             </button>
+
+            <button
+                class="px-2 py-0.5 rounded border border-terminal-amber/50 text-terminal-amber hover:bg-terminal-amber/10 motion-safe:transition-colors motion-safe:duration-100"
+                onclick={() => terminal.openAiSetup()}
+            >
+                {m.menu_ai_button()}
+            </button>
         {/if}
     </div>
 
