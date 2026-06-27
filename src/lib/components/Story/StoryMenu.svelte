@@ -1,7 +1,7 @@
 <script lang="ts">
     import * as m from "$lib/locales/messages";
     import { terminal } from "$lib/stores/terminal";
-    import TerminalLogo from "./TerminalLogo.svelte";
+    import TerminalLogo from "../Terminal/TerminalLogo.svelte";
     import StoryListItem from "./StoryListItem.svelte";
     import { storiesMeta, filterStories, availableGenres, availableLanguages, searchStories } from "$lib";
 

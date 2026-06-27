@@ -2,7 +2,7 @@
     import * as m from "$lib/locales/messages";
     import { onMount } from "svelte";
     import { terminal } from "$lib/stores/terminal";
-    import TerminalLogo from "./TerminalLogo.svelte";
+    import TerminalLogo from "./Terminal/TerminalLogo.svelte";
     import type { AiGenerationParams, AiModelOption } from "$lib";
     import { loadAiSettings, saveAiKey, saveAiModel, listModels, aiErrorMessage } from "$lib";
 

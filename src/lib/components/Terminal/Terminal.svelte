@@ -1,11 +1,11 @@
 <script lang="ts">
     import { onMount } from "svelte";
     import { terminal } from "$lib/stores/terminal";
-    import BootSequence from "./BootSequence.svelte";
-    import StoryMenu from "./StoryMenu.svelte";
+    import BootSequence from "../BootSequence.svelte";
+    import StoryMenu from "../Story/StoryMenu.svelte";
     import TerminalOutput from "./TerminalOutput.svelte";
-    import WikiBrowser from "./WikiBrowser.svelte";
-    import AiStorySetup from "./AiStorySetup.svelte";
+    import WikiBrowser from "../Wiki/WikiBrowser.svelte";
+    import AiStorySetup from "../AiStorySetup.svelte";
     import TerminalControls from "./TerminalControls.svelte";
     import TerminalHeader from "./TerminalHeader.svelte";
     import { storiesMeta, filterStories, searchStories, hasSave, loadActiveSession } from "$lib";
