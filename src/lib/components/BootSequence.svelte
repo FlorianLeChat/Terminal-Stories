@@ -82,7 +82,7 @@
 <svelte:window onkeydown={handleKey} />
 
 <button
-    class="flex-1 text-left flex flex-col justify-center px-8 font-mono select-none"
+    class="flex-1 text-left flex flex-col justify-center px-8 select-none"
     aria-label={m.boot_aria()}
     onclick={handleClick}
 >

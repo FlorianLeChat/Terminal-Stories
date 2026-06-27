@@ -27,7 +27,7 @@
     const showEndingsCount = $derived( ( atGeneratedEnding || atStandardEnding ) && endingsTotal > 0 );
 </script>
 
-<footer class="shrink-0 border-t border-terminal-dim/30 px-4 py-1 text-xs font-mono text-terminal-dim flex justify-between select-none">
+<footer class="shrink-0 border-t border-terminal-dim/30 px-4 py-1 text-xs text-terminal-dim flex justify-between select-none">
     <span>
         {#if view === "story"}
             {#if atGeneratedEnding}

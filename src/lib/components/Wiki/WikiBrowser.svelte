@@ -63,7 +63,7 @@
 
 </script>
 
-<div class="flex-1 overflow-y-auto px-4 py-2 font-mono scrollbar-terminal">
+<div class="flex-1 overflow-y-auto px-4 py-2 scrollbar-terminal">
     <TerminalLogo subtitle={m.wiki_subtitle()} />
 
     {#if !currentEntry}
@@ -132,7 +132,7 @@
                 <input
                     bind:this={searchInputEl}
                     type="text"
-                    class="flex-1 bg-transparent text-terminal-green text-xs outline-none font-mono placeholder-terminal-dim/50 caret-terminal-green"
+                    class="flex-1 bg-transparent text-terminal-green text-xs outline-none placeholder-terminal-dim/50 caret-terminal-green"
                     placeholder={m.wiki_search_placeholder()}
                     value={searchQuery}
                     oninput={( e ) => terminal.setSearchQuery( e.currentTarget.value )}

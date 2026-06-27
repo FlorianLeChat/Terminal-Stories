@@ -12,7 +12,7 @@
 </script>
 
 <header
-    class="status-bar flex items-center justify-between px-4 py-1 text-xs font-mono text-terminal-dim border-b border-terminal-dim/30 select-none shrink-0"
+    class="status-bar flex items-center justify-between px-4 py-1 text-xs text-terminal-dim border-b border-terminal-dim/30 select-none shrink-0"
     aria-label={m.header_aria()}
 >
     <span>TERMINAL STORIES</span>

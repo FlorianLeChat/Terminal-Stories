@@ -254,7 +254,7 @@
 
 <div
     bind:this={container}
-    class="flex-1 overflow-y-auto px-4 py-2 font-mono text-sm leading-relaxed scrollbar-terminal"
+    class="flex-1 overflow-y-auto px-4 py-2 text-sm leading-relaxed scrollbar-terminal"
     aria-live="polite"
     aria-label={m.terminal_output_aria()}
 >
@@ -273,7 +273,7 @@
                 </p>
 
                 <div class="flex items-center gap-2 mt-1.5">
-                    <span class="text-xs font-mono">
+                    <span class="text-xs">
                         <span class="text-terminal-amber">{bar.filled}</span><span class="text-terminal-dim/50">{bar.empty}</span>
                     </span>
 

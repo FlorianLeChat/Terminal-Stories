@@ -92,7 +92,7 @@
 
                     {#if completion !== null}
                         <span
-                            class="text-terminal-amber text-xs shrink-0 font-mono"
+                            class="text-terminal-amber text-xs shrink-0"
                             aria-label={m.story_item_save_aria( { completion: completion / 100 } )}
                         >
                             ◉
@@ -124,7 +124,7 @@
                         {#if completion !== null}
                             {@const bar = buildProgressBar( completion, 6 )}
 
-                            <span class="font-mono ml-auto text-xs" title={m.story_item_progress_title()}>
+                            <span class="ml-auto text-xs" title={m.story_item_progress_title()}>
                                 <span class="text-terminal-amber">◉ {bar.filled}</span><span class="text-terminal-dim/50">{bar.empty}</span>
                                 <span class="text-terminal-amber"> {m.story_item_progress_value( { value: completion / 100 } )}</span>
                             </span>
@@ -132,7 +132,7 @@
                     </span>
 
                     <span
-                        class="flex items-center gap-1 mt-1 font-mono"
+                        class="flex items-center gap-1 mt-1"
                         title={m.story_item_endings_title( { found: found.size, total: story.endingIds.length } )}
                     >
                         <span class="text-terminal-dim text-xs opacity-70 mr-1">

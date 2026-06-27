@@ -122,7 +122,7 @@
     };
 </script>
 
-<div class="flex-1 overflow-y-auto px-4 py-2 font-mono">
+<div class="flex-1 overflow-y-auto px-4 py-2">
     <TerminalLogo subtitle={m.ai_subtitle()} />
 
     <p class="text-terminal-dim text-xs text-center mb-4">{m.ai_intro()}</p>
