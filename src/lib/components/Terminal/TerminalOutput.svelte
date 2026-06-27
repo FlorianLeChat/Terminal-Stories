@@ -285,7 +285,7 @@
             <div class="h-3" aria-hidden="true"></div>
         {:else if line.type === "choice"}
             <button
-                class="wrap-break-word choice-line touch-manipulation py-1.5 px-2 -mx-2 rounded {lineClass( line.type )} {typedIds.has( line.id ) ? "" : "animate-fadein"} w-full text-left"
+                class="wrap-break-word choice-line py-1.5 px-2 -mx-2 rounded {lineClass( line.type )} {typedIds.has( line.id ) ? "" : "animate-fadein"} w-full text-left"
                 onclick={() => onchoice?.( line.choiceIndex ?? 0 )}
             >
                 {line.text}
