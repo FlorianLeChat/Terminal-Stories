@@ -245,7 +245,7 @@ const buildChoiceLines = ( scene: Scene, state: GameState ): Omit<TerminalLine, 
     const available = getAvailableChoices( scene, state );
     const lines: Omit<TerminalLine, "id">[] = [
         { text: "", type: "narrator" },
-        { text: "> Que faites-vous ?", type: "system" },
+        { text: m.controls_story_choice_prompt(), type: "system" },
         { text: "", type: "narrator" }
     ];
 
@@ -258,7 +258,7 @@ const buildChoiceLines = ( scene: Scene, state: GameState ): Omit<TerminalLine, 
         } );
     } );
 
-    lines.push( { text: "", type: "narrator" }, { text: "[ÉCHAP] Menu principal", type: "system" } );
+    lines.push( { text: "", type: "narrator" } );
 
     return lines;
 };
@@ -281,10 +281,6 @@ const buildStoryInfoLines = (
     save: SaveData | null
 ): Omit<TerminalLine, "id">[] =>
 {
-    const actionPrompt = saveExists
-        ? "[ENTRÉE] Reprendre   [N] Nouvelle partie   [ÉCHAP] Retour au menu"
-        : "[ENTRÉE] Commencer l'histoire   [ÉCHAP] Retour au menu";
-
     const lines: Omit<TerminalLine, "id">[] = [
         { text: "═".repeat( 60 ), type: "separator" },
         { text: story.title, type: "title" },
@@ -299,13 +295,8 @@ const buildStoryInfoLines = (
             ? Math.min( 100, Math.round( ( save.history.length + 1 ) / stats.scenes * 100 ) )
             : 0;
 
-        lines.push( { text: "SAUVEGARDE TROUVÉE", type: "save", savePercent } );
+        lines.push( { text: m.terminal_save_label(), type: "save", savePercent } );
     }
-
-    lines.push(
-        { text: "═".repeat( 60 ), type: "separator" },
-        { text: actionPrompt, type: "system" }
-    );
 
     return lines;
 };

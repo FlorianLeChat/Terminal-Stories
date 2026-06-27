@@ -39,9 +39,9 @@
             {/if}
         {:else if view === "story-info"}
             {#if hasSave}
-                {m.controls_story_info_resume()} &nbsp;|&nbsp; {m.controls_story_info_new()} &nbsp;|&nbsp; {m.controls_story_info_back()}
+                {m.controls_story_info_resume()} &nbsp;|&nbsp; {m.controls_story_info_new()} &nbsp;|&nbsp; {m.controls_story_menu()}
             {:else}
-                {m.controls_story_info_start()} &nbsp;|&nbsp; {m.controls_story_info_back()}
+                {m.controls_story_info_start()} &nbsp;|&nbsp; {m.controls_story_menu()}
             {/if}
         {:else if view === "menu"}
             {#if searchActive}
