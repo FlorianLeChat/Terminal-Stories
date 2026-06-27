@@ -1,3 +1,4 @@
+import * as m from "$lib/locales/messages";
 import { writable, get } from "svelte/store";
 import type { AiGenerationParams, AiStatus } from "$lib/types/ai";
 import { loadAiSettings } from "$lib/utilities/aiSettings";
@@ -9,7 +10,7 @@ import { getStory, availableGenres, availableLanguages } from "$lib/data";
 import { categoryIds, filterEntries, getEntry, getLanguageForUniverse } from "$lib/data/knowledge";
 import { computeStoryStats } from "$lib/utilities/readingTime";
 import { searchWikiEntries } from "$lib/utilities/searchIndex";
-import { saveProgress, loadSave, deleteSave, hasSave, saveDiscoveredEnding, saveActiveSession, clearActiveSession } from "$lib/utilities/saveService";
+import { saveProgress, loadSave, deleteSave, hasSave, saveDiscoveredEnding, loadDiscoveredEndings, saveActiveSession, clearActiveSession } from "$lib/utilities/saveService";
 export type TerminalView = "boot" | "menu" | "story-info" | "story" | "wiki" | "ai-setup";
 
 interface TerminalStore {
@@ -24,6 +25,10 @@ interface TerminalStore {
     searchQuery: string;
     searchActive: boolean;
     currentStoryIsGenerated: boolean;
+    generatedEndings: string[];
+    endingsFound: number;
+    endingsTotal: number;
+    storyKey: number;
     aiStatus: AiStatus;
     aiError: string | null;
 }
@@ -103,6 +108,10 @@ const createTerminalStore = () =>
         searchQuery: "",
         searchActive: false,
         currentStoryIsGenerated: false,
+        generatedEndings: [],
+        endingsFound: 0,
+        endingsTotal: 0,
+        storyKey: 0,
         aiStatus: "idle",
         aiError: null
     };
@@ -130,7 +139,7 @@ const createTerminalStore = () =>
      */
     const clearLines = () =>
     {
-        update( ( s ) => ( { ...s, lines: [] } ) );
+        update( ( s ) => ( { ...s, lines: [], storyKey: s.storyKey + 1 } ) );
     };
 
     /**
@@ -142,7 +151,7 @@ const createTerminalStore = () =>
     {
         clearActiveSession();
         clearLines();
-        update( ( s ) => ( { ...s, view: "menu", selectedStoryIndex: 0, awaitingInput: true, searchQuery: "", searchActive: false, currentStoryIsGenerated: false, aiStatus: "idle", aiError: null } ) );
+        update( ( s ) => ( { ...s, view: "menu", selectedStoryIndex: 0, awaitingInput: true, searchQuery: "", searchActive: false, currentStoryIsGenerated: false, generatedEndings: [], aiStatus: "idle", aiError: null } ) );
     };
 
     /**
@@ -364,8 +373,14 @@ const createTerminalStore = () =>
         const scene = story.scenes[ sceneId ];
         if ( !scene ) return;
 
+        const { currentStoryIsGenerated, generatedEndings } = get( { subscribe } );
+
         const texts = Array.isArray( scene.text ) ? scene.text : [ scene.text ];
         const lines: Omit<TerminalLine, "id">[] = [];
+
+        // Discovered endings of a generated story are tracked in memory so the
+        // ending screen can show progress and offer a restart, like a saved story.
+        let nextEndings = generatedEndings;
 
         lines.push( { text: "─".repeat( 60 ), type: "separator" } );
 
@@ -394,9 +409,69 @@ const createTerminalStore = () =>
             }
         }
 
+        // Ending counts written here; kept as 0 for non-ending scenes so the
+        // footer hides the counter when the player is mid-story.
+        let endingsFound = 0;
+        let endingsTotal = 0;
+
         if ( scene.isEnding )
         {
-            lines.push( { text: "", type: "narrator" }, { text: "[ENTRÉE] Revenir au menu", type: "system" } );
+            if ( currentStoryIsGenerated )
+            {
+                // Record this ending (deduped).
+                nextEndings = generatedEndings.includes( sceneId )
+                    ? generatedEndings
+                    : [ ...generatedEndings, sceneId ];
+
+                endingsTotal = Object.values( story.scenes ).filter( ( s ) => s.isEnding === true ).length;
+                endingsFound = nextEndings.length;
+
+                const isNewEnding = !generatedEndings.includes( sceneId );
+                const allDiscovered = endingsFound >= endingsTotal;
+
+                // The restart/menu key hints live in the footer (TerminalControls);
+                // only the discovery congratulation is shown inline.
+                if ( isNewEnding )
+                {
+                    lines.push( { text: "", type: "narrator" } );
+
+                    if ( allDiscovered )
+                    {
+                        lines.push( { text: m.ending_all_discovered( { total: endingsTotal } ), type: "system" } );
+                    }
+                    else
+                    {
+                        lines.push( { text: m.ending_new_discovered( { found: endingsFound, total: endingsTotal } ), type: "system" } );
+                    }
+                }
+            }
+            else
+            {
+                // Load persisted endings to compute the count for this session.
+                const existingEndings = loadDiscoveredEndings( state.storyId );
+                const isNewEnding = !existingEndings.has( sceneId );
+
+                endingsTotal = Object.values( story.scenes ).filter( ( s ) => s.isEnding === true ).length;
+                // +1 anticipates the save that will happen in goBack(); not yet persisted.
+                endingsFound = existingEndings.size + ( isNewEnding ? 1 : 0 );
+
+                const allDiscovered = endingsFound >= endingsTotal;
+
+                // The menu key hint lives in the footer (TerminalControls).
+                if ( isNewEnding )
+                {
+                    lines.push( { text: "", type: "narrator" } );
+
+                    if ( allDiscovered )
+                    {
+                        lines.push( { text: m.ending_all_discovered( { total: endingsTotal } ), type: "system" } );
+                    }
+                    else
+                    {
+                        lines.push( { text: m.ending_new_discovered( { found: endingsFound, total: endingsTotal } ), type: "system" } );
+                    }
+                }
+            }
         }
         else if ( scene.choices.length > 0 )
         {
@@ -420,7 +495,7 @@ const createTerminalStore = () =>
             lines.push( { text: "", type: "narrator" }, { text: "[ÉCHAP] Menu principal", type: "system" } );
         }
 
-        update( ( s ) => ( { ...s, lines: [ ...s.lines, ...lines.map( ( l ) => ( { ...l, id: nextId() } ) ) ] } ) );
+        update( ( s ) => ( { ...s, generatedEndings: nextEndings, endingsFound, endingsTotal, lines: [ ...s.lines, ...lines.map( ( l ) => ( { ...l, id: nextId() } ) ) ] } ) );
     };
 
     /**
@@ -538,6 +613,34 @@ const createTerminalStore = () =>
         }
 
         return filterEntries( wiki.category, wiki.language, wiki.universe );
+    };
+
+    /**
+     * Restarts a catalog story from its opening scene. When called from an
+     * ending scene the ending is persisted first so the discovery tally is
+     * updated before the fresh playthrough begins.
+     *
+     * @author Claude
+     */
+    const restartStory = () =>
+    {
+        const state = get( { subscribe } );
+
+        const canRestart = state.currentStory !== null && state.gameState !== null && !state.currentStoryIsGenerated;
+        if ( !canRestart || !state.currentStory || !state.gameState ) return;
+
+        const currentSceneId = state.gameState.currentScene;
+        const currentScene = state.currentStory.scenes[ currentSceneId ];
+        const isAtEnding = currentScene?.isEnding === true;
+
+        // Persist the ending now so renderScene reads the updated tally on restart.
+        // startStory will erase the mid-playthrough save; the endings record is separate.
+        if ( isAtEnding )
+        {
+            saveDiscoveredEnding( state.gameState.storyId, currentSceneId );
+        }
+
+        startStory( state.currentStory.id );
     };
 
     /**
@@ -839,6 +942,7 @@ const createTerminalStore = () =>
                 currentStory: story,
                 gameState,
                 currentStoryIsGenerated: true,
+                generatedEndings: [],
                 awaitingInput: true,
                 aiStatus: "idle",
                 aiError: null
@@ -856,12 +960,43 @@ const createTerminalStore = () =>
         }
     };
 
+    /**
+     * Replays the current generated story from its opening scene. Discovered
+     * endings are kept so the running tally grows across restarts; nothing is
+     * persisted.
+     *
+     * @author Claude
+     */
+    const restartGeneratedStory = () =>
+    {
+        const state = get( { subscribe } );
+
+        const canRestart = state.currentStory !== null && state.currentStoryIsGenerated;
+        if ( !canRestart || !state.currentStory ) return;
+
+        const story = state.currentStory;
+
+        const gameState: GameState = {
+            storyId: story.id,
+            currentScene: story.startScene,
+            flags: new Set(),
+            history: []
+        };
+
+        clearLines();
+        update( ( s ) => ( { ...s, gameState, awaitingInput: true } ) );
+
+        renderScene( story, story.startScene, gameState );
+    };
+
     return {
         subscribe,
         update,
         startMenu,
         openAiSetup,
         generateAndPlay,
+        restartGeneratedStory,
+        restartStory,
         setFilter,
         cycleGenre,
         cycleLanguage,
