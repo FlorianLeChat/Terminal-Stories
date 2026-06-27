@@ -261,7 +261,7 @@
     {#each displayed as line ( line.id )}
         {#if line.type === "image" && line.imageSrc}
             <figure class="my-3 border border-terminal-dim/30 rounded overflow-hidden max-w-xl animate-fadein">
-                <img src={line.imageSrc} alt="" class="w-full max-h-44 object-cover grayscale opacity-75" />
+                <img src={line.imageSrc} alt={line.imageAlt} class="w-full max-h-44 object-cover grayscale opacity-75" />
             </figure>
         {:else if line.type === "save"}
             {@const bar = buildProgressBar( line.savePercent ?? 0 )}
@@ -285,13 +285,13 @@
             <div class="h-3" aria-hidden="true"></div>
         {:else if line.type === "choice"}
             <button
-                class="line choice-line {lineClass( line.type )} {typedIds.has( line.id ) ? "" : "animate-fadein"} w-full text-left"
+                class="line choice-line touch-manipulation {lineClass( line.type )} {typedIds.has( line.id ) ? "" : "animate-fadein"} w-full text-left"
                 onclick={() => onchoice?.( line.choiceIndex ?? 0 )}
             >
                 {line.text}
             </button>
         {:else if line.type === "separator"}
-            <div class="line separator-line {lineClass( line.type )} {typedIds.has( line.id ) ? "" : "animate-fadein"}">
+            <div class="line whitespace-nowrap separator-line overflow-hidden {lineClass( line.type )} {typedIds.has( line.id ) ? "" : "animate-fadein"}">
                 <span class="select-none opacity-60">{line.text}</span>
             </div>
         {:else}
@@ -302,7 +302,7 @@
     {/each}
 
     {#if typingLine && isAnimating}
-        <output class="line block {lineClass( typingLine.type )}">
+        <output class="whitespace-pre-wrap block {lineClass( typingLine.type )}">
             {typingText}<span class="cursor-blink">▋</span>
         </output>
     {/if}
@@ -310,15 +310,7 @@
 
 <style>
     .line {
-        white-space: pre-wrap;
         word-break: break-word;
-    }
-
-    /* Long box-drawing rules (e.g. ─×60) would wrap to several ugly lines on
-       narrow screens; clip them instead so they read as a single full-width rule. */
-    .separator-line {
-        white-space: nowrap;
-        overflow: hidden;
     }
 
     /* Larger, clearly tappable hit area for choices on touch devices. */
@@ -326,7 +318,6 @@
         padding: 0.35rem 0.5rem;
         margin: 0 -0.5rem;
         border-radius: 0.25rem;
-        touch-action: manipulation;
     }
 
     .choice-line:active {

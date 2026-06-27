@@ -73,6 +73,7 @@ export interface TerminalLine {
     speaker?: string;
     choiceIndex?: number;
     imageSrc?: string;
+    imageAlt?: string;
     /** Completion percentage (0–100) carried by lines of type "save". */
     savePercent?: number;
 }
@@ -121,6 +122,8 @@ const buildBaseSceneLines = ( scene: Scene, story: Story ): Omit<TerminalLine, "
 {
     const texts = Array.isArray( scene.text ) ? scene.text : [ scene.text ];
     const lines: Omit<TerminalLine, "id">[] = [];
+
+    lines.push( { text: "─".repeat( 60 ), type: "separator" } );
 
     if ( scene.image )
     {

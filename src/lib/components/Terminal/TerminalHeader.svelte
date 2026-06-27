@@ -15,11 +15,11 @@
     class="status-bar flex items-center justify-between px-4 py-1 text-xs text-terminal-dim border-b border-terminal-dim/30 select-none shrink-0"
     aria-label={m.header_aria()}
 >
-    <span class="shrink-0">TERMINAL STORIES</span>
+    <h1 class="shrink-0">TERMINAL STORIES</h1>
 
     <span class="flex items-center gap-2 sm:gap-4 min-w-0 px-2">
         {#if view === "story" && currentStory}
-            <span class="text-terminal-amber truncate">{currentStory.title}</span>
+            <h2 class="text-terminal-amber truncate">{currentStory.title}</h2>
             <span class="shrink-0 hidden sm:inline">|</span>
         {/if}
 
@@ -33,7 +33,7 @@
         </span>
     </span>
 
-    <span class="cursor-blink shrink-0">█</span>
+    <span class="cursor-blink text-terminal-green shrink-0">█</span>
 </header>
 
 <style>
@@ -45,7 +45,6 @@
 
     .cursor-blink {
         animation: blink 1s step-end infinite;
-        color: #00ff46;
     }
 
     @keyframes blink {

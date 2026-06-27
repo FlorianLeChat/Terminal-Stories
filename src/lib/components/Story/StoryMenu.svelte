@@ -58,8 +58,8 @@
 <div class="flex-1 overflow-y-auto px-4 py-2">
     <TerminalLogo subtitle={m.menu_subtitle()} />
 
-    <section aria-labelledby="filter-genre-label" class="border border-terminal-dim/40 rounded px-3 py-2 my-4 space-y-3 sm:space-y-1.5">
-        <div class="flex flex-col gap-1.5 sm:flex-row sm:items-center sm:gap-2 sm:flex-wrap" role="group" aria-labelledby="filter-genre-label">
+    <ul aria-labelledby="filter-genre-label" class="border border-terminal-dim/40 rounded px-3 py-2 my-4 space-y-3 sm:space-y-1.5">
+        <li class="flex flex-col gap-1.5 sm:flex-row sm:items-center sm:gap-2 sm:flex-wrap" role="group" aria-labelledby="filter-genre-label">
             <span id="filter-genre-label" class="text-terminal-dim text-xs sm:w-16 shrink-0 select-none">
                 {m.menu_filter_genre()}
             </span>
@@ -75,9 +75,9 @@
                     {genre}
                 </button>
             {/each}
-        </div>
+        </li>
 
-        <div class="flex flex-col gap-1.5 sm:flex-row sm:items-center sm:gap-2 sm:flex-wrap" role="group" aria-labelledby="filter-language-label">
+        <li class="flex flex-col gap-1.5 sm:flex-row sm:items-center sm:gap-2 sm:flex-wrap" role="group" aria-labelledby="filter-language-label">
             <span id="filter-language-label" class="text-terminal-dim text-xs sm:w-16 shrink-0 select-none">
                 {m.menu_filter_language()}
             </span>
@@ -103,8 +103,8 @@
                     {m.menu_filter_reset()}
                 </button>
             {/if}
-        </div>
-    </section>
+        </li>
+    </ul>
 
     <!-- Nav hint + shortcut buttons: stacked column on mobile, inline row from `sm`. -->
     <nav class="flex flex-col items-stretch gap-3 sm:flex-row sm:items-center sm:justify-center mb-4 text-xs">

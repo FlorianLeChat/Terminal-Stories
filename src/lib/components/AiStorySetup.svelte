@@ -127,7 +127,7 @@
 
     <p class="text-terminal-dim text-xs text-center my-4">{m.ai_intro()}</p>
 
-    <form class="border border-terminal-dim/40 rounded px-4 py-3 space-y-4" onsubmit={handleSubmit}>
+    <form class="border border-terminal-dim/40 rounded px-4 py-3 space-y-4 mb-3" onsubmit={handleSubmit}>
         <div class="space-y-1">
             <label for="ai-key" class="block text-terminal-dim text-xs select-none">{m.ai_key_label()}</label>
             <div class="flex items-center gap-2">

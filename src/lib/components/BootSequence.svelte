@@ -89,7 +89,7 @@
     {#each bootLines as line, i ( i )}
         {#if visible[ i ]}
             <div
-                class="leading-relaxed animate-fadein text-xs sm:text-sm break-words"
+                class="leading-relaxed animate-fadein text-xs sm:text-sm wrap-break-word"
                 class:text-terminal-green={!line.blink}
                 class:text-terminal-amber={line.blink}
                 class:blink-text={line.blink}

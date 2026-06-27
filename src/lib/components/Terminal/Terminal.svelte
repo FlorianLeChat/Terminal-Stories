@@ -28,6 +28,7 @@
     let effectiveSkipSignal = $derived(
         skipState.key === $terminal.storyKey ? skipState.count : 0
     );
+
     /** Bound to TerminalOutput — true while lines are being typed out. */
     let isAnimating = $state( false );
 
@@ -415,70 +416,51 @@
 
 <svelte:window onkeydown={handleKeydown} />
 
-<div class="crt-wrapper h-dvh w-screen flex items-center justify-center bg-black overflow-hidden">
-    <div class="monitor relative w-full max-w-4xl h-full flex flex-col">
-        <div class="scanlines pointer-events-none"></div>
+<main class="bg-terminal-bg monitor relative w-full h-full max-w-4xl flex flex-col">
+    <div class="scanlines inset-0 absolute z-10 pointer-events-none"></div>
 
-        <main class="screen flex flex-col h-full overflow-hidden">
-            <TerminalHeader {view} />
+    <TerminalHeader {view} />
 
-            <div class="flex-1 flex flex-col overflow-hidden">
-                {#if view === "boot"}
-                    <BootSequence ondone={handleBoot} />
-                {:else if view === "menu"}
-                    <StoryMenu {selectedIndex} onselect={handleMenuSelect} onnavigate={handleMenuNavigate} />
-                {:else if view === "story-info" || view === "story"}
-                    {#key $terminal.storyKey}
-                        <TerminalOutput {lines} animated={view === "story"} skipSignal={effectiveSkipSignal} bind:isAnimating onchoice={terminal.makeChoice} />
-                    {/key}
-                {:else if view === "wiki"}
-                    <WikiBrowser />
-                {:else if view === "ai-setup"}
-                    <AiStorySetup />
-                {/if}
-            </div>
+    {#if view === "boot"}
+        <BootSequence ondone={handleBoot} />
+    {:else if view === "menu"}
+        <StoryMenu {selectedIndex} onselect={handleMenuSelect} onnavigate={handleMenuNavigate} />
+    {:else if view === "story-info" || view === "story"}
+        {#key $terminal.storyKey}
+            <TerminalOutput {lines} animated={view === "story"} skipSignal={effectiveSkipSignal} bind:isAnimating onchoice={terminal.makeChoice} />
+        {/key}
+    {:else if view === "wiki"}
+        <WikiBrowser />
+    {:else if view === "ai-setup"}
+        <AiStorySetup />
+    {/if}
 
-            <TerminalControls
-                {view}
-                hasSave={currentStoryHasSave}
-                {isAnimating}
-                wikiEntryOpen={!!$terminal.wiki.selectedEntryId}
-                searchActive={$terminal.searchActive}
-                {atGeneratedEnding}
-                {atStandardEnding}
-                endingsFound={$terminal.endingsFound}
-                endingsTotal={$terminal.endingsTotal}
-                onSkip={handleSkip}
-            />
-        </main>
-    </div>
-</div>
+    <TerminalControls
+        {view}
+        hasSave={currentStoryHasSave}
+        {isAnimating}
+        wikiEntryOpen={!!$terminal.wiki.selectedEntryId}
+        searchActive={$terminal.searchActive}
+        {atGeneratedEnding}
+        {atStandardEnding}
+        endingsFound={$terminal.endingsFound}
+        endingsTotal={$terminal.endingsTotal}
+        onSkip={handleSkip}
+    />
+</main>
 
 <style>
-    .crt-wrapper {
-        background: #000;
-    }
-
     .monitor {
-        background: #0a0f0a;
         box-shadow: 0 0 60px rgba(0, 255, 70, 0.08), inset 0 0 60px rgba(0, 0, 0, 0.8);
     }
 
-    .screen {
-        position: relative;
-        background: #050e05;
-    }
-
     .scanlines {
-        position: absolute;
-        inset: 0;
         background: repeating-linear-gradient(
             to bottom,
             transparent 0px,
             transparent 2px,
-            rgba(0, 0, 0, 0.08) 2px,
-            rgba(0, 0, 0, 0.08) 4px
+            rgba(0, 0, 0, 0.20) 2px,
+            rgba(0, 0, 0, 0.20) 4px
         );
-        z-index: 10;
     }
 </style>

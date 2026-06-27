@@ -90,8 +90,8 @@
     <TerminalLogo subtitle={m.wiki_subtitle()} />
 
     {#if !currentEntry}
-        <section aria-labelledby="wiki-filter-category-label" class="border border-terminal-dim/40 rounded px-3 py-2 my-4 space-y-3 sm:space-y-2">
-            <div class="flex flex-col gap-1.5 sm:flex-row sm:items-center sm:gap-2 sm:flex-wrap" role="group" aria-labelledby="wiki-filter-category-label">
+        <ul aria-labelledby="wiki-filter-category-label" class="border border-terminal-dim/40 rounded px-3 py-2 my-4 space-y-3 sm:space-y-2">
+            <li class="flex flex-col gap-1.5 sm:flex-row sm:items-center sm:gap-2 sm:flex-wrap" role="group" aria-labelledby="wiki-filter-category-label">
                 <span id="wiki-filter-category-label" class="text-terminal-dim text-xs sm:w-20 shrink-0 select-none">
                     {m.wiki_filter_category()}
                 </span>
@@ -108,9 +108,9 @@
                         <span class="opacity-80">({categoryCounts[ cat.id ]})</span>
                     </button>
                 {/each}
-            </div>
+            </li>
 
-            <div class="flex flex-col gap-1.5 sm:flex-row sm:items-center sm:gap-2 sm:flex-wrap" role="group" aria-labelledby="wiki-filter-language-label">
+            <li class="flex flex-col gap-1.5 sm:flex-row sm:items-center sm:gap-2 sm:flex-wrap" role="group" aria-labelledby="wiki-filter-language-label">
                 <span id="wiki-filter-language-label" class="text-terminal-dim text-xs sm:w-20 shrink-0 select-none">
                     {m.wiki_filter_language()}
                 </span>
@@ -126,9 +126,9 @@
                         {language}
                     </button>
                 {/each}
-            </div>
+            </li>
 
-            <div class="flex flex-col gap-1.5 sm:flex-row sm:items-center sm:gap-2 sm:flex-wrap" role="group" aria-labelledby="wiki-filter-universe-label">
+            <li class="flex flex-col gap-1.5 sm:flex-row sm:items-center sm:gap-2 sm:flex-wrap" role="group" aria-labelledby="wiki-filter-universe-label">
                 <span id="wiki-filter-universe-label" class="text-terminal-dim text-xs sm:w-20 shrink-0 select-none">
                     {m.wiki_filter_universe()}
                 </span>
@@ -144,8 +144,8 @@
                         {universe}
                     </button>
                 {/each}
-            </div>
-        </section>
+            </li>
+        </ul>
 
         {#if searchActive}
             <div class="border border-terminal-green/40 bg-terminal-green/5 rounded px-3 py-2 mb-3 flex items-center gap-2">
@@ -168,13 +168,13 @@
             </div>
         {/if}
 
-        <div class="text-terminal-dim text-xs mb-4 text-center">
+        <nav class="text-terminal-dim text-xs mb-4 text-center">
             {#if searchActive}
                 {m.wiki_nav_search_active()}
             {:else}
                 {m.wiki_nav_default()}
             {/if}
-        </div>
+        </nav>
 
         {#if entries.length === 0}
             <div class="border border-terminal-dim/40 rounded px-3 py-8 mb-4 text-center text-terminal-dim text-sm">

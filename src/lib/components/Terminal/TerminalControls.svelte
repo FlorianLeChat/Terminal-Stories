@@ -162,8 +162,8 @@
     {/if}
 
     {#if view === "boot"}
-        <span class="ml-auto gap-3 hidden sm:inline">
+        <code class="ml-auto gap-3 hidden sm:inline">
             1.0.0
-        </span>
+        </code>
     {/if}
 </footer>
