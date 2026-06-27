@@ -1,12 +1,37 @@
-<!doctype html>
-<html lang="fr">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" href="%sveltekit.assets%/favicon.svg" type="image/svg+xml" />
-		<meta name="viewport" content="width=device-width, initial-scale=1" />
-		%sveltekit.head%
-	</head>
-	<body data-sveltekit-preload-data="hover">
-		<div style="display: contents">%sveltekit.body%</div>
-	</body>
+<!DOCTYPE html>
+
+<html lang="%paraglide.lang%" dir="%paraglide.dir%">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+        <meta name="theme-color" content="#00ff46" />
+        <meta name="text-scale" content="scale" />
+        <meta name="description" content="🎭 A terminal-style website where you can read, explore, and play interactive stories created by humans and AI." />
+        <meta name="keywords" content="npm,terminal,stories,ai,typescript,eslint,a11y,prettier,svelte,husky,tailwindcss,vite,sveltekit,inlang" />
+
+        <title>Terminal Stories</title>
+
+        <link rel="author" href="https://github.com/FlorianLeChat" />
+        <meta name="author" content="Florian Trayon" />
+
+        <meta property="og:title" content="Terminal Stories" />
+        <meta property="og:description" content="🎭 A terminal-style website where you can read, explore, and play interactive stories created by humans and AI." />
+        <meta property="og:url" content="https://github.com/FlorianLeChat/Terminal-Stories" />
+        <meta property="og:image" content="https://opengraph.githubassets.com/fe14524458ca71c466b74efa0bfdb99665df8ddd/FlorianLeChat/Terminal-Stories" />
+        <meta property="og:type" content="website" />
+
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:creator" content="@FlorianTrayon" />
+        <meta name="twitter:title" content="Terminal Stories" />
+        <meta name="twitter:description" content="🎭 A terminal-style website where you can read, explore, and play interactive stories created by humans and AI." />
+        <meta name="twitter:image" content="https://opengraph.githubassets.com/fe14524458ca71c466b74efa0bfdb99665df8ddd/FlorianLeChat/Terminal-Stories" />
+
+        %sveltekit.head%
+    </head>
+
+    <body class="min-w-sm w-screen h-screen flex items-center justify-center bg-black overflow-hidden" data-sveltekit-preload-data="hover">
+        <div style="display: contents">
+            %sveltekit.body%
+        </div>
+    </body>
 </html>
