@@ -45,6 +45,7 @@
 
 	"controls_ai_generate": "[ENTER] Generate",
 	"controls_ai_restart": "[ENTER] Restart",
+	"controls_source_code": "Source code",
 	"controls_menu_ai": "[I] AI",
 	"controls_menu_cancel_search": "[ESC] Cancel search",
 	"controls_menu_genre": "[G] Genre",

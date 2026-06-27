@@ -162,7 +162,16 @@
     {/if}
 
     {#if view === "boot"}
-        <code class="ml-auto gap-3 hidden sm:inline">
+        <a
+            rel="noopener noreferrer"
+            href="https://github.com/FlorianLeChat/Terminal-Stories"
+            class="inline-flex items-center min-h-8 px-2 py-1 border border-terminal-dim/30 rounded whitespace-nowrap text-terminal-dim hover:text-terminal-white hover:border-terminal-dim active:bg-terminal-green/15 active:text-terminal-white motion-safe:transition-colors motion-safe:duration-100"
+            target="_blank"
+        >
+            {m.controls_source_code()}
+        </a>
+
+        <code class="ml-auto gap-3">
             1.0.0
         </code>
     {/if}
