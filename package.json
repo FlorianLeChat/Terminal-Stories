@@ -26,7 +26,6 @@
         "lint-staged": "~16.4",
         "svelte-check": "~4.4",
         "@sveltejs/kit": "~2.57",
-        "@lucide/svelte": "~1.8",
         "@commitlint/cli": "~20.5",
         "@tsconfig/svelte": "~5.0",
         "@tailwindcss/vite": "~4.2",
