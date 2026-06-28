@@ -1,0 +1,16 @@
+{
+    "name": "Terminal Stories",
+    "display": "standalone",
+    "start_url": "/",
+    "short_name": "Terminal Stories",
+    "description": "🎭 A terminal-style website where you can read, explore, and play interactive stories created by humans and AI.",
+    "theme_color": "#00ff46",
+    "background_color": "#050e05",
+    "icons": [
+        {
+            "src": "assets/favicon.svg",
+            "type": "image/svg+xml",
+            "sizes": "any"
+        }
+    ]
+}
