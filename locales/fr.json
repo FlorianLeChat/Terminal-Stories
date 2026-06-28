@@ -21,6 +21,8 @@
 	"ai_generating": "Génération en cours...",
 	"ai_genre_label": "GENRE",
 	"ai_intro": "Générez une histoire interactive unique, jouée immédiatement. Elle est éphémère et n'est jamais sauvegardée.",
+	"ai_key_console_link": "Créer ou gérer votre clé API",
+	"ai_key_docs_link": "Comment ça fonctionne ?",
 	"ai_key_help": "Votre clé est conservée sur cet appareil et envoyée directement à l'API Anthropic. Elle ne transite par aucun serveur.",
 	"ai_key_invalid": "Clé invalide ou aucun modèle disponible.",
 	"ai_key_label": "CLÉ API ANTHROPIC",

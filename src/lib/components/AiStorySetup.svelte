@@ -130,6 +130,7 @@
     <form class="border border-terminal-dim/40 rounded px-4 py-3 space-y-4 mb-3" onsubmit={handleSubmit}>
         <div class="space-y-1">
             <label for="ai-key" class="block text-terminal-dim text-xs select-none">{m.ai_key_label()}</label>
+
             <div class="flex items-center gap-2">
                 <input
                     bind:this={keyInputEl}
@@ -154,7 +155,23 @@
                 </button>
             </div>
 
-            <p class="text-terminal-dim/70 text-[0.7rem]">{m.ai_key_help()}</p>
+            <p class="text-terminal-dim/70 text-[0.7rem]">
+                {m.ai_key_help()}
+                <br />
+                <a
+                    href="https://platform.claude.com/settings/keys"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="underline underline-offset-2 hover:text-terminal-cyan"
+                >{m.ai_key_console_link()}</a>
+                 ·
+                <a
+                    href="https://platform.claude.com/docs/en/api/overview"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="underline underline-offset-2 hover:text-terminal-cyan"
+                >{m.ai_key_docs_link()}</a>
+            </p>
 
             {#if keyError}
                 <p class="text-terminal-amber text-[0.7rem]" role="alert">{keyError}</p>

@@ -21,6 +21,8 @@
 	"ai_generating": "Generating...",
 	"ai_genre_label": "GENRE",
 	"ai_intro": "Generate a unique interactive story, played right away. It is ephemeral and never saved.",
+	"ai_key_console_link": "Create or manage your API key",
+	"ai_key_docs_link": "How does it work?",
 	"ai_key_help": "Your key stays on this device and is sent directly to the Anthropic API. It never passes through any server.",
 	"ai_key_invalid": "Invalid key or no available model.",
 	"ai_key_label": "ANTHROPIC API KEY",
