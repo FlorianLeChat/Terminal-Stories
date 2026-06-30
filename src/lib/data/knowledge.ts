@@ -1,15 +1,11 @@
 import type { KnowledgeBase, KnowledgeCategory, KnowledgeEntry, CategoryMeta } from "$lib/types/knowledge";
 import { storiesMeta } from "$lib/data";
 
-import foretMaudite from "./knowledge/foret-maudite.json";
-import stationTerminus from "./knowledge/station-terminus.json";
-import dernierAppel from "./knowledge/dernier-appel.json";
+// Eagerly scans every JSON file in ./knowledge so new knowledge bases are
+// picked up automatically, without an import to add by hand for each one.
+const knowledgeModules = import.meta.glob<KnowledgeBase>( "./knowledge/*.json", { eager: true, import: "default" } );
 
-export const knowledgeBases: KnowledgeBase[] = [
-    foretMaudite as KnowledgeBase,
-    stationTerminus as KnowledgeBase,
-    dernierAppel as KnowledgeBase
-];
+export const knowledgeBases: KnowledgeBase[] = Object.values( knowledgeModules );
 
 // Flatten every base into a single list, defaulting each entry's universe and
 // storyId to its base so individual entries don't have to repeat them.

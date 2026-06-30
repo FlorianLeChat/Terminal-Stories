@@ -1,12 +1,12 @@
 import type { Story, StoryMeta, StoryFilters } from "$lib/types/story";
 import { computeStoryStats } from "$lib/utilities/readingTime";
 
-import foretMaudite from "./stories/foret-maudite.json";
-import stationTerminus from "./stories/station-terminus.json";
-import dernierAppel from "./stories/dernier-appel.json";
+// Eagerly scans every JSON file in ./stories so new stories are picked up
+// automatically, without an import to add by hand for each one.
+const storyModules = import.meta.glob<Story>( "./stories/*.json", { eager: true, import: "default" } );
 
 /** All stories bundled with the application. */
-export const stories: Story[] = [ foretMaudite as Story, stationTerminus as Story, dernierAppel as Story ];
+export const stories: Story[] = Object.values( storyModules );
 
 // Lightweight metadata used by the menu and filters, with precomputed reading
 // stats so the full scene graph never has to be walked during rendering.
