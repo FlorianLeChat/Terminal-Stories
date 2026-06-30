@@ -1,93 +1,86 @@
-# Terminal Stories
+# 🎭 Terminal Stories
 
+![HTML](.gitlab/badges/html.svg)
+![CSS](.gitlab/badges/css.svg)
+![TypeScript](.gitlab/badges/typescript.svg)
 
+![Svelte](.gitlab/badges/svelte.svg)
+![SvelteKit](.gitlab/badges/sveltekit.svg)
+![TailwindCSS](.gitlab/badges/tailwindcss.svg)
+![Inlang](.gitlab/badges/inlang.svg)
+![Vite](.gitlab/badges/vite.svg)
+![Prettier](.gitlab/badges/prettier.svg)
+![ESLint](.gitlab/badges/eslint.svg)
 
-## Getting started
+## In French
 
-To make it easy for you to get started with GitLab, here's a list of recommended next steps.
+> [!IMPORTANT]
+> Le code du projet est aussi hébergé sur mon instance GitLab personnalisée, accessible à [cette adresse](https://git.florian-dev.fr/floriantrayon/Terminal-Stories). Le dépôt GitHub est un miroir du dépôt GitLab, **mis à jour automatiquement**.
+>
+> **Les contributions publiques restent sur GitHub et sont les bienvenues** ; les pull requests validées y seront ensuite transférées manuellement sur GitLab pour être intégrées. 🙂
 
-Already a pro? Just edit this README.md and make it your own. Want to make it easy? [Use the template at the bottom](#editing-this-readme)!
+### Introduction
 
-## Add your files
+Après avoir réalisé un site Internet servant de page d'accueil vers mes différents projets et réseaux sociaux, appelé [Terminal Homepage](https://github.com/FlorianLeChat/Terminal-Homepage), j'ai souhaité concrétiser un projet plus ambitieux, qui allait nécessiter une bonne part de réflexion et de temps de développement. Avec l'avènement de l'intelligence artificielle, j'ai enfin eu l'opportunité de le créer à mon goût, avec un temps de développement bien plus réduit que ce que j'avais estimé si je l'avais fait seul. Je vous présente **Terminal Stories**. ❤️
 
-* [Create](https://docs.gitlab.com/user/project/repository/web_editor/#create-a-file) or [upload](https://docs.gitlab.com/user/project/repository/web_editor/#upload-a-file) files
-* [Add files using the command line](https://docs.gitlab.com/topics/git/add_files/#add-files-to-a-git-repository) or push an existing Git repository with the following command:
+Terminal Stories, qu'est-ce que c'est ? C'est un lecteur d'histoires interactives qui reprend les codes et l'esthétique des terminaux informatiques d'une époque passée. Il vous permet de lire, découvrir et interagir avec des histoires, des récits et des textes de fiction. Ces histoires peuvent être préenregistrées, mais aussi générées entièrement à la volée par une intelligence artificielle. 🧠
 
-```
-cd existing_repo
-git remote add origin https://git.florian-dev.fr/floriantrayon/Terminal-Stories.git
-git branch -M master
-git push -uf origin master
-```
+En plus de leurs fonctionnalités de choix et d'interaction, les histoires interactives s'accompagnent de plusieurs autres fonctionnalités : la sauvegarde et la reprise des histoires en cours, ainsi que l'accès à une encyclopédie de l'univers, des personnages et des lieux. Le tout est bien sûr gratuit et collaboratif : vos propres histoires peuvent être soumises pour être intégrées au site en ouvrant un ticket sur le [dépôt GitHub](https://github.com/FlorianLeChat/Terminal-Stories). 😉
 
-## Integrate with your tools
+Concernant la partie technique, le site respecte des valeurs de sobriété numérique, d'accessibilité et de respect de la vie privée. Construit une fois puis hébergé statiquement sur [GitLab Pages](https://docs.gitlab.com/user/project/pages/), il limite ainsi son empreinte carbone. Il s'appuie sur des technologies Web modernes telles que [SvelteKit](https://svelte.dev/docs/kit/introduction) ❤️‍🔥, [Vite](https://vite.dev/), [TailwindCSS](https://tailwindcss.com/) et [TypeScript](https://www.typescriptlang.org/), et ne contient ni cookies, ni technologies de suivi, ni publicité. Il est entièrement accessible à tous, sans restriction. Sur le plan de l'accessibilité, le site est complètement navigable au clavier, compatible avec les lecteurs d'écran, et un effort particulier a été porté sur la navigation depuis les appareils mobiles. 🌱
 
-* [Set up project integrations](https://git.florian-dev.fr/floriantrayon/Terminal-Stories/-/settings/integrations)
+### Installation
 
-## Collaborate with your team
+> [!WARNING]
+> Le déploiement en environnement de production nécessite un serveur Web déjà configuré comme [Nginx](https://nginx.org/en/), [Apache](https://httpd.apache.org/) ou [Caddy](https://caddyserver.com/) pour servir les fichiers statiques générés par Vite. ⚠️
 
-* [Invite team members and collaborators](https://docs.gitlab.com/user/project/members/)
-* [Create a new merge request](https://docs.gitlab.com/user/project/merge_requests/creating_merge_requests/)
-* [Automatically close issues from merge requests](https://docs.gitlab.com/user/project/issues/managing_issues/#closing-issues-automatically)
-* [Enable merge request approvals](https://docs.gitlab.com/user/project/merge_requests/approvals/)
-* [Set auto-merge](https://docs.gitlab.com/user/project/merge_requests/auto_merge/)
+#### Développement local
 
-## Test and Deploy
+- Installer [Node.js LTS](https://nodejs.org/) (>22 ou plus) ;
+- Installer les dépendances du projet avec la commande `npm install` ;
+- Démarrer le serveur local Vite avec la commande `npm run dev`.
 
-Use the built-in continuous integration in GitLab.
+#### Déploiement en production
 
-* [Get started with GitLab CI/CD](https://docs.gitlab.com/ci/quick_start/)
-* [Analyze your code for known vulnerabilities with Static Application Security Testing (SAST)](https://docs.gitlab.com/user/application_security/sast/)
-* [Deploy to Kubernetes, Amazon EC2, or Amazon ECS using Auto Deploy](https://docs.gitlab.com/topics/autodevops/requirements/)
-* [Use pull-based deployments for improved Kubernetes management](https://docs.gitlab.com/user/clusters/agent/)
-* [Set up protected environments](https://docs.gitlab.com/ci/environments/protected_environments/)
+- Installer [Node.js LTS](https://nodejs.org/) (>22 ou plus) ;
+- Installer les dépendances du projet avec la commande `npm install` ;
+- Compiler les fichiers statiques du site Internet avec la commande `npm run build` ;
+- Utiliser un serveur Web pour servir les fichiers statiques générés à l'étape précédente.
 
-***
+## In English
 
-# Editing this README
+> [!IMPORTANT]
+> The project's code is also hosted on my custom GitLab instance, available at [this address](https://git.florian-dev.fr/floriantrayon/Terminal-Stories). The GitHub repository is a mirror of the GitLab repository, **automatically kept up to date**.
+>
+> **Public contributions remain on GitHub and are welcome**; validated pull requests will then be manually transferred to GitLab to be integrated. 🙂
 
-When you're ready to make this README your own, just edit this file and use the handy template below (or feel free to structure it however you want - this is just a starting point!). Thanks to [makeareadme.com](https://www.makeareadme.com/) for this template.
+### Introduction
 
-## Suggestions for a good README
+After creating a website called [Terminal Homepage](https://github.com/FlorianLeChat/Terminal-Homepage), which serves as a home page for my personal projects and social media accounts. I decided to take on a more ambitious project—one that would require a lot of thinking and development time. But with the rise of artificial intelligence, I finally had the opportunity to create it exactly as I wanted, with a much shorter development time than I would have needed if I'd done it alone. Introducing Terminal Stories. ❤️
 
-Every project is different, so consider which of these sections apply to yours. The sections used in the template are suggestions for most open source projects. Also keep in mind that while a README can be too long and detailed, too long is better than too short. If you think your README is too long, consider utilizing another form of documentation rather than cutting out information.
+What is Terminal Stories? It's an interactive story reader based on the design and aesthetics of computer terminals from a past era. It lets you read, discover, and interact with stories, narratives, and works of fiction. These stories can be pre-recorded, but they can also be generated entirely on the fly by artificial intelligence. 🧠
 
-## Name
-Choose a self-explaining name for your project.
+As well as their choice-and-interaction features, the interactive stories come with several other features: you can save and resume stories in progress, and access an encyclopedia of the universe, characters, and locations. It's all free and collaborative, of course: you can submit your own stories to be added to the website by opening a ticket on the [GitHub repository](https://github.com/FlorianLeChat/Terminal-Stories). 😉
 
-## Description
-Let people know what your project can do specifically. Provide context and add a link to any reference visitors might be unfamiliar with. A list of Features or a Background subsection can also be added here. If there are alternatives to your project, this is a good place to list differentiating factors.
+In terms of technical aspects, the website reflects values of digital sobriety, accessibility, and respect for privacy. Built once and then statically hosted on [GitLab Pages](https://docs.gitlab.com/user/project/pages/), it minimizes its carbon footprint. It relies on modern web technologies such as [SvelteKit](https://svelte.dev/docs/kit/introduction) ❤️‍🔥, [Vite](https://vite.dev/), [TailwindCSS](https://tailwindcss.com/), and [TypeScript](https://www.typescriptlang.org/), and contains no cookies, tracking technologies, or advertisements. It is fully accessible to everyone, without restriction. From an accessibility perspective, the website is fully keyboard-navigable, compatible with screen readers, and special attention has been given to navigation on mobile devices. 🌱
 
-## Badges
-On some READMEs, you may see small images that convey metadata, such as whether or not all the tests are passing for the project. You can use Shields to add some to your README. Many services also have instructions for adding a badge.
+### Setup
 
-## Visuals
-Depending on what you are making, it can be a good idea to include screenshots or even a video (you'll frequently see GIFs rather than actual videos). Tools like ttygif can help, but check out Asciinema for a more sophisticated method.
+> [!WARNING]
+> Deployment in a production environment requires a pre-configured web server such as [Nginx](https://nginx.org/en/), [Apache](https://httpd.apache.org/), or [Caddy](https://caddyserver.com/) to serve the static files generated by Vite. ⚠️
 
-## Installation
-Within a particular ecosystem, there may be a common way of installing things, such as using Yarn, NuGet, or Homebrew. However, consider the possibility that whoever is reading your README is a novice and would like more guidance. Listing specific steps helps remove ambiguity and gets people to using your project as quickly as possible. If it only runs in a specific context like a particular programming language version or operating system or has dependencies that have to be installed manually, also add a Requirements subsection.
+#### Local development
 
-## Usage
-Use examples liberally, and show the expected output if you can. It's helpful to have inline the smallest example of usage that you can demonstrate, while providing links to more sophisticated examples if they are too long to reasonably include in the README.
+- Install [Node.js LTS](https://nodejs.org/) (>22 or higher) ;
+- Install project dependencies using `npm install` ;
+- Start Vite local server using `npm run dev`.
 
-## Support
-Tell people where they can go to for help. It can be any combination of an issue tracker, a chat room, an email address, etc.
+#### Production deployment
 
-## Roadmap
-If you have ideas for releases in the future, it is a good idea to list them in the README.
+- Install [Node.js LTS](https://nodejs.org/) (>22 or higher) ;
+- Install project dependencies using `npm install` ;
+- Build static website files using `npm run build` ;
+- Remove development dependencies using `npm prune --omit=dev` ;
+- Use a web server to serve the static files generated in the previous step.
 
-## Contributing
-State if you are open to contributions and what your requirements are for accepting them.
-
-For people who want to make changes to your project, it's helpful to have some documentation on how to get started. Perhaps there is a script that they should run or some environment variables that they need to set. Make these steps explicit. These instructions could also be useful to your future self.
-
-You can also document commands to lint the code or run tests. These steps help to ensure high code quality and reduce the likelihood that the changes inadvertently break something. Having instructions for running tests is especially helpful if it requires external setup, such as starting a Selenium server for testing in a browser.
-
-## Authors and acknowledgment
-Show your appreciation to those who have contributed to the project.
-
-## License
-For open source projects, say how it is licensed.
-
-## Project status
-If you have run out of energy or time for your project, put a note at the top of the README saying that development has slowed down or stopped completely. Someone may choose to fork your project or volunteer to step in as a maintainer or owner, allowing your project to keep going. You can also make an explicit request for maintainers.
+![image](.gitlab/images/terminal-stories.png)
