@@ -28,8 +28,8 @@
     }
   ],
   "startScene": "telephone",
-  "scenes": {
-    "telephone": {
+  "scenes": [
+    {
       "id": "telephone",
       "text": [
         "23:47. Ton téléphone vibre sur la table de nuit.",
@@ -62,7 +62,7 @@
         }
       ]
     },
-    "reference-nov": {
+    {
       "id": "reference-nov",
       "text": [
         "14 novembre 2019.",
@@ -88,7 +88,7 @@
         }
       ]
     },
-    "camera-revele": {
+    {
       "id": "camera-revele",
       "text": [
         "Caméra numéro 4. Couloir B. Vous aviez vérifié toutes les caméras.",
@@ -115,7 +115,7 @@
         }
       ]
     },
-    "rendez-vous": {
+    {
       "id": "rendez-vous",
       "text": [
         "12 rue de la Roquette. Un immeuble Haussmann. Un code sur la porte : 1419.",
@@ -143,7 +143,7 @@
         }
       ]
     },
-    "photos": {
+    {
       "id": "photos",
       "text": [
         "Les photos sont nettes. Damnatoires.",
@@ -169,7 +169,7 @@
         }
       ]
     },
-    "homme-baillon": {
+    {
       "id": "homme-baillon",
       "text": [
         "Tu retires le bâillon. L'homme respire vite. La quarantaine, costume défait.",
@@ -194,7 +194,7 @@
         }
       ]
     },
-    "doute-durand": {
+    {
       "id": "doute-durand",
       "text": [
         "Si Durand a laissé la caméra allumée sciemment...",
@@ -219,7 +219,7 @@
         }
       ]
     },
-    "verite-durand": {
+    {
       "id": "verite-durand",
       "text": [
         "Le technicien te regarde avec des yeux qui en ont trop vu.",
@@ -244,7 +244,7 @@
         }
       ]
     },
-    "bluff": {
+    {
       "id": "bluff",
       "text": [
         "Silence.",
@@ -270,7 +270,7 @@
         }
       ]
     },
-    "durand-sait": {
+    {
       "id": "durand-sait",
       "text": [
         "\"Comment tu sais que je suis à la Roquette ?\"",
@@ -295,7 +295,7 @@
         }
       ]
     },
-    "decision-technicien": {
+    {
       "id": "decision-technicien",
       "text": [
         "Le technicien te regarde. Il n'a pas l'air dangereux.",
@@ -313,7 +313,7 @@
         }
       ]
     },
-    "aveu-durand": {
+    {
       "id": "aveu-durand",
       "text": [
         "Sa voix est fatiguée. Vieille.",
@@ -331,7 +331,7 @@
         }
       ]
     },
-    "arrivee-durand": {
+    {
       "id": "arrivee-durand",
       "text": [
         "Durand arrive dix minutes plus tard. Il voit les photos sur la table.",
@@ -349,7 +349,7 @@
         }
       ]
     },
-    "accord-deposition": {
+    {
       "id": "accord-deposition",
       "text": [
         "«  Demain matin. Bureau du procureur. Tout dire.  »",
@@ -367,7 +367,7 @@
         }
       ]
     },
-    "fin-confrontation": {
+    {
       "id": "fin-confrontation",
       "isEnding": true,
       "endingType": "neutral",
@@ -383,7 +383,7 @@
       ],
       "choices": []
     },
-    "fin-confession": {
+    {
       "id": "fin-confession",
       "isEnding": true,
       "endingType": "good",
@@ -398,7 +398,7 @@
       ],
       "choices": []
     },
-    "fin-collaboration": {
+    {
       "id": "fin-collaboration",
       "isEnding": true,
       "endingType": "bad",
@@ -414,7 +414,7 @@
       ],
       "choices": []
     },
-    "fin-silence": {
+    {
       "id": "fin-silence",
       "isEnding": true,
       "endingType": "neutral",
@@ -430,7 +430,7 @@
       ],
       "choices": []
     },
-    "fin-incertitude": {
+    {
       "id": "fin-incertitude",
       "isEnding": true,
       "endingType": "neutral",
@@ -445,7 +445,7 @@
       ],
       "choices": []
     },
-    "fin-miroir": {
+    {
       "id": "fin-miroir",
       "isEnding": true,
       "endingType": "neutral",
@@ -460,5 +460,5 @@
       ],
       "choices": []
     }
-  }
+  ]
 }

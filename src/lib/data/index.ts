@@ -1,12 +1,28 @@
-import type { Story, StoryMeta, StoryFilters } from "$lib/types/story";
+import type { Scene, Story, StoryFile, StoryMeta, StoryFilters } from "$lib/types/story";
 import { computeStoryStats } from "$lib/utilities/readingTime";
 
 // Eagerly scans every JSON file in ./stories so new stories are picked up
 // automatically, without an import to add by hand for each one.
-const storyModules = import.meta.glob<Story>( "./stories/*.json", { eager: true, import: "default" } );
+const storyModules = import.meta.glob<StoryFile>( "./stories/*.json", { eager: true, import: "default" } );
+
+/**
+ * Turns a story file's flat `scenes` array into the keyed map the engine
+ * looks up scenes by id with.
+ *
+ * @param file - The raw story as authored in JSON.
+ * @returns The story with its scene array converted to a `Record`.
+ * @author Claude
+ */
+const toStory = ( file: StoryFile ): Story =>
+{
+    const scenes: Record<string, Scene> = {};
+    for ( const scene of file.scenes ) scenes[ scene.id ] = scene;
+
+    return { ...file, scenes };
+};
 
 /** All stories bundled with the application. */
-export const stories: Story[] = Object.values( storyModules );
+export const stories: Story[] = Object.values( storyModules ).map( toStory );
 
 // Lightweight metadata used by the menu and filters, with precomputed reading
 // stats so the full scene graph never has to be walked during rendering.

@@ -28,8 +28,8 @@
     }
   ],
   "startScene": "entree",
-  "scenes": {
-    "entree": {
+  "scenes": [
+    {
       "id": "entree",
       "text": [
         "Les arbres se referment derrière toi comme des mâchoires.",
@@ -61,7 +61,7 @@
         }
       ]
     },
-    "echo": {
+    {
       "id": "echo",
       "text": [
         "«  ...je t'attendais.  »",
@@ -87,7 +87,7 @@
         }
       ]
     },
-    "sentier": {
+    {
       "id": "sentier",
       "text": [
         "Le sentier serpente entre des chênes centenaires dont les racines ont dévoré les anciennes dalles.",
@@ -111,7 +111,7 @@
         }
       ]
     },
-    "lisiere": {
+    {
       "id": "lisiere",
       "text": [
         "La lueur vient d'un insecte de la taille de ton poing. Une luciole géante, aux ailes translucides.",
@@ -135,7 +135,7 @@
         }
       ]
     },
-    "cabane-vieille": {
+    {
       "id": "cabane-vieille",
       "text": [
         "L'intérieur est encombré d'herbes séchées, de fioles et de livres dont les titres se lisent à l'envers.",
@@ -161,7 +161,7 @@
         }
       ]
     },
-    "ruisseau": {
+    {
       "id": "ruisseau",
       "text": [
         "L'eau est noire comme de l'encre mais parfaitement claire. Tu vois le fond — des pièces de monnaie, des os, des miroirs brisés.",
@@ -185,7 +185,7 @@
         }
       ]
     },
-    "confrontation-esprit": {
+    {
       "id": "confrontation-esprit",
       "text": [
         "Les arbres se resserrent. Le sol se soulève. Des racines émergent comme des bras.",
@@ -210,7 +210,7 @@
         }
       ]
     },
-    "perdu": {
+    {
       "id": "perdu",
       "text": [
         "Tu marches. Tu marches encore. La forêt se répète en boucle.",
@@ -234,7 +234,7 @@
         }
       ]
     },
-    "revelations": {
+    {
       "id": "revelations",
       "text": [
         "«  Le cœur de la forêt est un arbre unique — blanc comme un os, vieux comme la mémoire.  »",
@@ -254,7 +254,7 @@
         }
       ]
     },
-    "profondeur": {
+    {
       "id": "profondeur",
       "text": [
         "La forêt se fait plus dense. Le sol disparaît sous un tapis de racines enchevêtrées.",
@@ -271,7 +271,7 @@
         }
       ]
     },
-    "arbre-source": {
+    {
       "id": "arbre-source",
       "text": [
         "L'arbre creux est immense. Trois hommes ne pourraient pas l'encercler.",
@@ -288,7 +288,7 @@
         }
       ]
     },
-    "pacte": {
+    {
       "id": "pacte",
       "text": [
         "L'Esprit s'accroupit. Une forme humaine, presque.",
@@ -314,7 +314,7 @@
         }
       ]
     },
-    "coeur-foret": {
+    {
       "id": "coeur-foret",
       "text": [
         "L'arbre blanc pulse comme un cœur. Son écorce est couverte de visages — des centaines.",
@@ -347,7 +347,7 @@
         }
       ]
     },
-    "fin-verite": {
+    {
       "id": "fin-verite",
       "isEnding": true,
       "endingType": "neutral",
@@ -361,7 +361,7 @@
       ],
       "choices": []
     },
-    "fin-retrait": {
+    {
       "id": "fin-retrait",
       "isEnding": true,
       "endingType": "good",
@@ -375,7 +375,7 @@
       ],
       "choices": []
     },
-    "fin-lumiere": {
+    {
       "id": "fin-lumiere",
       "isEnding": true,
       "endingType": "good",
@@ -391,5 +391,5 @@
       ],
       "choices": []
     }
-  }
+  ]
 }

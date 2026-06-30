@@ -41,6 +41,15 @@ export interface Story {
     scenes: Record<string, Scene>;
 }
 
+/**
+ * On-disk shape of a story file: scenes are authored as a flat array (each
+ * scene already carries its own `id`) instead of a keyed map, to keep the
+ * JSON lighter to write by hand.
+ */
+export interface StoryFile extends Omit<Story, "scenes"> {
+    scenes: Scene[];
+}
+
 export interface StoryStats {
     scenes: number;
     endings: number;
