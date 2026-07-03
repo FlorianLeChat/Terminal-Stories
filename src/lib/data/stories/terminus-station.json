@@ -1,0 +1,507 @@
+{
+  "id": "terminus-station",
+  "title": "Terminus Station",
+  "genre": "Sci-Fi",
+  "language": "English",
+  "universe": "Deep Space 2387",
+  "description": "An isolated space station. A distress signal. A crew of three — and something that survived the void.",
+  "tags": ["horror", "survival", "space", "alien", "crew"],
+  "author": "Terminal Stories",
+  "characters": [
+    {
+      "id": "commander",
+      "name": "Commander Reyes",
+      "description": "Mission lead. Pragmatic and cold. She's seen everything, or thinks she has.",
+      "role": "protagonist"
+    },
+    {
+      "id": "engineer",
+      "name": "Engineer Dax",
+      "description": "Systems specialist. Nervous but brilliant. He knows the station like the back of his hand.",
+      "role": "ally"
+    },
+    {
+      "id": "doctor",
+      "name": "Dr. Vasiliev",
+      "description": "Ship's doctor. Calm beyond reason. Maybe too calm.",
+      "role": "ally"
+    },
+    {
+      "id": "unknown",
+      "name": "???",
+      "description": "Something prowls the ducts.",
+      "role": "antagonist"
+    }
+  ],
+  "startScene": "docking",
+  "scenes": [
+    {
+      "id": "docking",
+      "text": [
+        "SHIP'S LOG — COMMANDER A. REYES — DAY 1",
+        "Docking successful at Terminus-7 Station. No response to hails for 72 hours.",
+        "The station drifts slightly out of its normal orbit. Systems partially online.",
+        "Dax and Vasiliev await my order in the airlock."
+      ],
+      "speaker": "commander",
+      "choices": [
+        {
+          "id": "enter-now",
+          "text": "Order immediate entry",
+          "action": "\"Dax, open that airlock. Vasiliev, stay behind me.\"",
+          "consequence": "The airlock groans open. The station air smells of scorched metal and something else — organic.",
+          "nextScene": "corridor-a"
+        },
+        {
+          "id": "scan-first",
+          "text": "Scan the station before entering",
+          "action": "\"Dax, get me the bio-signature readings first.\"",
+          "consequence": "Dax frowns. \"Commander... there are signatures. But they're moving strangely.\"",
+          "nextScene": "scan-reading",
+          "setsFlag": "scan-done"
+        }
+      ]
+    },
+    {
+      "id": "scan-reading",
+      "text": [
+        "Dax pulls up the data on his pad. His hands don't shake — but they should.",
+        "\"Twenty-two human signatures originally logged. I'm reading... eleven. Stable.\"",
+        "\"And one more. Nothing in the database matches it.\""
+      ],
+      "speaker": "engineer",
+      "choices": [
+        {
+          "id": "enter-armed",
+          "text": "Enter armed and in formation",
+          "action": "\"Weapons out. Delta formation. We go in.\"",
+          "consequence": "The weapons snap out of their holsters. You enter the station.",
+          "nextScene": "corridor-a",
+          "setsFlag": "weapons-drawn"
+        },
+        {
+          "id": "locate-eleven",
+          "text": "Locate the eleven survivors first",
+          "action": "\"Give me their exact positions. We find them first.\"",
+          "consequence": "\"Section B, level 3. All grouped in one place.\"",
+          "nextScene": "section-b"
+        }
+      ]
+    },
+    {
+      "id": "corridor-a",
+      "text": [
+        "The emergency lights flash red. Half the panels have been torn off.",
+        "On the wall, someone has scrawled in jagged letters: 'DON'T LOOK FOR TANNER'.",
+        "Dr. Vasiliev crouches beside a dark stain on the floor. \"That's not human blood.\""
+      ],
+      "speaker": "doctor",
+      "choices": [
+        {
+          "id": "investigate-message",
+          "text": "Investigate the message on the wall",
+          "action": "You examine the letters closely. They were gouged in with something hard.",
+          "consequence": "Behind the torn panel, you find an audio log.",
+          "nextScene": "audio-log"
+        },
+        {
+          "id": "continue-section-b",
+          "text": "Push on toward Section B",
+          "action": "\"We don't have time. Survivors first.\"",
+          "consequence": "Vasiliev follows without a word. Dax throws a last glance at the message.",
+          "nextScene": "section-b"
+        },
+        {
+          "id": "find-tanner",
+          "text": "Find out who Tanner is",
+          "action": "\"Dax, Tanner — check the crew registry.\"",
+          "consequence": "\"Tanner, Marcus. Chief biologist. Went missing 6 days ago.\"",
+          "nextScene": "laboratory"
+        }
+      ]
+    },
+    {
+      "id": "audio-log",
+      "text": [
+        "[RECORDING — DAY 4 SINCE THE INCIDENT]",
+        "A panicked voice, barely recognizable:",
+        "\"He changed. Tanner changed. It's not Tanner anymore. It wears his face but it doesn't breathe the same way...\"",
+        "\"It has access to every system. It knows where we are. Why is it waiting?\"",
+        "[END OF RECORDING]"
+      ],
+      "choices": [
+        {
+          "id": "to-survivors",
+          "text": "Head to the survivors immediately",
+          "action": "\"Section B. Fast.\"",
+          "consequence": "You run through the corridors. Something moves in the ducts above you.",
+          "nextScene": "section-b",
+          "setsFlag": "knows-tanner"
+        },
+        {
+          "id": "to-lab",
+          "text": "Go to Tanner's lab",
+          "action": "\"If we want to understand what we're up against, we need his research.\"",
+          "consequence": "Dax hesitates. \"That's the opposite direction from the survivors, Commander.\"",
+          "nextScene": "laboratory",
+          "setsFlag": "knows-tanner"
+        }
+      ]
+    },
+    {
+      "id": "laboratory",
+      "text": [
+        "The biology lab is in a catastrophic state. Containers shattered. Data wiped.",
+        "Except one screen — still lit. A file open: 'ZETA-ORGANISM — FINAL REPORT'.",
+        "You skim it: '...perfect mimicry... memory absorbed... detection near-impossible...'",
+        "Someone sighs behind you. You turn slowly."
+      ],
+      "choices": [
+        {
+          "id": "is-it-dax",
+          "text": "\"Dax? You followed me?\"",
+          "action": "You look the engineer in the eyes. Something is off.",
+          "consequence": "\"Of course, Commander. I'm still here.\" His voice is slightly off. Slightly.",
+          "nextScene": "dax-suspect"
+        },
+        {
+          "id": "draw-first",
+          "text": "[IF ARMED] Draw before turning around",
+          "action": "You spin around, weapon raised.",
+          "consequence": "Dax throws up his hands. \"Commander! It's me!\" You study his face. Do you believe him?",
+          "nextScene": "dax-suspect",
+          "requiresFlag": "weapons-drawn"
+        }
+      ]
+    },
+    {
+      "id": "section-b",
+      "text": [
+        "Eleven people. Barricaded in the Section B rec room.",
+        "Their faces when you walk in: relief, then... something else.",
+        "A woman steps forward. Chief mechanic, according to her badge. Her eyes are dry.",
+        "\"You came for us. Good. But one of you is going to have to stay.\""
+      ],
+      "choices": [
+        {
+          "id": "why-stay",
+          "text": "\"Why would anyone have to stay?\"",
+          "action": "You step toward her, hand on your holster.",
+          "consequence": "\"Because it hunts body heat. Fewer people aboard, fewer trails.\"",
+          "nextScene": "evacuation-plan"
+        },
+        {
+          "id": "evacuate-all",
+          "text": "\"Everyone leaves. Now.\"",
+          "action": "\"We leave no one behind. Formation, move.\"",
+          "consequence": "In the corridor, the ducts open above you.",
+          "nextScene": "chaotic-evacuation"
+        }
+      ]
+    },
+    {
+      "id": "dax-suspect",
+      "text": [
+        "You watch Dax. He's... normal. His movements, the way he talks.",
+        "But you read the report. Perfect mimicry. Memory absorbed.",
+        "He looks at you with what seems like concern. \"Commander, are you all right?\"",
+        "Vasiliev edges closer. He murmurs: \"There's a way to check.\""
+      ],
+      "speaker": "doctor",
+      "choices": [
+        {
+          "id": "vasiliev-test",
+          "text": "\"What test, Vasiliev?\"",
+          "action": "You keep an eye on Dax while Vasiliev explains.",
+          "consequence": "\"Body temperature. The organism is ectothermic. Dax, hold out your hand.\"",
+          "nextScene": "temperature-test"
+        },
+        {
+          "id": "trust-dax",
+          "text": "Trust Dax and move on",
+          "action": "\"Forget it. We have a job to do.\"",
+          "consequence": "Dax looks relieved. Vasiliev says nothing. You move out.",
+          "nextScene": "section-b"
+        }
+      ]
+    },
+    {
+      "id": "temperature-test",
+      "text": [
+        "Dax holds out his hand. Vasiliev sets his scanner against it.",
+        "A beep. A silence.",
+        "\"95.4 degrees. Slightly below normal. But...\" Vasiliev looks down. \"...so am I.\"",
+        "They look at each other. You're standing between them."
+      ],
+      "choices": [
+        {
+          "id": "trust-both",
+          "text": "Decide to trust them both",
+          "action": "\"We're a team. We stay a team. End of discussion.\"",
+          "consequence": "A moment of tension. Then Dax nods. So does Vasiliev.",
+          "nextScene": "evacuation-plan"
+        },
+        {
+          "id": "isolate-both",
+          "text": "Isolate them both as a precaution",
+          "action": "\"You both stay behind me. No one touches anyone until we evacuate.\"",
+          "consequence": "They agree. One of them, perhaps, is relieved for the wrong reason.",
+          "nextScene": "evacuation-plan"
+        }
+      ]
+    },
+    {
+      "id": "evacuation-plan",
+      "text": [
+        "The plan: cut the heating systems to throw off the thermal tracker.",
+        "The problem: it takes 20 minutes to do from the engine room.",
+        "\"I can do it,\" Dax says. \"But someone needs to cover the corridor.\""
+      ],
+      "speaker": "engineer",
+      "choices": [
+        {
+          "id": "send-dax",
+          "text": "Send Dax to the engine room",
+          "action": "\"Go. Vasiliev and I hold the corridor.\"",
+          "consequence": "Dax takes off running. The minutes pass. The ducts groan.",
+          "nextScene": "tense-wait"
+        },
+        {
+          "id": "go-yourself",
+          "text": "Go yourself",
+          "action": "\"I'll handle it. Dax, you stay with the civilians.\"",
+          "consequence": "You run alone through the corridors. Something follows at a distance.",
+          "nextScene": "engine-room"
+        }
+      ]
+    },
+    {
+      "id": "chaotic-evacuation",
+      "text": [
+        "The run for the airlocks is chaos.",
+        "The ducts burst open above you. Something — BIG — drops into the corridor.",
+        "Ahead of you: the airlock. Behind you: your formation scattering in panic.",
+        "You can save everyone, or make sure nothing else boards your ship."
+      ],
+      "choices": [
+        {
+          "id": "hold-for-all",
+          "text": "Hold the airlock open for everyone",
+          "action": "You hold the airlock open, screaming out names.",
+          "consequence": "Nine people make it through. Two don't come. Something else is closing in.",
+          "nextScene": "ending-survival"
+        },
+        {
+          "id": "seal-airlock",
+          "text": "Seal the airlock and launch immediately",
+          "action": "\"I'm sorry.\" You seal the airlock.",
+          "consequence": "The ship launches. Through the porthole, you see the station. Then darkness.",
+          "nextScene": "ending-sacrifice"
+        }
+      ]
+    },
+    {
+      "id": "tense-wait",
+      "text": [
+        "17 minutes. The ducts groan rhythmically.",
+        "Vasiliev leans toward you. \"There's something I didn't tell you, Commander.\"",
+        "\"Tanner... I was with him when it happened. I saw what it does. It isn't quick.\""
+      ],
+      "speaker": "doctor",
+      "choices": [
+        {
+          "id": "listen-vasiliev",
+          "text": "\"Tell me everything.\"",
+          "action": "You keep your eyes on the corridor while you listen.",
+          "consequence": "He talks. And when he's done, you understand why he's seemed so calm from the start.",
+          "nextScene": "vasiliev-confession"
+        },
+        {
+          "id": "silence-vasiliev",
+          "text": "\"Not now. Focus.\"",
+          "action": "You cut him off. Eyes on the corridor.",
+          "consequence": "He goes quiet. And when Dax comes back, you catch something in the doctor's eyes.",
+          "nextScene": "systems-cut"
+        }
+      ]
+    },
+    {
+      "id": "vasiliev-confession",
+      "text": [
+        "\"I'm immune. My blood chemistry — the organism can't imitate me.\"",
+        "\"But that doesn't stop me from being a... carrier.\"",
+        "He rolls up his sleeve. On his forearm, a web of dark filaments runs beneath the skin.",
+        "\"It happened two days ago. I didn't tell anyone because... I wanted to get out of here.\""
+      ],
+      "speaker": "doctor",
+      "choices": [
+        {
+          "id": "leave-vasiliev",
+          "text": "\"You stay here.\"",
+          "action": "It's the hardest decision you've ever made.",
+          "consequence": "He nods. \"I know. Go get Dax.\"",
+          "nextScene": "systems-cut"
+        },
+        {
+          "id": "take-vasiliev",
+          "text": "\"You're coming with us. We'll find a treatment.\"",
+          "action": "\"I don't leave anyone behind.\"",
+          "consequence": "He looks at you for a long moment. \"You didn't understand what I said, Commander.\"",
+          "nextScene": "ending-mistake"
+        }
+      ]
+    },
+    {
+      "id": "engine-room",
+      "text": [
+        "The engine room is half in darkness. The turbines idle low.",
+        "You locate the thermal control panel. Your fingers find the controls.",
+        "Behind you, breathing. Steady. Too steady."
+      ],
+      "choices": [
+        {
+          "id": "cut-systems",
+          "text": "Cut the systems and face what's behind you",
+          "action": "You cut the heating with one hand. You draw with the other.",
+          "consequence": "The lights dim. In the dark, two eyes glowing with a biological light.",
+          "nextScene": "face-off"
+        },
+        {
+          "id": "cut-and-flee",
+          "text": "Cut the systems and run without looking back",
+          "action": "You shut it all down and run.",
+          "consequence": "Something follows you down the corridor. Fast. Very fast.",
+          "nextScene": "systems-cut"
+        }
+      ]
+    },
+    {
+      "id": "face-off",
+      "text": [
+        "That face. You know it.",
+        "Marcus Tanner. Just as he was in his file photo. Smiling.",
+        "\"Have you come to save us?\"",
+        "His voice is perfect. His smile is perfect. His eyes don't blink."
+      ],
+      "choices": [
+        {
+          "id": "fire",
+          "text": "Fire without hesitation",
+          "action": "You fire. Three times.",
+          "consequence": "The thing drops. Then rises again. \"That hurts. But not enough.\"",
+          "nextScene": "systems-cut"
+        },
+        {
+          "id": "talk",
+          "text": "\"Tanner is dead. What are you?\"",
+          "action": "You keep your weapon trained on it but you don't fire.",
+          "consequence": "\"I am what he knew. What he wanted.\" A pause. \"I can let you go.\"",
+          "nextScene": "alien-offer"
+        }
+      ]
+    },
+    {
+      "id": "alien-offer",
+      "text": [
+        "\"A deal. You leave. I stay.\"",
+        "\"In exchange... one thing. Take me into your memory. A single memory. Just one.\"",
+        "\"I won't imitate you. I only want to... know what it's like to be you.\""
+      ],
+      "choices": [
+        {
+          "id": "accept-deal",
+          "text": "Accept the deal",
+          "action": "\"One memory. That's all.\"",
+          "consequence": "Something passes. A brief, cold contact. Then the creature fades into the shadows.",
+          "nextScene": "ending-deal"
+        },
+        {
+          "id": "refuse-deal",
+          "text": "Refuse and fire again",
+          "action": "\"I don't negotiate with something that killed my crew.\"",
+          "consequence": "It vanishes into the ducts. You run for the airlocks.",
+          "nextScene": "systems-cut"
+        }
+      ]
+    },
+    {
+      "id": "systems-cut",
+      "text": [
+        "The cold sets in fast. The station goes silent in a different way.",
+        "You gather the survivors. Dax keeps the count. Eleven. Still eleven.",
+        "The trek to the airlocks passes in absolute silence. As if the station were holding its breath.",
+        "Your ship is waiting."
+      ],
+      "choices": [
+        {
+          "id": "final-evacuation",
+          "text": "Order the evacuation",
+          "action": "\"Everyone aboard. We launch in three minutes.\"",
+          "consequence": "People file on. You count heads. Eleven plus your team. But...",
+          "nextScene": "ending-survival"
+        }
+      ]
+    },
+    {
+      "id": "ending-survival",
+      "isEnding": true,
+      "endingType": "neutral",
+      "text": [
+        "The ship pulls away. Terminus-7 Station shrinks in the porthole.",
+        "Eleven survivors. Plus you. Plus Dax.",
+        "Vasiliev isn't aboard. You don't know whether it was his choice to stay.",
+        "The report you'll write will have gaps. Gray areas.",
+        "Some truths are too heavy for official forms.",
+        "",
+        "— ENDING: What We Leave Behind —"
+      ],
+      "choices": []
+    },
+    {
+      "id": "ending-sacrifice",
+      "isEnding": true,
+      "endingType": "bad",
+      "text": [
+        "You watch the station recede.",
+        "In the report: 'No survivors. Cause undetermined.'",
+        "You know what you did. You know why you did it.",
+        "You don't yet know whether you could have done otherwise.",
+        "Some nights in space are longer than others.",
+        "",
+        "— ENDING: The Weight of Command —"
+      ],
+      "choices": []
+    },
+    {
+      "id": "ending-deal",
+      "isEnding": true,
+      "endingType": "good",
+      "text": [
+        "The ship launches. The station disappears.",
+        "In your memory, something has changed. A memory — of childhood, or of something else — feels different.",
+        "Not erased. Just... shared.",
+        "Somewhere in the vastness of the void, a consciousness that was not human",
+        "learns for the first time what it feels like to be afraid, and to act anyway.",
+        "",
+        "— ENDING: An Exchange Among the Stars —"
+      ],
+      "choices": []
+    },
+    {
+      "id": "ending-mistake",
+      "isEnding": true,
+      "endingType": "bad",
+      "text": [
+        "Three days after the return, the first crew member falls ill.",
+        "Then a second.",
+        "The quarantine protocol takes effect too late.",
+        "In your final report, a single line:",
+        "'I knew. I chose not to act.'",
+        "Sometimes, compassion and responsibility don't point the same way.",
+        "",
+        "— ENDING: The Best of Intentions —"
+      ],
+      "choices": []
+    }
+  ]
+}

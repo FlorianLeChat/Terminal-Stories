@@ -1,0 +1,149 @@
+{
+  "universe": "Kingdom of Elarion",
+  "storyId": "cursed-forest",
+  "entries": [
+    {
+      "id": "cursed-forest--universe--elarion",
+      "category": "universe",
+      "name": "Kingdom of Elarion",
+      "summary": "A medieval kingdom where ancient magic still sleeps in stone, water, and root.",
+      "description": [
+        "Elarion is an old kingdom of misty hills and timber villages, built at the edge of forests that the royal maps prefer to leave blank.",
+        "Here, magic is not an art one learns: it is an ancient presence, lurking in nature, to be respected or ignored at one's peril.",
+        "The roads always skirt the deep woods. The elders say that some forests remember — and that the memory of trees forgets neither promises nor betrayals.",
+        "The Mireval Forest, in the north of the kingdom, is the most feared of these places."
+      ],
+      "tags": ["fantasy", "medieval", "magic", "lore"],
+      "related": ["cursed-forest--location--mireval", "cursed-forest--era--age-of-whispers"]
+    },
+    {
+      "id": "cursed-forest--character--traveler",
+      "category": "character",
+      "name": "The Traveler",
+      "summary": "An adventurer worn down by the road, come to seek in the forest what he lost elsewhere.",
+      "description": [
+        "Role: Protagonist.",
+        "A man whose coat has known too many winters and whose blade long ago surrendered its edge to rust.",
+        "No one knows what he came looking for in Mireval — not even him, until the forest reminds him.",
+        "His journey is no quest for gold or glory, but a reckoning with a memory he has been fleeing."
+      ],
+      "aliases": ["The lone traveler"],
+      "tags": ["protagonist", "human"],
+      "related": ["cursed-forest--location--mireval", "cursed-forest--character--spirit", "cursed-forest--character--old-weaver"]
+    },
+    {
+      "id": "cursed-forest--character--spirit",
+      "category": "character",
+      "name": "The Spirit of the Forest",
+      "summary": "An ancient presence watching over every tree, every root, every shadow of Mireval.",
+      "description": [
+        "Role: Guardian — antagonist or ally, depending on what the visitor offers it.",
+        "The Spirit has no fixed form: it is made of leaves, shadow, and wind interwoven, and its voice comes from everywhere at once, deep as wood cracking under snow.",
+        "It hears everything the forest hears. 'Trees do not lie. They tell me everything.'",
+        "It scorns those who flee and takes interest in those who dare to stay. To one who knows how to ask for passage rather than demand it, it sometimes grants its protection."
+      ],
+      "aliases": ["The Guardian", "The voice of Mireval"],
+      "tags": ["antagonist", "spirit", "guardian"],
+      "related": ["cursed-forest--location--forest-heart", "cursed-forest--event--curse"]
+    },
+    {
+      "id": "cursed-forest--character--old-weaver",
+      "category": "character",
+      "name": "The Old Weaver",
+      "summary": "An exiled witch living in the heart of the woods; she knows things others have forgotten.",
+      "description": [
+        "Role: Ambiguous ally.",
+        "Blind, with entirely white eyes, she dwells in a cabin cluttered with dried herbs, vials, and books whose titles read backward.",
+        "She knows the location of the forest's heart and the nature of its guardian.",
+        "To one who knows how to listen, she gives a vial of golden light — 'to tame what guards.' To one who spurns her, she recalls that 'that's what all the ones who never come back say.'"
+      ],
+      "aliases": ["The Weaver", "The exiled witch"],
+      "tags": ["ally", "witch", "magic"],
+      "related": ["cursed-forest--location--cabin", "cursed-forest--location--forest-heart"]
+    },
+    {
+      "id": "cursed-forest--location--mireval",
+      "category": "location",
+      "name": "The Mireval Forest",
+      "summary": "A forest no one has returned from, where it is always dusk.",
+      "description": [
+        "North of Elarion stretches Mireval, marked by a single sign worn away by time: 'MIREVAL FOREST — DANGER — TURN BACK'.",
+        "Daylight vanishes there within a few steps; travelers advance through a perpetual twilight.",
+        "Luminescent mushrooms grow in perfect circles, giant fireflies guide — or mislead — the walkers, and the landscape repeats in a loop for those who lose their way.",
+        "The forest does not always kill. Sometimes, it merely keeps what men refuse to face."
+      ],
+      "aliases": ["Mireval"],
+      "tags": ["forest", "cursed place"],
+      "related": ["cursed-forest--location--forest-heart", "cursed-forest--location--black-stream", "cursed-forest--event--curse"]
+    },
+    {
+      "id": "cursed-forest--location--forest-heart",
+      "category": "location",
+      "name": "The Heart of the Forest",
+      "summary": "A colossal white tree, old as memory, whose bark bears hundreds of faces.",
+      "description": [
+        "At the center of a clearing stands a single tree, white as bone, its branches touching the low clouds.",
+        "Its bark is covered in faces — hundreds of them — that visitors sometimes recognize.",
+        "The tree pulses like a heart and guards 'something that belongs to you, or belonged to someone you loved.'",
+        "It is here that the final choice plays out: take what is guarded, walk away, or offer the golden light to free the forest."
+      ],
+      "aliases": ["The White Tree", "The heart-tree"],
+      "tags": ["tree", "sanctuary", "key location"],
+      "related": ["cursed-forest--character--spirit", "cursed-forest--location--mireval"]
+    },
+    {
+      "id": "cursed-forest--location--black-stream",
+      "category": "location",
+      "name": "The Black Stream",
+      "summary": "Ink-black water, clear to the bottom, spanned by a bridge of carved faces.",
+      "description": [
+        "The water is black as ink yet perfectly transparent: you can see the bottom strewn with coins, bones, and shattered mirrors.",
+        "Beyond the stream, the forest changes — the trees turn white, long dead.",
+        "An old wooden bridge spans it; on each pillar a face is carved, and these faces turn their stone eyes toward those who cross.",
+        "The Spirit sometimes advises peaceful travelers to 'follow the water.'"
+      ],
+      "aliases": ["The bridge of faces"],
+      "tags": ["water", "border", "passage"],
+      "related": ["cursed-forest--location--mireval", "cursed-forest--location--forest-heart"]
+    },
+    {
+      "id": "cursed-forest--location--cabin",
+      "category": "location",
+      "name": "The Weaver's Cabin",
+      "summary": "A refuge hidden in the woods, from which a wisp of smoke always rises.",
+      "description": [
+        "Around a bend in a trail winding between ancient oaks stands a cabin whose chimney smokes without pause.",
+        "The inside overflows with dried herbs, vials, and grimoires with inverted titles; the tea there smells of pine and sulfur.",
+        "It is the home of the Old Weaver, one of the few places in Mireval where a traveler can sit down and hear the truth."
+      ],
+      "tags": ["refuge", "dwelling"],
+      "related": ["cursed-forest--character--old-weaver"]
+    },
+    {
+      "id": "cursed-forest--era--age-of-whispers",
+      "category": "era",
+      "name": "The Age of Whispers",
+      "summary": "The distant era when the forest ceased to be an ordinary wood and became a keeper.",
+      "description": [
+        "Before the Age of Whispers, Mireval was just a wood like any other on the edge of Elarion.",
+        "Then came the time when the trees began to hold the voices, faces, and memories of those who ventured in.",
+        "Since then, time in Mireval is no longer measured in years but in silences: here it is always dusk, and memory does not age."
+      ],
+      "tags": ["era", "lore"],
+      "related": ["cursed-forest--event--curse", "cursed-forest--location--mireval"]
+    },
+    {
+      "id": "cursed-forest--event--curse",
+      "category": "event",
+      "name": "The Curse of Mireval",
+      "summary": "The ancient pact by which the forest began to keep the memories of men.",
+      "description": [
+        "No one tells the curse of Mireval the same way, but all agree on the result: the forest swallows those who enter, and keeps within its heart what they were trying to forget.",
+        "The faces carved into the bark of the White Tree are said to be those of travelers who never came back out.",
+        "It is said the curse can be lifted — not by force, but by a gift given with nothing asked in return. 'It has been a long time since anyone knew how to give without taking.'"
+      ],
+      "tags": ["event", "curse", "lore"],
+      "related": ["cursed-forest--character--spirit", "cursed-forest--location--forest-heart"]
+    }
+  ]
+}

@@ -1,0 +1,188 @@
+{
+  "universe": "Deep Space 2387",
+  "storyId": "terminus-station",
+  "entries": [
+    {
+      "id": "terminus-station--universe--deep-space",
+      "category": "universe",
+      "name": "Deep Space 2387",
+      "summary": "A future of human expansion, where isolated stations drift light-years from any rescue.",
+      "description": [
+        "By 2387, humanity has spread far beyond the solar system. Relay stations dot the commercial and scientific routes of deep space.",
+        "These outposts are self-sufficient, crammed with systems and desperately alone: when a distress signal goes quiet, the nearest rescue ship is often days away.",
+        "It's a universe of protocols, ship's logs, and radio silence — where the greatest threat isn't the void, but what might have survived it."
+      ],
+      "tags": ["sci-fi", "space", "future", "lore"],
+      "related": ["terminus-station--location--terminus-7", "terminus-station--era--age-of-expansion"]
+    },
+    {
+      "id": "terminus-station--character--reyes",
+      "category": "character",
+      "name": "Commander A. Reyes",
+      "summary": "A pragmatic, cold mission lead; she's seen everything, or thinks she has.",
+      "description": [
+        "Role: Protagonist.",
+        "Commander of the rescue ship dispatched to Terminus-7 Station after 72 hours of silence.",
+        "Methodical, she keeps a rigorous ship's log and prefers to scan before opening an airlock.",
+        "Her decisions weigh lives: who to save, who to leave, and what gaps to leave in the official report."
+      ],
+      "aliases": ["Reyes", "The Commander"],
+      "tags": ["protagonist", "human", "crew"],
+      "related": ["terminus-station--character--dax", "terminus-station--character--vasiliev", "terminus-station--event--incident"]
+    },
+    {
+      "id": "terminus-station--character--dax",
+      "category": "character",
+      "name": "Engineer Dax",
+      "summary": "A systems specialist, nervous but brilliant; he knows the station like the back of his hand.",
+      "description": [
+        "Role: Ally.",
+        "Ship's engineer in charge of scans, bio-signature readings, and sabotaging the thermal systems.",
+        "Competent and loyal, he becomes a suspect despite himself once the team realizes the organism imitates its victims perfectly.",
+        "His body temperature, like everyone's, suddenly becomes a matter of life and death."
+      ],
+      "aliases": ["Dax"],
+      "tags": ["ally", "human", "crew"],
+      "related": ["terminus-station--character--reyes", "terminus-station--character--zeta-organism"]
+    },
+    {
+      "id": "terminus-station--character--vasiliev",
+      "category": "character",
+      "name": "Dr. Vasiliev",
+      "summary": "Ship's doctor, calm beyond reason. Maybe too calm.",
+      "description": [
+        "Role: Ally — with a troubled past.",
+        "The rescue team's doctor, whose composure ends up being unsettling.",
+        "He knows the organism better than he lets on: he knows it's ectothermic, that it imitates, and that it can be detected by temperature.",
+        "His calm hides a secret — he was present when Tanner changed, and may already bear the creature's mark."
+      ],
+      "aliases": ["Vasiliev", "The doctor"],
+      "tags": ["ally", "human", "doctor"],
+      "related": ["terminus-station--character--zeta-organism", "terminus-station--event--incident"]
+    },
+    {
+      "id": "terminus-station--character--zeta-organism",
+      "category": "character",
+      "name": "The Zeta-Organism",
+      "summary": "Something that survived the void and now wears a dead man's face.",
+      "description": [
+        "Role: Antagonist.",
+        "A creature with perfect mimicry: it absorbs the memory of its victims and becomes undetectable to the naked eye.",
+        "Ectothermic, it hunts body heat through the station's ducts.",
+        "It wears the face and voice of Marcus Tanner. 'I am what he knew. What he wanted.' It may not be seeking only to kill — but to understand what it means to be human."
+      ],
+      "aliases": ["???", "The creature", "Zeta"],
+      "tags": ["antagonist", "alien", "mimicry"],
+      "related": ["terminus-station--character--tanner", "terminus-station--event--zeta-project", "terminus-station--location--laboratory"]
+    },
+    {
+      "id": "terminus-station--character--tanner",
+      "category": "character",
+      "name": "Marcus Tanner",
+      "summary": "The station's chief biologist, missing six days before the rescue team arrived.",
+      "description": [
+        "Role: Absent character — the point of origin of the horror.",
+        "Chief biologist of Terminus-7, in charge of the research on the Zeta-Organism.",
+        "A message scrawled on a wall sums up the crew's fear: 'DON'T LOOK FOR TANNER'.",
+        "He changed. 'It's not Tanner anymore. It wears his face but it doesn't breathe the same way.'"
+      ],
+      "aliases": ["Tanner"],
+      "tags": ["npc", "biologist", "missing"],
+      "related": ["terminus-station--character--zeta-organism", "terminus-station--location--laboratory"]
+    },
+    {
+      "id": "terminus-station--location--terminus-7",
+      "category": "location",
+      "name": "Terminus-7 Station",
+      "summary": "An isolated space outpost, silent for 72 hours and drifting out of its orbit.",
+      "description": [
+        "A deep-space relay station, originally home to twenty-two crew members.",
+        "When the rescue team arrives, it drifts slightly out of orbit, its systems partially online, its emergency lights flashing red.",
+        "The air smells of scorched metal and something organic. The ducts groan rhythmically — too rhythmically.",
+        "Only eleven survivors remain, barricaded in the Section B rec room."
+      ],
+      "aliases": ["Terminus-7", "The station"],
+      "tags": ["station", "main location"],
+      "related": ["terminus-station--location--section-b", "terminus-station--location--laboratory", "terminus-station--location--engine-room"]
+    },
+    {
+      "id": "terminus-station--location--section-b",
+      "category": "location",
+      "name": "Section B",
+      "summary": "The level 3 rec room, last refuge of the eleven survivors.",
+      "description": [
+        "On level 3, the Section B rec room has become a makeshift bunker.",
+        "Eleven people have barricaded themselves in, grouped together to limit the thermal trails.",
+        "Their chief mechanic greets the rescue team with a chilling warning: 'You came for us. Good. But one of you is going to have to stay.'"
+      ],
+      "tags": ["refuge", "location"],
+      "related": ["terminus-station--location--terminus-7"]
+    },
+    {
+      "id": "terminus-station--location--laboratory",
+      "category": "location",
+      "name": "The Biology Lab",
+      "summary": "Tanner's ravaged lab, where the final report on the Zeta-Organism lies dormant.",
+      "description": [
+        "Shattered containers, wiped data: the biology lab is in a catastrophic state.",
+        "A single screen remains lit, on a file titled 'ZETA-ORGANISM — FINAL REPORT'.",
+        "One reads, skimming: '...perfect mimicry... memory absorbed... detection near-impossible...'",
+        "It's here that one understands what the team is truly facing — often a second too late."
+      ],
+      "tags": ["laboratory", "key location"],
+      "related": ["terminus-station--character--tanner", "terminus-station--character--zeta-organism", "terminus-station--event--zeta-project"]
+    },
+    {
+      "id": "terminus-station--location--engine-room",
+      "category": "location",
+      "name": "The Engine Room",
+      "summary": "The belly of the station, where the heating can be cut to blind the thermal hunter.",
+      "description": [
+        "Half sunk in darkness, its turbines idling low, the engine room houses the thermal control panel.",
+        "Cutting the heating takes twenty minutes and throws off the creature's thermal sense — at the cost of a biting cold.",
+        "It's a place of ambush: 'Behind you, breathing. Steady. Too steady.'"
+      ],
+      "tags": ["location", "technical"],
+      "related": ["terminus-station--location--terminus-7", "terminus-station--character--zeta-organism"]
+    },
+    {
+      "id": "terminus-station--era--age-of-expansion",
+      "category": "era",
+      "name": "The Age of Expansion (2387)",
+      "summary": "The height of human space colonization — and of its scientific hubris.",
+      "description": [
+        "By 2387, humanity is pushing its frontiers faster than it can secure them.",
+        "Xenobiology research programs multiply on remote stations, far from any oversight or swift rescue.",
+        "It's an age that believes it can catalog everything — until it meets something that refuses to be reduced to a database entry."
+      ],
+      "tags": ["era", "future", "lore"],
+      "related": ["terminus-station--event--zeta-project", "terminus-station--universe--deep-space"]
+    },
+    {
+      "id": "terminus-station--event--zeta-project",
+      "category": "event",
+      "name": "The Zeta-Organism Project",
+      "summary": "The research program that brought aboard what should never have come in.",
+      "description": [
+        "Under the direction of Marcus Tanner, Terminus-7 was studying an unknown organism retrieved from the void.",
+        "The final report describes a life-form capable of perfect mimicry and memory absorption.",
+        "The project didn't fail through technical negligence, but through overconfidence: they set out to observe what had come to learn."
+      ],
+      "tags": ["event", "research", "lore"],
+      "related": ["terminus-station--character--zeta-organism", "terminus-station--event--incident"]
+    },
+    {
+      "id": "terminus-station--event--incident",
+      "category": "event",
+      "name": "The Terminus-7 Incident",
+      "summary": "Seventy-two hours of silence, twenty-two crew members, eleven survivors.",
+      "description": [
+        "The incident begins when Tanner 'changes' and the organism gains access to every system on the station.",
+        "The crew falls one by one; the survivors barricade themselves in and carve warnings on the walls.",
+        "When the rescue team arrives, only eleven people remain — and the impossible question: how many will truly leave still human?"
+      ],
+      "tags": ["event", "disaster"],
+      "related": ["terminus-station--location--terminus-7", "terminus-station--character--zeta-organism", "terminus-station--character--reyes"]
+    }
+  ]
+}

@@ -1,0 +1,147 @@
+{
+  "universe": "Contemporary Paris",
+  "storyId": "last-call",
+  "entries": [
+    {
+      "id": "last-call--universe--contemporary-paris",
+      "category": "universe",
+      "name": "Contemporary Paris",
+      "summary": "Present-day Paris seen from behind the curtain: the world of the homicide squad and its secrets.",
+      "description": [
+        "No magic, no stars: just a city that sleeps while others stay awake.",
+        "This is the Paris of precincts, custody cells, hallway cameras, and files someone would rather see disappear.",
+        "A moral-thriller universe where the line between justice and personal survival is thinner than anyone admits — and where a single anonymous call can bring down ten years of a career."
+      ],
+      "tags": ["thriller", "contemporary", "crime", "lore"],
+      "related": ["last-call--location--roquette", "last-call--era--present-night"]
+    },
+    {
+      "id": "last-call--character--morel",
+      "category": "character",
+      "name": "Detective Morel",
+      "summary": "Ten years on the homicide squad. Has seen things. Has done some, too.",
+      "description": [
+        "Role: Protagonist.",
+        "A seasoned homicide detective, woken at 11:47 PM by an anonymous call.",
+        "The voice on the line knows a buried secret: what really happened on November 14, 2019, in the Leclerc case.",
+        "Calm and professional, Morel must decide in a single night what is worth the most: the badge, the partner, or the truth."
+      ],
+      "aliases": ["Morel"],
+      "tags": ["protagonist", "police"],
+      "related": ["last-call--character--voice", "last-call--character--durand", "last-call--event--leclerc-case"]
+    },
+    {
+      "id": "last-call--character--voice",
+      "category": "character",
+      "name": "The Voice",
+      "summary": "Distorted, flat, anonymous. It knows too much — and may not want the money.",
+      "description": [
+        "Role: Antagonist.",
+        "A faceless caller whose voice runs through a chain of VPNs impossible to trace.",
+        "It holds the evidence from the Leclerc case: the footage from camera number 4, in several secure copies.",
+        "What it demands isn't a ransom but a performance — to expose the truth 'cleanly.' No one will ever know who it was."
+      ],
+      "aliases": ["The voice on the phone", "The anonymous caller"],
+      "tags": ["antagonist", "anonymous"],
+      "related": ["last-call--location--roquette", "last-call--event--last-call"]
+    },
+    {
+      "id": "last-call--character--durand",
+      "category": "character",
+      "name": "Detective Durand",
+      "summary": "Morel's partner for six years. Loyal. Or was he?",
+      "description": [
+        "Role: Ally — or accomplice, depending on what the night reveals.",
+        "Morel's partner on the homicide squad for six years, bound to them by the Leclerc case.",
+        "He was the one who 'checked' the corridor B cameras — and the one who left number 4 running.",
+        "Insurance against a future betrayal, or plain cowardice? 'For the same reasons you would have, in my place.'"
+      ],
+      "aliases": ["Durand"],
+      "tags": ["ally", "police", "ambiguous"],
+      "related": ["last-call--character--morel", "last-call--event--leclerc-case"]
+    },
+    {
+      "id": "last-call--character--technician",
+      "category": "character",
+      "name": "The Technician",
+      "summary": "The man behind camera number 4, paid for five years to keep a file.",
+      "description": [
+        "Role: Key witness.",
+        "Fortyish, suit disheveled, found bound and gagged in the apartment on Rue de la Roquette.",
+        "The technician in charge of the precinct's camera number 4, he was paid by Durand to keep its files — for five years.",
+        "He knows. He has known all this time. His fate rests entirely on Morel's choices."
+      ],
+      "aliases": ["The camera 4 technician"],
+      "tags": ["npc", "witness"],
+      "related": ["last-call--character--durand", "last-call--location--roquette"]
+    },
+    {
+      "id": "last-call--location--roquette",
+      "category": "location",
+      "name": "12 Rue de la Roquette",
+      "summary": "An empty Haussmann-era apartment, the stage for the meeting the Voice demands.",
+      "description": [
+        "A Haussmann-era building whose door opens to the code 1419 — like a date that never ends.",
+        "On the third floor, a door left ajar; inside, a chair, a lamp, and an envelope set on a table.",
+        "The envelope holds damning photographs and a USB drive. The trap, or the deliverance.",
+        "In the bathroom, sometimes, a bound man waits to be found."
+      ],
+      "aliases": ["The Roquette apartment"],
+      "tags": ["apartment", "key location"],
+      "related": ["last-call--character--voice", "last-call--character--technician"]
+    },
+    {
+      "id": "last-call--location--precinct",
+      "category": "location",
+      "name": "The Precinct — Corridor B",
+      "summary": "The corridor where, in 2019, camera number 4 was not broken as everyone believed.",
+      "description": [
+        "The site of the turning point: corridor B of the precinct, and its camera number 4.",
+        "Everyone thought that camera was broken on November 14, 2019. Everyone, except the one who had left it running.",
+        "The footage from this corridor is the only proof of what happened to the suspect Leclerc in custody."
+      ],
+      "aliases": ["Corridor B", "Camera number 4"],
+      "tags": ["location", "police", "evidence"],
+      "related": ["last-call--event--leclerc-case", "last-call--character--durand"]
+    },
+    {
+      "id": "last-call--era--present-night",
+      "category": "era",
+      "name": "The Present Night",
+      "summary": "From 11:47 PM to midnight: thirteen minutes worth ten years of a career.",
+      "description": [
+        "The story unfolds almost in real time, in the contemporary present, between 11:47 PM and midnight.",
+        "The countdown is constant: 'You have 13 minutes before it all comes crashing down.'",
+        "This era has no date in the history books — it's the intimate, brief moment of an impossible decision, made in the heart of the Paris night."
+      ],
+      "tags": ["era", "real time", "contemporary"],
+      "related": ["last-call--event--last-call"]
+    },
+    {
+      "id": "last-call--event--leclerc-case",
+      "category": "event",
+      "name": "The Leclerc Case (November 14, 2019)",
+      "summary": "A suspect dead in custody. Officially: cardiac arrest.",
+      "description": [
+        "On November 14, 2019, the suspect Leclerc died in custody at the precinct.",
+        "The official version speaks of cardiac arrest. Morel and Durand know what really happened.",
+        "Camera number 4 in corridor B filmed everything — and that file, kept secret for five years, is the sword of Damocles hanging over the whole plot."
+      ],
+      "tags": ["event", "misconduct", "past"],
+      "related": ["last-call--location--precinct", "last-call--character--durand", "last-call--character--morel"]
+    },
+    {
+      "id": "last-call--event--last-call",
+      "category": "event",
+      "name": "The Last Call",
+      "summary": "The 11:47 PM anonymous call that reopens the Leclerc case and forces Morel to choose.",
+      "description": [
+        "It all begins with a buzz on the nightstand: unknown number, 11:47 PM.",
+        "The Voice grants thirteen minutes, then a meeting, then an envelope — and a choice with no right answer.",
+        "Depending on Morel's decisions, the night ends in confession, in betrayal, in confrontation, or in the silence of a truth never published."
+      ],
+      "tags": ["event", "trigger"],
+      "related": ["last-call--character--voice", "last-call--era--present-night"]
+    }
+  ]
+}
