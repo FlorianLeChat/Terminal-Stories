@@ -1,0 +1,201 @@
+{
+    "universe": "France médiévale",
+    "storyId": "la-femme-aux-cheveux-en-or",
+    "entries": [
+        {
+            "id": "la-femme-aux-cheveux-en-or--universe--france-medievale",
+            "category": "universe",
+            "name": "France médiévale",
+            "summary": "Un royaume exsangue du XIVe siècle, rongé par la guerre et la peste, où la cité d'Arles tient lieu de dernier rempart.",
+            "description": [
+                "Au XIVe siècle, la France saigne sur deux fronts : la guerre de Cent Ans contre l'Angleterre au nord, la peste noire partout.",
+                "Le gros des armées combat aux côtés du dauphin, laissant les provinces du Midi défendues par de maigres troupes de réserve.",
+                "C'est dans ce royaume affaibli que la cité d'Arles, présentée comme le dernier rempart français, voit fondre sur elle les forces de Castille et qu'une seule nuit de choix peut faire basculer le cours de l'histoire."
+            ],
+            "tags": ["médiéval", "guerre", "france", "lore"],
+            "related": ["la-femme-aux-cheveux-en-or--location--arles", "la-femme-aux-cheveux-en-or--era--xive-siecle", "la-femme-aux-cheveux-en-or--event--siege-arles"]
+        },
+        {
+            "id": "la-femme-aux-cheveux-en-or--era--xive-siecle",
+            "category": "era",
+            "name": "Le XIVe siècle, guerre de Cent Ans et peste noire",
+            "summary": "Une époque de famine, de fer et de foi, où la mort rôde sous toutes ses formes.",
+            "description": [
+                "Le XIVe siècle est celui de la guerre de Cent Ans, débutée en 1337, et de la peste noire qui décime l'Europe autour de 1347-1351.",
+                "Le pouvoir royal, mobilisé contre les Anglais, ne peut protéger toutes ses terres : les cités du Sud vivent dans la crainte d'un assaut soudain.",
+                "L'Église, elle, dépêche l'Inquisition pour traquer hérétiques et prétendus semeurs de peste, ajoutant la peur du bûcher à celle de l'ennemi."
+            ],
+            "tags": ["époque", "médiéval", "lore"],
+            "related": ["la-femme-aux-cheveux-en-or--universe--france-medievale", "la-femme-aux-cheveux-en-or--character--inquisition", "la-femme-aux-cheveux-en-or--event--siege-arles"]
+        },
+        {
+            "id": "la-femme-aux-cheveux-en-or--character--comte",
+            "category": "character",
+            "name": "Le Comte d'Arles",
+            "summary": "Un jeune seigneur tiré du lit par le fracas d'un siège, sommé de choisir entre son devoir et sa peur.",
+            "description": [
+                "Rôle : Protagoniste.",
+                "Jeune comte d'Arles, réveillé en sursaut le matin où les engins de siège de Castille encerclent sa cité.",
+                "Partagé entre ses craintes et son devoir, il peut prendre les armes, fuir avec sa conquête d'un soir, ou s'en remettre à plus vaillant que lui.",
+                "Aucune de ses décisions n'est neutre : chacune conduit à la gloire, à l'exil ou au fer, et scelle le sort d'Arles."
+            ],
+            "aliases": ["Le Comte", "Le seigneur d'Arles"],
+            "tags": ["protagoniste", "noble", "humain"],
+            "related": ["la-femme-aux-cheveux-en-or--character--jeune-femme", "la-femme-aux-cheveux-en-or--character--capitaine", "la-femme-aux-cheveux-en-or--character--eleonore", "la-femme-aux-cheveux-en-or--event--siege-arles"]
+        },
+        {
+            "id": "la-femme-aux-cheveux-en-or--character--jeune-femme",
+            "category": "character",
+            "name": "La jeune femme",
+            "summary": "Une paysanne offerte au comte pour la nuit et lame dissimulée envoyée pour l'égorger.",
+            "description": [
+                "Rôle : Antagoniste dissimulée.",
+                "Choisie parmi plusieurs paysannes par les gardes du comte au sortir du banquet, elle partage son lit la nuit précédant l'assaut.",
+                "En réalité, c'est une espionne dépêchée par l'armée de Castille pour assassiner le comte dans son sommeil.",
+                "Selon les choix du comte, elle peut le trahir jusqu'au bout, avouer sa mission au seuil de la forêt, ou se racheter et porter un jour son enfant."
+            ],
+            "aliases": ["La paysanne", "L'espionne"],
+            "tags": ["antagoniste", "espionne", "humain"],
+            "related": ["la-femme-aux-cheveux-en-or--character--comte", "la-femme-aux-cheveux-en-or--character--carlos", "la-femme-aux-cheveux-en-or--event--banquet", "la-femme-aux-cheveux-en-or--location--passage-secret"]
+        },
+        {
+            "id": "la-femme-aux-cheveux-en-or--character--capitaine",
+            "category": "character",
+            "name": "Le Capitaine d'armes",
+            "summary": "Le fer et la loyauté d'Arles : le vétéran qui peut rallier la cité ou condamner son seigneur.",
+            "description": [
+                "Rôle : Allié.",
+                "Capitaine d'armes du château, homme d'expérience et de loyauté indéfectible envers Arles.",
+                "Il peut aider le comte à rassembler des milliers d'hommes dans les arènes ou, si celui-ci refuse par fierté, le laisser courir à sa perte.",
+                "S'il découvre une trahison, sa colère est sans appel : il n'hésite pas à faire exécuter le comte lui-même."
+            ],
+            "aliases": ["Le capitaine"],
+            "tags": ["allié", "soldat", "humain"],
+            "related": ["la-femme-aux-cheveux-en-or--character--comte", "la-femme-aux-cheveux-en-or--location--arenes", "la-femme-aux-cheveux-en-or--location--arles"]
+        },
+        {
+            "id": "la-femme-aux-cheveux-en-or--character--eleonore",
+            "category": "character",
+            "name": "Éléonore de Valois",
+            "summary": "Une commandante en armure immaculée, aux cheveux d'or, la femme qui peut renverser la bataille.",
+            "description": [
+                "Rôle : Alliée.",
+                "Commandante de la deuxième armée royale française, reconnaissable à l'insigne de la couronne, à ses cheveux d'or et à ses triomphes passés.",
+                "Elle se présente au comte sans renforts, mais prête à se battre et même à affronter Carlos de Castille en duel.",
+                "Elle est la « femme aux cheveux d'or » du titre : lui faire confiance ouvre les seules voies vers la victoire ; l'écarter par orgueil mène au désastre."
+            ],
+            "aliases": ["Éléonore", "La commandante", "La femme aux cheveux d'or"],
+            "tags": ["alliée", "commandante", "humain"],
+            "related": ["la-femme-aux-cheveux-en-or--character--comte", "la-femme-aux-cheveux-en-or--character--carlos", "la-femme-aux-cheveux-en-or--location--arenes", "la-femme-aux-cheveux-en-or--event--siege-arles"]
+        },
+        {
+            "id": "la-femme-aux-cheveux-en-or--character--inquisition",
+            "category": "character",
+            "name": "L'Inquisition",
+            "summary": "Des hommes en noir qui traquent la peste et l'hérésie et dont la foi a un prix.",
+            "description": [
+                "Rôle : Antagoniste.",
+                "Envoyés par l'Église catholique, ces hommes vêtus de noir, une croix au cou, patrouillent la cité pour lutter contre la peste et traquer les hérétiques.",
+                "Ils croisent le comte en fuite dans les ruelles : un aveu maladroit peut le perdre, tandis que le calme de la jeune femme peut le sauver.",
+                "Leur allégeance ne va qu'à l'Église : ils peuvent livrer le comte à Castille sans le moindre remords, pourvu que leur mission soit servie."
+            ],
+            "aliases": ["Les hommes en noir"],
+            "tags": ["antagoniste", "religieux"],
+            "related": ["la-femme-aux-cheveux-en-or--location--saint-trophime", "la-femme-aux-cheveux-en-or--era--xive-siecle", "la-femme-aux-cheveux-en-or--character--carlos"]
+        },
+        {
+            "id": "la-femme-aux-cheveux-en-or--character--carlos",
+            "category": "character",
+            "name": "Carlos de Castille",
+            "summary": "L'infant de Castille, cruel et sûr de lui, venu profiter de l'agonie du royaume de France.",
+            "description": [
+                "Rôle : Antagoniste principal.",
+                "Infant de la couronne de Castille et chef de l'armée qui assiège Arles.",
+                "Réputé pour sa cruauté, il veut étendre la couronne de Castille en profitant de l'affaiblissement de la France.",
+                "Il propose volontiers un duel pour régler le sort de la cité, arrogance qui peut faire sa perte face à Éléonore, ou sceller la défaite d'un comte trop orgueilleux."
+            ],
+            "aliases": ["Carlos", "L'infant de Castille"],
+            "tags": ["antagoniste", "noble", "castille"],
+            "related": ["la-femme-aux-cheveux-en-or--character--eleonore", "la-femme-aux-cheveux-en-or--character--comte", "la-femme-aux-cheveux-en-or--event--siege-arles"]
+        },
+        {
+            "id": "la-femme-aux-cheveux-en-or--location--arles",
+            "category": "location",
+            "name": "La Cité et le Château d'Arles",
+            "summary": "Dernier rempart français du Midi, réveillé un matin par le feu des catapultes.",
+            "description": [
+                "Cité fortifiée de Provence, présentée comme le dernier rempart français face à l'avancée de Castille.",
+                "Au petit matin, ses fortifications sont cernées d'engins de siège ; un premier tir de catapulte frappe la ville à ses pieds, et habitants comme bétail se terrent.",
+                "Du château partent tous les chemins de l'histoire : la salle d'armes, l'arrière-cour et les écuries, les ruelles, et un passage secret vers l'est."
+            ],
+            "aliases": ["Arles", "La cité", "Le château"],
+            "tags": ["cité", "lieu principal"],
+            "related": ["la-femme-aux-cheveux-en-or--location--arenes", "la-femme-aux-cheveux-en-or--location--saint-trophime", "la-femme-aux-cheveux-en-or--location--passage-secret", "la-femme-aux-cheveux-en-or--event--siege-arles"]
+        },
+        {
+            "id": "la-femme-aux-cheveux-en-or--location--arenes",
+            "category": "location",
+            "name": "Les Arènes Antiques",
+            "summary": "Les ruines de l'amphithéâtre romain d'Arles, où se rassemblent les troupes avant la bataille.",
+            "description": [
+                "Vestiges de l'amphithéâtre romain d'Arles, devenus le point de ralliement des armées françaises.",
+                "C'est là que le comte et le capitaine organisent la défense, et qu'un chevalier vient annoncer l'arrivée d'Éléonore.",
+                "Dans un bosquet voisin, à l'abri des regards, se noue la rencontre qui peut sauver, ou perdre, la cité."
+            ],
+            "tags": ["lieu clé", "militaire"],
+            "related": ["la-femme-aux-cheveux-en-or--location--arles", "la-femme-aux-cheveux-en-or--character--eleonore", "la-femme-aux-cheveux-en-or--character--capitaine", "la-femme-aux-cheveux-en-or--event--siege-arles"]
+        },
+        {
+            "id": "la-femme-aux-cheveux-en-or--location--saint-trophime",
+            "category": "location",
+            "name": "La Basilique Saint-Trophime",
+            "summary": "Le sanctuaire d'Arles, qui peut se muer en tribunal et en lieu de trahison.",
+            "description": [
+                "Église emblématique d'Arles, dédiée à saint Trophime.",
+                "Si le comte se livre à l'Inquisition, c'est ici qu'il est traîné pour être jugé de haute trahison.",
+                "Le sanctuaire se change alors en piège : les hommes en noir y remettent le comte aux soldats de Castille, sans un remords."
+            ],
+            "tags": ["lieu", "religieux"],
+            "related": ["la-femme-aux-cheveux-en-or--character--inquisition", "la-femme-aux-cheveux-en-or--location--arles"]
+        },
+        {
+            "id": "la-femme-aux-cheveux-en-or--location--passage-secret",
+            "category": "location",
+            "name": "Le Passage Secret vers la Forêt",
+            "summary": "Une issue dérobée à l'est de la cité, porte de la fuite, et de l'aveu.",
+            "description": [
+                "Dissimulé derrière une maison abandonnée, aux fortifications est de la cité, ce passage mène à la forêt et à la liberté.",
+                "Peu de gens en connaissent l'existence ; c'est la voie de ceux qui choisissent de fuir plutôt que de combattre.",
+                "C'est au seuil de ce passage que la jeune femme s'arrête et avoue enfin qui elle est, laissant au comte le choix de la grâce ou de la vengeance."
+            ],
+            "tags": ["lieu", "fuite"],
+            "related": ["la-femme-aux-cheveux-en-or--location--arles", "la-femme-aux-cheveux-en-or--character--jeune-femme"]
+        },
+        {
+            "id": "la-femme-aux-cheveux-en-or--event--siege-arles",
+            "category": "event",
+            "name": "Le Siège d'Arles",
+            "summary": "L'assaut castillan qui, en une matinée, décide du sort de la cité et du royaume.",
+            "description": [
+                "Profitant de la faiblesse de la France, l'armée de Castille encercle Arles au petit matin et ouvre le feu de ses engins de siège.",
+                "La cité ne peut compter que sur ses troupes de réserve, le reste des forces combattant au nord aux côtés du dauphin.",
+                "Selon les décisions du comte, le siège s'achève en victoire triomphante, en duel héroïque, ou en massacre et la chute d'Arles laisse toute la France exposée à l'envahisseur venu de la péninsule ibérique."
+            ],
+            "tags": ["événement", "bataille"],
+            "related": ["la-femme-aux-cheveux-en-or--location--arles", "la-femme-aux-cheveux-en-or--character--carlos", "la-femme-aux-cheveux-en-or--character--eleonore", "la-femme-aux-cheveux-en-or--character--comte"]
+        },
+        {
+            "id": "la-femme-aux-cheveux-en-or--event--banquet",
+            "category": "event",
+            "name": "Le Banquet de la Grande Chasse",
+            "summary": "La fête de la veille, insouciance fatale qui a glissé une espionne dans le lit du comte.",
+            "description": [
+                "La veille de l'assaut, le comte donnait un banquet pour célébrer une grande chasse.",
+                "Au sortir des festivités, ses gardes ont choisi parmi les paysannes une jeune femme pour partager sa nuit.",
+                "Nul ne savait qu'elle était l'arme de Castille : cette nuit de plaisir est le fil qui relie l'insouciance d'hier à l'horreur du réveil."
+            ],
+            "tags": ["événement", "intrigue"],
+            "related": ["la-femme-aux-cheveux-en-or--character--comte", "la-femme-aux-cheveux-en-or--character--jeune-femme"]
+        }
+    ]
+}
