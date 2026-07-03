@@ -15,7 +15,6 @@ import { aiErrorMessage,
     availableGenres,
     availableLanguages,
     categoryIds,
-    clearActiveSession,
     computeStoryStats,
     deleteSave,
     filterEntries,
@@ -27,7 +26,6 @@ import { aiErrorMessage,
     loadAiSettings,
     loadDiscoveredEndings,
     loadSave,
-    saveActiveSession,
     saveDiscoveredEnding,
     saveProgress,
     searchWikiEntries } from "$lib";
@@ -366,7 +364,6 @@ const createTerminalStore = () =>
      */
     const startMenu = () =>
     {
-        clearActiveSession();
         clearLines();
         update( ( s ) => ( { ...s, view: "menu", selectedStoryIndex: 0, awaitingInput: true, searchQuery: "", searchActive: false, currentStoryIsGenerated: false, generatedEndings: [], aiStatus: "idle", aiError: null } ) );
     };
@@ -503,7 +500,6 @@ const createTerminalStore = () =>
             awaitingInput: true
         } ) );
 
-        saveActiveSession( storyId );
         renderScene( story, story.startScene, gameState, true );
     };
 
@@ -545,7 +541,6 @@ const createTerminalStore = () =>
             awaitingInput: true
         } ) );
 
-        saveActiveSession( storyId );
         renderScene( story, save.currentScene, gameState, true );
     };
 
@@ -694,7 +689,6 @@ const createTerminalStore = () =>
             deleteSave( state.gameState.storyId );
         }
 
-        clearActiveSession();
         update( ( s ) => ( { ...s, view: "menu", currentStory: null, gameState: null } ) );
         startMenu();
     };
@@ -1002,7 +996,6 @@ const createTerminalStore = () =>
      */
     const openAiSetup = () =>
     {
-        clearActiveSession();
         clearLines();
         update( ( s ) => ( {
             ...s,

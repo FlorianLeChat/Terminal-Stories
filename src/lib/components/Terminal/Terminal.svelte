@@ -1,5 +1,8 @@
 <script lang="ts">
+    import { page } from "$app/state";
     import { onMount } from "svelte";
+    import { resolve } from "$app/paths";
+    import { replaceState } from "$app/navigation";
     import { terminal } from "$lib/stores/terminal";
     import BootSequence from "../BootSequence.svelte";
     import StoryMenu from "../Story/StoryMenu.svelte";
@@ -8,7 +11,7 @@
     import AiStorySetup from "../AiStorySetup.svelte";
     import TerminalControls from "./TerminalControls.svelte";
     import TerminalHeader from "./TerminalHeader.svelte";
-    import { storiesMeta, filterStories, searchStories, hasSave, loadActiveSession } from "$lib";
+    import { storiesMeta, filterStories, searchStories, hasSave, parseDeepLink, deepLinkSearch, type DeepLinkTarget } from "$lib";
 
     let view = $derived( $terminal.view );
     let lines = $derived( $terminal.lines );
@@ -56,25 +59,87 @@
             : false
     );
 
+    // The shareable location matching the current view: a story (info/playback)
+    // or an open wiki entry. Any other view (menu, boot, wiki list, AI setup)
+    // has no dedicated URL and maps to `null`.
+    let deepLinkTarget = $derived.by( (): DeepLinkTarget | null =>
+    {
+        const isStoryView = $terminal.view === "story-info" || $terminal.view === "story";
+        const storyId = $terminal.currentStory?.id;
+
+        if ( isStoryView && storyId )
+        {
+            return { type: "story", id: storyId };
+        }
+
+        const openWikiEntryId = $terminal.view === "wiki" ? $terminal.wiki.selectedEntryId : null;
+
+        if ( openWikiEntryId )
+        {
+            return { type: "wiki", id: openWikiEntryId };
+        }
+
+        return null;
+    } );
+
+    // Keep the address bar in sync with the current target so stories and wiki
+    // entries stay shareable/bookmarkable. `replaceState` avoids growing the
+    // history stack — the app drives its own back navigation via ESC.
+    $effect( () =>
+    {
+        // The URL must survive the boot screen so a deep link can be read once
+        // booting finishes (see handleBoot); never rewrite it before then.
+        if ( $terminal.view === "boot" ) return;
+
+        const search = deepLinkSearch( deepLinkTarget );
+
+        if ( search === page.url.search ) return;
+
+        // resolve() keeps the configured base path and swaps only the query
+        // string on the single app route, satisfying typed-route navigation.
+        replaceState( resolve( `/${ search }` ), {} );
+    } );
+
     /**
-     * Leaves the boot screen: resumes the active story if one was interrupted by
-     * a page refresh, otherwise shows the main menu.
+     * Opens the story or wiki entry referenced by a deep link, restoring the
+     * matching view directly instead of the default menu.
+     *
+     * @param target - The validated target parsed from the URL.
+     * @author Claude
+     */
+    const applyDeepLink = ( target: DeepLinkTarget ) =>
+    {
+        if ( target.type === "story" )
+        {
+            terminal.selectStory( target.id );
+        }
+        else
+        {
+            // openRelatedEntry selects the entry within its own category so a
+            // later "back" (ESC) lands on a coherent, populated list.
+            terminal.openWiki();
+            terminal.openRelatedEntry( target.id );
+        }
+    };
+
+    /**
+     * Leaves the boot screen: honours a deep link when the URL points to a
+     * story or wiki entry, otherwise falls back to the main menu. The URL is
+     * now the sole source of truth for restoring a story after a refresh.
      *
      * @author Claude
      */
     const handleBoot = () =>
     {
-        const activeStoryId = loadActiveSession();
-        const canResume = activeStoryId !== null && hasSave( activeStoryId );
+        const target = parseDeepLink( page.url.searchParams );
 
-        if ( canResume )
+        if ( target )
         {
-            terminal.selectStory( activeStoryId );
+            applyDeepLink( target );
+            return;
         }
-        else
-        {
-            terminal.startMenu();
-        }
+
+        terminal.startMenu();
     };
 
     /**

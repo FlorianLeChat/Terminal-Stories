@@ -6,6 +6,7 @@ export * from "$lib/data/knowledge";
 export * from "$lib/utilities/aiError";
 export * from "$lib/utilities/aiService";
 export * from "$lib/utilities/aiSettings";
+export * from "$lib/utilities/deepLink";
 export * from "$lib/utilities/progressBar";
 export * from "$lib/utilities/readingTime";
 export * from "$lib/utilities/saveService";
