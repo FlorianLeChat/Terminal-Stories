@@ -117,7 +117,7 @@
                 "",
                 "Le château tombe et tous les habitants sont massacrés.",
                 "",
-                "— FIN : « Absence injustifiée à la bataille » —"
+                "— FIN : « Le devoir déserté » —"
             ],
             "choices": []
         },
@@ -132,7 +132,7 @@
                 "",
                 "Le château tombe et tous les habitants sont massacrés.",
                 "",
-                "— FIN : « Une relation dangereuse » —"
+                "— FIN : « L'étreinte fatale » —"
             ],
             "choices": []
         },
@@ -176,7 +176,7 @@
                 "",
                 "Croyant à un signe de reddition, les troupes de Castille lèvent à leur tour un drapeau blanc, signe de paix. À la vue du drapeau blanc, les troupes françaises sont soulagées et ouvrent les portes de la cité. Les troupes de Castille s'y engouffrent, rompent leur promesse, massacrent tous les habitants, et le château tombe.",
                 "",
-                "— FIN : « La trahison punie » —"
+                "— FIN : « La tête du traître » —"
             ],
             "choices": []
         },
@@ -220,7 +220,7 @@
                 "",
                 "Les habitants d'Arles sont massacrés et le château tombe aux mains de l'armée de Castille.",
                 "",
-                "— FIN : « La trahison de l'Inquisition » —"
+                "— FIN : « La foi vénale » —"
             ],
             "choices": []
         },
@@ -265,7 +265,7 @@
                 "",
                 "La nuit, tu te demandes si tu as fait le bon choix, mais tu sais que tu ne peux plus revenir en arrière.",
                 "",
-                "— FIN : « La rédemption dans l'amour » —"
+                "— FIN : « La rédemption dans l'exil » —"
             ],
             "choices": []
         },
@@ -282,7 +282,7 @@
                 "",
                 "La nuit, tu repenses à ce jour où tu as abandonné ta patrie et tué cette jeune femme que tu aimais, au plus profond de ton cœur, pour sauver ta vie.",
                 "",
-                "— FIN : « Un homme misérable » —"
+                "— FIN : « Les mains souillées » —"
             ],
             "choices": []
         },
@@ -325,7 +325,7 @@
                     "text": "Accepter son aide et te battre à ses côtés",
                     "action": "Tu t'approches d'elle et lui tends la main, acceptant son aide avec gratitude.",
                     "consequence": "Vous revenez ensemble auprès des troupes françaises, qui semblent galvanisées par la présence d'Éléonore et de ses hommes. Vous organisez la défense, puis vous vous mettez en position pour affronter les troupes de Castille.",
-                    "nextScene": "duel-eleonore"
+                    "nextScene": "bataille"
                 },
                 {
                     "id": "refuser-aide-eleonore",
@@ -358,7 +358,55 @@
                 "",
                 "Vous avez changé l'histoire de la France et de l'Europe.",
                 "",
-                "— FIN : « Une victoire triomphante » —"
+                "— FIN : « La sagesse récompensée » —"
+            ],
+            "choices": []
+        },
+        {
+            "id": "bataille",
+            "text": [
+                "Éléonore lève son glaive et l'ordre de sortie retentit. Les portes de la cité s'ouvrent dans un grondement et les troupes françaises s'élancent à sa suite, portées par un même cri. En face, la première ligne castillane abaisse ses piques et charge à son tour : les deux masses d'hommes se percutent dans un fracas de fer et de bois.",
+                "",
+                "Autour de toi, ce n'est plus qu'une mêlée confuse de cris, de sang et de poussière. Éléonore fend les rangs ennemis avec une aisance déconcertante, mais un détachement castillan contourne l'affrontement et se rue vers les archers postés au pied des murailles, ceux-là mêmes dont les salves tiennent la bataille à bout de flèches.",
+                "",
+                "Le fer sonne de toutes parts. La prochaine décision t'appartient."
+            ],
+            "choices": [
+                {
+                    "id": "couvrir-archers",
+                    "text": "Mener tes hommes protéger les archers menacés",
+                    "action": "Tu rassembles une poignée de soldats autour de toi et vous vous jetez à la rencontre du détachement ennemi pour protéger les archers.",
+                    "consequence": "Le choc est brutal, mais vous tenez bon. Sauvés, les archers reprennent leurs salves et déciment les lignes castillanes. Libérée de cette menace, Éléonore progresse jusqu'au cœur du dispositif ennemi.",
+                    "nextScene": "duel-eleonore"
+                },
+                {
+                    "id": "rester-aupres-eleonore",
+                    "text": "Rester au côté d'Éléonore et couvrir ses flancs",
+                    "action": "Tu choisis de ne pas quitter Éléonore et de garder ses arrières tandis qu'elle taille sa route vers le commandement ennemi.",
+                    "consequence": "Dos à dos, vous repoussez chaque assaillant. Ta présence rassure les soldats, qui resserrent les rangs autour de vous et enrayent la percée castillane.",
+                    "nextScene": "duel-eleonore"
+                },
+                {
+                    "id": "charger-carlos",
+                    "text": "Foncer seul à travers la mêlée pour atteindre Carlos",
+                    "action": "Aveuglé par l'espoir d'en finir, tu t'élances seul à travers la mêlée, décidé à abattre Carlos de Castille de ta propre main.",
+                    "consequence": "Tu progresses de quelques pas avant d'être happé par la masse ennemie, coupé de tes hommes.",
+                    "nextScene": "fin-temeraire"
+                }
+            ]
+        },
+        {
+            "id": "fin-temeraire",
+            "isEnding": true,
+            "endingType": "bad",
+            "text": [
+                "Encerclé par les soldats castillans, isolé de tes troupes, tu frappes autour de toi avec l'énergie du désespoir. Mais les coups pleuvent de toutes parts et, bientôt, une pique te transperce le flanc. Tu t'effondres dans la boue, piétiné par la mêlée, sans jamais avoir approché Carlos.",
+                "",
+                "Éléonore te voit tomber au loin, trop tard pour te secourir. Privées de leur seigneur et ébranlées par ta chute, les troupes françaises vacillent, et la brèche ouverte par ta témérité laisse s'engouffrer l'ennemi.",
+                "",
+                "Malgré son courage, Éléonore est submergée et contrainte à la retraite avec les derniers survivants. La cité tombe ce jour-là. Arles étant tombée aux mains de l'armée de Castille, la France est, par ta faute, désormais plus que jamais menacée par l'envahisseur venu de la péninsule ibérique. On se souviendra de toi non comme d'un héros, mais comme du comte qui, par imprudence, condamna sa cité et son peuple.",
+                "",
+                "— FIN : « La charge téméraire » —"
             ],
             "choices": []
         },
@@ -424,7 +472,7 @@
                 "",
                 "Quelques jours plus tard, le corps d'Éléonore est rapatrié dans son village natal, où elle est pleurée par les siens. Toi, en revanche, tu es haï par la couronne pour avoir causé sa mort par orgueil — considéré comme un lâche et un traître, ta dépouille est jetée à la rivière, vouée à l'oubli.",
                 "",
-                "— FIN : « L'incompréhension de l'orgueil » —"
+                "— FIN : « L'orgueil meurtrier » —"
             ],
             "choices": []
         },
@@ -445,7 +493,7 @@
                 "",
                 "Quelques jours plus tard, elle est échangée contre un commandant de Castille capturé, puis libérée — mais couverte de honte pour avoir été capturée par l'ennemi. Rejetée par les siens et déchue de toutes ses distinctions militaires, elle vit désormais dans le regret, se demandant si elle aurait pu changer le cours de l'histoire. Toi, en revanche, tu es haï par la couronne pour n'avoir pas su protéger la cité et ses habitants — considéré comme un lâche et un traître, ta dépouille est jetée à la rivière, vouée à l'oubli.",
                 "",
-                "— FIN : « L'orgueil d'un idiot » —"
+                "— FIN : « La folle fierté » —"
             ],
             "choices": []
         }

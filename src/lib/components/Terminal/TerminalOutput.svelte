@@ -2,6 +2,7 @@
     import * as m from "$lib/locales/messages";
     import { untrack } from "svelte";
     import { SvelteSet } from "svelte/reactivity";
+    import { asset } from "$app/paths";
     import { buildProgressBar } from "$lib";
     import type { TerminalLine } from "$lib/stores/terminal";
 
@@ -261,7 +262,7 @@
     {#each displayed as line ( line.id )}
         {#if line.type === "image" && line.imageSrc}
             <figure class="my-3 border border-terminal-dim/30 rounded overflow-hidden max-w-xl animate-fadein">
-                <img src={line.imageSrc} alt={line.imageAlt} class="w-full max-h-44 object-cover grayscale opacity-75" />
+                <img src={asset( line.imageSrc )} alt={line.imageAlt ?? ""} class="w-full max-h-44 object-cover grayscale opacity-75" />
             </figure>
         {:else if line.type === "save"}
             {@const bar = buildProgressBar( line.savePercent ?? 0 )}
