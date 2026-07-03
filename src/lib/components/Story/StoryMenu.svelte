@@ -3,7 +3,7 @@
     import { terminal } from "$lib/stores/terminal";
     import TerminalLogo from "../Terminal/TerminalLogo.svelte";
     import StoryListItem from "./StoryListItem.svelte";
-    import { storiesMeta, filterStories, availableGenres, availableLanguages, searchStories } from "$lib";
+    import { storiesMeta, filterStories, availableGenres, availableLanguages, searchStories, genreColor, genreLabel } from "$lib";
 
     interface Props {
         selectedIndex?: number;
@@ -32,27 +32,6 @@
             searchInputEl?.focus();
         }
     } );
-
-    const genreColors: Record<string, string> = {
-        "Fantasy": "text-emerald-400",
-        "Sci-Fi": "text-blue-400",
-        "Thriller": "text-red-400",
-        "Horror": "text-purple-400",
-        "Detective": "text-yellow-400"
-    };
-
-    /**
-     * Returns the Tailwind text-color class for a genre, falling back to the
-     * dim terminal color for unknown genres.
-     *
-     * @param genre - The story genre.
-     * @returns The CSS class to color the genre label.
-     * @author Claude
-     */
-    const genreColor = ( genre: string ): string =>
-    {
-        return genreColors[ genre ] ?? "text-terminal-dim";
-    };
 </script>
 
 <div class="flex-1 overflow-y-auto px-4 py-2">
@@ -72,7 +51,7 @@
                     aria-pressed={filters.genre === genre}
                     onclick={() => terminal.setFilter( "genre", genre )}
                 >
-                    {genre}
+                    {genreLabel( genre )}
                 </button>
             {/each}
         </li>

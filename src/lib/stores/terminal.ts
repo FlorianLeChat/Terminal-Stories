@@ -19,6 +19,7 @@ import { aiErrorMessage,
     deleteSave,
     filterEntries,
     generateStory,
+    genreLabel,
     getEntry,
     getLanguageForUniverse,
     getStory,
@@ -285,7 +286,7 @@ const buildStoryInfoLines = (
 {
     const lines: Omit<TerminalLine, "id">[] = [
         { text: story.title, type: "title" },
-        { text: `${ story.genre } — ${ story.universe }`, type: "system" },
+        { text: `${ genreLabel( story.genre ) } — ${ story.universe }`, type: "system" },
         { text: "─".repeat( 60 ), type: "separator" },
         { text: story.description, type: "narrator" }
     ];

@@ -72,6 +72,13 @@
 	"ending_all_discovered": "Congratulations, all {total} endings discovered! This story holds no more secrets.",
 	"ending_new_discovered": "Congratulations, ending {found} discovered ({found} / {total}).",
 
+	"genre_detective": "Detective",
+	"genre_drama": "Drama",
+	"genre_fantasy": "Fantasy",
+	"genre_horror": "Horror",
+	"genre_sci_fi": "Sci-Fi",
+	"genre_thriller": "Thriller",
+
 	"header_aria": "Status bar",
 	"header_view_ai_setup": "AI GENERATOR",
 	"header_view_boot": "STARTUP",

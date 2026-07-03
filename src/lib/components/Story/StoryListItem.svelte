@@ -1,7 +1,7 @@
 <script lang="ts">
     import * as m from "$lib/locales/messages";
     import type { StoryMeta } from "$lib";
-    import { formatReadingTime, buildProgressBar, loadSave, loadDiscoveredEndings } from "$lib";
+    import { formatReadingTime, buildProgressBar, loadSave, loadDiscoveredEndings, genreColor, genreLabel } from "$lib";
 
     interface Props {
         story: StoryMeta;
@@ -13,27 +13,6 @@
     }
 
     let { story, index, selectedIndex, isLast, onselect, onnavigate }: Props = $props();
-
-    const genreColors: Record<string, string> = {
-        "Fantasy": "text-emerald-400",
-        "Sci-Fi": "text-blue-400",
-        "Thriller": "text-red-400",
-        "Horror": "text-purple-400",
-        "Detective": "text-yellow-400"
-    };
-
-    /**
-     * Returns the Tailwind text-color class for a genre, falling back to the
-     * dim terminal color for unknown genres.
-     *
-     * @param genre - The story genre.
-     * @returns The CSS class to color the genre label.
-     * @author Claude
-     */
-    const genreColor = ( genre: string ): string =>
-    {
-        return genreColors[ genre ] ?? "text-terminal-dim";
-    };
 
     /**
      * Returns the completion percentage (0–100) for a story based on its save,
@@ -115,7 +94,7 @@
                 </span>
 
                 <span class="flex items-center gap-2 flex-wrap mb-2">
-                    <span class="text-xs {genreColor( story.genre )} shrink-0">[{story.genre}]</span>
+                    <span class="text-xs {genreColor( story.genre )} shrink-0">[{genreLabel( story.genre )}]</span>
                     <span class="text-terminal-dim text-xs shrink-0">· {story.language}</span>
 
                     {#if completion !== null}

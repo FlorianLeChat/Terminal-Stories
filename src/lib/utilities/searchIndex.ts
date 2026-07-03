@@ -1,5 +1,6 @@
 import { stories, storiesMeta } from "$lib/data";
 import { knowledgeEntries } from "$lib/data/knowledge";
+import { genreLabel } from "$lib/utilities/genre";
 import type { StoryMeta } from "$lib/types/story";
 import type { KnowledgeEntry } from "$lib/types/knowledge";
 
@@ -98,7 +99,7 @@ const getStorySearchDocs = (): StorySearchDoc[] =>
             fields: [
                 [ meta.title, 3 ],
                 [ meta.universe, 2 ],
-                [ meta.genre, 2 ],
+                [ genreLabel( meta.genre ), 2 ],
                 [ meta.tags.join( " " ), 2 ],
                 [ characterNames, 2 ],
                 [ meta.description, 1 ]

@@ -72,6 +72,13 @@
 	"ending_all_discovered": "Félicitations, toutes les fins découvertes ({total} / {total}) ! Cette histoire n'a plus de secrets pour vous.",
 	"ending_new_discovered": "Félicitations, fin {found} découverte ({found} / {total}).",
 
+	"genre_detective": "Policier",
+	"genre_drama": "Drame",
+	"genre_fantasy": "Fantaisie",
+	"genre_horror": "Horreur",
+	"genre_sci_fi": "Science-fiction",
+	"genre_thriller": "Thriller",
+
 	"header_aria": "Barre d'état",
 	"header_view_ai_setup": "GÉNÉRATEUR IA",
 	"header_view_boot": "DÉMARRAGE",
