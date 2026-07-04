@@ -21,6 +21,12 @@
             "role": "antagonist"
         },
         {
+            "id": "assassin",
+            "name": "L'homme masqué",
+            "description": "Un tueur dépêché dans le sillage de la jeune femme pour s'assurer de la mort du Comte d'Arles, le visage dissimulé derrière un masque et la longue dague toujours prête.",
+            "role": "antagonist"
+        },
+        {
             "id": "capitaine",
             "name": "Capitaine d'armes",
             "description": "Le capitaine d'armes du château, un homme d'expérience et de loyauté, qui tente de rallier les troupes françaises pour défendre la cité contre les forces de Castille.",
@@ -87,22 +93,58 @@
             "text": [
                 "Quelques dizaines de minutes passent. Des bruits de pas précipités résonnent dans le couloir. La porte s'ouvre brusquement : un homme masqué entre, armé d'une longue dague, visiblement à la recherche de quelqu'un.",
                 "",
-                "Vous vous réveillez tous les deux en sursaut."
+                "Vous vous réveillez tous les deux en sursaut. L'intrus balaie la chambre du regard, la lame levée."
+            ],
+            "choices": [
+                {
+                    "id": "reagir-intrus",
+                    "text": "Se redresser d'un bond, aux aguets",
+                    "action": "Tu repousses les draps et te dresses face à l'intrus, le souffle court.",
+                    "consequence": "L'homme masqué te toise à travers les fentes de son masque, puis prend la parole.",
+                    "nextScene": "assassin-menace"
+                }
+            ]
+        },
+        {
+            "id": "assassin-menace",
+            "speaker": "assassin",
+            "text": [
+                "« Ne bougez plus. Je cherche le Comte d'Arles... et quelque chose me dit que je l'ai trouvé. »",
+                "",
+                "Il fait un pas dans la chambre, la lame luisant à la lueur de l'aube. À tes côtés, la jeune femme s'est redressée, étrangement calme, le drap serré contre elle."
             ],
             "choices": [
                 {
                     "id": "se-mettre-face-a-la-femme",
-                    "text": "Se mettre face à la jeune femme pour la protéger",
-                    "action": "Tu te places devant la jeune femme, encore dévêtue, pour la protéger de l'intrus. Tu dis d'un ton ferme : « Qui êtes-vous et que voulez-vous ? »",
-                    "consequence": "L'homme masqué éclate de rire et te répond : « Je suis venu pour le Comte d'Arles. »",
-                    "nextScene": "fin-assassinat-homme"
+                    "text": "Se placer devant la jeune femme pour la protéger",
+                    "action": "Tu t'interposes entre la lame et la jeune femme, encore dévêtue.",
+                    "consequence": "« Qui êtes-vous et que voulez-vous ? » lances-tu d'un ton ferme.",
+                    "nextScene": "assassin-defiance"
                 },
                 {
                     "id": "se-mettre-genoux",
-                    "text": "Se lever et se mettre à genoux",
-                    "action": "À la vue de la dague, tu préfères te mettre à genoux, les mains en l'air, pour montrer que tu ne représentes pas une menace. Tu dis d'un ton tremblant : « Je ne suis pas une menace, je vous en prie, épargnez-nous. »",
-                    "consequence": "L'homme masqué éclate de rire avant de faire un signe à la jeune femme.",
+                    "text": "Se mettre à genoux, les mains levées",
+                    "action": "À la vue de la dague, tu te laisses tomber à genoux, les mains ouvertes, pour montrer que tu ne représentes pas une menace. « Je ne suis pas une menace, je vous en prie, épargnez-nous. »",
+                    "consequence": "L'homme masqué éclate de rire, puis fait un signe à la jeune femme.",
                     "nextScene": "fin-assassinat-femme"
+                }
+            ]
+        },
+        {
+            "id": "assassin-defiance",
+            "speaker": "comte",
+            "text": [
+                "« À moi ! Gardes ! Un intrus dans les appartements du Comte ! » hurles-tu vers la porte, dans l'espoir d'ameuter le château.",
+                "",
+                "Mais les couloirs restent muets : les gardes se sont rués vers les remparts. La jeune femme, derrière toi, n'esquisse pas le moindre geste pour t'aider — elle se contente d'observer, un sourire satisfait aux lèvres."
+            ],
+            "choices": [
+                {
+                    "id": "affronter-issue",
+                    "text": "Tenir tête, coûte que coûte",
+                    "action": "Tu serres les poings, décidé à vendre chèrement ta peau.",
+                    "consequence": "L'homme masqué bondit.",
+                    "nextScene": "fin-assassinat-homme"
                 }
             ]
         },
@@ -141,7 +183,23 @@
             "text": [
                 "Vous sortez de votre chambre et constatez que les couloirs sont vides : tous les gardes semblent s'être précipités vers les fortifications pour défendre le château. À toute vitesse, vous descendez les escaliers et débouchez dans l'arrière-cour, où se trouvent les écuries et les remises.",
                 "",
-                "Alors que tout semblait calme, vous tombez sur une patrouille de soldats français qui se dirige vers l'armurerie pour se préparer à défendre le château. Dans un élan de panique, vous tentez de les contourner pour sortir du château, mais le capitaine d'armes vous arrête et vous demande ce que vous faites."
+                "Alors que tout semblait calme, vous tombez sur une patrouille de soldats français qui se dirige vers l'armurerie pour se préparer à défendre le château. Dans un élan de panique, vous tentez de les contourner pour sortir du château, mais le capitaine d'armes vous barre le passage, la main levée."
+            ],
+            "choices": [
+                {
+                    "id": "faire-face-capitaine",
+                    "text": "S'arrêter face au capitaine",
+                    "action": "Tu t'immobilises, la jeune femme dans ton dos.",
+                    "consequence": "Le capitaine d'armes plisse les yeux et t'interpelle.",
+                    "nextScene": "arriere-cour-capitaine"
+                }
+            ]
+        },
+        {
+            "id": "arriere-cour-capitaine",
+            "speaker": "capitaine",
+            "text": [
+                "« Messire ? Où allez-vous ainsi, alors que l'ennemi est déjà à nos portes ? » Sa voix est ferme, teintée de surprise. Derrière lui, les soldats attendent, la main sur le pommeau de leur épée."
             ],
             "choices": [
                 {
@@ -186,9 +244,23 @@
                 "Autour du château, les ruelles sont presque désertes. Les habitants sont calfeutrés chez eux, le bétail est rentré dans les étables et les chefs de famille guettent l'arrivée des soldats ennemis.",
                 "Vous avancez, le visage dissimulé, pour éviter d'être reconnus par vos sujets, couverts de honte.",
                 "",
-                "Au détour d'une ruelle proche de votre passage secret pour sortir de la cité, vous apercevez six hommes, tous vêtus de noir, une croix catholique au cou, certains armés de bâtons et de fouets. Il s'agit des hommes de l'Inquisition, en mission pour l'Église catholique afin de lutter contre la peste et de traquer les hérétiques.",
-                "",
-                "À votre vue, ils se tournent vers vous et vous interpellent : « Jeunes gens, que faites-vous ici ? »"
+                "Au détour d'une ruelle proche de votre passage secret pour sortir de la cité, vous apercevez six hommes, tous vêtus de noir, une croix catholique au cou, certains armés de bâtons et de fouets. Il s'agit des hommes de l'Inquisition, en mission pour l'Église catholique afin de lutter contre la peste et de traquer les hérétiques."
+            ],
+            "choices": [
+                {
+                    "id": "aborder-inquisition",
+                    "text": "Continuer d'avancer sans se démonter",
+                    "action": "Tu poursuis ta route, le visage dissimulé sous ta capuche, la jeune femme à tes côtés.",
+                    "consequence": "Les hommes en noir se tournent vers vous et vous barrent le chemin.",
+                    "nextScene": "ruelles-inquisition"
+                }
+            ]
+        },
+        {
+            "id": "ruelles-inquisition",
+            "speaker": "inquisition",
+            "text": [
+                "« Jeunes gens, que faites-vous ici, à rôder alors que la cité se terre ? » L'un d'eux fait claquer son fouet contre sa paume, tandis que les autres vous encerclent lentement."
             ],
             "choices": [
                 {
@@ -229,9 +301,25 @@
             "text": [
                 "L'Inquisition, rassurée par les explications de la jeune femme, vous laisse passer et fait un signe de croix pour vous bénir.",
                 "",
-                "Quelques minutes plus tard, vous atteignez les fortifications à l'est de la cité, où se trouve le passage secret menant à la forêt. Le passage est dissimulé derrière une maison abandonnée, dont seules quelques personnes connaissent l'existence. Mais alors que vous vous apprêtez à le franchir, la jeune femme s'arrête soudain et se retourne vers toi.",
+                "Quelques minutes plus tard, vous atteignez les fortifications à l'est de la cité, où se trouve le passage secret menant à la forêt. Le passage est dissimulé derrière une maison abandonnée, dont seules quelques personnes connaissent l'existence. Mais alors que vous vous apprêtez à le franchir, la jeune femme s'arrête soudain et se retourne vers toi."
+            ],
+            "choices": [
+                {
+                    "id": "ecouter-femme",
+                    "text": "Lui demander ce qui ne va pas",
+                    "action": "Tu t'arrêtes à ton tour, la main tendue vers elle.",
+                    "consequence": "Elle te regarde avec un sourire triste, puis se met à parler.",
+                    "nextScene": "passage-secret-aveu"
+                }
+            ]
+        },
+        {
+            "id": "passage-secret-aveu",
+            "speaker": "jeune-femme",
+            "text": [
+                "« Je suis désolée, mais je ne peux pas continuer à te suivre. » Sa voix tremble. « J'ai été envoyée par l'armée de Castille... pour t'assassiner. Cette nuit n'était qu'un piège. »",
                 "",
-                "Elle te regarde avec un sourire triste et te dit : « Je suis désolée, mais je ne peux pas continuer à te suivre. » Quand tu lui en demandes la raison, elle t'avoue qu'elle a été envoyée par l'armée de Castille pour t'assassiner."
+                "Elle baisse les yeux, la gorge nouée, et attend ta réaction sans oser fuir."
             ],
             "choices": [
                 {
@@ -289,7 +377,25 @@
         {
             "id": "armurerie",
             "text": [
-                "D'un pas lourd, tu rejoins l'armurerie du château, où tu t'équipes de ton armure et de ton épée. En sortant, tu descends à toute vitesse dans l'arrière-cour pour rejoindre les troupes françaises qui se préparent à défendre le château. La situation est mauvaise : les troupes de Castille prennent l'avantage, et le capitaine d'armes te demande de l'aider à rallier les troupes françaises pour défendre la cité."
+                "D'un pas lourd, tu rejoins l'armurerie du château, où tu t'équipes de ton armure et de ton épée. En sortant, tu descends à toute vitesse dans l'arrière-cour pour rejoindre les troupes françaises qui se préparent à défendre le château.",
+                "",
+                "La situation est mauvaise : les troupes de Castille prennent l'avantage, et le capitaine d'armes vient à ta rencontre, le visage grave."
+            ],
+            "choices": [
+                {
+                    "id": "ecouter-capitaine",
+                    "text": "Écouter le capitaine d'armes",
+                    "action": "Tu resserres la sangle de ton bouclier et lui fais face.",
+                    "consequence": "Il pose une main sur ton épaule et te parle sans détour.",
+                    "nextScene": "armurerie-capitaine"
+                }
+            ]
+        },
+        {
+            "id": "armurerie-capitaine",
+            "speaker": "capitaine",
+            "text": [
+                "« Messire, nous sommes en infériorité et le moral flanche. Aidez-moi à rallier les hommes, sillonnons la cité ensemble : à eux seuls, vos gens ne tiendront pas face à Castille. »"
             ],
             "choices": [
                 {
@@ -315,9 +421,23 @@
                 "",
                 "Alors que tu t'apprêtes à donner l'ordre de sortie, un chevalier arrive au grand galop, portant un étendard aux couleurs de la couronne française. Il se présente comme un messager : sa commandante souhaite te rencontrer pour te proposer son aide.",
                 "",
-                "Tu acceptes de la rencontrer et, accompagné de quelques-uns de tes fidèles soldats, tu le suis à travers les ruines des arènes, jusqu'à un petit bosquet à l'abri des regards. Là, tu découvres une femme en armure immaculée, les cheveux d'or, un glaive forgé à la main, entourée d'une poignée de fidèles soldats tout aussi bien armés.",
-                "",
-                "Elle s'avance vers toi : « Je suis Éléonore, commandante de la deuxième armée royale française. Je n'ai pas de renforts, mais je suis prête à me battre à vos côtés pour défendre ce château et notre pays. Ensemble, nous pouvons repousser les troupes castillanes et protéger notre peuple. »"
+                "Tu acceptes de la rencontrer et, accompagné de quelques-uns de tes fidèles soldats, tu le suis à travers les ruines des arènes, jusqu'à un petit bosquet à l'abri des regards. Là, tu découvres une femme en armure immaculée, les cheveux d'or, un glaive forgé à la main, entourée d'une poignée de fidèles soldats tout aussi bien armés."
+            ],
+            "choices": [
+                {
+                    "id": "ecouter-eleonore",
+                    "text": "L'écouter",
+                    "action": "Tu t'avances vers elle, intrigué par cette apparition en pleine tourmente.",
+                    "consequence": "Elle soutient ton regard et prend la parole.",
+                    "nextScene": "ralliement-eleonore"
+                }
+            ]
+        },
+        {
+            "id": "ralliement-eleonore",
+            "speaker": "eleonore",
+            "text": [
+                "« Je suis Éléonore, commandante de la deuxième armée royale française. Je n'ai pas de renforts, mais je suis prête à me battre à vos côtés pour défendre ce château et notre pays. Ensemble, nous pouvons repousser les troupes castillanes et protéger notre peuple. »"
             ],
             "choices": [
                 {
@@ -415,11 +535,41 @@
             "text": [
                 "Devant vos troupes réunies, les soldats de Castille marquent un temps d'arrêt, presque par respect pour vous.",
                 "",
-                "Carlos de Castille, leur commandant, s'avance, surpris de voir une femme à vos côtés. Un sourire narquois aux lèvres, il déclare : « Vous êtes courageux, mais seul contre moi et mes troupes, vous n'avez aucune chance. Donnez-moi cette femme et je vous épargnerai. Sinon, affrontez-moi en duel, et je vous écraserai. » Rongé par la peur, tu regardes Éléonore.",
+                "Carlos de Castille, leur commandant, s'avance, surpris de voir une femme à vos côtés. Un sourire narquois se dessine sur ses lèvres."
+            ],
+            "choices": [
+                {
+                    "id": "entendre-carlos",
+                    "text": "Attendre ce qu'il a à dire",
+                    "action": "Tu affermis ta prise sur ton arme, le cœur battant.",
+                    "consequence": "Carlos lève la main pour réclamer le silence et s'adresse à vous.",
+                    "nextScene": "duel-ultimatum"
+                }
+            ]
+        },
+        {
+            "id": "duel-ultimatum",
+            "speaker": "antagoniste",
+            "text": [
+                "« Vous êtes courageux, mais seul contre moi et mes troupes, vous n'avez aucune chance. Donnez-moi cette femme et je vous épargnerai. Sinon, affrontez-moi en duel, et je vous écraserai. »"
+            ],
+            "choices": [
+                {
+                    "id": "regarder-eleonore",
+                    "text": "Chercher le regard d'Éléonore",
+                    "action": "Rongé par la peur, tu te tournes vers Éléonore.",
+                    "consequence": "Elle te rend un regard de défi et s'avance d'un pas vers Carlos.",
+                    "nextScene": "duel-defi"
+                }
+            ]
+        },
+        {
+            "id": "duel-defi",
+            "speaker": "eleonore",
+            "text": [
+                "« Je me battrai pour défendre mon pays et cette cité. Si je perds, je me rendrai à vous. Si je gagne, vous battrez en retraite et laisserez cette cité en paix. »",
                 "",
-                "Elle te rend un regard de défi et s'adresse à Carlos avec vaillance : « Je me battrai pour défendre mon pays et cette cité. Si je perds, je me rendrai à vous. Si je gagne, vous battrez en retraite et laisserez cette cité en paix. »",
-                "",
-                "Carlos, surpris par sa bravoure, accepte le duel."
+                "Surpris par sa bravoure, Carlos accepte le duel."
             ],
             "choices": [
                 {

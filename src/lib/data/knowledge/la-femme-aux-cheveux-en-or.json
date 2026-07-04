@@ -56,7 +56,22 @@
             ],
             "aliases": ["La paysanne", "L'espionne"],
             "tags": ["antagoniste", "espionne", "humain"],
-            "related": ["la-femme-aux-cheveux-en-or--character--comte", "la-femme-aux-cheveux-en-or--character--carlos", "la-femme-aux-cheveux-en-or--event--banquet", "la-femme-aux-cheveux-en-or--location--passage-secret"]
+            "related": ["la-femme-aux-cheveux-en-or--character--comte", "la-femme-aux-cheveux-en-or--character--carlos", "la-femme-aux-cheveux-en-or--character--assassin", "la-femme-aux-cheveux-en-or--event--banquet", "la-femme-aux-cheveux-en-or--location--passage-secret"]
+        },
+        {
+            "id": "la-femme-aux-cheveux-en-or--character--assassin",
+            "category": "character",
+            "name": "L'homme masqué",
+            "summary": "Un tueur envoyé dans le sillage de l'espionne pour s'assurer, la dague à la main, de la mort du comte.",
+            "description": [
+                "Rôle : Antagoniste.",
+                "Homme au visage dissimulé sous un masque, dépêché par Castille pour parachever la mission de la jeune femme si celle-ci échouait.",
+                "Il surgit dans la chambre du comte lorsque celui-ci choisit de se rendormir plutôt que d'agir, la longue dague déjà tirée.",
+                "Simple bras armé, il n'a ni pitié ni hésitation : quelle que soit la réaction du comte, sa lame trouve toujours son cœur."
+            ],
+            "aliases": ["L'intrus", "Le tueur masqué"],
+            "tags": ["antagoniste", "tueur", "humain"],
+            "related": ["la-femme-aux-cheveux-en-or--character--jeune-femme", "la-femme-aux-cheveux-en-or--character--comte", "la-femme-aux-cheveux-en-or--character--carlos"]
         },
         {
             "id": "la-femme-aux-cheveux-en-or--character--capitaine",
