@@ -29,6 +29,35 @@ En plus de leurs fonctionnalités de choix et d'interaction, les histoires inter
 
 Concernant la partie technique, le site respecte des valeurs de sobriété numérique, d'accessibilité et de respect de la vie privée. Construit une fois puis hébergé statiquement sur [GitLab Pages](https://docs.gitlab.com/user/project/pages/), il limite ainsi son empreinte carbone. Il s'appuie sur des technologies Web modernes telles que [SvelteKit](https://svelte.dev/docs/kit/introduction) ❤️‍🔥, [Vite](https://vite.dev/), [TailwindCSS](https://tailwindcss.com/) et [TypeScript](https://www.typescriptlang.org/), et ne contient ni cookies, ni publicité. Aucune technologie de suivi n'est utilisée par défaut ; le site peut toutefois activer, optionnellement, une mesure d'audience via [Umami](https://umami.is/) (si activé), une alternative open source et respectueuse de la vie privée à Google Analytics : sans cookies, sans collecte de données personnelles identifiables, et conforme au RGPD. Il est entièrement accessible à tous, sans restriction. Sur le plan de l'accessibilité, le site est complètement navigable au clavier, compatible avec les lecteurs d'écran, et un effort particulier a été porté sur la navigation depuis les appareils mobiles. 🌱
 
+```mermaid
+sequenceDiagram
+    actor Joueur as 🧑 Joueur
+    participant Terminal as 🖥️ Terminal
+    participant Histoire as 📖 Histoire
+    participant Encyclopédie as 📚 Encyclopédie
+    participant IA as ✨ Histoire générée par IA
+
+    Joueur->>Terminal: J'ouvre le terminal
+    Terminal-->>Joueur: Séquence de démarrage puis menu
+
+    Joueur->>Terminal: Je choisis une histoire
+    Terminal->>Histoire: Lance la lecture
+    Histoire-->>Joueur: Affiche la scène (effet machine à écrire)
+
+    loop À chaque scène
+        Joueur->>Histoire: Je fais un choix
+        Histoire-->>Joueur: La suite de l'aventure
+    end
+
+    Joueur->>Encyclopédie: Je consulte le wiki (univers, personnages, lieux)
+    Encyclopédie-->>Joueur: Détails sur l'univers
+
+    Joueur->>IA: Je demande une histoire inédite
+    IA-->>Joueur: Une aventure générée rien que pour moi
+
+    Note over Joueur,IA: Ma progression est sauvegardée et je peux partager un lien pour reprendre là où j'en étais
+```
+
 ### Installation
 
 > [!WARNING]
@@ -63,6 +92,35 @@ What is Terminal Stories? It's an interactive story reader based on the design a
 As well as their choice-and-interaction features, the interactive stories come with several other features: you can save and resume stories in progress, and access an encyclopedia of the universe, characters, and locations. It's all free and collaborative, of course: you can submit your own stories to be added to the website by opening a ticket on the [GitHub repository](https://github.com/FlorianLeChat/Terminal-Stories). 😉
 
 In terms of technical aspects, the website reflects values of digital sobriety, accessibility, and respect for privacy. Built once and then statically hosted on [GitLab Pages](https://docs.gitlab.com/user/project/pages/), it minimizes its carbon footprint. It relies on modern web technologies such as [SvelteKit](https://svelte.dev/docs/kit/introduction) ❤️‍🔥, [Vite](https://vite.dev/), [TailwindCSS](https://tailwindcss.com/), and [TypeScript](https://www.typescriptlang.org/), and contains no cookies or advertisements. No tracking technology is used by default; the site can optionally enable audience measurement through [Umami](https://umami.is/) (if enabled), an open-source, privacy-friendly alternative to Google Analytics: no cookies, no collection of personally identifiable data, and GDPR-compliant. It is fully accessible to everyone, without restriction. From an accessibility perspective, the website is fully keyboard-navigable, compatible with screen readers, and special attention has been given to navigation on mobile devices. 🌱
+
+```mermaid
+sequenceDiagram
+    actor Player as 🧑 Player
+    participant Terminal as 🖥️ Terminal
+    participant Story as 📖 Story
+    participant Encyclopedia as 📚 Encyclopedia
+    participant AI as ✨ AI-generated story
+
+    Player->>Terminal: I open the terminal
+    Terminal-->>Player: Boot sequence then menu
+
+    Player->>Terminal: I pick a story
+    Terminal->>Story: Starts the playback
+    Story-->>Player: Displays the scene (with typewriter effect)
+
+    loop On every scene
+        Player->>Story: I make a choice
+        Story-->>Player: The next part of the adventure
+    end
+
+    Player->>Encyclopedia: I browse the wiki (universe, characters, locations)
+    Encyclopedia-->>Player: Details about the universe
+
+    Player->>AI: I request a brand-new story
+    AI-->>Player: An adventure generated just for me
+
+    Note over Player,AI: My progress is saved and I can share a link to resume right where I left off
+```
 
 ### Setup
 
