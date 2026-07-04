@@ -101,6 +101,16 @@ if ( scene?.isEnding === true ) terminal.goBack();
   1. `npm run check` — TypeScript + Svelte type checking
   2. `npm run lint` — ESLint rules
 
+## Planning before implementation
+
+For any non-trivial request (new feature, refactor, multi-file change), draft a development plan first and have it reviewed before writing code:
+
+1. Outline the steps, the files/areas impacted, and any open design decisions.
+2. Share the plan with the user and wait for their review/approval.
+3. Only start implementation once the plan is validated; adjust the plan (not just the code) if the approach changes mid-task.
+
+Trivial changes (typo fixes, small isolated edits, one-line corrections) don't need this step.
+
 ## Preview / dev server
 
 **Never start a preview or dev server.** Do not call `preview_start`, `npm run dev`, or any equivalent. The user runs the server manually. Verification is limited to `npm run check` and `npm run lint`.
@@ -135,6 +145,10 @@ Prefer splitting into smaller components rather than growing a single file. Extr
 - the file is getting long enough that navigation becomes awkward.
 
 New components go in `src/lib/components/`.
+
+## Architecture diagram
+
+The `README.md` contains a Mermaid diagram (under the **Architecture** section) that summarizes how the project works — input flow, central store, views, data, services, and i18n. **Whenever the project's behavior or architecture changes** (new view, new service, altered data flow, removed component…), check that diagram and update it so it stays accurate.
 
 ## Structure
 
