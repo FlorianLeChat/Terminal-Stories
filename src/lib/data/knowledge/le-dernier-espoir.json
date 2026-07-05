@@ -77,16 +77,16 @@
             "id": "le-dernier-espoir--character--safar",
             "category": "character",
             "name": "Lieutenant Safar - 10.742-P",
-            "summary": "Un administrateur fondu dans une antenne de fortune, devenu la voix hypnotique qui appelle les survivants vers la lumière.",
+            "summary": "Un administrateur fondu au mât d'antennes du Thermophile, devenu la voix hypnotique qui appelle les survivants vers la lumière.",
             "description": [
                 "Rôle : Antagoniste.",
-                "Ancien officier de l'Administration, il est retrouvé sur les ruines de Los Angeles, chair et machine mêlées à une immense antenne de fortune.",
-                "Rongé par l'énergie noire de la bombe, il diffuse en boucle un appel hypnotique invitant les survivants à cesser de lutter et à rejoindre la lumière.",
+                "Ancien officier de l'Administration, il est retrouvé au large de Los Angeles, au sommet du Thermophile, chair et machine mêlées au grand mât d'antennes intercontinentales du navire.",
+                "Rongé par l'énergie noire de la bombe, il détourne la portée des antennes intercontinentales du Thermophile pour diffuser en boucle, jusqu'au milieu du Pacifique, un appel hypnotique invitant les survivants à cesser de lutter et à rejoindre la lumière.",
                 "Selon les choix de Howard, sa litanie peut être réduite au silence ou, au contraire, avoir raison de sa volonté."
             ],
             "aliases": ["Safar", "10.742-P", "La voix"],
             "tags": ["antagoniste", "administrateur", "humain"],
-            "related": ["le-dernier-espoir--character--yoneda", "le-dernier-espoir--location--los-angeles", "le-dernier-espoir--event--bombe-new-york"]
+            "related": ["le-dernier-espoir--character--yoneda", "le-dernier-espoir--location--thermophile", "le-dernier-espoir--event--bombe-new-york"]
         },
         {
             "id": "le-dernier-espoir--character--fondateur",
@@ -138,8 +138,8 @@
             "summary": "Une plaine de verre noir sous un ciel mauve, où errent les survivants happés par la voix de Safar.",
             "description": [
                 "Autrefois une métropole américaine, Los Angeles n'est plus qu'une étendue de verre noir et de ruines fondues sous un ciel mauve strié d'aurores malades.",
-                "Les radiations y sont critiques, et les rares survivants marchent en silence vers l'antenne de fortune de Safar, le regard vide.",
-                "C'est depuis cette côte dévastée que le Thermophile, blessé, s'éloigne lentement vers le large."
+                "Les radiations y sont critiques, et les rares survivants entrent en silence dans la mer, le regard vide, aimantés par la voix qui monte du large.",
+                "Au large de cette côte dévastée croise le Thermophile, blessé, à la cime duquel Safar a fondu sa voix."
             ],
             "tags": ["lieu", "ruines"],
             "related": ["le-dernier-espoir--character--safar", "le-dernier-espoir--location--thermophile", "le-dernier-espoir--event--bombe-new-york"]
@@ -164,12 +164,12 @@
             "summary": "Le pendant naval du Dédale, dernier porte-avions de commandement de l'Administration, sabordé par ses propres administrateurs.",
             "description": [
                 "Porte-avions autonome et blindé de l'Administration, conçu pour tenir des mois sans jamais toucher terre, il patrouille sans relâche autour du globe aux côtés du Dédale et croise, au moment de l'effondrement, au large de Los Angeles.",
-                "Il abrite le Fondateur et le dernier commandement encore en état de fonctionner après l'effondrement du réseau mondial.",
+                "Il abrite le Fondateur et le dernier commandement encore en état de fonctionner après l'effondrement du réseau mondial. À son sommet, pourtant, le lieutenant Safar s'est fondu au mât d'antennes et détourne la portée intercontinentale du navire pour diffuser son appel hypnotique jusqu'au milieu du Pacifique.",
                 "Privé de chaîne de commandement, son équipage s'entre-déchire en plusieurs factions, jusqu'à ce qu'un tir perdu ouvre une voie d'eau fatale."
             ],
             "aliases": ["Le porte-avions"],
             "tags": ["lieu clé", "militaire"],
-            "related": ["le-dernier-espoir--character--kira", "le-dernier-espoir--character--fondateur", "le-dernier-espoir--event--naufrage-thermophile"]
+            "related": ["le-dernier-espoir--character--kira", "le-dernier-espoir--character--fondateur", "le-dernier-espoir--character--safar", "le-dernier-espoir--event--naufrage-thermophile"]
         },
         {
             "id": "le-dernier-espoir--event--bombe-new-york",

@@ -10,7 +10,7 @@
       "description": [
         "No magic, no stars: just a city that sleeps while others stay awake.",
         "This is the Paris of precincts, custody cells, hallway cameras, and files someone would rather see disappear.",
-        "A moral-thriller universe where the line between justice and personal survival is thinner than anyone admits — and where a single anonymous call can bring down ten years of a career."
+        "A moral-thriller universe where the line between justice and personal survival is thinner than anyone admits, and where a single anonymous call can bring down ten years of a career."
       ],
       "tags": ["thriller", "contemporary", "crime", "lore"],
       "related": ["last-call--location--roquette", "last-call--era--present-night"]
@@ -34,12 +34,12 @@
       "id": "last-call--character--voice",
       "category": "character",
       "name": "The Voice",
-      "summary": "Distorted, flat, anonymous. It knows too much — and may not want the money.",
+      "summary": "Distorted, flat, anonymous. It knows too much, and may not want the money.",
       "description": [
         "Role: Antagonist.",
         "A faceless caller whose voice runs through a chain of VPNs impossible to trace.",
         "It holds the evidence from the Leclerc case: the footage from camera number 4, in several secure copies.",
-        "What it demands isn't a ransom but a performance — to expose the truth 'cleanly.' No one will ever know who it was."
+        "What it demands isn't a ransom but a performance, to expose the truth 'cleanly.' No one will ever know who it was."
       ],
       "aliases": ["The voice on the phone", "The anonymous caller"],
       "tags": ["antagonist", "anonymous"],
@@ -51,9 +51,9 @@
       "name": "Detective Durand",
       "summary": "Morel's partner for six years. Loyal. Or was he?",
       "description": [
-        "Role: Ally — or accomplice, depending on what the night reveals.",
+        "Role: Ally, or accomplice, depending on what the night reveals.",
         "Morel's partner on the homicide squad for six years, bound to them by the Leclerc case.",
-        "He was the one who 'checked' the corridor B cameras — and the one who left number 4 running.",
+        "He was the one who 'checked' the corridor B cameras, and the one who left number 4 running.",
         "Insurance against a future betrayal, or plain cowardice? 'For the same reasons you would have, in my place.'"
       ],
       "aliases": ["Durand"],
@@ -68,7 +68,7 @@
       "description": [
         "Role: Key witness.",
         "Fortyish, suit disheveled, found bound and gagged in the apartment on Rue de la Roquette.",
-        "The technician in charge of the precinct's camera number 4, he was paid by Durand to keep its files — for five years.",
+        "The technician in charge of the precinct's camera number 4, he was paid by Durand to keep its files, for five years.",
         "He knows. He has known all this time. His fate rests entirely on Morel's choices."
       ],
       "aliases": ["The camera 4 technician"],
@@ -81,7 +81,7 @@
       "name": "12 Rue de la Roquette",
       "summary": "An empty Haussmann-era apartment, the stage for the meeting the Voice demands.",
       "description": [
-        "A Haussmann-era building whose door opens to the code 1419 — like a date that never ends.",
+        "A Haussmann-era building whose door opens to the code 1419, like a date that never ends.",
         "On the third floor, a door left ajar; inside, a chair, a lamp, and an envelope set on a table.",
         "The envelope holds damning photographs and a USB drive. The trap, or the deliverance.",
         "In the bathroom, sometimes, a bound man waits to be found."
@@ -93,7 +93,7 @@
     {
       "id": "last-call--location--precinct",
       "category": "location",
-      "name": "The Precinct — Corridor B",
+      "name": "The Precinct, Corridor B",
       "summary": "The corridor where, in 2019, camera number 4 was not broken as everyone believed.",
       "description": [
         "The site of the turning point: corridor B of the precinct, and its camera number 4.",
@@ -112,7 +112,7 @@
       "description": [
         "The story unfolds almost in real time, in the contemporary present, between 11:47 PM and midnight.",
         "The countdown is constant: 'You have 13 minutes before it all comes crashing down.'",
-        "This era has no date in the history books — it's the intimate, brief moment of an impossible decision, made in the heart of the Paris night."
+        "This era has no date in the history books, it's the intimate, brief moment of an impossible decision, made in the heart of the Paris night."
       ],
       "tags": ["era", "real time", "contemporary"],
       "related": ["last-call--event--last-call"]
@@ -125,7 +125,7 @@
       "description": [
         "On November 14, 2019, the suspect Leclerc died in custody at the precinct.",
         "The official version speaks of cardiac arrest. Morel and Durand know what really happened.",
-        "Camera number 4 in corridor B filmed everything — and that file, kept secret for five years, is the sword of Damocles hanging over the whole plot."
+        "Camera number 4 in corridor B filmed everything, and that file, kept secret for five years, is the sword of Damocles hanging over the whole plot."
       ],
       "tags": ["event", "misconduct", "past"],
       "related": ["last-call--location--precinct", "last-call--character--durand", "last-call--character--morel"]
@@ -137,7 +137,7 @@
       "summary": "The 11:47 PM anonymous call that reopens the Leclerc case and forces Morel to choose.",
       "description": [
         "It all begins with a buzz on the nightstand: unknown number, 11:47 PM.",
-        "The Voice grants thirteen minutes, then a meeting, then an envelope — and a choice with no right answer.",
+        "The Voice grants thirteen minutes, then a meeting, then an envelope, and a choice with no right answer.",
         "Depending on Morel's decisions, the night ends in confession, in betrayal, in confrontation, or in the silence of a truth never published."
       ],
       "tags": ["event", "trigger"],

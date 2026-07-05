@@ -1,392 +1,421 @@
 {
-  "id": "cursed-forest",
-  "title": "The Cursed Forest",
-  "genre": "fantasy",
-  "language": "English",
-  "universe": "Kingdom of Elarion",
-  "description": "A lone traveler pushes into a forest no one has ever returned from. Whispers, shadows, and a choice that will change everything.",
-  "tags": ["magic", "survival", "mystery", "solitude"],
-  "author": "Terminal Stories",
-  "characters": [
-    {
-      "id": "traveler",
-      "name": "The Traveler",
-      "role": "protagonist"
-    },
-    {
-      "id": "spirit",
-      "name": "The Spirit of the Forest",
-      "role": "antagonist"
-    },
-    {
-      "id": "old-weaver",
-      "name": "The Old Weaver",
-      "role": "ally"
-    }
-  ],
-  "startScene": "entrance",
-  "scenes": [
-    {
-      "id": "entrance",
-      "text": [
-        "The trees close behind you like jaws.",
-        "Daylight vanishes within a few steps. Here, it is always dusk.",
-        "A sign half-eaten by time lies on the ground: 'MIREVAL FOREST — DANGER — TURN BACK'.",
-        "Too late to turn back. You decided that before you ever set out."
-      ],
-      "choices": [
+    "id": "cursed-forest",
+    "title": "The Cursed Forest",
+    "genre": "fantasy",
+    "language": "English",
+    "universe": "Kingdom of Elarion",
+    "description": "A lone traveler pushes into a forest no one has ever returned from. Whispers, shadows, and a choice that will change everything.",
+    "tags": [
+        "magic",
+        "survival",
+        "mystery",
+        "solitude"
+    ],
+    "author": "Terminal Stories",
+    "characters": [
         {
-          "id": "follow-trail",
-          "text": "Follow the main trail north",
-          "action": "You set foot on the old stone trail, barely visible beneath the moss.",
-          "consequence": "The path feels familiar... as if someone had prepared it for you.",
-          "nextScene": "trail"
+            "id": "traveler",
+            "name": "The Traveler",
+            "role": "protagonist"
         },
         {
-          "id": "explore-treeline",
-          "text": "Explore the edge of the woods before going deeper",
-          "action": "You cautiously follow the treeline, scanning the shadows.",
-          "consequence": "A pale glow flickers in the distance, among the roots of an old oak.",
-          "nextScene": "treeline"
+            "id": "spirit",
+            "name": "The Spirit of the Forest",
+            "role": "antagonist"
         },
         {
-          "id": "call-out",
-          "text": "Call out to announce your presence",
-          "action": "You shout your name into the leafy dark.",
-          "consequence": "Silence. Then an echo... but it isn't your voice that answers.",
-          "nextScene": "echo"
+            "id": "old-weaver",
+            "name": "The Old Weaver",
+            "role": "ally"
         }
-      ]
-    },
-    {
-      "id": "echo",
-      "text": [
-        "\"...I was waiting for you.\"",
-        "The voice comes from everywhere at once. Deep, ancient, like wood cracking under snow.",
-        "The branches above you slowly interlace, forming something that resembles a face."
-      ],
-      "speaker": "spirit",
-      "choices": [
+    ],
+    "startScene": "entrance",
+    "scenes": [
         {
-          "id": "defy-spirit",
-          "text": "\"Who are you? Show yourself!\"",
-          "action": "You draw your blade, rust and all.",
-          "consequence": "A laugh murmurs through every leaf. \"Fear makes men brave. Or stupid.\"",
-          "nextScene": "spirit-confrontation"
+            "id": "entrance",
+            "text": [
+                "The trees close behind you like jaws.",
+                "Daylight vanishes within a few steps. Here, it is always dusk.",
+                "A sign half-eaten by time lies on the ground: 'MIREVAL FOREST, DANGER, TURN BACK'.",
+                "Too late to turn back. You decided that before you ever set out."
+            ],
+            "choices": [
+                {
+                    "id": "follow-trail",
+                    "text": "Follow the main trail north",
+                    "action": "You set foot on the old stone trail, barely visible beneath the moss.",
+                    "consequence": "The path feels familiar... as if someone had prepared it for you.",
+                    "nextScene": "trail"
+                },
+                {
+                    "id": "explore-treeline",
+                    "text": "Explore the edge of the woods before going deeper",
+                    "action": "You cautiously follow the treeline, scanning the shadows.",
+                    "consequence": "A pale glow flickers in the distance, among the roots of an old oak.",
+                    "nextScene": "treeline"
+                },
+                {
+                    "id": "call-out",
+                    "text": "Call out to announce your presence",
+                    "action": "You shout your name into the leafy dark.",
+                    "consequence": "Silence. Then an echo... but it isn't your voice that answers.",
+                    "nextScene": "echo"
+                }
+            ]
         },
         {
-          "id": "negotiate",
-          "text": "\"I only seek passage. I want no trouble.\"",
-          "action": "You sheathe your blade and open your hands, palms forward.",
-          "consequence": "A long silence. Then: \"Few have known how to ask. Follow the water.\"",
-          "nextScene": "stream",
-          "setsFlag": "spirit-calmed"
-        }
-      ]
-    },
-    {
-      "id": "trail",
-      "text": [
-        "The trail winds between ancient oaks whose roots have devoured the old flagstones.",
-        "Luminescent mushrooms grow in perfect circles. A bad sign.",
-        "Around a bend, you find a cabin. Smoke curls from the chimney."
-      ],
-      "choices": [
-        {
-          "id": "knock-door",
-          "text": "Knock on the cabin door",
-          "action": "You rap three sharp knocks on the old wood.",
-          "consequence": "A quavering voice: \"Come in, traveler. The tea is hot.\"",
-          "nextScene": "weaver-cabin"
+            "id": "echo",
+            "text": [
+                {
+                    "speaker": "spirit",
+                    "text": "\"...I was waiting for you.\""
+                },
+                "The voice comes from everywhere at once. Deep, ancient, like wood cracking under snow.",
+                "The branches above you slowly interlace, forming something that resembles a face."
+            ],
+            "choices": [
+                {
+                    "id": "defy-spirit",
+                    "text": "\"Who are you? Show yourself!\"",
+                    "action": "You draw your blade, rust and all.",
+                    "consequence": "A laugh murmurs through every leaf. \"Fear makes men brave. Or stupid.\"",
+                    "nextScene": "spirit-confrontation"
+                },
+                {
+                    "id": "negotiate",
+                    "text": "\"I only seek passage. I want no trouble.\"",
+                    "action": "You sheathe your blade and open your hands, palms forward.",
+                    "consequence": "A long silence. Then: \"Few have known how to ask. Follow the water.\"",
+                    "nextScene": "stream",
+                    "setsFlag": "spirit-calmed"
+                }
+            ]
         },
         {
-          "id": "skirt-around",
-          "text": "Skirt around the cabin and keep going",
-          "action": "You slip quietly behind the cabin.",
-          "consequence": "Something watches you from the window. You don't turn around.",
-          "nextScene": "depths"
-        }
-      ]
-    },
-    {
-      "id": "treeline",
-      "text": [
-        "The glow comes from an insect the size of your fist. A giant firefly, with translucent wings.",
-        "It flits toward you, hesitates, then heads off to the northeast.",
-        "Creatures like this don't exist in ordinary forests."
-      ],
-      "choices": [
-        {
-          "id": "follow-firefly",
-          "text": "Follow the firefly",
-          "action": "You follow it through the thorny brush.",
-          "consequence": "It guides you to a stream of black water that sings softly.",
-          "nextScene": "stream"
+            "id": "trail",
+            "text": [
+                "The trail winds between ancient oaks whose roots have devoured the old flagstones.",
+                "Luminescent mushrooms grow in perfect circles. A bad sign.",
+                "Around a bend, you find a cabin. Smoke curls from the chimney."
+            ],
+            "choices": [
+                {
+                    "id": "knock-door",
+                    "text": "Knock on the cabin door",
+                    "action": "You rap three sharp knocks on the old wood.",
+                    "consequence": "A quavering voice: \"Come in, traveler. The tea is hot.\"",
+                    "nextScene": "weaver-cabin"
+                },
+                {
+                    "id": "skirt-around",
+                    "text": "Skirt around the cabin and keep going",
+                    "action": "You slip quietly behind the cabin.",
+                    "consequence": "Something watches you from the window. You don't turn around.",
+                    "nextScene": "depths"
+                }
+            ]
         },
         {
-          "id": "ignore-firefly",
-          "text": "Ignore the firefly and find your own way",
-          "action": "You push into the woods without a guide.",
-          "consequence": "The forest swallows you. You walk for what feels like hours.",
-          "nextScene": "lost"
-        }
-      ]
-    },
-    {
-      "id": "weaver-cabin",
-      "text": [
-        "The inside is cluttered with dried herbs, vials, and books whose titles read backward.",
-        "The old woman hands you a cup without looking at you. Her eyes are entirely white.",
-        "\"Sit down. I'll tell you what you came looking for, and what you stand to lose.\""
-      ],
-      "speaker": "old-weaver",
-      "choices": [
-        {
-          "id": "listen-weaver",
-          "text": "\"I'm listening.\"",
-          "action": "You sit and take the cup. It smells of pine and sulfur.",
-          "consequence": "She speaks for a long time. You learn the location of the forest's heart — and its guardian.",
-          "nextScene": "revelations",
-          "setsFlag": "knows-the-heart"
+            "id": "treeline",
+            "text": [
+                "The glow comes from an insect the size of your fist. A giant firefly, with translucent wings.",
+                "It flits toward you, hesitates, then heads off to the northeast.",
+                "Creatures like this don't exist in ordinary forests."
+            ],
+            "choices": [
+                {
+                    "id": "follow-firefly",
+                    "text": "Follow the firefly",
+                    "action": "You follow it through the thorny brush.",
+                    "consequence": "It guides you to a stream of black water that sings softly.",
+                    "nextScene": "stream"
+                },
+                {
+                    "id": "ignore-firefly",
+                    "text": "Ignore the firefly and find your own way",
+                    "action": "You push into the woods without a guide.",
+                    "consequence": "The forest swallows you. You walk for what feels like hours.",
+                    "nextScene": "lost"
+                }
+            ]
         },
         {
-          "id": "refuse-weaver",
-          "text": "\"I need nothing. Just passage.\"",
-          "action": "You back toward the door.",
-          "consequence": "She smiles for the first time. \"That's what all the ones who never come back say.\"",
-          "nextScene": "depths"
-        }
-      ]
-    },
-    {
-      "id": "stream",
-      "text": [
-        "The water is black as ink but perfectly clear. You can see the bottom — coins, bones, shattered mirrors.",
-        "On the far side of the stream, the forest changes. The trees are white. Long dead.",
-        "An ancient wooden bridge spans the water. On each pillar, a face is carved."
-      ],
-      "choices": [
-        {
-          "id": "cross-bridge",
-          "text": "Cross the bridge",
-          "action": "You step onto the bridge. The planks creak with every step.",
-          "consequence": "The faces turn their stone eyes toward you. They're waiting for something.",
-          "nextScene": "forest-heart"
+            "id": "weaver-cabin",
+            "text": [
+                "The inside is cluttered with dried herbs, vials, and books whose titles read backward.",
+                "The old woman hands you a cup without looking at you. Her eyes are entirely white.",
+                {
+                    "speaker": "old-weaver",
+                    "text": "\"Sit down. I'll tell you what you came looking for, and what you stand to lose.\""
+                }
+            ],
+            "choices": [
+                {
+                    "id": "listen-weaver",
+                    "text": "\"I'm listening.\"",
+                    "action": "You sit and take the cup. It smells of pine and sulfur.",
+                    "consequence": "She speaks for a long time. You learn the location of the forest's heart, and its guardian.",
+                    "nextScene": "revelations",
+                    "setsFlag": "knows-the-heart"
+                },
+                {
+                    "id": "refuse-weaver",
+                    "text": "\"I need nothing. Just passage.\"",
+                    "action": "You back toward the door.",
+                    "consequence": "She smiles for the first time. \"That's what all the ones who never come back say.\"",
+                    "nextScene": "depths"
+                }
+            ]
         },
         {
-          "id": "follow-stream",
-          "text": "Follow the stream to its source",
-          "action": "You follow the current north.",
-          "consequence": "The source is a hollow tree whose trunk weeps a black sap.",
-          "nextScene": "source-tree"
-        }
-      ]
-    },
-    {
-      "id": "spirit-confrontation",
-      "text": [
-        "The trees draw closer. The ground heaves. Roots surge up like arms.",
-        "The Spirit takes shape — not a being, but a form: leaves, shadow, and wind interwoven.",
-        "\"You wanted to see me? Here I am, little human.\""
-      ],
-      "speaker": "spirit",
-      "choices": [
-        {
-          "id": "flee",
-          "text": "Run for your life",
-          "action": "You run without looking back.",
-          "consequence": "The forest lets you flee. For now.",
-          "nextScene": "lost"
+            "id": "stream",
+            "text": [
+                "The water is black as ink but perfectly clear. You can see the bottom, coins, bones, shattered mirrors.",
+                "On the far side of the stream, the forest changes. The trees are white. Long dead.",
+                "An ancient wooden bridge spans the water. On each pillar, a face is carved."
+            ],
+            "choices": [
+                {
+                    "id": "cross-bridge",
+                    "text": "Cross the bridge",
+                    "action": "You step onto the bridge. The planks creak with every step.",
+                    "consequence": "The faces turn their stone eyes toward you. They're waiting for something.",
+                    "nextScene": "forest-heart"
+                },
+                {
+                    "id": "follow-stream",
+                    "text": "Follow the stream to its source",
+                    "action": "You follow the current north.",
+                    "consequence": "The source is a hollow tree whose trunk weeps a black sap.",
+                    "nextScene": "source-tree"
+                }
+            ]
         },
         {
-          "id": "hold-ground",
-          "text": "Hold your ground and drive your blade into the earth",
-          "action": "You plunge your blade into the soil. A gesture of defiance — or of offering.",
-          "consequence": "The Spirit stops. \"Interesting.\"",
-          "nextScene": "pact"
-        }
-      ]
-    },
-    {
-      "id": "lost",
-      "text": [
-        "You walk. And walk again. The forest repeats itself in a loop.",
-        "The same twisted tree. The same moss-covered stone. The same crow watching you.",
-        "Exhaustion sets in. Night falls — or maybe it's always night here."
-      ],
-      "choices": [
-        {
-          "id": "sleep",
-          "text": "Lie down and sleep",
-          "action": "You rest your head on the roots of a tree.",
-          "consequence": "Dreams show you a path. When you wake, the ground has changed.",
-          "nextScene": "weaver-cabin"
+            "id": "spirit-confrontation",
+            "text": [
+                "The trees draw closer. The ground heaves. Roots surge up like arms.",
+                "The Spirit takes shape, not a being, but a form: leaves, shadow, and wind interwoven.",
+                {
+                    "speaker": "spirit",
+                    "text": "\"You wanted to see me? Here I am, little human.\""
+                }
+            ],
+            "choices": [
+                {
+                    "id": "flee",
+                    "text": "Run for your life",
+                    "action": "You run without looking back.",
+                    "consequence": "The forest lets you flee. For now.",
+                    "nextScene": "lost"
+                },
+                {
+                    "id": "hold-ground",
+                    "text": "Hold your ground and drive your blade into the earth",
+                    "action": "You plunge your blade into the soil. A gesture of defiance, or of offering.",
+                    "consequence": "The Spirit stops. \"Interesting.\"",
+                    "nextScene": "pact"
+                }
+            ]
         },
         {
-          "id": "keep-going",
-          "text": "Keep going no matter what",
-          "action": "You walk in a straight line, refusing to let yourself be turned around.",
-          "consequence": "After an hour, you stumble into the black stream.",
-          "nextScene": "stream"
-        }
-      ]
-    },
-    {
-      "id": "revelations",
-      "text": [
-        "\"The heart of the forest is a single tree — white as bone, old as memory.\"",
-        "\"It guards something. Something that belongs to you, or belonged to someone you loved.\"",
-        "She lays a hand on your arm. Her skin is cold. \"Take this.\"",
-        "She holds out a small vial filled with golden light. \"To tame what guards.\""
-      ],
-      "speaker": "old-weaver",
-      "choices": [
-        {
-          "id": "take-vial",
-          "text": "Take the vial and thank her",
-          "action": "You slip the vial carefully into your pocket.",
-          "consequence": "The light warms against your skin. You know now where to go.",
-          "nextScene": "forest-heart",
-          "setsFlag": "has-vial"
-        }
-      ]
-    },
-    {
-      "id": "depths",
-      "text": [
-        "The forest grows denser. The ground disappears beneath a carpet of tangled roots.",
-        "Sounds follow you — not animals. More like breaths. Presences.",
-        "At last you reach a clearing. At its center: a white tree, colossal, its branches touching the low clouds."
-      ],
-      "choices": [
-        {
-          "id": "approach-tree",
-          "text": "Approach the white tree",
-          "action": "You cross the clearing slowly.",
-          "consequence": "Something stirs within the bark.",
-          "nextScene": "forest-heart"
-        }
-      ]
-    },
-    {
-      "id": "source-tree",
-      "text": [
-        "The hollow tree is immense. Three men could not encircle it.",
-        "The black sap running from its trunk forms words in the earth: 'REMEMBER'.",
-        "Inside the hollow, something glows with a light you recognize."
-      ],
-      "choices": [
-        {
-          "id": "enter-tree",
-          "text": "Step into the hollow of the tree",
-          "action": "You slip inside.",
-          "consequence": "The space is impossible — far larger within. You find yourself facing the heart of the forest.",
-          "nextScene": "forest-heart"
-        }
-      ]
-    },
-    {
-      "id": "pact",
-      "text": [
-        "The Spirit crouches. An almost human shape.",
-        "\"You didn't run. Men always run. Tell me — what do you truly seek?\"",
-        "For the first time since you entered the forest, the wind stops."
-      ],
-      "speaker": "spirit",
-      "choices": [
-        {
-          "id": "tell-truth",
-          "text": "Tell the truth about what you seek",
-          "action": "You speak. The words come out on their own — things you hadn't said in a long time.",
-          "consequence": "The Spirit listens. \"Follow the stream. I will be behind you.\"",
-          "nextScene": "stream",
-          "setsFlag": "spirit-ally"
+            "id": "lost",
+            "text": [
+                "You walk. And walk again. The forest repeats itself in a loop.",
+                "The same twisted tree. The same moss-covered stone. The same crow watching you.",
+                "Exhaustion sets in. Night falls, or maybe it's always night here."
+            ],
+            "choices": [
+                {
+                    "id": "sleep",
+                    "text": "Lie down and sleep",
+                    "action": "You rest your head on the roots of a tree.",
+                    "consequence": "Dreams show you a path. When you wake, the ground has changed.",
+                    "nextScene": "weaver-cabin"
+                },
+                {
+                    "id": "keep-going",
+                    "text": "Keep going no matter what",
+                    "action": "You walk in a straight line, refusing to let yourself be turned around.",
+                    "consequence": "After an hour, you stumble into the black stream.",
+                    "nextScene": "stream"
+                }
+            ]
         },
         {
-          "id": "lie",
-          "text": "Lie — invent a noble quest",
-          "action": "You make up a story about a royal mission.",
-          "consequence": "\"Trees do not lie. They tell me everything.\" A long silence. \"Go. But without my help.\"",
-          "nextScene": "forest-heart"
-        }
-      ]
-    },
-    {
-      "id": "forest-heart",
-      "text": [
-        "The white tree pulses like a heart. Its bark is covered in faces — hundreds of them.",
-        "You recognize some of them.",
-        "A voice comes from the tree itself. Or perhaps from your memory.",
-        "\"You've arrived. Now, choose: take what belongs to you, or let the forest keep its secrets.\""
-      ],
-      "choices": [
-        {
-          "id": "take-secret",
-          "text": "Reach for the light within the tree",
-          "action": "Your hand touches the bark. It is warm.",
-          "consequence": "A memory returns to you — complete, painful, true.",
-          "nextScene": "ending-truth"
+            "id": "revelations",
+            "text": [
+                {
+                    "speaker": "old-weaver",
+                    "text": "\"The heart of the forest is a single tree, white as bone, old as memory.\""
+                },
+                {
+                    "speaker": "old-weaver",
+                    "text": "\"It guards something. Something that belongs to you, or belonged to someone you loved.\""
+                },
+                "She lays a hand on your arm. Her skin is cold.",
+                {
+                    "speaker": "old-weaver",
+                    "text": "\"Take this.\""
+                },
+                "She holds out a small vial filled with golden light.",
+                {
+                    "speaker": "old-weaver",
+                    "text": "\"To tame what guards.\""
+                }
+            ],
+            "choices": [
+                {
+                    "id": "take-vial",
+                    "text": "Take the vial and thank her",
+                    "action": "You slip the vial carefully into your pocket.",
+                    "consequence": "The light warms against your skin. You know now where to go.",
+                    "nextScene": "forest-heart",
+                    "setsFlag": "has-vial"
+                }
+            ]
         },
         {
-          "id": "leave-secret",
-          "text": "Turn back and leave the forest to its secrets",
-          "action": "You step back slowly, eyes still on the tree.",
-          "consequence": "The tree seems... relieved. A path opens between the roots.",
-          "nextScene": "ending-withdrawal"
+            "id": "depths",
+            "text": [
+                "The forest grows denser. The ground disappears beneath a carpet of tangled roots.",
+                "Sounds follow you, not animals. More like breaths. Presences.",
+                "At last you reach a clearing. At its center: a white tree, colossal, its branches touching the low clouds."
+            ],
+            "choices": [
+                {
+                    "id": "approach-tree",
+                    "text": "Approach the white tree",
+                    "action": "You cross the clearing slowly.",
+                    "consequence": "Something stirs within the bark.",
+                    "nextScene": "forest-heart"
+                }
+            ]
         },
         {
-          "id": "use-vial",
-          "text": "[VIAL] Pour the golden vial over the roots",
-          "action": "You uncork the vial and let the light spill into the earth.",
-          "consequence": "The tree lights up entirely. The faces in the bark smile.",
-          "nextScene": "ending-light",
-          "requiresFlag": "has-vial"
+            "id": "source-tree",
+            "text": [
+                "The hollow tree is immense. Three men could not encircle it.",
+                "The black sap running from its trunk forms words in the earth: 'REMEMBER'.",
+                "Inside the hollow, something glows with a light you recognize."
+            ],
+            "choices": [
+                {
+                    "id": "enter-tree",
+                    "text": "Step into the hollow of the tree",
+                    "action": "You slip inside.",
+                    "consequence": "The space is impossible, far larger within. You find yourself facing the heart of the forest.",
+                    "nextScene": "forest-heart"
+                }
+            ]
+        },
+        {
+            "id": "pact",
+            "text": [
+                "The Spirit crouches. An almost human shape.",
+                {
+                    "speaker": "spirit",
+                    "text": "\"You didn't run. Men always run. Tell me, what do you truly seek?\""
+                },
+                "For the first time since you entered the forest, the wind stops."
+            ],
+            "choices": [
+                {
+                    "id": "tell-truth",
+                    "text": "Tell the truth about what you seek",
+                    "action": "You speak. The words come out on their own, things you hadn't said in a long time.",
+                    "consequence": "The Spirit listens. \"Follow the stream. I will be behind you.\"",
+                    "nextScene": "stream",
+                    "setsFlag": "spirit-ally"
+                },
+                {
+                    "id": "lie",
+                    "text": "Lie, invent a noble quest",
+                    "action": "You make up a story about a royal mission.",
+                    "consequence": "\"Trees do not lie. They tell me everything.\" A long silence. \"Go. But without my help.\"",
+                    "nextScene": "forest-heart"
+                }
+            ]
+        },
+        {
+            "id": "forest-heart",
+            "text": [
+                "The white tree pulses like a heart. Its bark is covered in faces, hundreds of them.",
+                "You recognize some of them.",
+                "A voice comes from the tree itself. Or perhaps from your memory.",
+                {
+                    "speaker": "spirit",
+                    "text": "\"You've arrived. Now, choose: take what belongs to you, or let the forest keep its secrets.\""
+                }
+            ],
+            "choices": [
+                {
+                    "id": "take-secret",
+                    "text": "Reach for the light within the tree",
+                    "action": "Your hand touches the bark. It is warm.",
+                    "consequence": "A memory returns to you, complete, painful, true.",
+                    "nextScene": "ending-truth"
+                },
+                {
+                    "id": "leave-secret",
+                    "text": "Turn back and leave the forest to its secrets",
+                    "action": "You step back slowly, eyes still on the tree.",
+                    "consequence": "The tree seems... relieved. A path opens between the roots.",
+                    "nextScene": "ending-withdrawal"
+                },
+                {
+                    "id": "use-vial",
+                    "text": "[VIAL] Pour the golden vial over the roots",
+                    "action": "You uncork the vial and let the light spill into the earth.",
+                    "consequence": "The tree lights up entirely. The faces in the bark smile.",
+                    "nextScene": "ending-light",
+                    "requiresFlag": "has-vial"
+                }
+            ]
+        },
+        {
+            "id": "ending-truth",
+            "isEnding": true,
+            "endingType": "neutral",
+            "text": [
+                "You remember everything.",
+                "Why you came. What you lost. What you did.",
+                "The forest lets you go, but you are no longer the one who entered.",
+                "Sometimes, cursed forests only keep what men refuse to face.",
+                "— ENDING: The Weight of Memory —"
+            ],
+            "choices": []
+        },
+        {
+            "id": "ending-withdrawal",
+            "isEnding": true,
+            "endingType": "good",
+            "text": [
+                "You leave the forest at dawn.",
+                "The sign is behind you. The sun ahead.",
+                "You didn't find what you were looking for. But you refused to lose yourself to get it.",
+                "Sometimes, coming back alive is the greatest victory.",
+                "— ENDING: The Wisdom of Letting Go —"
+            ],
+            "choices": []
+        },
+        {
+            "id": "ending-light",
+            "isEnding": true,
+            "endingType": "good",
+            "text": [
+                "The light spreads into every root, every branch, every leaf.",
+                "The faces in the bark fade away, freed.",
+                "The Spirit of the Forest lets out a sigh as long as a century.",
+                {
+                    "speaker": "spirit",
+                    "text": "\"It has been a long time since anyone knew how to give without taking.\""
+                },
+                "The Mireval Forest is no longer cursed.",
+                "And you, you go home, the vial empty but your heart full.",
+                "— ENDING: The Gift Given —"
+            ],
+            "choices": []
         }
-      ]
-    },
-    {
-      "id": "ending-truth",
-      "isEnding": true,
-      "endingType": "neutral",
-      "text": [
-        "You remember everything.",
-        "Why you came. What you lost. What you did.",
-        "The forest lets you go, but you are no longer the one who entered.",
-        "Sometimes, cursed forests only keep what men refuse to face.",
-        "",
-        "— ENDING: The Weight of Memory —"
-      ],
-      "choices": []
-    },
-    {
-      "id": "ending-withdrawal",
-      "isEnding": true,
-      "endingType": "good",
-      "text": [
-        "You leave the forest at dawn.",
-        "The sign is behind you. The sun ahead.",
-        "You didn't find what you were looking for. But you refused to lose yourself to get it.",
-        "Sometimes, coming back alive is the greatest victory.",
-        "",
-        "— ENDING: The Wisdom of Letting Go —"
-      ],
-      "choices": []
-    },
-    {
-      "id": "ending-light",
-      "isEnding": true,
-      "endingType": "good",
-      "text": [
-        "The light spreads into every root, every branch, every leaf.",
-        "The faces in the bark fade away — freed.",
-        "The Spirit of the Forest lets out a sigh as long as a century.",
-        "\"It has been a long time since anyone knew how to give without taking.\"",
-        "The Mireval Forest is no longer cursed.",
-        "And you — you go home, the vial empty but your heart full.",
-        "",
-        "— ENDING: The Gift Given —"
-      ],
-      "choices": []
-    }
-  ]
+    ]
 }

@@ -5,7 +5,12 @@
     "language": "Français",
     "universe": "France médiévale",
     "description": "Au XIVe siècle, alors que la guerre de Cent Ans et la peste noire font rage en Europe, la cité d'Arles, dernier rempart français, est assiégée par les forces armées de Castille, qui profitent de la faiblesse du royaume de France. Le comte ne peut compter que sur ses troupes de réserve, le reste des forces combattant aux côtés du dauphin contre les Anglais, loin au nord. Mais contre toute attente, une femme mystérieuse aux cheveux d'or se présente : les choix que vous ferez pourraient changer le cours de l'histoire.",
-    "tags": ["guerre", "siège", "trahison", "stratégie"],
+    "tags": [
+        "guerre",
+        "siège",
+        "trahison",
+        "stratégie"
+    ],
     "author": "Florian Trayon",
     "characters": [
         {
@@ -50,12 +55,12 @@
             "id": "reveil",
             "text": [
                 "Tu te réveilles en sursaut dans ton lit. L'aurore calme et silencieuse vient d'être brisée. Des cris lointains résonnent dans les couloirs du château.",
-                "",
                 "À tes côtés, une jeune femme dort encore. Tu te souviens du banquet de la veille, des festivités données pour célébrer une grande chasse, et de la nuit que vous avez passée ensemble.",
-                "",
                 "Tu te lèves, encore engourdi par le sommeil, et te diriges vers la fenêtre. À travers les carreaux, tu aperçois des engins de siège qui encerclent les fortifications de la cité. Le ciel est sombre, chargé de fumée. Un premier tir de catapulte frappe la cité au pied du château. Hommes, femmes et enfants courent se mettre à l'abri.",
-                "",
-                "Tu dis d'un ton ferme à la jeune femme : « Réveille-toi, il faut se préparer. »"
+                {
+                    "speaker": "comte",
+                    "text": "« Réveille-toi, il faut se préparer. », dis-tu à la jeune femme d'un ton ferme."
+                }
             ],
             "choices": [
                 {
@@ -85,7 +90,6 @@
             "id": "assassin",
             "text": [
                 "Quelques dizaines de minutes passent. Des bruits de pas précipités résonnent dans le couloir. La porte s'ouvre brusquement : un homme masqué entre, armé d'une longue dague, visiblement à la recherche de quelqu'un.",
-                "",
                 "Vous vous réveillez tous les deux en sursaut. L'intrus balaie la chambre du regard, la lame levée."
             ],
             "choices": [
@@ -100,10 +104,11 @@
         },
         {
             "id": "assassin-menace",
-            "speaker": "assassin",
             "text": [
-                "« Ne bougez plus. Je cherche le Comte d'Arles... et quelque chose me dit que je l'ai trouvé. »",
-                "",
+                {
+                    "speaker": "assassin",
+                    "text": "« Ne bougez plus. Je cherche le Comte d'Arles... et quelque chose me dit que je l'ai trouvé. »"
+                },
                 "Il fait un pas dans la chambre, la lame luisant à la lueur de l'aube. À tes côtés, la jeune femme s'est redressée, étrangement calme, le drap serré contre elle."
             ],
             "choices": [
@@ -125,11 +130,12 @@
         },
         {
             "id": "assassin-defiance",
-            "speaker": "comte",
             "text": [
-                "« À moi ! Gardes ! Un intrus dans les appartements du Comte ! » hurles-tu vers la porte, dans l'espoir d'ameuter le château.",
-                "",
-                "Mais les couloirs restent muets : les gardes se sont rués vers les remparts. La jeune femme, derrière toi, n'esquisse pas le moindre geste pour t'aider — elle se contente d'observer, un sourire satisfait aux lèvres."
+                {
+                    "speaker": "comte",
+                    "text": "« À moi ! Gardes ! Un intrus dans les appartements du Comte ! » hurles-tu vers la porte, dans l'espoir d'ameuter le château."
+                },
+                "Mais les couloirs restent muets : les gardes se sont rués vers les remparts. La jeune femme, derrière toi, n'esquisse pas le moindre geste pour t'aider, elle se contente d'observer, un sourire satisfait aux lèvres."
             ],
             "choices": [
                 {
@@ -147,11 +153,8 @@
             "endingType": "bad",
             "text": [
                 "L'homme masqué s'élance, bondit sur le lit et porte plusieurs coups mortels à la poitrine du Comte. La jeune femme à tes côtés ne fait rien pour l'en empêcher et se contente de regarder la scène avec un sourire satisfait. Tu t'effondres, sans vie, après avoir tenté de prévenir les gardes du château.",
-                "",
                 "Quelques heures plus tard, des gardes du château, inquiets de ton absence, découvrent ton corps. Abattues par la nouvelle et par la tournure défavorable de la bataille, les dernières troupes françaises se rendent aux armées de Castille, qui les exécutent sans aucune grâce.",
-                "",
                 "Le château tombe et tous les habitants sont massacrés.",
-                "",
                 "— FIN : « Le devoir déserté » —"
             ],
             "choices": []
@@ -162,11 +165,8 @@
             "endingType": "bad",
             "text": [
                 "La jeune femme se jette sur toi et tente de t'étrangler de toutes ses forces. Tu te débats pour la repousser, mais l'homme masqué se précipite et enfonce sa dague dans ton cœur. Tu t'effondres, sans vie, après avoir tenté de prévenir les gardes du château.",
-                "",
                 "Quelques heures plus tard, des gardes du château, inquiets de ton absence, découvrent ton corps. Abattues par la nouvelle et par la tournure défavorable de la bataille, les dernières troupes françaises se rendent aux armées de Castille, qui les exécutent sans aucune grâce.",
-                "",
                 "Le château tombe et tous les habitants sont massacrés.",
-                "",
                 "— FIN : « L'étreinte fatale » —"
             ],
             "choices": []
@@ -175,7 +175,6 @@
             "id": "arriere-cour",
             "text": [
                 "Vous sortez de votre chambre et constatez que les couloirs sont vides : tous les gardes semblent s'être précipités vers les fortifications pour défendre le château. À toute vitesse, vous descendez les escaliers et débouchez dans l'arrière-cour, où se trouvent les écuries et les remises.",
-                "",
                 "Alors que tout semblait calme, vous tombez sur une patrouille de soldats français qui se dirige vers l'armurerie pour se préparer à défendre le château. Dans un élan de panique, vous tentez de les contourner pour sortir du château, mais le capitaine d'armes vous barre le passage, la main levée."
             ],
             "choices": [
@@ -190,9 +189,12 @@
         },
         {
             "id": "arriere-cour-capitaine",
-            "speaker": "capitaine",
             "text": [
-                "« Messire ? Où allez-vous ainsi, alors que l'ennemi est déjà à nos portes ? » Sa voix est ferme, teintée de surprise. Derrière lui, les soldats attendent, la main sur le pommeau de leur épée."
+                {
+                    "speaker": "capitaine",
+                    "text": "« Messire ? Où allez-vous ainsi, alors que l'ennemi est déjà à nos portes ? »"
+                },
+                "La voix du capitaine est ferme, teintée de surprise. Derrière lui, les soldats attendent, la main sur le pommeau de leur épée."
             ],
             "choices": [
                 {
@@ -224,9 +226,7 @@
             "endingType": "bad",
             "text": [
                 "Après ton exécution, le capitaine d'armes prend la tête du château et ordonne à ses troupes de déposer les armes face aux forces de Castille. Il brandit ta tête et la jette par-dessus les remparts, espérant s'attirer la clémence de l'ennemi.",
-                "",
                 "Croyant à un signe de reddition, les troupes de Castille lèvent à leur tour un drapeau blanc, signe de paix. À la vue du drapeau blanc, les troupes françaises sont soulagées et ouvrent les portes de la cité. Les troupes de Castille s'y engouffrent, rompent leur promesse, massacrent tous les habitants, et le château tombe.",
-                "",
                 "— FIN : « La tête du traître » —"
             ],
             "choices": []
@@ -236,7 +236,6 @@
             "text": [
                 "Autour du château, les ruelles sont presque désertes. Les habitants sont calfeutrés chez eux, le bétail est rentré dans les étables et les chefs de famille guettent l'arrivée des soldats ennemis.",
                 "Vous avancez, le visage dissimulé, pour éviter d'être reconnus par vos sujets, couverts de honte.",
-                "",
                 "Au détour d'une ruelle proche de votre passage secret pour sortir de la cité, vous apercevez six hommes, tous vêtus de noir, une croix catholique au cou, certains armés de bâtons et de fouets. Il s'agit des hommes de l'Inquisition, en mission pour l'Église catholique afin de lutter contre la peste et de traquer les hérétiques."
             ],
             "choices": [
@@ -251,9 +250,12 @@
         },
         {
             "id": "ruelles-inquisition",
-            "speaker": "inquisition",
             "text": [
-                "« Jeunes gens, que faites-vous ici, à rôder alors que la cité se terre ? » L'un d'eux fait claquer son fouet contre sa paume, tandis que les autres vous encerclent lentement."
+                {
+                    "speaker": "inquisition",
+                    "text": "« Jeunes gens, que faites-vous ici, à rôder alors que la cité se terre ? »"
+                },
+                "L'un d'eux fait claquer son fouet contre sa paume, tandis que les autres vous encerclent lentement."
             ],
             "choices": [
                 {
@@ -278,13 +280,9 @@
             "endingType": "bad",
             "text": [
                 "Les hommes de l'Inquisition vous arrêtent et vous emmènent à la basilique Saint-Trophime d'Arles pour y être déclaré coupable de haute trahison.",
-                "",
                 "Quelques heures plus tard, des soldats de Castille pénètrent dans la basilique, accompagnés de l'Inquisition qui chante les louanges de l'armée de Castille. Ils annoncent que la mission de l'Inquisition est terminée et vous livrent aux troupes de Castille, sans le moindre remords. Les soldats de Castille s'agenouillent devant l'Inquisition pour prêter allégeance à l'Église catholique.",
-                "",
                 "Une fois l'Inquisition partie, les troupes de Castille vous exécutent sur place, sans aucune grâce. La jeune femme, quant à elle, est elle aussi exécutée : bien qu'elle ait été démasquée comme une espionne envoyée par l'armée de Castille pour t'assassiner, sa fuite est perçue comme une trahison.",
-                "",
                 "Les habitants d'Arles sont massacrés et le château tombe aux mains de l'armée de Castille.",
-                "",
                 "— FIN : « La foi vénale » —"
             ],
             "choices": []
@@ -293,7 +291,6 @@
             "id": "passage-secret",
             "text": [
                 "L'Inquisition, rassurée par les explications de la jeune femme, vous laisse passer et fait un signe de croix pour vous bénir.",
-                "",
                 "Quelques minutes plus tard, vous atteignez les fortifications à l'est de la cité, où se trouve le passage secret menant à la forêt. Le passage est dissimulé derrière une maison abandonnée, dont seules quelques personnes connaissent l'existence. Mais alors que vous vous apprêtez à le franchir, la jeune femme s'arrête soudain et se retourne vers toi."
             ],
             "choices": [
@@ -308,10 +305,16 @@
         },
         {
             "id": "passage-secret-aveu",
-            "speaker": "jeune-femme",
             "text": [
-                "« Je suis désolée, mais je ne peux pas continuer à te suivre. » Sa voix tremble. « J'ai été envoyée par l'armée de Castille... pour t'assassiner. Cette nuit n'était qu'un piège. »",
-                "",
+                {
+                    "speaker": "jeune-femme",
+                    "text": "« Je suis désolée, mais je ne peux pas continuer à te suivre. » dit-elle d'une voix tremblante."
+                },
+                "Elle poursuit :",
+                {
+                    "speaker": "jeune-femme",
+                    "text": "« J'ai été envoyée par l'armée de Castille... pour t'assassiner. Cette nuit n'était qu'un piège. »"
+                },
                 "Elle baisse les yeux, la gorge nouée, et attend ta réaction sans oser fuir."
             ],
             "choices": [
@@ -337,15 +340,10 @@
             "endingType": "neutral",
             "text": [
                 "Malgré ce que le Comte vient de découvrir, il prend la main de la jeune femme et s'enfonce avec elle dans la forêt, laissant derrière eux le château et les troupes de Castille.",
-                "",
                 "Quelques heures plus tard, vous voyez au loin d'épaisses fumées s'élever au-dessus du château, signe que les troupes de Castille ont pris le dessus.",
-                "",
                 "Après cet événement, la nouvelle se propage rapidement à travers les terres françaises et vous êtes considérés comme des traîtres par l'armée française. Arles étant tombée aux mains de l'armée de Castille, la France est, par votre faute, désormais plus que jamais menacée par l'envahisseur venu de la péninsule ibérique.",
-                "",
                 "De cette dernière nuit en tant que comte est née une relation qui ne devait durer que le temps d'un soir : elle vous a rapprochés au point de vous aimer, et la jeune femme porte désormais votre enfant.",
-                "",
                 "La nuit, tu te demandes si tu as fait le bon choix, mais tu sais que tu ne peux plus revenir en arrière.",
-                "",
                 "— FIN : « La rédemption dans l'exil » —"
             ],
             "choices": []
@@ -356,13 +354,9 @@
             "endingType": "bad",
             "text": [
                 "Tu poursuis ta fuite, seul, dans la forêt, sachant que tu ne pourras jamais oublier ce qui vient de se passer.",
-                "",
                 "Quelques heures plus tard, tu vois au loin d'épaisses fumées s'élever au-dessus du château, signe que les troupes de Castille ont pris le dessus.",
-                "",
                 "Après cet événement, la nouvelle se propage rapidement à travers les terres françaises et tu es considéré comme un traître par l'armée française. Arles étant tombée aux mains de l'armée de Castille, la France est, par ta faute, désormais plus que jamais menacée par l'envahisseur venu de la péninsule ibérique.",
-                "",
                 "La nuit, tu repenses à ce jour où tu as abandonné ta patrie et tué cette jeune femme que tu aimais, au plus profond de ton cœur, pour sauver ta vie.",
-                "",
                 "— FIN : « Les mains souillées » —"
             ],
             "choices": []
@@ -371,7 +365,6 @@
             "id": "armurerie",
             "text": [
                 "D'un pas lourd, tu rejoins l'armurerie du château, où tu t'équipes de ton armure et de ton épée. En sortant, tu descends à toute vitesse dans l'arrière-cour pour rejoindre les troupes françaises qui se préparent à défendre le château.",
-                "",
                 "La situation est mauvaise : les troupes de Castille prennent l'avantage, et le capitaine d'armes vient à ta rencontre, le visage grave."
             ],
             "choices": [
@@ -395,8 +388,8 @@
                     "id": "accepter-rallier",
                     "text": "Accepter de l'aider à rallier les troupes",
                     "action": "Tu acceptes de rallier les troupes françaises pour défendre le château.",
-                    "consequence": "En faisant le tour de la cité avec le capitaine, vous parvenez à rallier plusieurs milliers d'hommes, vétérans aguerris et paysans inexpérimentés —, toujours en infériorité numérique face aux troupes de Castille, puis vous vous dirigez vers les ruines des arènes antiques.",
-                    "nextScene": "ralliement"
+                    "consequence": "En faisant le tour de la cité avec le capitaine, vous parvenez à rallier plusieurs milliers d'hommes, vétérans aguerris et paysans inexpérimentés, toujours en infériorité numérique face aux troupes de Castille, puis vous vous dirigez vers les ruines des arènes antiques.",
+                    "nextScene": "ralliement-troupes"
                 },
                 {
                     "id": "refuser-aide-seul",
@@ -408,12 +401,10 @@
             ]
         },
         {
-            "id": "ralliement",
+            "id": "ralliement-troupes",
             "text": [
                 "Devant les ruines des arènes antiques romaines, tu observes les troupes françaises rassemblées, prêtes à défendre le château. Le capitaine et toi organisez la défense sur les murailles avec les hommes les moins expérimentés, tandis que les plus aguerris se préparent à sortir au combat. Beaucoup de soldats ont peur et hésitent à se battre, mais tu les encourages à défendre leur pays et leur honneur.",
-                "",
                 "Alors que tu t'apprêtes à donner l'ordre de sortie, un chevalier arrive au grand galop, portant un étendard aux couleurs de la couronne française. Il se présente comme un messager : sa commandante souhaite te rencontrer pour te proposer son aide.",
-                "",
                 "Tu acceptes de la rencontrer et, accompagné de quelques-uns de tes fidèles soldats, tu le suis à travers les ruines des arènes, jusqu'à un petit bosquet à l'abri des regards. Là, tu découvres une femme en armure immaculée, les cheveux d'or, un glaive forgé à la main, entourée d'une poignée de fidèles soldats tout aussi bien armés."
             ],
             "choices": [
@@ -422,12 +413,12 @@
                     "text": "L'écouter",
                     "action": "Tu t'avances vers elle, intrigué par cette apparition en pleine tourmente.",
                     "consequence": "Elle soutient ton regard et prend la parole.",
-                    "nextScene": "ralliement-eleonore"
+                    "nextScene": "rencontre-eleonore"
                 }
             ]
         },
         {
-            "id": "ralliement-eleonore",
+            "id": "rencontre-eleonore",
             "speaker": "eleonore",
             "text": [
                 "« Je suis Éléonore, commandante de la deuxième armée royale française. Je n'ai pas de renforts, mais je suis prête à me battre à vos côtés pour défendre ce château et notre pays. Ensemble, nous pouvons repousser les troupes castillanes et protéger notre peuple. »"
@@ -438,7 +429,7 @@
                     "text": "Accepter son aide et te battre à ses côtés",
                     "action": "Tu t'approches d'elle et lui tends la main, acceptant son aide avec gratitude.",
                     "consequence": "Vous revenez ensemble auprès des troupes françaises, qui semblent galvanisées par la présence d'Éléonore et de ses hommes. Vous organisez la défense, puis vous vous mettez en position pour affronter les troupes de Castille.",
-                    "nextScene": "bataille"
+                    "nextScene": "duel-eleonore"
                 },
                 {
                     "id": "refuser-aide-eleonore",
@@ -462,64 +453,11 @@
             "endingType": "good",
             "text": [
                 "Une fois les troupes françaises en position, tu vois les forces de Castille foncer droit sur les rangs menés par Éléonore. Dans un élan de bravoure, les villageois reconvertis en archers déciment les premières lignes depuis les murailles, tandis que l'infanterie reste en position.",
-                "",
                 "Éléonore, comme si chacun de ses ordres était calculé, lance plusieurs vagues d'assaut pour anéantir les premières lignes ennemies. Aidées par des salves de flèches, les troupes françaises parviennent à abattre les soldats ennemis les plus aguerris. Prises de panique, les troupes ennemies tirent à la catapulte sur leurs propres rangs en tentant d'atteindre Éléonore, et les déciment par erreur.",
-                "",
                 "Voyant la bataille tourner en sa défaveur, Carlos de Castille, posté sur une colline, entouré de ses lieutenants, ordonne la retraite. Éléonore ordonne d'achever les fuyards et est acclamée en héroïne par les troupes françaises ; toi, tu es honoré pour ta sagesse et ton courage.",
-                "",
                 "Ensemble, vous avez protégé votre peuple et toute la France.",
-                "",
                 "Vous avez changé l'histoire de la France et de l'Europe.",
-                "",
                 "— FIN : « La sagesse récompensée » —"
-            ],
-            "choices": []
-        },
-        {
-            "id": "bataille",
-            "text": [
-                "Éléonore lève son glaive et l'ordre de sortie retentit. Les portes de la cité s'ouvrent dans un grondement et les troupes françaises s'élancent à sa suite, portées par un même cri. En face, la première ligne castillane abaisse ses piques et charge à son tour : les deux masses d'hommes se percutent dans un fracas de fer et de bois.",
-                "",
-                "Autour de toi, ce n'est plus qu'une mêlée confuse de cris, de sang et de poussière. Éléonore fend les rangs ennemis avec une aisance déconcertante, mais un détachement castillan contourne l'affrontement et se rue vers les archers postés au pied des murailles, ceux-là mêmes dont les salves tiennent la bataille à bout de flèches.",
-                "",
-                "Le fer sonne de toutes parts. La prochaine décision t'appartient."
-            ],
-            "choices": [
-                {
-                    "id": "couvrir-archers",
-                    "text": "Mener tes hommes protéger les archers menacés",
-                    "action": "Tu rassembles une poignée de soldats autour de toi et vous vous jetez à la rencontre du détachement ennemi pour protéger les archers.",
-                    "consequence": "Le choc est brutal, mais vous tenez bon. Sauvés, les archers reprennent leurs salves et déciment les lignes castillanes. Libérée de cette menace, Éléonore progresse jusqu'au cœur du dispositif ennemi.",
-                    "nextScene": "duel-eleonore"
-                },
-                {
-                    "id": "rester-aupres-eleonore",
-                    "text": "Rester au côté d'Éléonore et couvrir ses flancs",
-                    "action": "Tu choisis de ne pas quitter Éléonore et de garder ses arrières tandis qu'elle taille sa route vers le commandement ennemi.",
-                    "consequence": "Dos à dos, vous repoussez chaque assaillant. Ta présence rassure les soldats, qui resserrent les rangs autour de vous et enrayent la percée castillane.",
-                    "nextScene": "duel-eleonore"
-                },
-                {
-                    "id": "charger-carlos",
-                    "text": "Foncer seul à travers la mêlée pour atteindre Carlos",
-                    "action": "Aveuglé par l'espoir d'en finir, tu t'élances seul à travers la mêlée, décidé à abattre Carlos de Castille de ta propre main.",
-                    "consequence": "Tu progresses de quelques pas avant d'être happé par la masse ennemie, coupé de tes hommes.",
-                    "nextScene": "fin-temeraire"
-                }
-            ]
-        },
-        {
-            "id": "fin-temeraire",
-            "isEnding": true,
-            "endingType": "bad",
-            "text": [
-                "Encerclé par les soldats castillans, isolé de tes troupes, tu frappes autour de toi avec l'énergie du désespoir. Mais les coups pleuvent de toutes parts et, bientôt, une pique te transperce le flanc. Tu t'effondres dans la boue, piétiné par la mêlée, sans jamais avoir approché Carlos.",
-                "",
-                "Éléonore te voit tomber au loin, trop tard pour te secourir. Privées de leur seigneur et ébranlées par ta chute, les troupes françaises vacillent, et la brèche ouverte par ta témérité laisse s'engouffrer l'ennemi.",
-                "",
-                "Malgré son courage, Éléonore est submergée et contrainte à la retraite avec les derniers survivants. La cité tombe ce jour-là. Arles étant tombée aux mains de l'armée de Castille, la France est, par ta faute, désormais plus que jamais menacée par l'envahisseur venu de la péninsule ibérique. On se souviendra de toi non comme d'un héros, mais comme du comte qui, par imprudence, condamna sa cité et son peuple.",
-                "",
-                "— FIN : « La charge téméraire » —"
             ],
             "choices": []
         },
@@ -527,13 +465,12 @@
             "id": "duel-eleonore",
             "text": [
                 "Devant vos troupes réunies, les soldats de Castille marquent un temps d'arrêt, presque par respect pour vous.",
-                "",
                 "Carlos de Castille, leur commandant, s'avance, surpris de voir une femme à vos côtés. Un sourire narquois se dessine sur ses lèvres."
             ],
             "choices": [
                 {
                     "id": "entendre-carlos",
-                    "text": "Attendre ce qu'il a à dire",
+                    "text": "Entendre ce que Carlos a à dire",
                     "action": "Tu affermis ta prise sur ton arme, le cœur battant.",
                     "consequence": "Carlos lève la main pour réclamer le silence et s'adresse à vous.",
                     "nextScene": "duel-ultimatum"
@@ -551,17 +488,62 @@
                     "id": "regarder-eleonore",
                     "text": "Chercher le regard d'Éléonore",
                     "action": "Rongé par la peur, tu te tournes vers Éléonore.",
-                    "consequence": "Elle te rend un regard de défi et s'avance d'un pas vers Carlos.",
-                    "nextScene": "duel-defi"
+                    "consequence": "Elle te rend un regard de défi et lance à Carlos qu'elle ne se rendra jamais. Fou de rage devant ce refus, il rejoint ses rangs et ordonne l'assaut : les deux armées s'ébranlent.",
+                    "nextScene": "bataille"
                 }
             ]
         },
         {
-            "id": "duel-defi",
-            "speaker": "eleonore",
+            "id": "bataille",
             "text": [
-                "« Je me battrai pour défendre mon pays et cette cité. Si je perds, je me rendrai à vous. Si je gagne, vous battrez en retraite et laisserez cette cité en paix. »",
-                "",
+                "Éléonore lève son glaive et les troupes françaises s'élancent à sa suite, portées par un même cri. En face, la première ligne castillane abaisse ses piques et charge à son tour : les deux masses d'hommes se percutent dans un fracas de fer et de bois.",
+                "Autour de toi, ce n'est plus qu'une mêlée confuse de cris, de sang et de poussière. Éléonore fend les rangs ennemis avec une aisance déconcertante, mais un détachement castillan contourne l'affrontement et se rue vers les archers postés au pied des murailles, ceux-là mêmes dont les salves tiennent la bataille à bout de flèches.",
+                "Le fer sonne de toutes parts. La prochaine décision t'appartient."
+            ],
+            "choices": [
+                {
+                    "id": "couvrir-archers",
+                    "text": "Mener tes hommes et protéger les archers menacés",
+                    "action": "Tu rassembles une poignée de soldats autour de toi et vous vous jetez à la rencontre du détachement ennemi pour protéger les archers.",
+                    "consequence": "Le choc est brutal, mais vous tenez bon. Sauvés, les archers reprennent leurs salves et déciment les lignes castillanes. Libérée de cette menace, Éléonore progresse jusqu'au cœur du dispositif ennemi.",
+                    "nextScene": "duel-defi"
+                },
+                {
+                    "id": "rester-aupres-eleonore",
+                    "text": "Rester au côté d'Éléonore et couvrir ses flancs",
+                    "action": "Tu choisis de ne pas quitter Éléonore et de garder ses arrières tandis qu'elle taille sa route vers le commandement ennemi.",
+                    "consequence": "Dos à dos, vous repoussez chaque assaillant. Ta présence rassure les soldats, qui resserrent les rangs autour de vous et enrayent la percée castillane.",
+                    "nextScene": "duel-defi"
+                },
+                {
+                    "id": "charger-carlos",
+                    "text": "Foncer seul à travers la mêlée pour atteindre Carlos",
+                    "action": "Aveuglé par l'espoir d'en finir, tu t'élances seul à travers la mêlée, décidé à abattre Carlos de Castille de ta propre main.",
+                    "consequence": "Tu progresses de quelques pas avant d'être happé par la masse ennemie, coupé de tes hommes.",
+                    "nextScene": "fin-temeraire"
+                }
+            ]
+        },
+        {
+            "id": "fin-temeraire",
+            "isEnding": true,
+            "endingType": "bad",
+            "text": [
+                "Encerclé par les soldats castillans, isolé de tes troupes, tu frappes autour de toi avec l'énergie du désespoir. Mais les coups pleuvent de toutes parts et, bientôt, une pique te transperce le flanc. Tu t'effondres dans la boue, piétiné par la mêlée, sans jamais avoir approché Carlos.",
+                "Éléonore te voit tomber au loin, trop tard pour te secourir. Privées de leur seigneur et ébranlées par ta chute, les troupes françaises vacillent, et la brèche ouverte par ta témérité laisse s'engouffrer l'ennemi.",
+                "Malgré son courage, Éléonore est submergée et contrainte à la retraite avec les derniers survivants. La cité tombe ce jour-là. Arles étant tombée aux mains de l'armée de Castille, la France est, par ta faute, désormais plus que jamais menacée par l'envahisseur venu de la péninsule ibérique. On se souviendra de toi non comme d'un héros, mais comme du comte qui, par imprudence, condamna sa cité et son peuple.",
+                "— FIN : « La charge téméraire » —"
+            ],
+            "choices": []
+        },
+        {
+            "id": "duel-defi",
+            "text": [
+                "La bataille fait rage, mais Éléonore s'est frayé un chemin jusqu'à Carlos de Castille. Autour d'eux, le fer se suspend : les deux chefs se font enfin face. Éléonore pointe son glaive vers lui.",
+                {
+                    "speaker": "eleonore",
+                    "text": "« Je me battrai pour défendre mon pays et cette cité. Si je perds, je me rendrai à vous. Si je gagne, vous battrez en retraite et laisserez cette cité en paix. »"
+                },
                 "Surpris par sa bravoure, Carlos accepte le duel."
             ],
             "choices": [
@@ -587,13 +569,9 @@
             "endingType": "good",
             "text": [
                 "Éléonore s'avance vers Carlos de Castille et porte le premier coup. Grâce à son expérience, à sa force et à son habileté, elle porte des coups précis et puissants, repoussant les attaques de Carlos. Carlos, surpris par la force et la détermination d'Éléonore, tente de l'intimider avec des paroles méprisantes, mais elle reste concentrée sur le combat.",
-                "",
                 "Voyant leur commandant mis en difficulté par une femme, les troupes de Castille, déstabilisées, battent en retraite. Éléonore porte un coup fatal à Carlos de Castille et ordonne, triomphante, aux troupes françaises de décimer les rangs ennemis en fuite.",
-                "",
                 "Vous êtes acclamés par les troupes françaises et par les habitants de la cité, qui vous remercient pour votre bravoure et votre courage.",
-                "",
                 "Vous avez changé l'histoire de la France et de l'Europe.",
-                "",
                 "— FIN : « La femme aux cheveux d'or » —"
             ],
             "choices": []
@@ -604,17 +582,11 @@
             "endingType": "bad",
             "text": [
                 "Tu t'avances vers Carlos de Castille, le glaive levé, prêt à défendre le château et ton honneur. Carlos porte les premiers coups, et tu te rends compte que tu n'es pas à la hauteur de l'expérience et de la force de ton adversaire. Il te porte un coup puissant qui te blesse grièvement ; tu t'effondres au sol, incapable de poursuivre le combat.",
-                "",
                 "Éléonore, te voyant en difficulté, tente de te protéger et de frapper Carlos, mais il est déjà trop tard pour toi.",
-                "",
                 "Profitant de ta défaite, les troupes de Castille lancent une salve de flèches sur les premières lignes françaises. Alors que Carlos se retire, entouré de ses soldats, Éléonore est touchée mortellement à la poitrine et s'effondre, inanimée.",
-                "",
                 "Tu es exécuté sur le champ de bataille par la première vague d'assaut ennemie.",
-                "",
                 "Privées de commandement, les troupes françaises se font décimer et implorent la pitié de leurs assaillants. Les armées de Castille s'engouffrent dans la cité, massacrent tous les habitants, et le château tombe. Arles étant tombée aux mains de l'armée de Castille, la France est, par ta faute, désormais plus que jamais menacée par l'envahisseur venu de la péninsule ibérique.",
-                "",
-                "Quelques jours plus tard, le corps d'Éléonore est rapatrié dans son village natal, où elle est pleurée par les siens. Toi, en revanche, tu es haï par la couronne pour avoir causé sa mort par orgueil — considéré comme un lâche et un traître, ta dépouille est jetée à la rivière, vouée à l'oubli.",
-                "",
+                "Quelques jours plus tard, le corps d'Éléonore est rapatrié dans son village natal, où elle est pleurée par les siens. Toi, en revanche, tu es haï par la couronne pour avoir causé sa mort par orgueil, considéré comme un lâche et un traître, ta dépouille est jetée à la rivière, vouée à l'oubli.",
                 "— FIN : « L'orgueil meurtrier » —"
             ],
             "choices": []
@@ -625,17 +597,11 @@
             "endingType": "bad",
             "text": [
                 "Devant vos troupes réunies, les soldats de Castille marquent un temps d'arrêt, presque par respect pour vous. Carlos de Castille s'avance vers toi et te propose un duel ; tu l'acceptes pour sauver ton honneur et celui de tes troupes.",
-                "",
                 "Carlos porte les premiers coups, et tu te rends compte que tu n'es pas à la hauteur de l'expérience et de la force de ton adversaire. Il te porte un coup puissant qui te blesse grièvement ; tu t'effondres au sol, incapable de poursuivre le combat.",
-                "",
                 "Profitant de ta défaite, les troupes de Castille lancent une salve de flèches sur les premières lignes françaises. Tu es exécuté sur le champ de bataille par la première vague d'assaut ennemie.",
-                "",
                 "Privées de commandement, les troupes françaises se font décimer et implorent la pitié de leurs assaillants. Les armées de Castille s'engouffrent dans la cité, massacrent tous les habitants, et le château tombe.",
-                "",
                 "Arles étant tombée aux mains de l'armée de Castille, la France est, par ta faute, désormais plus que jamais menacée par l'envahisseur venu de la péninsule ibérique. Éléonore, qui avait été laissée seule pour défendre le château, est capturée et utilisée comme monnaie d'échange pour obtenir un tribut de la couronne française.",
-                "",
-                "Quelques jours plus tard, elle est échangée contre un commandant de Castille capturé, puis libérée — mais couverte de honte pour avoir été capturée par l'ennemi. Rejetée par les siens et déchue de toutes ses distinctions militaires, elle vit désormais dans le regret, se demandant si elle aurait pu changer le cours de l'histoire. Toi, en revanche, tu es haï par la couronne pour n'avoir pas su protéger la cité et ses habitants — considéré comme un lâche et un traître, ta dépouille est jetée à la rivière, vouée à l'oubli.",
-                "",
+                "Quelques jours plus tard, elle est échangée contre un commandant de Castille capturé, puis libérée, mais couverte de honte pour avoir été capturée par l'ennemi. Rejetée par les siens et déchue de toutes ses distinctions militaires, elle vit désormais dans le regret, se demandant si elle aurait pu changer le cours de l'histoire. Toi, en revanche, tu es haï par la couronne pour n'avoir pas su protéger la cité et ses habitants, considéré comme un lâche et un traître, ta dépouille est jetée à la rivière, vouée à l'oubli.",
                 "— FIN : « La folle fierté » —"
             ],
             "choices": []

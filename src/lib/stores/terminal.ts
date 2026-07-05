@@ -7,6 +7,7 @@ import type { AiGenerationParams,
     KnowledgeCategory,
     SaveData,
     Scene,
+    SceneTextEntry,
     Story,
     StoryFilters,
     StoryStats,
@@ -108,9 +109,53 @@ const getAvailableChoices = ( scene: Scene, state: GameState ): Choice[] =>
     } );
 };
 
+/** Sentinel speaker id meaning "narration", as opposed to a character speaking. */
+const NARRATOR_SPEAKER = "narrator";
+
 /**
- * Builds the opening lines for a scene: separator (unless first scene), optional image and speaker,
- * then the narration text (one line per paragraph, or one blank for empty ones).
+ * Resolves the text and speaker of a single scene text entry, falling back to
+ * the scene's own speaker (or the narrator sentinel) when unspecified.
+ *
+ * @param entry - The scene text entry (a plain string or a dialogue line).
+ * @param scene - The scene the entry belongs to.
+ * @returns The entry's text, resolved speaker, and whether the text is blank.
+ * @author Claude
+ */
+const resolveSceneTextEntry = (
+    entry: SceneTextEntry,
+    scene: Scene
+): { text: string; speaker: string; isBlank: boolean } =>
+{
+    const isDialogueLine = typeof entry !== "string";
+    const text = isDialogueLine ? entry.text : entry;
+    const speaker = ( isDialogueLine ? entry.speaker : undefined ) ?? scene.speaker ?? NARRATOR_SPEAKER;
+
+    return { text, speaker, isBlank: text === "" };
+};
+
+/**
+ * Builds the `[ Name ]` header line introducing a new speaker, resolving the
+ * displayed name from the story's character list when possible.
+ *
+ * @param speaker - The speaker id starting to talk.
+ * @param story - The story the speaker belongs to.
+ * @returns The header terminal line.
+ * @author Claude
+ */
+const buildSpeakerHeaderLine = ( speaker: string, story: Story ): Omit<TerminalLine, "id"> =>
+{
+    const char = story.characters.find( ( c ) => c.id === speaker );
+    const name = char ? char.name : speaker;
+
+    return { text: `[ ${ name } ]`, type: "speaker", speaker: name };
+};
+
+/**
+ * Builds the opening lines for a scene: separator (unless first scene), optional image,
+ * then the dialogue lines, each preceded by a `[ Name ]` header whenever the speaker changes
+ * from the previous line, and each followed by an automatic blank line. Authors never need
+ * to write a blank line into a scene's `text`; the choice prompt and other system messages
+ * built downstream manage their own spacing separately and are unaffected by this.
  *
  * @param scene - The scene to render.
  * @param story - The story the scene belongs to (used to resolve speaker names).
@@ -120,7 +165,6 @@ const getAvailableChoices = ( scene: Scene, state: GameState ): Choice[] =>
  */
 const buildBaseSceneLines = ( scene: Scene, story: Story, isFirst = false ): Omit<TerminalLine, "id">[] =>
 {
-    const texts = Array.isArray( scene.text ) ? scene.text : [ scene.text ];
     const lines: Omit<TerminalLine, "id">[] = [];
 
     if ( !isFirst )
@@ -133,25 +177,21 @@ const buildBaseSceneLines = ( scene: Scene, story: Story, isFirst = false ): Omi
         lines.push( { text: "", type: "image", imageSrc: scene.image } );
     }
 
-    if ( scene.speaker )
-    {
-        const char = story.characters.find( ( c ) => c.id === scene.speaker );
-        const name = char ? char.name : scene.speaker;
+    let lastSpeaker: string | null = null;
 
-        lines.push( { text: `[ ${ name } ]`, type: "speaker", speaker: name } );
-    }
-
-    for ( const t of texts )
+    scene.text.forEach( ( entry, index ) =>
     {
-        if ( t === "" )
-        {
-            lines.push( { text: "", type: "narrator" } );
-        }
-        else
-        {
-            lines.push( { text: t, type: scene.isEnding ? "ending" : "narrator" } );
-        }
-    }
+        const { text, speaker, isBlank } = resolveSceneTextEntry( entry, scene );
+        const isNewSpeaker = !isBlank && speaker !== NARRATOR_SPEAKER && speaker !== lastSpeaker;
+
+        if ( isNewSpeaker ) lines.push( buildSpeakerHeaderLine( speaker, story ) );
+        if ( !isBlank ) lastSpeaker = speaker;
+
+        lines.push( { text, type: scene.isEnding ? "ending" : "narrator" } );
+
+        const isLastEntry = index === scene.text.length - 1;
+        if ( !isLastEntry ) lines.push( { text: "", type: "narrator" } );
+    } );
 
     return lines;
 };
@@ -626,7 +666,6 @@ const createTerminalStore = () =>
         if ( !choice ) return;
 
         const actionLines: Omit<TerminalLine, "id">[] = [
-            { text: "", type: "narrator" },
             { text: `> ${ choice.text }`, type: "action" },
             { text: choice.action, type: "action" },
             { text: choice.consequence, type: "consequence" }

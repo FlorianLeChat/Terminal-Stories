@@ -16,10 +16,27 @@ export interface Choice {
     setsFlag?: string;
 }
 
+/**
+ * A single line within a scene that names a speaker other than the scene's
+ * own default (a character id, or the `"narrator"` sentinel).
+ */
+export interface DialogueLine {
+    speaker: string;
+    text: string;
+}
+
+/**
+ * One entry of a scene's `text`. A plain string is a line spoken by the
+ * scene's default speaker (its own `speaker`, or `"narrator"` if unset); a
+ * {@link DialogueLine} is used only when a line's speaker differs from that
+ * default.
+ */
+export type SceneTextEntry = string | DialogueLine;
+
 export interface Scene {
     id: string;
-    text: string | string[];
     speaker?: string;
+    text: SceneTextEntry[];
     image?: string;
     choices: Choice[];
     isEnding?: boolean;

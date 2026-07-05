@@ -1,4 +1,4 @@
-import type { Story, Scene, Choice, StoryStats } from "$lib/types/story";
+import type { Story, Scene, Choice, SceneTextEntry, StoryStats } from "$lib/types/story";
 
 /** Average reading speed in words per minute (prose). */
 const WORDS_PER_MINUTE = 200;
@@ -19,18 +19,15 @@ const countWords = ( value: string ): number =>
 };
 
 /**
- * Counts the words of a scene text, which may be a single string or a list of
- * paragraphs.
+ * Counts the words of a scene text, made of narration and dialogue lines.
  *
  * @param text - The scene text, as stored in the story data.
- * @returns The total number of words across every paragraph.
+ * @returns The total number of words across every line.
  * @author Claude
  */
-const textWords = ( text: string | string[] ): number =>
+const textWords = ( text: SceneTextEntry[] ): number =>
 {
-    const parts = Array.isArray( text ) ? text : [ text ];
-
-    return parts.reduce( ( sum, t ) => sum + countWords( t ), 0 );
+    return text.reduce( ( sum, entry ) => sum + countWords( typeof entry === "string" ? entry : entry.text ), 0 );
 };
 
 /**
