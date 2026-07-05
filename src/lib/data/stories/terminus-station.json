@@ -11,25 +11,21 @@
     {
       "id": "commander",
       "name": "Commander Reyes",
-      "description": "Mission lead. Pragmatic and cold. She's seen everything, or thinks she has.",
       "role": "protagonist"
     },
     {
       "id": "engineer",
       "name": "Engineer Dax",
-      "description": "Systems specialist. Nervous but brilliant. He knows the station like the back of his hand.",
       "role": "ally"
     },
     {
       "id": "doctor",
       "name": "Dr. Vasiliev",
-      "description": "Ship's doctor. Calm beyond reason. Maybe too calm.",
       "role": "ally"
     },
     {
       "id": "unknown",
       "name": "???",
-      "description": "Something prowls the ducts.",
       "role": "antagonist"
     }
   ],

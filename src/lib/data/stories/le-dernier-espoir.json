@@ -11,43 +11,36 @@
         {
             "id": "howard",
             "name": "Capitaine Howard - 10.60-D",
-            "description": "",
             "role": "protagonist"
         },
         {
             "id": "safar",
             "name": "Lieutenant Safar - 10.742-P",
-            "description": "",
             "role": "antagonist"
         },
         {
             "id": "system",
             "name": "Ordinateur de bord",
-            "description": "",
             "role": "narrator"
         },
         {
             "id": "supervision",
             "name": "Supervision",
-            "description": "",
             "role": "ally"
         },
         {
             "id": "yoneda",
             "name": "Sergente Yoneda - 10.113-B",
-            "description": "",
             "role": "ally"
         },
         {
             "id": "kira",
             "name": "Commandante Kira - 6A",
-            "description": "",
             "role": "ally"
         },
         {
             "id": "fondateur",
             "name": "Le Fondateur - 0A",
-            "description": "",
             "role": "ally"
         }
     ],

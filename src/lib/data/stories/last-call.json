@@ -11,19 +11,16 @@
     {
       "id": "player",
       "name": "Detective Morel",
-      "description": "Ten years on the homicide squad. You've seen things. You've done a few, too.",
       "role": "protagonist"
     },
     {
       "id": "voice",
       "name": "The Voice",
-      "description": "Distorted. Flat. It knows far too much.",
       "role": "antagonist"
     },
     {
       "id": "partner",
       "name": "Detective Durand",
-      "description": "Your partner for six years. Loyal. Or was he?",
       "role": "ally"
     }
   ],

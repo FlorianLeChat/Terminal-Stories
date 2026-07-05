@@ -227,7 +227,6 @@ export const normalizeGeneratedStory = ( raw: unknown ): Story =>
         ? data.characters.map( ( character, index ) => ( {
             id: typeof character.id === "string" && character.id !== "" ? character.id : `character-${ index }`,
             name: typeof character.name === "string" ? character.name : `Personnage ${ index + 1 }`,
-            description: typeof character.description === "string" ? character.description : "",
             role: coerceRole( character.role )
         } ) )
         : [];

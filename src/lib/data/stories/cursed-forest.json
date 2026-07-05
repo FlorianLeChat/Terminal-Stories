@@ -11,19 +11,16 @@
     {
       "id": "traveler",
       "name": "The Traveler",
-      "description": "An adventurer worn down by the road, wearing an old coat and a rusted blade.",
       "role": "protagonist"
     },
     {
       "id": "spirit",
       "name": "The Spirit of the Forest",
-      "description": "An ancient presence that watches over every tree, every root, every shadow.",
       "role": "antagonist"
     },
     {
       "id": "old-weaver",
       "name": "The Old Weaver",
-      "description": "An exiled witch living in the heart of the woods. She knows things others have forgotten.",
       "role": "ally"
     }
   ],

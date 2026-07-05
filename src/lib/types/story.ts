@@ -3,7 +3,6 @@ export type CharacterRole = "protagonist" | "antagonist" | "ally" | "npc" | "nar
 export interface Character {
     id: string;
     name: string;
-    description: string;
     role: CharacterRole;
 }
 

@@ -11,43 +11,36 @@
         {
             "id": "comte",
             "name": "Le Comte d'Arles",
-            "description": "Le jeune comte d'Arles, pris entre ses craintes et son devoir alors que les armées de Castille s'abattent sur les terres françaises et s'approchent des portes de sa cité.",
             "role": "protagonist"
         },
         {
             "id": "jeune-femme",
             "name": "La jeune femme",
-            "description": "Choisie parmi plusieurs paysannes par vos gardes, à la suite de votre banquet, pour satisfaire vos désirs et se donner à vous. En réalité, elle est une espionne envoyée par l'armée de Castille pour vous assassiner.",
             "role": "antagonist"
         },
         {
             "id": "assassin",
             "name": "L'homme masqué",
-            "description": "Un tueur dépêché dans le sillage de la jeune femme pour s'assurer de la mort du Comte d'Arles, le visage dissimulé derrière un masque et la longue dague toujours prête.",
             "role": "antagonist"
         },
         {
             "id": "capitaine",
             "name": "Capitaine d'armes",
-            "description": "Le capitaine d'armes du château, un homme d'expérience et de loyauté, qui tente de rallier les troupes françaises pour défendre la cité contre les forces de Castille.",
             "role": "ally"
         },
         {
             "id": "eleonore",
             "name": "Éléonore de Valois",
-            "description": "Commandante de la deuxième armée royale française, reconnaissable à son armure portant l'insigne de la couronne, à ses cheveux d'or et à ses triomphes passés sur les champs de bataille.",
             "role": "ally"
         },
         {
             "id": "inquisition",
             "name": "L'Inquisition",
-            "description": "Des hommes vêtus de noir, portant une croix catholique au cou, envoyés par l'Église catholique pour lutter contre la peste et traquer les hérétiques.",
             "role": "antagonist"
         },
         {
             "id": "antagoniste",
             "name": "Carlos de Castille",
-            "description": "L'infant de la couronne de Castille, à la tête de l'armée royale assiégeant le château, connu pour sa cruauté et sa détermination à étendre la couronne de Castille en profitant de l'affaiblissement du royaume de France.",
             "role": "antagonist"
         }
     ],
