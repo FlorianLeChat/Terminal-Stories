@@ -28,6 +28,7 @@
         "@sveltejs/kit": "~2.57",
         "@commitlint/cli": "~20.5",
         "@tsconfig/svelte": "~5.0",
+        "@playwright/test": "~1.61",
         "@tailwindcss/vite": "~4.2",
         "typescript-eslint": "~8.59",
         "@cspell/dict-fr-fr": "~2.3",
@@ -45,6 +46,7 @@
     },
     "scripts": {
         "dev": "vite",
+        "test": "playwright test",
         "lint": "eslint . --format gitlab --ext .js,.ts,.svelte",
         "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
         "build": "vite build",
