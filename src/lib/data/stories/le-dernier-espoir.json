@@ -1,0 +1,1022 @@
+{
+    "id": "le-dernier-espoir",
+    "title": "Le dernier espoir",
+    "genre": "sci-fi",
+    "language": "Français",
+    "universe": "Futur proche",
+    "description": "Dans un futur proche, la Terre est proie à des conflits géopolitiques et à des tensions sociales, exacerbées par la crise climatique et la raréfaction des ressources. Avec l'avènement des nanotechnologies et de l'intelligence artificielle, les gouvernements ont perdu le contrôle de la société, laissant place à une nouvelle classe dirigeante : les Administrateurs. Ces individus, dotés d'armures issues de travaux scientifiques du projet militaire « Hyperloop », sont des femmes et des hommes, chargées de veiller à la stabilité et à la sécurité de la population dans le globe. Mais que se passe-t-il lorsque l'humanité est confrontée à une menace qui dépasse les compétences des Administrateurs ?",
+    "tags": ["Science-fiction", "Aventure", "Action", "Dystopie", "Futur"],
+    "author": "Florian Trayon",
+    "characters": [
+        {
+            "id": "howard",
+            "name": "Capitaine Howard - 10.60-D",
+            "description": "",
+            "role": "protagonist"
+        },
+        {
+            "id": "safar",
+            "name": "Lieutenant Safar - 10.742-P",
+            "description": "",
+            "role": "antagonist"
+        },
+        {
+            "id": "system",
+            "name": "Ordinateur de bord",
+            "description": "",
+            "role": "narrator"
+        },
+        {
+            "id": "supervision",
+            "name": "Supervision",
+            "description": "",
+            "role": "ally"
+        },
+        {
+            "id": "yoneda",
+            "name": "Sergente Yoneda - 10.113-B",
+            "description": "",
+            "role": "ally"
+        },
+        {
+            "id": "kira",
+            "name": "Commandante Kira - 6A",
+            "description": "",
+            "role": "ally"
+        },
+        {
+            "id": "fondateur",
+            "name": "Le Fondateur - 0A",
+            "description": "",
+            "role": "ally"
+        }
+    ],
+    "startScene": "initialisation",
+    "scenes": [
+        {
+            "id": "initialisation",
+            "speaker": "system",
+            "text": [
+                "*Bip* *Bip* *Bip*",
+                "",
+                "Initialisation système, veuillez patienter...",
+                "Systèmes prêts. Communications établies avec supervision.",
+                "",
+                "Capitaine Howard, immatriculation 10.60-D, authentifié.",
+                "Prêt pour largage. Veuillez confirmer la mission."
+            ],
+            "choices": [
+                {
+                    "id": "confirmer-mission",
+                    "text": "Confirmer la mission et procéder au largage",
+                    "action": "Tu ouvres les yeux dans ton armure, observant le bouton « LARGAGE » clignoter sur ton affichage tête haute avant d'appuyer dessus.",
+                    "consequence": "Tu espères que cette journée se passera sans encombre, après tout il s'agit d'une patrouille habituelle.",
+                    "nextScene": "largage"
+                },
+                {
+                    "id": "refuser-largage",
+                    "text": "Refuser la mission et rester à bord du vaisseau de transport",
+                    "action": "« Négatif, supervision. Je ne suis pas certain que cette mission soit... judicieuse aujourd'hui. » dis-tu, la main suspendue au-dessus du bouton « LARGAGE ».",
+                    "consequence": "Un silence gêné répond, puis la voix neutre du système : « Requête enregistrée. Capitaine Howard, matricule 10.60-D, retiré de la rotation. »",
+                    "nextScene": "fin-refus-mission"
+                }
+            ]
+        },
+        {
+            "id": "fin-refus-mission",
+            "speaker": "howard",
+            "isEnding": true,
+            "endingType": "bad",
+            "text": [
+                "On te retire de la rotation, mais on ne te renvoie pas plus loin que le quartier général, en Europe. Tu y traînes les jours suivants, désœuvré, à observer les allées et venues près du centre de commandement, sans qu'on te confie la moindre tâche.",
+                "",
+                "Tu es là, à flâner dans un couloir, quand tous les écrans s'allument en même temps : « BOMBE LARGUÉE À NEW YORK ». Tu regardes, consterné, aux côtés d'officiers tout aussi impuissants que toi, sans savoir qu'il ne s'agit pas d'une bombe ordinaire. Une lumière blanche avale l'horizon par la fenêtre, silencieuse, et efface le quartier général avec le reste du continent avant que quiconque ait pu comprendre ce qui arrivait.",
+                "",
+                "Loin de là, dans son quartier d'enfance, la sergente Yoneda reste jusqu'au bout, jusqu'à ce que son armure n'ait plus une once de batterie. Puis elle vieillit sur place, dans ces ruines qui furent chez elle, et regarde le monde retourner lentement à l'âge de pierre. Certaines nuits, elle rêve qu'elle aurait peut-être pu faire mieux, ailleurs, autrement. Mais au réveil, elle est chez elle.",
+                "",
+                "Ce n'est pas la pire des fins. Tu as manqué à ton devoir, c'est vrai, et tu n'auras jamais su ce qui t'a emporté. Mais quelque part, une femme doit la vie sauve au fait que tu n'aies pas accompli la tienne aujourd'hui.",
+                "",
+                "— FIN : « Le largage refusé » —"
+            ],
+            "choices": []
+        },
+        {
+            "id": "largage",
+            "speaker": "system",
+            "text": [
+                "*Bip* *Bip* *Bip*",
+                "",
+                "Largage confirmé. Prêt à virtualisation... OK.",
+                "",
+                "Trois.",
+                "Deux.",
+                "Un.",
+                "",
+                "Largage, reprenez le contrôle de votre armure."
+            ],
+            "choices": [
+                {
+                    "id": "regarder-autour",
+                    "text": "Regarder autour de soi et observer l'environnement",
+                    "action": "Tu observes l'environnement à travers ton casque, les yeux rivés sur l'horizon. Le ciel est d'un bleu éclatant, parsemé de nuages blancs. Le soleil brille haut dans le ciel, réchauffant la surface de la planète. Ton affichage tête haute indique que tu es à une altitude de 10 000 mètres, et que la vitesse de descente est de 200 km/h. Tu aperçois au loin des montagnes enneigées, des forêts verdoyantes et des rivières scintillantes.",
+                    "consequence": "Tu te sens libre comme l'air l'espace d'un instant avant d'activer la communication avec la supervision.",
+                    "nextScene": "verification-armure"
+                }
+            ]
+        },
+        {
+            "id": "verification-armure",
+            "speaker": "howard",
+            "text": [
+                "Supervision, ici le Capitaine Howard. Largage effectué, je suis en route pour la zone de patrouille. Tout semble calme pour l'instant.",
+                "",
+                "Contrôle armure, je confirme que tous les systèmes sont opérationnels. Charge à bord... établie à 100%, portée 14 000 km. Je suis prêt à exécuter la mission.",
+                "",
+                "À vous supervision, je vous laisse le contrôle de la communication."
+            ],
+            "choices": [
+                {
+                    "id": "ecouter-supervision",
+                    "text": "Tu écoutes attentivement la supervision et attends ses instructions",
+                    "action": "Tu te concentres sur la voix de la supervision, prête à te donner les instructions pour la mission.",
+                    "consequence": "Ton affichage tête haute indique que la supervision est en train de te transmettre les coordonnées de la zone de patrouille.",
+                    "nextScene": "contact-supervision"
+                }
+            ]
+        },
+        {
+            "id": "contact-supervision",
+            "speaker": "supervision",
+            "text": [
+                "Supervision, ici supervision, Capitaine Howard. J'espère que vous allez bien.",
+                "Ici à Tokyo, heure locale 14h12, la situation est plutôt calme, vous êtes largués à 538 km, position 53.2°N, 139.8°E, altitude 10 000 mètres.",
+                "Vous allez rejoindre 10.113-B, sergente Yoneda, qui est en patrouille dans la zone depuis 3 heures. Elle vous attend pour vous guider vers la zone de patrouille.",
+                "",
+                "Veuillez noter que le Dédale est en alerte maximale à New York, pas d'impact de votre côté. Vous risquez cependant de ne pas recevoir de renforts dans votre région si la situation se dégrade.",
+                "Je vous laisse le contrôle de la communication avec la sergente Yoneda, Capitaine Howard. Bonne chance."
+            ],
+            "choices": [
+                {
+                    "id": "repondre-supervision",
+                    "text": "Répondre à la supervision et confirmer la réception des instructions",
+                    "action": "Tu réponds d'un ton calme et assuré : « Bien reçu, supervision. Je suis en route pour rejoindre la sergente Yoneda. »",
+                    "consequence": "Tu mets fin à la communication avec la supervision et te lances la communication avec la Sergente Yoneda.",
+                    "nextScene": "contact-yoneda"
+                }
+            ]
+        },
+        {
+            "id": "contact-yoneda",
+            "speaker": "howard",
+            "text": [
+                "Howard à Yoneda, ici le Capitaine Howard. Je suis en route pour rejoindre votre position. Pouvez-vous me confirmer votre emplacement exact et la situation sur le terrain ?",
+                "",
+                "Je suis à 538 km, position 53.2°N, 139.8°E, altitude 10 000 mètres. Je me dirige en code 9 vers votre dernière position de faction",
+                "Je vous laisse le contrôle de la communication, sergente Yoneda. Veuillez me guider vers la zone de patrouille."
+            ],
+            "choices": [
+                {
+                    "id": "reponse-yoneda",
+                    "text": "Attendre la réponse de Yoneda",
+                    "action": "Alors que tu es en route vers sa dernière position, tu attends la réponse de Yoneda.",
+                    "consequence": "Après plusieurs minutes d'attente, tu ne reçois aucune réponse, tu décides alors d'accélérer la propulsion de ton armure pour rejoindre sa position plus rapidement.",
+                    "nextScene": "rencontre-yoneda"
+                }
+            ]
+        },
+        {
+            "id": "rencontre-yoneda",
+            "text": [
+                "Après plus de vingt minute de vol, tu arrives enfin à sa dernière position, en périphérie de la capitale nipponne. Tu aperçois plus bas le signal de la sergente Yoneda, près d'une aire de jeux pour enfants abandonnée, à l'abri des regards. Tu descends en piqué pour la rejoindre.",
+                "",
+                "En arrivant sur les lieux, tu l'observes sur une balançoire, regardant l'horizon d'un quartier qui semble désert. Tu t'approches d'elle et elle te fait un signe de la main pour te saluer.",
+                "",
+                "« Sergente, tout va bien ? » demandes-tu en t'approchant d'elle.",
+                "« Oui, Capitaine. Tout va bien, code 79. Je vous attendais. » répond-elle d'une voix calme.",
+                "« Drôle d'endroit pour attendre quelqu'un. » dis-tu en observant les alentours.",
+                "",
+                "Le quartier est désert, il ne s'agissait pas d'une zone de guerre, comme si les habitants avaient fui le quartier depuis des années, abandonnant les lieux à l'abandon. Les bâtiments sont en ruines, les routes sont fissurées et envahies par la végétation. Le silence est pesant, seulement troublé par le vent qui souffle à travers les rues désertes.",
+                "",
+                "« Sergente, pouvez-vous me dire ce qui se passe ici ? » demandes-tu en observant les alentours.",
+                "« Je suis née ici, Capitaine. C'est la première fois que je reviens dans ce quartier depuis des années. » répond-elle d'une voix triste.",
+                "« Je vois... mais pourquoi tout est désert ? » demandes-tu en observant les bâtiments en ruines.",
+                "« C'est la guerre, Capitaine. La guerre a tout détruit. » répond-elle d'une voix grave.",
+                "",
+                "Elle poursuit : « Quand la guerre a cessée, les femmes ayant perdu leurs maris se sont rapprochées des villes pour refonder des familles. Mais le Japon ne fait presque plus d'enfants, les quartiers périphériques sont désertés, et les villes sont surpeuplées. »",
+                "« Vous n'êtes pas responsable des guerres, et encore moins du déclin démographique. » dis-tu en posant une main sur son épaule.",
+                "",
+                "Vous vous accroupissez à côté la balançoire, observant l'horizon d'un quartier qui semble figé dans le temps.",
+                "« Cela me brise le cœur de voir ce quartier ainsi, Capitaine. » dit-elle d'une voix triste."
+            ],
+            "choices": [
+                {
+                    "id": "encourager-yoneda",
+                    "text": "Répondre à Yoneda et l'encourager à continuer la mission",
+                    "action": "« Si je peux faire quelque chose pour vous aider, Yoneda, je le ferai. » dis-tu d'une voix rassurante.",
+                    "consequence": "Elle te regarde avec un sourire triste, mais reconnaissant. « Merci, Capitaine. Je suis prête à continuer la mission. »",
+                    "nextScene": "debuter-mission"
+                },
+                {
+                    "id": "rejeter-yoneda",
+                    "text": "Rembarrer sèchement Yoneda et la sommer de vous laisser seule",
+                    "action": "« Je ne suis pas votre confesseur, sergente. Restez ici à vous apitoyer si vous voulez, moi j'ai une mission à accomplir. » dis-tu d'un ton cassant.",
+                    "consequence": "Elle se redresse d'un coup, le visage fermé. « Très bien, Capitaine. Débrouillez-vous seul. » Elle décolle sans un regard en arrière, vous abandonnant sur la balançoire rouillée.",
+                    "nextScene": "fin-abandon"
+                }
+            ]
+        },
+        {
+            "id": "fin-abandon",
+            "isEnding": true,
+            "endingType": "bad",
+            "text": [
+                "Tu la regardes s'éloigner dans le ciel, certain qu'elle reviendra une fois calmée. Elle ne revient pas.",
+                "",
+                "Sans elle pour te guider, tu erres dans les rues de Tokyo, patrouillant sans véritable but, une silhouette blindée seule dans une ville qu'elle ne connaît pas. Tu assistes de loin aux premiers affrontements entre policiers et manifestants à Shibuya, hésitant sur la conduite à tenir, quand les écrans géants s'illuminent d'un bandeau rouge : « BOMBE LARGUÉE À NEW YORK ». Le réseau s'effondre avant même que tu aies pu intervenir.",
+                "",
+                "Livré à toi-même, tu te jettes malgré tout dans la mêlée pour tenter de ramener l'ordre. Sans personne pour couvrir tes arrières ni coordonner tes mouvements, tu épuises tes réserves à repousser des vagues d'émeutiers de plus en plus nombreuses. Ton armure finit par rendre l'âme, batterie à plat, systèmes éteints un à un.",
+                "",
+                "Immobilisé, sans défense, tu es submergé par la foule en furie et lynché dans le chaos, incapable de poursuivre la mission jusqu'au bout.",
+                "",
+                "À des kilomètres de là, de retour dans son quartier d'enfance, Yoneda regardera le ciel s'embraser sur Tokyo, seule elle aussi, sans jamais savoir ce qu'il est advenu du capitaine qu'elle a laissé derrière elle. Elle se sentira lâche d'être partie ainsi, mais ce n'est pas une si mauvaise fin : loin de Shibuya au moment où tout s'est effondré, elle est toujours en vie.",
+                "",
+                "— FIN : « Seul dans la tempête » —"
+            ],
+            "choices": []
+        },
+        {
+            "id": "debuter-mission",
+            "text": [
+                "Vous vous relevez et vous prenez votre envol pour rejoindre la zone de patrouille, en plein centre-ville de Tokyo. Vous survolez les rues bondées, les gratte-ciel, et les parcs, observant la vie urbaine qui s'étend à perte de vue. La ville est animée, mais vous remarquez que certaines zones sont désertes, comme si elles avaient été abandonnées depuis longtemps.",
+                "",
+                "« Yoneda, pouvez-vous me dire ce que nous devons surveiller dans cette zone ? » demandes-tu en observant les alentours.",
+                "« Surveillance de la population, Capitaine. Il y a eu des violentes émeutes hier soir, et nous devons nous assurer que la situation ne dégénère pas à nouveau. » répond-elle d'une voix calme.",
+                "",
+                "« Pourquoi les émeutes ont-elles éclaté ? » demandes-tu en observant la célèbre tour de Tokyo, qui s'élève au loin.",
+                "« Les gens ne sont pas contents de la situation actuelle, Capitaine. L'inflation, le chômage, et la pauvreté ont poussé les gens à bout. » répond-elle d'une voix grave.",
+                "",
+                "« Vous pouvez me dire où se trouvent les points chauds de la ville ? » demandes-tu en observant les alentours.",
+                "« Je pense que le point chaud se trouve dans le quartier de Shibuya, Capitaine. C'est là que les émeutes ont éclaté hier soir. » répond-elle d'une voix calme.",
+                "",
+                "« En route pour Shibuya dans ce cas. » dis-tu en prenant de l'altitude pour survoler la ville.",
+                "« Bien reçu, Capitaine. Je vous suis. » répond-elle en prenant de l'altitude pour te suivre."
+            ],
+            "choices": [
+                {
+                    "id": "se-diriger-vers-shibuya",
+                    "text": "Se diriger vers le quartier de Shibuya pour surveiller les émeutes",
+                    "action": "Tu prends de l'altitude pour survoler la ville et te diriger vers le quartier de Shibuya.",
+                    "consequence": "Tu observes les colonnes de fumée et les fourgons des forces anti-émeutes prêts à intervenir. Tu décides de te poser sur un toit pour observer la situation de plus près.",
+                    "nextScene": "surveillance-shibuya"
+                }
+            ]
+        },
+        {
+            "id": "surveillance-shibuya",
+            "text": [
+                "Tu observes la situation depuis le toit d'un immeuble, à quelques centaines de mètres du quartier de Shibuya. Tu aperçois les forces anti-émeutes en faction, surveillant les manifestants qui se rassemblent dans les rues. Les manifestants sont en colère, brandissant des pancartes et des banderoles, et scandant des slogans contre le gouvernement.",
+                "",
+                "« Je crois qu'ils n'en n'ont pas eu assez hier soir, Capitaine. » dit Yoneda en observant les manifestants."
+            ],
+            "choices": [
+                {
+                    "id": "aller-vers-les-manifestants",
+                    "text": "Se poser près des manifestants pour leur parler et tenter de calmer la situation",
+                    "action": "Vous descendez au niveau de la rue pour rencontrer les manifestants et tenter de calmer la situation.",
+                    "consequence": "Avec méfiance, vous vous approchez des manifestants, qui vous regardent avec suspicion, sans hostilité.",
+                    "nextScene": "rencontre-manifestants"
+                },
+                {
+                    "id": "aller-vers-la-police",
+                    "text": "Se poser près des forces anti-émeutes pour leur parler et voir la situation de leur côté",
+                    "action": "Vous descendez au niveau de la rue pour rencontrer les policiers en position pour voir si vous pouvez les aider à calmer la situation.",
+                    "consequence": "Vous vous approchez des policiers qui semblent se tendre à votre arrivée.",
+                    "nextScene": "rencontre-police"
+                }
+            ]
+        },
+        {
+            "id": "rencontre-manifestants",
+            "text": [
+                "Vous repérez le leader du groupe de manifestants, un homme d'une trentaine d'années, portant un masque et une veste en cuir.",
+                "",
+                "« Bonjour, unités 10.60-D et 10.113-B, nous pouvons vous aider en quoi que ce soit ? » demandes-tu d'une voix calme.",
+                "« Vous devriez pas être ici, c'est eux qui vous envoi ? » répond le leader en pointant du doigt les forces anti-émeutes.",
+                "",
+                "« Nous sommes ici pour éviter de nouveaux blessés et essayer de calmer le jeu des deux côtés. » dis-tu en observant les manifestants.",
+                "« C'est louable, mais vous n'êtes pas les bienvenus ici. » répond le leader en haussant la voix.",
+                "",
+                "« Nous ne voulons pas de confrontation, nous voulons juste discuter avec vous. » dis-tu en observant les manifestants.",
+                "« Vous avez vu ce que vous faites à New York, chez les Américains ? Vous êtes à la solde des gouvernements, vous êtes des traîtres ! » répond le leader en pointan du doigt les écrans géants publicitaires.",
+                "",
+                "Les écrans diffusent la télévision nippone, qui montre les images de la guerre civile à New York, avec des manifestants essuyant des projections de gaz lacrymogène en provenance des forces anti-émeutes épaulées par des administrateurs.",
+                "Il écrit sur le bandeau d'informations : « New York, alerte maximale, le Dédale de l'Administration déployé. »",
+                "",
+                "« Je ne sais pas quoi vous répondre, mais nous ne sommes pas là pour vous faire du mal. » dis-tu en soulevant les mains pour montrer que vous n'êtes pas armés.",
+                "Plusieurs manifestants s'approchent de vous, certains brandissant des pancartes et des banderoles, d'autres vous regardant avec méfiance.",
+                "« Partez, il vaut mieux pour vous. » dit le leader en croisant les bras.",
+                "",
+                "Tu te retournes vers Yoneda qui fait face aux forces anti-émeutes, et tu lui dis : « Yoneda, je crois qu'il est temps de partir. »",
+                "Elle se retourne vers toi avant de te dire en hurlant : « ATTENTION ! ».",
+                "",
+                "Vous êtes poussé par Yoneda, vous évitant une grenade tirée par la police vers votre direction."
+            ],
+            "choices": [
+                {
+                    "id": "fuir-avec-yoneda",
+                    "text": "Fuir avec Yoneda pour éviter les affrontements",
+                    "action": "Vous vous relevez et vous fuyez avec Yoneda, en direction des rues adjacentes pour éviter les affrontements.",
+                    "consequence": "Vous vous retrouvez dans une ruelle déserte, à l'abri des regards. Vous reprenez votre souffle et vous observez la situation.",
+                    "nextScene": "fuite"
+                },
+                {
+                    "id": "affronter-la-police",
+                    "text": "Affronter la police pour protéger les manifestants",
+                    "action": "Vous vous relevez avant de mettre en mode de combat pour affronter la police et protéger les manifestants.",
+                    "consequence": "Ton affichage tête haute te dit : « AVERTISSEMENT SYSTÈME : MODE DE COMBAT ACTIVÉ, ARMURE À 100 % DE PUISSANCE. »",
+                    "nextScene": "charge"
+                }
+            ]
+        },
+        {
+            "id": "fuite",
+            "text": [
+                "Une fois à l'abri, vous vous regardez mutuellement, essoufflés et en sueur. Vous réalisez que la situation est devenue trop dangereuse pour rester dans cette zone.",
+                "",
+                "« Il faut contacter la supervision pour leur faire part de la situation et demander des renforts. » dis-tu d'un air sérieux.",
+                "",
+                "Yoneda hoche la tête, place son communicateur sur son casque et tente de contacter la supervision.",
+                "« Supervision, ici la sergente Yoneda. Nous avons été pris dans une situation dangereuse avec les manifestants et les forces anti-émeutes. Nous avons besoin de renforts immédiatement. »",
+                "",
+                "Quelques secondes plus tard, toujours pas de réponse.",
+                "« Supervision ? »",
+                "",
+                "Yoneda se tourne vers toi, l'air inquiet. « Capitaine, nous n'avons pas de réponse... »",
+                "Alors que Yoneda termine sa phrase, vous entendez des cris et vous voyez un manifestant courir dans la ruelle comme pour vous prévenir d'un danger imminent.",
+                "",
+                "Howard s'approche de ce dernier, l'ignorant et lui demande : « Que se passe-t-il ? »",
+                "Le manifestant, continue sa course et dit d'un air essoufflé : « Ça va exploser ! Ils l'ont fait exploser ! » avant de désigner, d'un geste tremblant, un panneau d'affichage municipal fixé au coin de la ruelle.",
+                "",
+                "Tu lèves les yeux. L'écran diffuse encore la télévision nippone, le bandeau d'informations défilant en boucle : « BOMBE LARGUÉE À NEW YORK — LE DÉDALE DE L'ADMINISTRATION HORS SERVICE ». Puis l'image grésille et s'éteint, comme tous les autres écrans de la rue.",
+                "",
+                "Vous vous retournez vers Yoneda, qui a l'air paniquée. « New York... » dis-tu, la gorge sèche.",
+                "Elle vous répond d'une petite voix : « Capitaine, j'ai perdu le contact avec la supervision, je ne sais pas ce qui se passe. »",
+                "",
+                "Elle continue d'un air pétrifié : « J'ai perdu le contact avec la moitié de l'hémisphère... »",
+                "« Quoi ? » dis-tu, surpris.",
+                "",
+                "Vous prenez votre communicateur et tentez de contacter la supervision, mais vous n'obtenez aucune réponse."
+            ],
+            "choices": [
+                {
+                    "id": "sortir-de-la-ruelle",
+                    "text": "Sortir de la ruelle pour comprendre ce qui se passe en ville",
+                    "action": "Vous quittez l'abri de la ruelle et vous vous avancez prudemment vers l'artère principale.",
+                    "consequence": "Le vacarme qui vous parvient n'a plus rien à voir avec une simple manifestation. C'est un grondement continu, fait de cris, de sirènes et de verre brisé.",
+                    "nextScene": "effondrement"
+                }
+            ]
+        },
+        {
+            "id": "charge",
+            "text": [
+                "Tu t'élances vers les forces anti-émeutes, ton armure vrombissant sous la montée en puissance. Les policiers reculent, désorientés par ta charge. Tu désarmes le premier d'un geste précis, projetant son lanceur de grenade au loin sans le blesser.",
+                "",
+                "« Capitaine, qu'est-ce que vous faites ?! » hurle Yoneda en te rejoignant, se plaçant entre toi et les manifestants pour les protéger d'éventuels tirs.",
+                "Les manifestants, d'abord stupéfaits, se mettent à acclamer. Un administrateur qui prend leur défense, du jamais vu.",
+                "",
+                "Mais le chef de patrouille lève la main, prêt à donner l'ordre d'un tir groupé. « Vous venez de commettre une grave erreur, administrateur. »",
+                "",
+                "Soudain, un cri s'élève de la foule. Tous les regards se tournent vers les écrans géants publicitaires. La télévision nippone affiche en lettres rouges : « BOMBE LARGUÉE À NEW YORK ». Puis l'image se fige, grésille, et disparaît. Les journalistes ont perdu le signal.",
+                "",
+                "Le doigt du chef de patrouille retombe. Plus personne ne pense à se battre. Manifestants et policiers, ennemis quelques secondes plus tôt, restent figés côte à côte, les yeux rivés sur les écrans éteints.",
+                "",
+                "Yoneda s'approche de toi, la voix blanche : « Capitaine... j'ai perdu le contact avec la supervision. »"
+            ],
+            "choices": [
+                {
+                    "id": "interrompre-affrontement",
+                    "text": "Interrompre l'affrontement et tenter de comprendre ce qui se passe",
+                    "action": "Tu désactives ton mode de combat et recules lentement, les mains ouvertes, laissant policiers et manifestants à leur stupeur commune.",
+                    "consequence": "L'affrontement n'a plus aucun sens. Quelque chose de bien plus grave vient de se produire, et tu le sens jusque dans ton armure.",
+                    "nextScene": "effondrement"
+                }
+            ]
+        },
+        {
+            "id": "rencontre-police",
+            "text": [
+                "Vous vous approchez du chef de patrouille, un homme d'une quarantaine d'années, portant un uniforme de police, un casque et un lanceur de grenade.",
+                "« Bonjour, unités 10.60-D et 10.113-B, nous pouvons vous aider en quoi que ce soit ? » demandes-tu d'une voix calme.",
+                "« Non ça va aller, on a la situation sous contrôle. » répond le chef de patrouille en observant les manifestants.",
+                "Dans un ton plus hostile, il répond : « Si vous voulez vous rendre utile, vous pouvez nous aider à disperser ces manifestants. »",
+                "",
+                "« Nous ne sommes pas là pour dissperser quoique ce soit, ils ont l'air d'être plutôt pacifiques. » dis-tu en observant les manifestants.",
+                "« Pacifiques ?! Vous êtes aveugles ou quoi ?! » répond le chef de patrouille en pointant du doigt les écrans géants publicitaires.",
+                "",
+                "Les écrans diffusent la télévision nippone, qui montre les images de la guerre civile à New York, avec des manifestants essuyant des projections de gaz lacrymogène en provenance des forces anti-émeutes épaulées par des administrateurs. Il écrit sur le bandeau d'informations : « New York, alerte maximale, le Dédale de l'Administration déployé. »",
+                "",
+                "« Ce qui se passe à New York n'a rien à voir avec nous, nous ne sommes pas là pour faire la guerre. » réponds-tu d'un ton ferme.",
+                "",
+                "Quelques instants vous entendez des cris derrière vous alors que les manifestants regardent tous les écrans géants. Vous faites de même pour comprendre ce qu'il se passe. La télévision nippone affiche désormais : « BOMBE LARGUÉE À NEW YORK », les journalistes semblent avoir perdu le signal avec New York.",
+                "",
+                "Le chef de patrouille laisse tomber son lanceur, le visage livide. « C'est... c'est une blague ? » murmure-t-il.",
+                "Puis l'écran grésille et s'éteint pour de bon. Le silence retombe sur le carrefour, un silence terrible, où manifestants et policiers ne font plus qu'une seule foule hébétée.",
+                "",
+                "Yoneda s'approche de toi, la voix tremblante : « Capitaine... je viens de perdre le contact avec la supervision. »"
+            ],
+            "choices": [
+                {
+                    "id": "rejoindre-yoneda-police",
+                    "text": "Quitter les lieux avec Yoneda pour évaluer la situation en ville",
+                    "action": "Tu poses une main sur l'épaule de Yoneda et vous vous éloignez de la foule, cap sur la première hauteur pour prendre la mesure de la situation.",
+                    "consequence": "Derrière vous, la stupeur commence déjà à se muer en panique. Les premiers cris de rage éclatent.",
+                    "nextScene": "effondrement"
+                },
+                {
+                    "id": "prevenir-manifestants-police",
+                    "text": "Tourner le dos aux policiers et courir prévenir les manifestants du danger",
+                    "action": "Tu ignores le chef de patrouille livide et te précipites vers la foule pour la pousser à se disperser avant que tout ne bascule.",
+                    "consequence": "Mais il est déjà trop tard. La stupeur se mue en fureur, et la panique emporte la rue avant même que tu n'aies pu dire un mot.",
+                    "nextScene": "effondrement"
+                }
+            ]
+        },
+        {
+            "id": "effondrement",
+            "text": [
+                "Vous sortez à découvert. Tokyo n'est plus la même ville.",
+                "",
+                "En l'espace de quelques minutes, la panique a tout emporté. Les nouvelles de New York se sont répandues comme une traînée de poudre. Les gens courent dans tous les sens ; certains pillent les magasins, d'autres se battent pour un bidon d'essence ou une bouteille d'eau. Des colonnes de fumée s'élèvent déjà de plusieurs quartiers. Une voiture flambe au milieu du carrefour. Quelque part, une vitrine explose sous les coups.",
+                "",
+                "« Capitaine, regardez... » dit Yoneda en pointant du doigt un groupe qui s'en prend à une famille pour lui voler ses provisions. Plus loin, un homme en frappe un autre à terre, longtemps après qu'il eut cessé de bouger. La violence n'est plus une menace : elle est partout, gratuite, déchaînée.",
+                "",
+                "Les forces de l'ordre ont disparu, avalées par la foule ou déjà en fuite. Les administrateurs, si respectés hier encore, ne sont plus que deux silhouettes perdues dans le chaos. Ton affichage tête haute clignote, impitoyable : « Réseau administration : hors ligne. Unités à portée : 0. »",
+                "",
+                "Vous êtes seuls."
+            ],
+            "choices": [
+                {
+                    "id": "proteger-civils",
+                    "text": "Intervenir pour protéger les civils et tenter de rétablir un semblant d'ordre",
+                    "action": "Tu te précipites au cœur de la mêlée, décidé à protéger ceux qui peuvent encore l'être.",
+                    "consequence": "Ton instinct d'administrateur reprend le dessus : tant qu'il y a des gens à sauver, il faut essayer.",
+                    "nextScene": "chaos-civils"
+                },
+                {
+                    "id": "prendre-hauteur",
+                    "text": "Prendre de la hauteur pour mesurer l'ampleur de la catastrophe",
+                    "action": "Tu actives tes propulseurs et t'élèves au-dessus des toits, Yoneda à ta suite.",
+                    "consequence": "Tu as besoin de comprendre l'étendue du désastre avant d'agir.",
+                    "nextScene": "chaos-hauteur"
+                }
+            ]
+        },
+        {
+            "id": "chaos-civils",
+            "text": [
+                "Vous vous précipitez vers la famille agressée. À votre approche, les pillards détalent, effrayés par vos armures. Vous aidez le père à se relever, tandis que la mère serre ses deux enfants contre elle.",
+                "« Merci... merci... » balbutie l'homme, avant de fuir avec les siens dans les rues en flammes.",
+                "",
+                "Mais pour une famille sauvée, dix autres scènes de violence éclatent autour de vous. Vous ne pouvez pas être partout. Vous en sauvez un, puis un autre, jusqu'à ce que l'évidence vous rattrape : la ville tout entière est en train de sombrer, et vous n'êtes que deux.",
+                "",
+                "« On ne peut pas les sauver tous, Capitaine. » dit Yoneda, la voix brisée. « On ne peut sauver personne. »",
+                "",
+                "Alors que tu allais répondre, un vrombissement sourd déchire le ciel au-dessus de vous. Quelque chose tombe. Vite. Droit sur la ville."
+            ],
+            "choices": [
+                {
+                    "id": "lever-les-yeux-civils",
+                    "text": "Lever les yeux vers le ciel",
+                    "action": "Tu redresses la tête, cherchant l'origine de ce grondement qui couvre le vacarme de l'émeute.",
+                    "consequence": "Un point sombre grossit à vue d'œil, traînant derrière lui une écharpe de fumée noire.",
+                    "nextScene": "arrivee-kira"
+                }
+            ]
+        },
+        {
+            "id": "chaos-hauteur",
+            "text": [
+                "Vous prenez votre envol et grimpez au-dessus des toits. Le spectacle qui s'offre à vous vous glace le sang.",
+                "",
+                "Ce n'est pas un quartier qui brûle. C'est la ville. Des dizaines de foyers d'incendie ponctuent l'horizon, de Shibuya jusqu'à la baie. Les autoroutes sont figées, bloquées par des carcasses de voitures. Une marée humaine s'écoule vers la périphérie, fuyant on ne sait quoi.",
+                "",
+                "« Comment tout a pu basculer aussi vite ? Où sont les autres ? » murmures-tu.",
+                "« Les gens ont compris, Capitaine. » répond Yoneda. « Si New York est tombée, plus rien ne les retient. Plus de règles, plus d'avenir. Juste la peur. Nous sommes seuls. »",
+                "",
+                "Ton affichage tête haute grésille, tente encore de raccrocher au réseau, en vain. « Réseau administration : hors ligne. Unités à portée : 0. »",
+                "",
+                "C'est alors que tu le remarques : un point lumineux, très haut dans le ciel, qui grossit à vue d'œil. Une traînée de fumée noire le suit. Il tombe. Droit vers Tokyo."
+            ],
+            "choices": [
+                {
+                    "id": "intercepter",
+                    "text": "Se porter à sa rencontre",
+                    "action": "Tu pousses tes propulseurs à fond en direction de l'objet en chute libre, Yoneda sur tes talons.",
+                    "consequence": "Ce n'est pas un missile. La signature thermique est trop irrégulière. On dirait... une armure.",
+                    "nextScene": "arrivee-kira"
+                }
+            ]
+        },
+        {
+            "id": "arrivee-kira",
+            "text": [
+                "L'objet s'écrase à quelques centaines de mètres, soulevant un nuage de poussière et de débris. Ce n'est pas une bombe. C'est une armure.",
+                "",
+                "Vous vous précipitez vers le cratère. Au fond, une carcasse fumante, à peine reconnaissable. L'armure est lacérée, criblée d'impacts, une partie du casque arrachée. Sur le plastron, à moitié effacé, un matricule : 6A.",
+                "",
+                "« La commandante... » souffle Yoneda. « C'est la Commandante Kira. Une des six commandantes du globe. Qu'est-ce qu'elle fait ici ? »",
+                "",
+                "Vous dégagez les décombres à mains nues. Kira est là, le visage ensanglanté, respirant à peine. Ses yeux s'ouvrent lentement et se posent sur toi."
+            ],
+            "choices": [
+                {
+                    "id": "secourir-kira",
+                    "text": "S'agenouiller près d'elle et écouter ce qu'elle a à dire",
+                    "action": "Tu t'agenouilles dans les débris, soutenant sa nuque brisée avec précaution.",
+                    "consequence": "Sa main tremblante cherche ton bras. Elle veut parler.",
+                    "nextScene": "revelation-kira"
+                }
+            ]
+        },
+        {
+            "id": "revelation-kira",
+            "speaker": "kira",
+            "text": [
+                "« Howard... c'est bien vous... » articule-t-elle avec difficulté.",
+                "« Commandante, ne bougez pas, on va vous sortir de là. » dis-tu en la maintenant contre toi.",
+                "« Non... écoutez-moi... je n'ai pas... beaucoup de temps. »",
+                "",
+                "« Je suis la seule... à avoir traversé. La seule à avoir atteint le côté nippon. Les autres... les autres n'ont pas passé le Pacifique. Ils sont tous morts. »",
+                "« Ce n'était pas une bombe ordinaire, Howard. C'était... notre bombe à énergie noire. Un prototype embarqué à bord du Dédale. Ils l'ont larguée sur New York... et elle n'a pas explosé. Elle a effacé... »",
+                "« La moitié du globe. Rasée. New York, la côte est, l'Europe... il n'y a plus rien. Que de la cendre et une lumière qui dévore tout ce qu'elle touche, sans un bruit. »",
+                "",
+                "Elle tousse, du sang perle à ses lèvres.",
+                "",
+                "« Et ceux qui restent... ceux qui étaient trop loin pour mourir mais trop près pour en réchapper... ils sont devenus fous. L'énergie noire, elle ne brûle pas seulement les corps. Elle ronge l'esprit. Ils ne sont plus humains. La côte américaine est un enfer à ciel ouvert. »",
+                "« Ne suivez pas... les voix. Vous entendrez des voix, là-bas. Elles vous appelleront. C'est comme ça qu'elle vous attrape. »",
+                "",
+                "Sa main saisit ton avant-bras avec une force désespérée.",
+                "",
+                "« Il reste le Thermophile. Notre porte-avions de commandement. Autonome, blindé, il croise au large de Los Angeles. C'est le dernier bâtiment de l'Administration encore debout. Si un commandement existe toujours quelque part... c'est là. C'est notre dernier espoir, Howard. Le dernier. Il faut que quelqu'un le rejoigne. »",
+                "",
+                "Sa poigne se relâche. Ses yeux se voilent.",
+                "",
+                "« Dites-leur... que j'ai essayé de prévenir... à temps... »",
+                "",
+                "La Commandante Kira ne respire plus."
+            ],
+            "choices": [
+                {
+                    "id": "honorer-kira",
+                    "text": "Fermer les yeux de Kira et jurer de rejoindre le Thermophile",
+                    "action": "Tu abaisses doucement les paupières de la commandante. « On ira, Kira. On trouvera le Thermophile. Je vous le promets. »",
+                    "consequence": "Il n'y a plus rien à sauver ici. Mais peut-être, à des milliers de kilomètres, sur ce navire, une dernière lueur subsiste.",
+                    "nextScene": "cap-sur-lamerique"
+                },
+                {
+                    "id": "douter-kira",
+                    "text": "Douter, pourquoi risquer le Pacifique pour un navire à moitié coulé ?",
+                    "action": "« Traverser un océan pour un porte-avions qui a peut-être déjà sombré ? C'est de la folie, Yoneda. »",
+                    "consequence": "« Et rester ici, c'est quoi ? » répond-elle en désignant la ville en flammes. « Attendre de brûler avec le reste ? Le Thermophile, c'est la seule chose qui ressemble encore à un espoir. Je préfère mourir en essayant. »",
+                    "nextScene": "cap-sur-lamerique"
+                }
+            ]
+        },
+        {
+            "id": "cap-sur-lamerique",
+            "text": [
+                "Vous prenez la Commandante Kira, l'allongez à l'écart des flammes, et lui rendez un dernier salut militaire.",
+                "",
+                "Tu vérifies ton affichage tête haute. « Charge à 71%. Portée théorique... 9 900 km. Le Thermophile croise au large de Los Angeles, à un peu moins de 8 800 km. » Tu marques une pause. « On a juste la marge pour l'aller. Pas pour le retour. »",
+                "",
+                "« Alors on ne reviendra pas. » répond Yoneda, le regard dur. « Ou on se rechargera à bord, s'il tient encore debout. On avisera. »",
+                "",
+                "Vous montez dans le ciel, cap à l'est, laissant Tokyo et son brasier derrière vous. Sous vos pieds, bientôt, il n'y a plus que l'immensité noire du Pacifique."
+            ],
+            "choices": [
+                {
+                    "id": "traverser",
+                    "text": "Traverser le Pacifique",
+                    "action": "Tu bascules en vol de croisière à haute altitude et engages le long transit au-dessus de l'océan.",
+                    "consequence": "Le silence de la haute atmosphère n'est troublé que par le décompte de ta réserve d'énergie qui s'égrène, kilomètre après kilomètre.",
+                    "nextScene": "traversee-pacifique"
+                }
+            ]
+        },
+        {
+            "id": "traversee-pacifique",
+            "text": [
+                "Des heures de vol au-dessus d'un océan sans fin. Ton affichage tête haute grignote ta réserve d'énergie sans relâche. Charge : 58%... 49%... 41%. La fatigue s'installe. Yoneda vole à ta hauteur, silencieuse, les yeux fixés sur l'horizon vide.",
+                "",
+                "Soudain, une friture dans ton casque. Puis une voix. Grave, calme, presque douce.",
+                "",
+                "« À toutes les unités encore à l'écoute... ici le Lieutenant 10.742-P Safar. Ne résistez pas. Il n'y a plus rien à protéger, plus personne à sauver. Venez à Los Angeles. La lumière vous attend. Elle est si belle, une fois qu'on cesse de lutter... venez... »",
+                "",
+                "La voix se répète, en boucle, hypnotique, s'insinuant sous ta peau. Ton affichage tête haute localise la source : un émetteur puissant, droit devant, au cœur des ruines de Los Angeles.",
+                "",
+                "« Les voix, Capitaine. » dit Yoneda, la mâchoire serrée. « C'est de ça que Kira nous a prévenus. Safar... je le connaissais. C'était un bon officier. »"
+            ],
+            "choices": [
+                {
+                    "id": "couper-communication",
+                    "text": "Couper immédiatement les communications et poursuivre vers la côte",
+                    "action": "Tu coupes le canal d'un geste sec. Le silence revient, mais la voix résonne encore dans ta tête.",
+                    "consequence": "Mieux vaut ne pas laisser cette voix s'installer. Vous filez vers la côte américaine, sourds à son appel.",
+                    "nextScene": "los-angeles"
+                },
+                {
+                    "id": "ecouter-safar",
+                    "text": "Garder le canal ouvert pour comprendre ce qu'est devenu Safar",
+                    "action": "Tu laisses le canal ouvert, cherchant dans ce message une faille, un indice, un reste d'humanité.",
+                    "consequence": "Plus tu l'écoutes, plus la voix te semble raisonnable, apaisante. Yoneda finit par couper elle-même ta communication : « Assez, Capitaine. Elle vous avait, là. »",
+                    "nextScene": "los-angeles"
+                }
+            ]
+        },
+        {
+            "id": "los-angeles",
+            "text": [
+                "Après une éternité au-dessus des flots, une côte se dessine enfin. Mais ce n'est pas l'Amérique que Kira connaissait.",
+                "Là où s'étendait Los Angeles, il n'y a plus qu'une plaine de verre noir et de ruines fondues. Le ciel lui-même est mauve, strié d'aurores malades. Ton affichage tête haute s'affole : « ALERTE : radiations critiques. Intégrité du blindage compromise après 3 heures d'exposition. »",
+                "",
+                "Sur les décombres, des silhouettes convergent vers une immense antenne de fortune d'où s'échappe la voix de Safar. Des survivants. Ou ce qu'il en reste : le regard vide, la peau brûlée, ils marchent vers la lumière comme des somnambules.",
+                "« N'atterris pas là-dedans. » dit Yoneda. « Ce ne sont plus des gens. »",
+                "",
+                "C'est alors que tu le vois, au large, se découpant sur l'océan mauve : une masse colossale, hérissée d'antennes et de tourelles. Un porte-avions. Il liste sur bâbord, une colonne de fumée s'échappe de sa superstructure, et il s'éloigne lentement des côtes, comme s'il cherchait à mettre de la distance entre lui et cet enfer.",
+                "",
+                "« Le Thermophile. » souffle Yoneda. « Il est encore là. Mais il est salement amoché... et il fuit la côte. »"
+            ],
+            "choices": [
+                {
+                    "id": "foncer-thermophile",
+                    "text": "Filer droit vers le Thermophile sans t'attarder sur les ruines",
+                    "action": "Tu vires vers le large, plein gaz, avant que la horde n'ait le temps de lever les yeux vers vous.",
+                    "consequence": "Chaque seconde passée au-dessus de cette terre morte ronge ton blindage. Le navire est votre seule chance.",
+                    "nextScene": "approche-thermophile"
+                },
+                {
+                    "id": "survoler-ruines",
+                    "text": "Survoler brièvement les ruines pour chercher d'éventuels survivants sains",
+                    "action": "Tu descends d'un cran et longes les décombres, scrutant chaque ombre à la recherche d'un visage encore humain.",
+                    "consequence": "Tu n'en trouves aucun. Seulement des regards vides tournés vers la lumière. Le cœur lourd, tu remets le cap sur le navire au large.",
+                    "nextScene": "approche-thermophile"
+                },
+                {
+                    "id": "reduire-antenne",
+                    "text": "Piquer vers l'antenne de Safar pour faire taire les voix une bonne fois pour toutes",
+                    "action": "Tu ignores un instant le navire au large et fonds droit sur l'immense antenne de fortune d'où s'échappe la litanie de Safar.",
+                    "consequence": "« Capitaine, les radiations, on ne tiendra pas longtemps là-dedans... » proteste Yoneda. Mais elle te suit.",
+                    "nextScene": "confrontation-safar"
+                }
+            ]
+        },
+        {
+            "id": "confrontation-safar",
+            "speaker": "safar",
+            "text": [
+                "Vous vous posez au pied de l'antenne, au milieu des somnambules. Ils ne vous prêtent aucune attention, le regard aimanté par la structure grésillante, la bouche entrouverte comme pour boire la lumière.",
+                "",
+                "Au cœur de l'enchevêtrement de câbles, une armure. Ou ce qu'il en reste. Le plastron porte encore un matricule à demi fondu : 10.742-P. Le métal a coulé dans la ferraille de l'antenne, chair et machine mêlées, maintenues en vie par cette énergie noire qui suinte des ruines.",
+                "",
+                "La tête se redresse lentement vers vous. Une voix, la même que dans ton casque, mais plus douce encore, débarrassée de toute peur.",
+                "",
+                "« Vous êtes venus. Je savais que vous viendriez. Posez tout ça, Capitaine. Les armes, les ordres, les morts que vous traînez derrière vous. Ici, plus rien ne pèse. La lumière ne demande qu'à vous accueillir. Écoutez-la... elle ne ment pas, elle. »",
+                "",
+                "« Safar... » murmure Yoneda, la voix étranglée. « Qu'est-ce qu'ils t'ont fait... »",
+                "« Rien que de très doux. Ils m'ont libéré. »"
+            ],
+            "choices": [
+                {
+                    "id": "detruire-antenne",
+                    "text": "Détruire l'émetteur et abréger l'agonie de Safar",
+                    "action": "Tu concentres la puissance qui te reste sur l'antenne et l'armure fondue en son cœur. « Repose en paix, lieutenant. » La structure s'effondre dans une gerbe d'étincelles.",
+                    "consequence": "La voix s'éteint. Sur toute la côte, les somnambules s'arrêtent net, hébétés, comme réveillés d'un rêve dont ils ne reviendront pas vraiment. Un silence immense retombe. Il est temps de rejoindre le Thermophile.",
+                    "nextScene": "approche-thermophile"
+                },
+                {
+                    "id": "ceder-a-la-lumiere",
+                    "text": "Baisser les armes et écouter, juste un instant, la promesse de la lumière",
+                    "action": "Tu fais un pas vers l'antenne. La voix se répand en toi comme une eau tiède. Tes épaules se détendent. Pour la première fois depuis Tokyo, tu n'as plus peur.",
+                    "consequence": "Tu sens la main de Yoneda se refermer sur ton bras pour te retenir... puis se desserrer. Elle l'entend aussi, maintenant. Elle a cessé de lutter.",
+                    "nextScene": "fin-lumiere"
+                }
+            ]
+        },
+        {
+            "id": "fin-lumiere",
+            "isEnding": true,
+            "endingType": "bad",
+            "text": [
+                "Vous ôtez vos casques ensemble. L'air brûle, saturé de radiations, mais il n'a plus aucune importance. La voix de Safar vous enveloppe, chaude, maternelle, et vous comprenez enfin ce qu'elle promet : la fin de la fatigue, la fin de la peur, la fin de tout ce poids.",
+                "",
+                "Vous rejoignez la lente procession des survivants qui marchent vers l'antenne. Le Thermophile, le Fondateur, le dernier espoir de l'Administration : plus rien de tout cela n'existe. Il n'y a plus que la lumière, droit devant, si belle qu'on se demande comment on a pu la fuir.",
+                "",
+                "« Vous aviez raison, lieutenant. » souffle Yoneda, un sourire vide aux lèvres. « Elle ne ment pas. »",
+                "",
+                "Vous avancez, main dans la main, jusqu'à ce que vos ombres se dissolvent à leur tour dans la clarté mauve. Quelque part au large, une haute silhouette d'acier continue de fendre les flots sans vous, indifférente, emportant vers un destin que vous ne connaîtrez jamais celui que vous auriez pu devenir.",
+                "",
+                "— FIN : « L'appel de la lumière » —"
+            ],
+            "choices": []
+        },
+        {
+            "id": "approche-thermophile",
+            "text": [
+                "Vous vous éloignez de la côte, survolant une mer d'huile sous le ciel mauve. Le Thermophile grossit à mesure que vous approchez : un léviathan d'acier de plusieurs centaines de mètres, autonome, conçu pour tenir des mois sans jamais toucher terre. Le poste de commandement flottant de toute une région du globe.",
+                "",
+                "Mais il agonise. Une entaille béante lacère sa superstructure. Le pont d'envol est jonché de drones calcinés et d'appareils renversés. La coque, noircie, laisse échapper une fumée âcre. Il gîte dangereusement.",
+                "",
+                "Ton affichage tête haute tressaille, puis accroche enfin quelque chose : « Réseau administration : signal local détecté. Source : PA-Thermophile. »",
+                "Pour la première fois depuis Tokyo, un semblant d'espoir te traverse. L'Administration existe encore. Quelque part, sur ce navire, il reste des vôtres.",
+                "",
+                "Vous vous posez sur le pont d'envol gauchi. Le métal grince sous vos pieds. Et là, montant des entrailles du bâtiment, un bruit que tu reconnais entre tous : des tirs. Pas des tirs d'armes légères. Des décharges d'armures de combat.",
+                "",
+                "« Ce ne sont pas des civils affolés, Capitaine. » dit Yoneda, tendue. « Ce sont des administrateurs. Ils se battent entre eux. »"
+            ],
+            "choices": [
+                {
+                    "id": "entrer-thermophile",
+                    "text": "Pénétrer dans le navire pour comprendre ce qui s'y passe",
+                    "action": "Tu descends une écoutille ouverte, Yoneda derrière toi, t'enfonçant dans les coursives éclairées de rouge par l'alarme.",
+                    "consequence": "Chaque pont que tu franchis résonne de cris, d'ordres contradictoires et de tirs. Le Thermophile n'est plus un refuge. C'est un champ de bataille.",
+                    "nextScene": "pont-thermophile"
+                }
+            ]
+        },
+        {
+            "id": "pont-thermophile",
+            "text": [
+                "Au bout d'une coursive, vous débouchez sur un vaste hangar reconverti en poste de commandement de fortune. Une dizaine d'administrateurs y sont retranchés, armures dépareillées, certaines à moitié démontées faute de pièces. Deux corps gisent au sol, dans leur sang. L'air empeste la poudre et l'ozone.",
+                "À votre entrée, une demi-douzaine d'armes se braquent sur vous. Puis un homme lève la main, un administrateur au plastron marqué d'un galon de sergent. Il vous détaille, remarque vos armures presque intactes et ton matricule de capitaine.",
+                "",
+                "« Des renforts ? Un capitaine et une sergente ? » lâche-t-il, mi-espoir mi-mépris. « Vous arrivez un peu tard. Il n'y a plus rien à commander ici. »",
+                "",
+                "Il vous explique en quelques phrases hachées. Le réseau global s'est effondré à la seconde de l'impact. Le Thermophile a perdu la moitié de son équipage dans les premières heures. Et depuis, faute de chaîne de commandement, les survivants s'entre-déchirent : certains veulent fuir vers le grand large, d'autres saborder le navire, d'autres encore prendre le contrôle.",
+                "",
+                "« Et le commandement légitime ? » demandes-tu. « Il n'y a personne aux commandes ? »",
+                "« Le Fondateur. » répond le commandant, la voix plus basse. « Le Fondateur en personne était à bord. Il s'est enfermé dans les quartiers de commandement il y a douze heures. Il n'a plus donné un seul ordre depuis. Personne n'entre, personne ne sort. »"
+            ],
+            "choices": [
+                {
+                    "id": "rallier-fondateur",
+                    "text": "Tenter de rallier les administrateurs autour de l'autorité du Fondateur",
+                    "action": "« S'il est encore vivant, il est le seul commandement qui nous reste. Aidez-nous à le rejoindre, et l'Administration pourra encore décider de son sort. »",
+                    "consequence": "Certains hochent la tête, prêts à te suivre. Mais une autre faction, à l'autre bout du hangar, ouvre le feu, pour eux, l'autorité se prend, elle ne se rend pas. Le hangar bascule dans le chaos.",
+                    "nextScene": "combat-interne"
+                },
+                {
+                    "id": "discretion-fondateur",
+                    "text": "Rester discret et te frayer un chemin seul vers les quartiers de commandement",
+                    "action": "« On ne prendra parti pour personne. On va voir le Fondateur, et on avisera. » Tu entraînes Yoneda vers une coursive latérale.",
+                    "consequence": "Mais votre départ précipité est pris pour une manœuvre. Un tir vous frôle. En quelques secondes, tout le pont s'embrase autour de vous.",
+                    "nextScene": "combat-interne"
+                }
+            ]
+        },
+        {
+            "id": "combat-interne",
+            "text": [
+                "Le Thermophile devient un enfer d'acier. Les factions s'affrontent d'un pont à l'autre, sans plus aucune raison sinon la peur et le pouvoir. Vous n'avez pas d'autre choix que de vous frayer un passage vers les quartiers de commandement, arme au poing, sans jamais chercher à tuer, seulement à passer.",
+                "",
+                "Tu enfonces une cloison, désarmes un administrateur retranché, esquives une grenade. L'alarme hurle et le système intelligent du navire ne cesse de répéter : « AVERTISSEMENT GÉNÉRAL. INTÉGRITÉ DU THERMOPHILE COMPROMISE, ÉVACUEZ. ». Les coursives s'emplissent de fumée.",
+                "",
+                "« Capitaine, à gauche ! »",
+                "Tu te retournes une fraction de seconde trop tard. Une lance à plasma jaillit d'un sas. Yoneda te percute de plein fouet, te projetant hors de la trajectoire et encaisse le tir à ta place. Son bras gauche est cisaillé net à l'articulation ; l'armure se verrouille, inerte, dans un jet d'étincelles.",
+                "« Ça va aller ! » crie-t-elle en serrant les dents, alors que ton propre affichage vire au rouge : « AVERTISSEMENT SYSTÈME. INTÉGRITÉ DU BLINDAGE : 44%. »",
+                "",
+                "Vous vous jetez ensemble contre la lourde porte blindée des quartiers de commandement. Elle est verrouillée de l'intérieur. Derrière vous, les tirs se rapprochent."
+            ],
+            "choices": [
+                {
+                    "id": "forcer-porte",
+                    "text": "Forcer la porte scellée des quartiers de commandement",
+                    "action": "À deux, tu et Yoneda concentrez la puissance restante de vos armures sur la serrure blindée. Le métal cède dans un gémissement.",
+                    "consequence": "La porte s'ouvre sur un silence total, tranchant après le vacarme de la bataille. Un silence qui, déjà, ne présage rien de bon.",
+                    "nextScene": "quartiers-commandant"
+                }
+            ]
+        },
+        {
+            "id": "quartiers-commandant",
+            "text": [
+                "Les quartiers de commandement sont plongés dans la pénombre, éclairés par les seuls écrans de veille qui grésillent des cartes du monde constellées de zones rouges, les régions effacées. Tu aperçois les bureaux des commandants, dont celui de Kira, vide, les dossiers éparpillés. Le chaos a tout envahi, même ici.",
+                "",
+                "Au centre de la pièce, dans un large fauteuil face au hublot panoramique, un homme est affaissé. Âgé, en uniforme militaire de haute fonction, les mains posées sur les accoudoirs. Le Fondateur de l'Administration. L'architecte du projet Hyperloop, celui qui a conçu le Dédale, le Thermophile et rêvé un monde stabilisé par ses armures.",
+                "",
+                "Tu t'approches. Il ne bouge pas. Son visage est paisible, tourné vers l'océan mauve. À ses pieds, une arme de service. Sur la console, une diode clignote doucement : un enregistrement en attente de lecture.",
+                "",
+                "« Il est mort, Capitaine. » murmure Yoneda, sa voix se brisant. « Notre dernier espoir. Mort avant même qu'on arrive. »",
+                "",
+                "Tu poses une main sur la console. La diode clignote toujours. Son dernier message."
+            ],
+            "choices": [
+                {
+                    "id": "lire-enregistrement",
+                    "text": "Lancer le dernier enregistrement du Fondateur",
+                    "action": "Tu presses la diode. Un grésillement, puis la voix fatiguée du Fondateur emplit la pièce silencieuse.",
+                    "consequence": "Vous vous immobilisez, suspendus aux mots d'un homme qui n'est déjà plus.",
+                    "nextScene": "log-fondateur"
+                }
+            ]
+        },
+        {
+            "id": "log-fondateur",
+            "speaker": "fondateur",
+            "text": [
+                "« Si vous écoutez ceci, c'est que vous avez traversé l'enfer pour venir jusqu'ici. Alors je vous dois la vérité. »",
+                "",
+                "« J'ai bâti le Dédale pour nous protéger de nous-mêmes. Un labyrinthe si parfait que plus aucune guerre ne pourrait nous y retrouver. Des gardiens en armure, une main ferme, la stabilité. C'était le rêve. »",
+                "",
+                "« Mais on ne construit pas un labyrinthe sans y enfermer aussi le Minotaure. La bombe à énergie noire n'était qu'une clé de sûreté. Une arme si terrible qu'elle ne devait jamais servir. Nous l'avons forgée quand même. Et quelqu'un, dans nos propres rangs, a fini par la tourner. »",
+                "",
+                "« La moitié du monde a disparu à cause de ce que nous avons créé pour le sauver. Nous ne sommes plus les gardiens. Nous sommes devenus le désastre. »",
+                "",
+                "« Il n'y a plus de chaîne de commandement. Plus d'ordres à donner. À partir de maintenant, chaque administrateur est seul face à sa conscience. Je n'ai plus la force de porter ce que nous avons fait. »",
+                "",
+                "« À vous, qui écoutez encore : ne refaites pas le Dédale. Ne rêvez plus de labyrinthes. Vivez, simplement, aussi longtemps qu'il vous restera à vivre. Pardonnez-moi. »",
+                "",
+                "L'enregistrement s'achève sur un souffle. La pièce retombe dans le silence."
+            ],
+            "choices": [
+                {
+                    "id": "encaisser-verite",
+                    "text": "Encaisser la vérité et décider de la suite",
+                    "action": "Tu restes un instant immobile, écrasé par le poids de ce que tu viens d'entendre. Puis tu te tournes vers Yoneda.",
+                    "consequence": "Il n'y a plus d'Administration à rejoindre, plus d'ordre à recevoir. Il ne reste que vous deux ici, et un navire qui coule.",
+                    "nextScene": "naufrage"
+                }
+            ]
+        },
+        {
+            "id": "naufrage",
+            "text": [
+                "« Alors c'était nous. » dit Yoneda, hébétée. « Depuis le début, c'était nous. »",
+                "",
+                "Avant que tu puisses répondre, une déflagration monstrueuse ébranle tout le navire. Le hublot panoramique se fissure. Dehors, une des factions vient d'ouvrir le feu sur une autre avec l'artillerie lourde du Thermophile, et un tir a manqué sa cible pour éventrer la coque, loin sous la ligne de flottaison.",
+                "",
+                "L'alarme change de ton. La voix synthétique du bord tonne dans les coursives : « VOIE D'EAU MAJEURE. COMPARTIMENTS INFÉRIEURS NOYÉS. ÉVACUATION IMMÉDIATE. »",
+                "",
+                "Le pont s'incline brutalement sous vos pieds. Déjà agonisant, le léviathan commence à sombrer, entraînant avec lui le corps du Fondateur, les factions qui se déchiraient, et le dernier commandement de l'Administration.",
+                "",
+                "« Il n'y a plus rien à sauver ici, Capitaine ! » hurle Yoneda par-dessus le fracas de l'eau. « Il faut sortir, maintenant ! »"
+            ],
+            "choices": [
+                {
+                    "id": "fuir-navire",
+                    "text": "Fuir le navire qui coule et regagner la côte",
+                    "action": "Tu passes le bras valide de Yoneda par-dessus ton épaule et vous vous ruez vers la brèche béante de la coque, l'eau montant déjà à mi-jambe.",
+                    "consequence": "Vous jaillissez à l'air libre à l'instant où le Thermophile bascule. Cap sur la côte, à bout de forces.",
+                    "nextScene": "fuite-thermophile"
+                }
+            ]
+        },
+        {
+            "id": "fuite-thermophile",
+            "text": [
+                "Vous vous arrachez du navire dans une gerbe d'écume, propulseurs crachotants. Derrière vous, le Thermophile se dresse une dernière fois vers le ciel mauve, puis glisse lentement sous la surface dans un long gémissement d'acier. En quelques minutes, il ne reste plus qu'un tourbillon, quelques débris, et le silence.",
+                "",
+                "Le dernier bâtiment de l'Administration, son dernier commandement, son dernier espoir : englouti.",
+                "",
+                "Vous rejoignez tant bien que mal la côte, moteurs à l'agonie, et vous vous posez lourdement sur les ruines calcinées de la périphérie de Los Angeles, à l'écart de la horde et de l'antenne de Safar. Essoufflés. Blessés. Vivants, pour l'instant."
+            ],
+            "choices": [
+                {
+                    "id": "faire-le-point",
+                    "text": "Faire le point sur la situation et vos réserves",
+                    "action": "Tu t'adosses à un pan de mur noirci et lances un diagnostic complet de vos deux armures.",
+                    "consequence": "Les chiffres qui s'affichent ne laissent que peu de place à l'espoir.",
+                    "nextScene": "dilemme-final"
+                }
+            ]
+        },
+        {
+            "id": "dilemme-final",
+            "text": [
+                "À l'abri, vous inspectez vos armures. La tienne : intégrité 44%, charge 19%. Celle de Yoneda : bras gauche hors service, charge 23%.",
+                "",
+                "Il n'y a plus de Thermophile pour vous recharger. Plus de commandement, plus de renforts, plus de refuge. Rien que deux administrateurs blessés sur une terre morte, et un océan à franchir dans l'autre sens.",
+                "",
+                "Ton affichage tête haute affiche l'implacable calcul : « Charge combinée : 42%. Autonomie disponible : ~3 700 km. Distance jusqu'à Tokyo : 8 800 km. »",
+                "",
+                "Tu refais le compte, encore et encore. Le verdict ne change pas. Même en cumulant vos deux réserves dans une seule armure, on n'atteint pas le Japon. À moins que l'un de vous ne reste ici, définitivement, et que l'autre parte allégé, à charge pleine, avec une chance mince, de rejoindre une terre encore vivante.",
+                "",
+                "« Une seule de nos deux armures peut espérer rentrer. » dis-tu à voix basse. « L'autre restera ici. »",
+                "Yoneda te regarde. Elle a compris, elle aussi. Ni l'un ni l'autre n'ose parler le premier."
+            ],
+            "choices": [
+                {
+                    "id": "sacrifice-howard",
+                    "text": "« Tu rentres, Yoneda. Je te cède ma charge. », Howard se sacrifie",
+                    "action": "Tu ouvres déjà le port de transfert entre vos deux armures, sans lui laisser le temps de protester.",
+                    "consequence": "Quelqu'un doit rentrer. Quelqu'un doit raconter. Ce sera elle.",
+                    "nextScene": "fin-howard"
+                },
+                {
+                    "id": "sacrifice-yoneda",
+                    "text": "Yoneda refuse et t'impose son sacrifice pour que tu rentres témoigner",
+                    "action": "Avant que tu puisses réagir, Yoneda a déjà basculé sa réserve dans ton armure.",
+                    "consequence": "« Vous êtes capitaine. On vous croira, vous. » Sa décision est prise, irrévocable.",
+                    "nextScene": "fin-yoneda"
+                },
+                {
+                    "id": "rester-ensemble",
+                    "text": "Refuser de vous séparer et affronter la fin ensemble, ici, à Los Angeles",
+                    "action": "Tu refermes le calcul d'un geste. « On a traversé cet océan ensemble. On ne se sépare pas maintenant. »",
+                    "consequence": "Vous avez fait votre choix. Il ne reste qu'à l'assumer, côte à côte.",
+                    "nextScene": "fin-ensemble"
+                }
+            ]
+        },
+        {
+            "id": "fin-howard",
+            "isEnding": true,
+            "endingType": "bad",
+            "text": [
+                "« Non, Capitaine, c'est hors de-... »",
+                "« C'est un ordre, sergente. » Ta voix ne tremble pas. « Toi, tu es née de l'autre côté de cet océan. Tu sais ce que c'est de perdre un quartier. Moi, je saurai ce que c'est de perdre un monde. Quelqu'un doit rentrer. Quelqu'un doit raconter ce qu'on a vu sur ce navire. Ce sera toi. »",
+                "",
+                "Tu ouvres le port de charge entre vos deux armures et transfères ta batterie dans la sienne. Sur ton affichage tête haute, les chiffres dégringolent. 19%... 11%... 3%.",
+                "",
+                "Yoneda pleure, son unique bras valide serré contre ton plastron. « Je ne vous oublierai pas, Howard. Aucun de nous ne vous oubliera. »",
+                "« Va, Yoneda. Et raconte. Dis-leur de ne jamais reconstruire le Dédale. Jamais. »",
+                "",
+                "Elle s'élève dans le ciel mauve, cap à l'ouest, et sa silhouette rapetisse jusqu'à se confondre avec l'horizon.",
+                "",
+                "Alors tu t'assieds, le dos contre un mur calciné, face à l'océan. Le soleil, énorme et rouge, descend lentement derrière la mer d'huile. Ton armure ne te protège plus de rien : le compteur de radiations grimpe, régulier, implacable, et une chaleur sourde se répand dans tes membres. Tu ne bouges pas. Tu regardes le soleil se coucher.",
+                "",
+                "C'est presque doux. La lumière décline, tes forces avec elle. Chaque minute t'arrache un peu plus au monde, sans douleur, comme une marée qui se retire. Tu penses à Yoneda, quelque part au-dessus du Pacifique, et tu espères de tout ce qu'il te reste de cœur qu'elle atteindra Tokyo. Tu penses à la balançoire, à ce quartier figé dans le temps, à ce ciel qui, un matin, était d'un bleu éclatant, parsemé de nuages blancs.",
+                "",
+                "Le dernier rayon disparaît sous l'horizon. Tes systèmes s'éteignent l'un après l'autre, comme des bougies qu'on souffle.",
+                "",
+                "« Ici le Capitaine Howard, immatriculation 10.60-D. Fin de mission. »",
+                "",
+                "*Bip prolongé.*",
+                "",
+                "Loin, très loin à l'ouest, Yoneda posera un jour le pied sur la terre de Tokyo. Elle racontera. Puis les années passeront. Sans réseau, sans Administration, sans avenir, l'humanité retombera peu à peu à l'âge de pierre, quelques feux dans la nuit, quelques clans, plus aucune loi, plus aucune foi. Et chaque fois qu'elle regardera vers l'est, par-delà l'océan, la vieille femme qu'elle sera devenue pensera encore à un capitaine resté de l'autre côté du monde, un soir où le soleil se couchait sur le quartier de son enfance.",
+                "",
+                "— FIN : « Un dernier ordre » —"
+            ],
+            "choices": []
+        },
+        {
+            "id": "fin-yoneda",
+            "isEnding": true,
+            "endingType": "bad",
+            "text": [
+                "« Non. » La voix de Yoneda claque comme un ordre, malgré son bras brisé. « Vous êtes capitaine. Vous avez rang de témoin. On vous croira, vous. Moi, je ne suis qu'un matricule de plus. »",
+                "« Yoneda-... »",
+                "« Et puis... » Un sourire triste passe sur son visage. « Je suis née de ce côté du monde, au fond. C'est presque juste que j'y reste. »",
+                "",
+                "Avant que tu puisses l'en empêcher, elle a ouvert le port de charge et vidé sa batterie dans ton armure. Ton affichage tête haute grimpe : 19%... 28%... 41%. Le sien s'effondre vers zéro.",
+                "",
+                "« Rentrez, Capitaine. Dites-leur ce qu'on a vu, ce que le Fondateur a avoué. Dites-leur de ne jamais construire une arme pareille. Jamais. »",
+                "",
+                "Tu voudrais protester, mais il n'y a plus le temps, plus la charge, plus le choix. Tu t'élèves, le cœur en miettes.",
+                "",
+                "En bas, Yoneda s'assied dans les décombres, le visage tourné vers le large, exactement comme sur cette balançoire, à Tokyo, il y a une éternité de cela. Tu sais ce qui l'attend : le soleil se couchera sur cette terre morte, les radiations monteront doucement, et elles l'emporteront là, assise, sans un cri, tandis que la lumière déclinera à l'horizon. Elle le sait aussi. Elle te fait un dernier signe de sa main valide.",
+                "",
+                "« Adieu, Capitaine. »",
+                "",
+                "Tu files vers l'ouest, seul, au-dessus d'un océan noir.",
+                "",
+                "Tu atteindras Tokyo. Tu raconteras, à ceux qui voudront bien encore écouter. Mais il n'y aura plus grand-chose à sauver. Les années passeront, et le monde continuera de s'effondrer : plus de réseau, plus d'Administration, plus de lois. L'humanité retombera à l'âge de pierre, sans foi ni loi, réduite à quelques feux tremblants dans la nuit.",
+                "",
+                "Et toi, vieilli, au milieu des ruines du quartier d'enfance de Yoneda, tu regarderas souvent vers l'est. Par-delà l'océan. Vers une sergente que tu as laissée de l'autre côté du monde, et qui, jusqu'au bout, aura veillé sur toi.",
+                "",
+                "— FIN : « Celle qui veillait » —"
+            ],
+            "choices": []
+        },
+        {
+            "id": "fin-ensemble",
+            "isEnding": true,
+            "endingType": "good",
+            "text": [
+                "« Non. » dis-tu en coupant le calcul sur ton affichage. « On a traversé cet océan ensemble. On ne se sépare pas maintenant. »",
+                "",
+                "Yoneda te regarde longuement. Puis quelque chose se dénoue en elle, et elle sourit, un vrai sourire, le premier depuis Tokyo. « Je n'avais pas très envie de rentrer seule, de toute façon. »",
+                "",
+                "Vous éteignez vos systèmes de combat. Vous ôtez vos casques. L'air est vicié, chargé de radiations, mais quelle importance, désormais. Vous décidez de ne pas passer ces dernières heures à attendre la mort. Vous décidez de les vivre.",
+                "",
+                "Un peu plus loin, dans les décombres d'une supérette éventrée, un vieux congélateur ronronne encore, alimenté par on ne sait quel miracle électrique. À l'intérieur, givrées, oubliées du monde : des glaces. Tu en tends une à Yoneda. Vous vous asseyez côte à côte sur un pan de mur tiède, face à la lumière mauve qui avance à l'horizon, et vous mangez des glaces à la fin du monde, comme deux gamins qui auraient séché les cours.",
+                "",
+                "Vous parlez. De tout, de rien. Du quartier de Yoneda, de la balançoire, des enfants qui n'y jouent plus. De ce ciel qui, un matin, était d'un bleu éclatant, parsemé de nuages blancs. Elle rit d'une de tes maladresses, tu ris de son rire. Tu défais l'armure inerte de son bras blessé, avec une douceur maladroite, et tu nettoies la plaie comme tu peux. Elle te laisse faire, sa main libre posée sur la tienne, et ne la retire pas.",
+                "",
+                "Vous ne vous étiez rien avoué. Peut-être ne l'aviez-vous même jamais su. Mais là, dans les cendres de tout, à l'abri de rien, cela devient soudain d'une évidence tranquille. Deux administrateurs, deux matricules, qui découvrent trop tard qu'ils s'aimaient et qui ont, malgré tout, la chance folle de le découvrir ensemble.",
+                "",
+                "« On aura bien vécu, au fond, non ? » demande-t-elle, la tête posée contre ton épaule.",
+                "« On aura fini par vivre, oui. » réponds-tu en glissant un bras autour d'elle. « C'est déjà énorme. »",
+                "",
+                "Au loin, les échos fantômes de la voix de Safar qui de continue de chanter sa promesse. Vous ne l'écoutez pas. Vous n'en avez pas besoin : vous l'avez trouvée, votre lumière, et elle est juste là, tout contre vous.",
+                "",
+                "Vos armures s'éteignent l'une après l'autre. Le soleil se couche sur l'océan mauve. Vous restez ainsi, front contre front, à parler de moins en moins, à respirer de plus en plus lentement, sans plus jamais lâcher la main de l'autre.",
+                "",
+                "Ici s'achève, ensemble, la patrouille du Capitaine Howard, 10.60-D et de la Sergente Yoneda, 10.113-B.",
+                "",
+                "— FIN : « L'amour inespéré » —"
+            ],
+            "choices": []
+        }
+    ]
+}

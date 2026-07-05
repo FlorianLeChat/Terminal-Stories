@@ -1,0 +1,201 @@
+{
+    "universe": "Futur proche",
+    "storyId": "le-dernier-espoir",
+    "entries": [
+        {
+            "id": "le-dernier-espoir--universe--futur-proche",
+            "category": "universe",
+            "name": "Futur proche",
+            "summary": "Un monde rongé par la crise climatique et les tensions géopolitiques, tenu à bout de bras par des armures d'élite.",
+            "description": [
+                "Dans un futur proche, la Terre est en proie à des conflits géopolitiques et à des tensions sociales, exacerbés par la crise climatique et la raréfaction des ressources.",
+                "Avec l'avènement des nanotechnologies et de l'intelligence artificielle, les gouvernements ont perdu le contrôle de la société, laissant place à une nouvelle classe dirigeante : les Administrateurs.",
+                "Ces femmes et ces hommes, dotés d'armures issues du projet militaire « Hyperloop », veillent à la stabilité et à la sécurité de la population à travers le globe, jusqu'au jour où une menace dépasse leurs compétences."
+            ],
+            "tags": ["science-fiction", "dystopie", "lore"],
+            "related": ["le-dernier-espoir--era--effondrement", "le-dernier-espoir--character--howard", "le-dernier-espoir--event--bombe-new-york"]
+        },
+        {
+            "id": "le-dernier-espoir--era--effondrement",
+            "category": "era",
+            "name": "L'Effondrement",
+            "summary": "Le jour où une arme née pour protéger le monde a rayé la moitié du globe de la carte.",
+            "description": [
+                "Une bombe à énergie noire, prototype secret embarqué à bord du Dédale, est larguée sur New York par des mains encore inconnues.",
+                "En quelques instants, elle efface la côte est américaine, l'Europe et une large part de l'hémisphère : plus de réseau, plus d'Administration, plus de commandement.",
+                "Partout ailleurs, la nouvelle se répand comme une traînée de poudre et les villes basculent dans la panique, livrées à elles-mêmes."
+            ],
+            "tags": ["époque", "catastrophe", "lore"],
+            "related": ["le-dernier-espoir--universe--futur-proche", "le-dernier-espoir--event--bombe-new-york", "le-dernier-espoir--event--naufrage-thermophile", "le-dernier-espoir--location--dedale"]
+        },
+        {
+            "id": "le-dernier-espoir--character--howard",
+            "category": "character",
+            "name": "Capitaine Howard - 10.60-D",
+            "summary": "Un administrateur en patrouille de routine à Tokyo, précipité dans l'effondrement du monde.",
+            "description": [
+                "Rôle : Protagoniste.",
+                "Capitaine de l'Administration, largué en patrouille de routine près de Tokyo le jour où New York disparaît.",
+                "Aux côtés de la sergente Yoneda, il traverse le Pacifique jusqu'aux ruines de Los Angeles pour tenter de rejoindre le Thermophile, dernier commandement encore debout.",
+                "Selon ses choix, il peut sombrer avec la voix de Safar, se sacrifier pour Yoneda, la laisser se sacrifier pour lui, ou refuser jusqu'au bout de se séparer d'elle."
+            ],
+            "aliases": ["Howard", "10.60-D", "Le Capitaine"],
+            "tags": ["protagoniste", "administrateur", "humain"],
+            "related": ["le-dernier-espoir--character--yoneda", "le-dernier-espoir--character--kira", "le-dernier-espoir--event--bombe-new-york"]
+        },
+        {
+            "id": "le-dernier-espoir--character--yoneda",
+            "category": "character",
+            "name": "Sergente Yoneda - 10.113-B",
+            "summary": "Une administratrice originaire d'un quartier déserté de Tokyo, compagne de route de Howard jusqu'au bout du monde.",
+            "description": [
+                "Rôle : Alliée.",
+                "Sergente de l'Administration née dans un quartier périphérique de Tokyo, déserté par l'exode et le déclin démographique.",
+                "Elle guide Howard vers la zone de patrouille de Shibuya, puis l'accompagne à travers le Pacifique jusqu'aux ruines de Los Angeles.",
+                "Fidèle jusqu'au sacrifice, elle peut aussi bien mourir à sa place que le voir mourir à la sienne, ou choisir de rester avec lui jusqu'à la fin."
+            ],
+            "aliases": ["Yoneda", "10.113-B", "La sergente"],
+            "tags": ["alliée", "administratrice", "humain"],
+            "related": ["le-dernier-espoir--character--howard", "le-dernier-espoir--location--quartier-yoneda", "le-dernier-espoir--character--safar"]
+        },
+        {
+            "id": "le-dernier-espoir--character--kira",
+            "category": "character",
+            "name": "Commandante Kira - 6A",
+            "summary": "Une des six commandantes du globe, seule survivante de la traversée du Pacifique, mourante à Tokyo.",
+            "description": [
+                "Rôle : Alliée.",
+                "Une des six commandantes de l'Administration, elle tente de fuir l'Amérique dévastée mais s'écrase, à bout de forces, près de Tokyo.",
+                "Avant de mourir dans les bras de Howard, elle révèle la vérité sur la bombe à énergie noire et le sort du Thermophile.",
+                "Son dernier mot est un espoir : peut-être existe-t-il encore, sur ce navire, un commandement pour donner un sens à ce qui reste."
+            ],
+            "aliases": ["Kira", "6A", "La Commandante"],
+            "tags": ["alliée", "commandante", "humain"],
+            "related": ["le-dernier-espoir--character--howard", "le-dernier-espoir--event--bombe-new-york", "le-dernier-espoir--location--thermophile"]
+        },
+        {
+            "id": "le-dernier-espoir--character--safar",
+            "category": "character",
+            "name": "Lieutenant Safar - 10.742-P",
+            "summary": "Un administrateur fondu dans une antenne de fortune, devenu la voix hypnotique qui appelle les survivants vers la lumière.",
+            "description": [
+                "Rôle : Antagoniste.",
+                "Ancien officier de l'Administration, il est retrouvé sur les ruines de Los Angeles, chair et machine mêlées à une immense antenne de fortune.",
+                "Rongé par l'énergie noire de la bombe, il diffuse en boucle un appel hypnotique invitant les survivants à cesser de lutter et à rejoindre la lumière.",
+                "Selon les choix de Howard, sa litanie peut être réduite au silence ou, au contraire, avoir raison de sa volonté."
+            ],
+            "aliases": ["Safar", "10.742-P", "La voix"],
+            "tags": ["antagoniste", "administrateur", "humain"],
+            "related": ["le-dernier-espoir--character--yoneda", "le-dernier-espoir--location--los-angeles", "le-dernier-espoir--event--bombe-new-york"]
+        },
+        {
+            "id": "le-dernier-espoir--character--fondateur",
+            "category": "character",
+            "name": "Le Fondateur - 0A",
+            "summary": "L'architecte du projet Hyperloop, retrouvé mort à bord du Thermophile, rongé par le remords.",
+            "description": [
+                "Rôle : Allié.",
+                "Concepteur du projet Hyperloop, ainsi que des vaisseaux de commandement Dédale et Thermophile, il rêvait d'un monde stabilisé par les armures de l'Administration.",
+                "Réfugié dans les quartiers de commandement du Thermophile, il se donne la mort avant l'arrivée de Howard et Yoneda.",
+                "Son dernier enregistrement révèle que la bombe à énergie noire était une arme de l'Administration elle-même, et met en garde contre la tentation de reconstruire un jour le Dédale."
+            ],
+            "aliases": ["Le Fondateur", "0A"],
+            "tags": ["allié", "administrateur", "humain"],
+            "related": ["le-dernier-espoir--location--dedale", "le-dernier-espoir--location--thermophile", "le-dernier-espoir--event--naufrage-thermophile"]
+        },
+        {
+            "id": "le-dernier-espoir--character--supervision",
+            "category": "character",
+            "name": "Supervision",
+            "summary": "La voix de commandement de l'Administration à Tokyo, réduite au silence dès les premières minutes de l'effondrement.",
+            "description": [
+                "Rôle : Alliée.",
+                "Poste de commandement de l'Administration à Tokyo, elle guide Howard vers sa mission de patrouille en tout début d'histoire.",
+                "Elle mentionne, sans plus d'inquiétude qu'un bulletin de routine, l'alerte maximale du Dédale à New York.",
+                "Son silence soudain, après la bombe, est l'un des premiers signes que le monde entier vient de basculer."
+            ],
+            "aliases": ["La supervision"],
+            "tags": ["alliée", "commandement"],
+            "related": ["le-dernier-espoir--character--howard", "le-dernier-espoir--event--bombe-new-york", "le-dernier-espoir--location--dedale"]
+        },
+        {
+            "id": "le-dernier-espoir--location--quartier-yoneda",
+            "category": "location",
+            "name": "Le quartier de l'enfance de Yoneda",
+            "summary": "Un quartier périphérique de Tokyo, déserté par la guerre et le déclin démographique.",
+            "description": [
+                "En périphérie de Tokyo, ce quartier autrefois habité s'est vidé au fil des ans, victime de la guerre puis de l'exode vers les grandes villes.",
+                "C'est là, près d'une aire de jeux abandonnée, que Yoneda attend Howard au tout début de leur mission commune.",
+                "Ce lieu figé dans le temps referme, en creux, tout ce que le monde va perdre dans les heures qui suivent."
+            ],
+            "tags": ["lieu", "tokyo"],
+            "related": ["le-dernier-espoir--character--yoneda", "le-dernier-espoir--character--howard"]
+        },
+        {
+            "id": "le-dernier-espoir--location--los-angeles",
+            "category": "location",
+            "name": "Les ruines de Los Angeles",
+            "summary": "Une plaine de verre noir sous un ciel mauve, où errent les survivants happés par la voix de Safar.",
+            "description": [
+                "Autrefois une métropole américaine, Los Angeles n'est plus qu'une étendue de verre noir et de ruines fondues sous un ciel mauve strié d'aurores malades.",
+                "Les radiations y sont critiques, et les rares survivants marchent en silence vers l'antenne de fortune de Safar, le regard vide.",
+                "C'est depuis cette côte dévastée que le Thermophile, blessé, s'éloigne lentement vers le large."
+            ],
+            "tags": ["lieu", "ruines"],
+            "related": ["le-dernier-espoir--character--safar", "le-dernier-espoir--location--thermophile", "le-dernier-espoir--event--bombe-new-york"]
+        },
+        {
+            "id": "le-dernier-espoir--location--dedale",
+            "category": "location",
+            "name": "Le Dédale",
+            "summary": "L'unique porte-hélicoptères de combat et de commandement de l'Administration, en patrouille perpétuelle autour du globe aux côtés du Thermophile.",
+            "description": [
+                "Vaisseau volant porte-hélicoptères, conçu pour le combat et le soutien aux Administrateurs, le Dédale sert aussi de centre de commandement itinérant.",
+                "Unique en son genre, il tourne sans relâche autour du globe aux côtés du Thermophile, assurant chacun à leur tour la supervision et la coordination des missions des Administrateurs, en complément du quartier général.",
+                "Il est déployé à New York pour une mission de sécurisation critique, après que le Conseil de sécurité des Nations Unies s'est réuni en urgence face à la guerre civile qui embrase plusieurs pays. C'est à son bord qu'était embarquée la bombe à énergie noire, prototype ultra-secret dont le largage a précipité l'effondrement du monde."
+            ],
+            "tags": ["lieu clé", "militaire"],
+            "related": ["le-dernier-espoir--event--bombe-new-york", "le-dernier-espoir--location--thermophile", "le-dernier-espoir--character--fondateur"]
+        },
+        {
+            "id": "le-dernier-espoir--location--thermophile",
+            "category": "location",
+            "name": "Le Thermophile",
+            "summary": "Le pendant naval du Dédale, dernier porte-avions de commandement de l'Administration, sabordé par ses propres administrateurs.",
+            "description": [
+                "Porte-avions autonome et blindé de l'Administration, conçu pour tenir des mois sans jamais toucher terre, il patrouille sans relâche autour du globe aux côtés du Dédale et croise, au moment de l'effondrement, au large de Los Angeles.",
+                "Il abrite le Fondateur et le dernier commandement encore en état de fonctionner après l'effondrement du réseau mondial.",
+                "Privé de chaîne de commandement, son équipage s'entre-déchire en plusieurs factions, jusqu'à ce qu'un tir perdu ouvre une voie d'eau fatale."
+            ],
+            "aliases": ["Le porte-avions"],
+            "tags": ["lieu clé", "militaire"],
+            "related": ["le-dernier-espoir--character--kira", "le-dernier-espoir--character--fondateur", "le-dernier-espoir--event--naufrage-thermophile"]
+        },
+        {
+            "id": "le-dernier-espoir--event--bombe-new-york",
+            "category": "event",
+            "name": "La bombe à énergie noire de New York",
+            "summary": "L'arme secrète embarquée à bord du Dédale, déployé à New York, qui a effacé la moitié du globe.",
+            "description": [
+                "Prototype ultra-secret embarqué à bord du Dédale, envoyé à New York pour une mission de sécurisation après la réunion en urgence du Conseil de sécurité des Nations Unies, cette bombe à énergie noire n'était censée servir jamais : une clé de sûreté, trop terrible pour être utilisée.",
+                "Larguée depuis ce vaisseau par des mains restées inconnues, elle n'explose pas au sens classique : elle efface, sans bruit, tout ce qu'elle touche.",
+                "Les rares survivants trop proches pour mourir mais trop loin pour en réchapper perdent la raison, happés par une énergie qui ronge autant l'esprit que les corps."
+            ],
+            "tags": ["événement", "catastrophe"],
+            "related": ["le-dernier-espoir--location--dedale", "le-dernier-espoir--character--kira", "le-dernier-espoir--character--fondateur", "le-dernier-espoir--location--los-angeles"]
+        },
+        {
+            "id": "le-dernier-espoir--event--naufrage-thermophile",
+            "category": "event",
+            "name": "Le naufrage du Thermophile",
+            "summary": "La chute du dernier commandement de l'Administration, emporté par les siens plutôt que par l'ennemi.",
+            "description": [
+                "À bord du Thermophile, privés de toute chaîne de commandement, les administrateurs survivants se divisent en factions rivales et s'affrontent à l'arme lourde.",
+                "Un tir manqué déchire la coque sous la ligne de flottaison, provoquant une voie d'eau majeure que rien ne peut plus colmater.",
+                "Le navire sombre en quelques minutes, emportant avec lui le corps du Fondateur et le dernier espoir d'un commandement pour l'Administration."
+            ],
+            "tags": ["événement", "catastrophe"],
+            "related": ["le-dernier-espoir--location--thermophile", "le-dernier-espoir--character--fondateur", "le-dernier-espoir--character--howard"]
+        }
+    ]
+}
