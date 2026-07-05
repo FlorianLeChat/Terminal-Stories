@@ -113,7 +113,26 @@ Trivial changes (typo fixes, small isolated edits, one-line corrections) don't n
 
 ## Preview / dev server
 
-**Never start a preview or dev server.** Do not call `preview_start`, `npm run dev`, or any equivalent. The user runs the server manually. Verification is limited to `npm run check` and `npm run lint`.
+**Never start a preview or dev server.** Do not call `preview_start`, `npm run dev`, or any equivalent. The user runs the server manually. Verification is limited to `npm run check` and `npm run lint`. Do not run `npm run test` (Playwright) either — it also boots a preview server; the user runs it manually.
+
+## End-to-end tests (Playwright)
+
+Tests live in `tests/e2e/` (config: `playwright.config.ts`) and exercise the whole app end to end (no preview/dev server should be started manually — Playwright's own `webServer` handles that). **Whenever a change touches user-facing behavior, update the matching spec(s) in the same commit**:
+
+- `tests/e2e/boot.spec.ts` — boot sequence (startup log, ENTER/click to continue).
+- `tests/e2e/menu.spec.ts` — main menu (catalog list, genre/language filters, search, keyboard navigation, direct-access shortcuts, links to the wiki/AI generator).
+- `tests/e2e/story.spec.ts` — story playback (info screen, choices, endings, save/resume, restart, leaving to the menu).
+- `tests/e2e/wiki.spec.ts` — encyclopedia (category/language/universe filters, search, entry detail, back navigation).
+- `tests/e2e/ai-setup.spec.ts` — AI story generator (key validation, locked/unlocked form, generation success/error, ephemeral playback).
+- `tests/e2e/deep-links.spec.ts` — shareable URLs (`?story=`, `?wiki=`) round-tripping through navigation and reloads.
+
+Conventions to follow:
+
+- Use `gotoMenu`/`gotoFresh`/`skipBoot` from `tests/e2e/support/fixtures.ts` to reach a clean starting point instead of duplicating boot/localStorage logic.
+- Assert on the English strings from `locales/en.json` (the app always renders the base locale in tests — the runtime's locale strategy doesn't read the browser's `Accept-Language`). Prefer accessible queries (`getByRole`, `getByLabel`, `getByText`) over CSS selectors.
+- Never hardcode a story's scene graph/text as a path of choices — when a test needs to reach an ending, compute the path from the shipped JSON (see `tests/e2e/support/storyPath.ts`) so it keeps working as story content changes.
+- Mock external calls (e.g. the Anthropic API in `ai-setup.spec.ts`) with `page.route()`; never hit real third-party endpoints from a test.
+- When adding a new view, store action, or shortcut, add or extend a spec covering it — new functionality without e2e coverage should be treated as incomplete.
 
 ## Commits
 
