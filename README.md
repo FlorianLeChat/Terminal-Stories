@@ -31,11 +31,11 @@ Concernant la partie technique, le site respecte des valeurs de sobriété numé
 
 ```mermaid
 sequenceDiagram
-    actor Joueur as 🧑 Joueur
-    participant Terminal as 🖥️ Terminal
-    participant Histoire as 📖 Histoire
-    participant Encyclopédie as 📚 Encyclopédie
-    participant IA as ✨ Histoire générée par IA
+    actor Joueur
+    participant Terminal
+    participant Histoire
+    participant Encyclopédie
+    participant IA as Histoire générée par IA
 
     Joueur->>Terminal: J'ouvre le terminal
     Terminal-->>Joueur: Séquence de démarrage puis menu
@@ -95,11 +95,11 @@ In terms of technical aspects, the website reflects values of digital sobriety, 
 
 ```mermaid
 sequenceDiagram
-    actor Player as 🧑 Player
-    participant Terminal as 🖥️ Terminal
-    participant Story as 📖 Story
-    participant Encyclopedia as 📚 Encyclopedia
-    participant AI as ✨ AI-generated story
+    actor Player as Player
+    participant Terminal as Terminal
+    participant Story as Story
+    participant Encyclopedia as Encyclopedia
+    participant AI as AI-generated story
 
     Player->>Terminal: I open the terminal
     Terminal-->>Player: Boot sequence then menu
