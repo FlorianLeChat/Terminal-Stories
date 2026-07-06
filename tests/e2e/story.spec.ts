@@ -43,6 +43,58 @@ test.describe( "Story playback", () =>
         await expect( choiceButton( page, 1 ) ).toBeVisible();
     } );
 
+    test( "sharing is available from the story-info screen before the story starts", async ( { page } ) =>
+    {
+        await gotoMenu( page, `/?story=${ STORY_ID }` );
+        await expect( page.getByText( "STORY INFO" ) ).toBeVisible();
+
+        await page.getByRole( "button", { name: "[S] Share" } ).click();
+
+        const dialog = page.getByRole( "dialog" );
+        await expect( dialog ).toBeVisible();
+        await expect( dialog.getByRole( "img", { name: "QR code linking to this story" } ) ).toBeVisible();
+        await expect( dialog.getByText( new RegExp( `\\?story=${ STORY_ID }` ) ) ).toBeVisible();
+    } );
+
+    test( "sharing a story shows a QR overlay with the link and a device-local note", async ( { page } ) =>
+    {
+        await gotoMenu( page, `/?story=${ STORY_ID }` );
+        await page.keyboard.press( "Enter" );
+        await expect( page.getByText( "NOW READING" ) ).toBeVisible();
+
+        await page.getByRole( "button", { name: "[S] Share" } ).click();
+
+        const dialog = page.getByRole( "dialog" );
+        await expect( dialog ).toBeVisible();
+        await expect( dialog.getByRole( "heading", { name: "Share this story" } ) ).toBeVisible();
+
+        // The QR image and the raw deep link both point at this story.
+        await expect( dialog.getByRole( "img", { name: "QR code linking to this story" } ) ).toBeVisible();
+        await expect( dialog.getByText( new RegExp( `\\?story=${ STORY_ID }` ) ) ).toBeVisible();
+
+        // The progress-is-local warning is present.
+        await expect( dialog.getByText( /saved on this device only/ ) ).toBeVisible();
+
+        await dialog.getByRole( "button", { name: "[ESC] Close" } ).click();
+        await expect( dialog ).not.toBeVisible();
+    } );
+
+    test( "the S key opens the share overlay and ESC closes it without leaving the story", async ( { page } ) =>
+    {
+        await gotoMenu( page, `/?story=${ STORY_ID }` );
+        await page.keyboard.press( "Enter" );
+        await expect( page.getByText( "NOW READING" ) ).toBeVisible();
+
+        await page.keyboard.press( "s" );
+        await expect( page.getByRole( "dialog" ) ).toBeVisible();
+
+        await page.keyboard.press( "Escape" );
+        await expect( page.getByRole( "dialog" ) ).not.toBeVisible();
+
+        // ESC dismissed the overlay only — the story is still on screen.
+        await expect( page.getByText( "NOW READING" ) ).toBeVisible();
+    } );
+
     test( "advances scenes as choices are made and reaches an ending", async ( { page } ) =>
     {
         const path = findPathToEnding( STORY_ID );

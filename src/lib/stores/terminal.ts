@@ -52,6 +52,7 @@ interface TerminalStore {
     storyKey: number;
     aiStatus: AiStatus;
     aiError: string | null;
+    shareOpen: boolean;
 }
 
 export interface TerminalLine {
@@ -369,7 +370,8 @@ const createTerminalStore = () =>
         endingsTotal: 0,
         storyKey: 0,
         aiStatus: "idle",
-        aiError: null
+        aiError: null,
+        shareOpen: false
     };
 
     const { subscribe, update } = writable<TerminalStore>( initial );
@@ -406,7 +408,7 @@ const createTerminalStore = () =>
     const startMenu = () =>
     {
         clearLines();
-        update( ( s ) => ( { ...s, view: "menu", selectedStoryIndex: 0, awaitingInput: true, searchQuery: "", searchActive: false, currentStoryIsGenerated: false, generatedEndings: [], aiStatus: "idle", aiError: null } ) );
+        update( ( s ) => ( { ...s, view: "menu", selectedStoryIndex: 0, awaitingInput: true, searchQuery: "", searchActive: false, currentStoryIsGenerated: false, generatedEndings: [], aiStatus: "idle", aiError: null, shareOpen: false } ) );
     };
 
     /**
@@ -498,7 +500,8 @@ const createTerminalStore = () =>
             currentStory: story,
             awaitingInput: true,
             searchQuery: "",
-            searchActive: false
+            searchActive: false,
+            shareOpen: false
         } ) );
 
         const stats = computeStoryStats( story );
@@ -538,7 +541,8 @@ const createTerminalStore = () =>
             currentStory: story,
             gameState,
             currentStoryIsGenerated: false,
-            awaitingInput: true
+            awaitingInput: true,
+            shareOpen: false
         } ) );
 
         renderScene( story, story.startScene, gameState, true );
@@ -579,7 +583,8 @@ const createTerminalStore = () =>
             currentStory: story,
             gameState,
             currentStoryIsGenerated: false,
-            awaitingInput: true
+            awaitingInput: true,
+            shareOpen: false
         } ) );
 
         renderScene( story, save.currentScene, gameState, true );
@@ -1090,7 +1095,8 @@ const createTerminalStore = () =>
                 generatedEndings: [],
                 awaitingInput: true,
                 aiStatus: "idle",
-                aiError: null
+                aiError: null,
+                shareOpen: false
             } ) );
 
             renderScene( story, story.startScene, gameState, true );
@@ -1134,6 +1140,34 @@ const createTerminalStore = () =>
         renderScene( story, story.startScene, gameState, true );
     };
 
+    /**
+     * Opens the share overlay for the currently selected catalog story, whether
+     * it is being previewed (story-info) or read (story). Generated stories are
+     * ephemeral and have no shareable URL, so there is nothing to link to.
+     *
+     * @author Claude
+     */
+    const openShare = () =>
+    {
+        const state = get( { subscribe } );
+
+        const isShareableView = state.view === "story" || state.view === "story-info";
+        const canShare = isShareableView && state.currentStory !== null && !state.currentStoryIsGenerated;
+        if ( !canShare ) return;
+
+        update( ( s ) => ( { ...s, shareOpen: true } ) );
+    };
+
+    /**
+     * Closes the share overlay.
+     *
+     * @author Claude
+     */
+    const closeShare = () =>
+    {
+        update( ( s ) => ( { ...s, shareOpen: false } ) );
+    };
+
     return {
         subscribe,
         update,
@@ -1151,6 +1185,8 @@ const createTerminalStore = () =>
         resumeStory,
         makeChoice,
         goBack,
+        openShare,
+        closeShare,
         openWiki,
         closeWiki,
         setWikiCategory,

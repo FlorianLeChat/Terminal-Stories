@@ -11,6 +11,7 @@
     import AiStorySetup from "../AiStorySetup.svelte";
     import TerminalControls from "./TerminalControls.svelte";
     import TerminalHeader from "./TerminalHeader.svelte";
+    import ShareDialog from "./ShareDialog.svelte";
     import { storiesMeta, filterStories, searchStories, hasSave, parseDeepLink, deepLinkSearch, type DeepLinkTarget } from "$lib";
 
     let view = $derived( $terminal.view );
@@ -175,6 +176,10 @@
     {
         if ( view === "boot" ) return;
 
+        // While the share overlay is open, let the native <dialog> own the input
+        // (ESC closes it); don't fire story/menu shortcuts underneath it.
+        if ( $terminal.shareOpen ) return;
+
         // The AI setup screen is a plain form: let typing flow to the focused
         // field, and only intercept ESC to return to the menu.
         if ( view === "ai-setup" )
@@ -338,6 +343,13 @@
         const storyId = $terminal.currentStory?.id;
         if ( !storyId ) return;
 
+        if ( e.key.toLowerCase() === "s" )
+        {
+            e.preventDefault();
+            terminal.openShare();
+            return;
+        }
+
         if ( e.key === "Enter" )
         {
             if ( currentStoryHasSave )
@@ -442,6 +454,14 @@
             return;
         }
 
+        // [S] opens the share overlay (ignored for generated stories by the store).
+        if ( e.key.toLowerCase() === "s" )
+        {
+            e.preventDefault();
+            terminal.openShare();
+            return;
+        }
+
         if ( e.key === "Escape" )
         {
             terminal.goBack();
@@ -512,6 +532,10 @@
         endingsTotal={$terminal.endingsTotal}
         onSkip={handleSkip}
     />
+
+    {#if view === "story" || view === "story-info"}
+        <ShareDialog />
+    {/if}
 </main>
 
 <style>

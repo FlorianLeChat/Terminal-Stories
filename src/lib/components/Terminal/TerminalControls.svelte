@@ -44,6 +44,10 @@
     // letting every control work by touch as well as by keyboard.
     let currentStory = $derived( $terminal.currentStory );
 
+    // Generated stories are ephemeral and have no shareable URL, so the share
+    // control is offered for catalog stories only.
+    let isGenerated = $derived( $terminal.currentStoryIsGenerated );
+
     /**
      * Starts a fresh playthrough of the currently previewed story.
      *
@@ -120,6 +124,10 @@
 
                 {@render control( m.controls_story_menu(), () => terminal.goBack() )}
             {/if}
+
+            {#if !isGenerated}
+                {@render control( m.controls_story_share(), () => terminal.openShare() )}
+            {/if}
         {:else if view === "story-info"}
             {#if hasSave}
                 {@render control( m.controls_story_info_resume(), handleResume )}
@@ -129,6 +137,8 @@
                 {@render control( m.controls_story_info_start(), handleStart )}
                 {@render control( m.controls_story_menu(), () => terminal.startMenu() )}
             {/if}
+
+            {@render control( m.controls_story_share(), () => terminal.openShare() )}
         {:else if view === "menu"}
             {#if searchActive}
                 {@render control( m.controls_menu_cancel_search(), () => terminal.deactivateSearch() )}
