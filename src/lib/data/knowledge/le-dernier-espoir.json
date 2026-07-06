@@ -13,7 +13,7 @@
                 "Ces femmes et ces hommes, dotés d'armures issues du projet militaire « Hyperloop », veillent à la stabilité et à la sécurité de la population à travers le globe, jusqu'au jour où une menace dépasse leurs compétences."
             ],
             "tags": ["science-fiction", "dystopie", "lore"],
-            "related": ["le-dernier-espoir--era--effondrement", "le-dernier-espoir--character--howard", "le-dernier-espoir--event--bombe-new-york"]
+            "related": ["le-dernier-espoir--era--effondrement", "le-dernier-espoir--character--howard", "le-dernier-espoir--event--bombe-new-york", "le-dernier-espoir--event--projet-hyperloop", "le-dernier-espoir--location--quartier-general"]
         },
         {
             "id": "le-dernier-espoir--era--effondrement",
@@ -26,7 +26,7 @@
                 "Partout ailleurs, la nouvelle se répand comme une traînée de poudre et les villes basculent dans la panique, livrées à elles-mêmes."
             ],
             "tags": ["époque", "catastrophe", "lore"],
-            "related": ["le-dernier-espoir--universe--futur-proche", "le-dernier-espoir--event--bombe-new-york", "le-dernier-espoir--event--naufrage-thermophile", "le-dernier-espoir--location--dedale"]
+            "related": ["le-dernier-espoir--universe--futur-proche", "le-dernier-espoir--event--bombe-new-york", "le-dernier-espoir--event--incident-dedale", "le-dernier-espoir--event--naufrage-thermophile", "le-dernier-espoir--location--dedale", "le-dernier-espoir--location--quartier-general"]
         },
         {
             "id": "le-dernier-espoir--character--howard",
@@ -97,11 +97,11 @@
                 "Rôle : Allié.",
                 "Concepteur du projet Hyperloop, ainsi que des vaisseaux de commandement Dédale et Thermophile, il rêvait d'un monde stabilisé par les armures de l'Administration.",
                 "Réfugié dans les quartiers de commandement du Thermophile, il se donne la mort avant l'arrivée de Howard et Yoneda.",
-                "Son dernier enregistrement révèle que la bombe à énergie noire était une arme de l'Administration elle-même, et met en garde contre la tentation de reconstruire un jour le Dédale."
+                "Son dernier enregistrement révèle que la bombe à énergie noire était une arme de l'Administration elle-même, et supplie qu'on ne refasse jamais de recherche sur elle : ne pas retrouver ses traces, ne pas la reconstruire, la laisser disparaître avec lui."
             ],
             "aliases": ["Le Fondateur", "0A"],
             "tags": ["allié", "administrateur", "humain"],
-            "related": ["le-dernier-espoir--location--dedale", "le-dernier-espoir--location--thermophile", "le-dernier-espoir--event--naufrage-thermophile"]
+            "related": ["le-dernier-espoir--event--projet-hyperloop", "le-dernier-espoir--location--dedale", "le-dernier-espoir--location--thermophile", "le-dernier-espoir--event--naufrage-thermophile"]
         },
         {
             "id": "le-dernier-espoir--character--supervision",
@@ -154,8 +154,8 @@
                 "Unique en son genre, il tourne sans relâche autour du globe aux côtés du Thermophile, assurant chacun à leur tour la supervision et la coordination des missions des Administrateurs, en complément du quartier général.",
                 "Il est déployé à New York pour une mission de sécurisation critique, après que le Conseil de sécurité des Nations Unies s'est réuni en urgence face à la guerre civile qui embrase plusieurs pays. C'est à son bord qu'était embarquée la bombe à énergie noire, prototype ultra-secret dont le largage a précipité l'effondrement du monde."
             ],
-            "tags": ["lieu clé", "militaire"],
-            "related": ["le-dernier-espoir--event--bombe-new-york", "le-dernier-espoir--location--thermophile", "le-dernier-espoir--character--fondateur"]
+            "tags": ["lieu-clé", "militaire"],
+            "related": ["le-dernier-espoir--event--bombe-new-york", "le-dernier-espoir--event--incident-dedale", "le-dernier-espoir--location--thermophile", "le-dernier-espoir--character--fondateur", "le-dernier-espoir--event--projet-hyperloop"]
         },
         {
             "id": "le-dernier-espoir--location--thermophile",
@@ -168,7 +168,7 @@
                 "Privé de chaîne de commandement, son équipage s'entre-déchire en plusieurs factions, jusqu'à ce qu'un tir perdu ouvre une voie d'eau fatale."
             ],
             "aliases": ["Le porte-avions"],
-            "tags": ["lieu clé", "militaire"],
+            "tags": ["lieu-clé", "militaire"],
             "related": ["le-dernier-espoir--character--kira", "le-dernier-espoir--character--fondateur", "le-dernier-espoir--character--safar", "le-dernier-espoir--event--naufrage-thermophile"]
         },
         {
@@ -177,12 +177,13 @@
             "name": "La bombe à énergie noire de New York",
             "summary": "L'arme secrète embarquée à bord du Dédale, déployé à New York, qui a effacé la moitié du globe.",
             "description": [
-                "Prototype ultra-secret embarqué à bord du Dédale, envoyé à New York pour une mission de sécurisation après la réunion en urgence du Conseil de sécurité des Nations Unies, cette bombe à énergie noire n'était censée servir jamais : une clé de sûreté, trop terrible pour être utilisée.",
+                "Née d'une découverte accidentelle survenue au cours du projet Hyperloop, l'énergie noire fut forgée en arme par le Fondateur pour servir d'ultime moyen de dissuasion face aux gouvernements du monde.",
+                "Prototype ultra-secret embarqué à bord du Dédale, envoyé à New York pour une mission de sécurisation après la réunion en urgence du Conseil de sécurité des Nations Unies, cette bombe n'était censée servir jamais : une clé de sûreté, trop terrible pour être utilisée.",
                 "Larguée depuis ce vaisseau par des mains restées inconnues, elle n'explose pas au sens classique : elle efface, sans bruit, tout ce qu'elle touche.",
                 "Les rares survivants trop proches pour mourir mais trop loin pour en réchapper perdent la raison, happés par une énergie qui ronge autant l'esprit que les corps."
             ],
             "tags": ["événement", "catastrophe"],
-            "related": ["le-dernier-espoir--location--dedale", "le-dernier-espoir--character--kira", "le-dernier-espoir--character--fondateur", "le-dernier-espoir--location--los-angeles"]
+            "related": ["le-dernier-espoir--event--projet-hyperloop", "le-dernier-espoir--location--dedale", "le-dernier-espoir--event--incident-dedale", "le-dernier-espoir--character--kira", "le-dernier-espoir--character--fondateur", "le-dernier-espoir--location--los-angeles"]
         },
         {
             "id": "le-dernier-espoir--event--naufrage-thermophile",
@@ -196,6 +197,50 @@
             ],
             "tags": ["événement", "catastrophe"],
             "related": ["le-dernier-espoir--location--thermophile", "le-dernier-espoir--character--fondateur", "le-dernier-espoir--character--howard"]
+        },
+        {
+            "id": "le-dernier-espoir--event--projet-hyperloop",
+            "category": "event",
+            "name": "Le projet Hyperloop",
+            "summary": "La découverte scientifique fondatrice de l'Administration : des armures de combat surpuissantes conçues pour imposer la paix par la force.",
+            "description": [
+                "À l'origine, Hyperloop est une découverte scientifique majeure, exploitée par le Fondateur pour élaborer des armures de combat d'une technologie sans précédent, capables de décupler à elles seules la puissance d'un individu sur un champ de bataille.",
+                "Son but premier était d'instaurer la paix dans le monde par la force : interposer entre deux armées quelques Administrateurs en armure, dont le ratio de puissance était si écrasant en cas d'affrontement armé qu'aucune bataille conventionnelle ne pouvait plus être remportée face à eux, rendant la guerre elle-même inutile.",
+                "Par la suite, le Fondateur développa cette technologie en collaborant avec les États, jusqu'à faire des Administrateurs une force conventionnelle reconnue par les Nations Unies, membre à part entière de la communauté internationale et garante de la stabilité mondiale.",
+                "De ce même programme naîtront les vaisseaux de commandement Dédale et Thermophile. C'est aussi au détour de ses travaux que l'énergie noire fut découverte, par pur accident : une puissance que nul n'avait cherchée, et que le Fondateur choisit de forger en arme absolue plutôt que d'enfouir.",
+                "Cette bombe à énergie noire, censée n'être jamais utilisée, ne devait servir que d'ultime moyen de dissuasion face aux gouvernements du monde. Elle finira pourtant par retourner le rêve du Fondateur en cauchemar et par précipiter l'effondrement."
+            ],
+            "aliases": ["Hyperloop"],
+            "tags": ["technologie", "militaire", "lore"],
+            "related": ["le-dernier-espoir--character--fondateur", "le-dernier-espoir--universe--futur-proche", "le-dernier-espoir--location--dedale", "le-dernier-espoir--location--thermophile", "le-dernier-espoir--event--bombe-new-york"]
+        },
+        {
+            "id": "le-dernier-espoir--event--incident-dedale",
+            "category": "event",
+            "name": "L'incident du Dédale",
+            "summary": "L'implosion du vaisseau de commandement, quelques secondes seulement après l'impact de la bombe à énergie noire sur New York.",
+            "description": [
+                "Déployé à New York pour une mission de sécurisation critique, le Dédale est le vaisseau depuis lequel la bombe à énergie noire est larguée sur la ville par des mains restées inconnues.",
+                "Quelques secondes seulement après l'impact, le vaisseau est happé par l'onde de l'arme : sa structure se replie sur elle-même et il implose en plein vol, sans laisser à son équipage le temps de comprendre ce qui l'emporte.",
+                "Il n'en reste rien : ni épave, ni enregistrement, ni témoin. L'unique porte-hélicoptères volant de commandement de l'Administration disparaît en même temps que la moitié du globe, emportant avec lui la vérité sur les mains qui ont pressé la détente."
+            ],
+            "tags": ["événement", "catastrophe"],
+            "related": ["le-dernier-espoir--location--dedale", "le-dernier-espoir--event--bombe-new-york", "le-dernier-espoir--era--effondrement", "le-dernier-espoir--event--projet-hyperloop"]
+        },
+        {
+            "id": "le-dernier-espoir--location--quartier-general",
+            "category": "location",
+            "name": "Le Quartier général des Administrateurs",
+            "summary": "Le cœur névralgique de l'Administration, enfoui dans les montagnes suisses, effacé le jour de l'Effondrement.",
+            "description": [
+                "Niché au creux des montagnes suisses, à l'abri des regards et des frontières, le quartier général est le centre névralgique de l'Administration : commandement, formation des Administrateurs, coordination des rotations à l'échelle du globe et supervision, en alternance avec le Dédale et le Thermophile.",
+                "Son emplacement neutre, en terrain montagneux et fortifié, en faisait un sanctuaire réputé inviolable, siège discret de la collaboration entre l'Administration, les États et les Nations Unies.",
+                "C'est là qu'on renvoie les Administrateurs retirés de la rotation, loin de toute mission ; c'est là, aussi, que se prennent les décisions dont dépend l'équilibre du monde.",
+                "Il n'y survivra pas : le jour de l'Effondrement, la vague de la bombe à énergie noire efface l'Europe entière, et le quartier général avec elle, laissant l'Administration sans tête et le monde sans commandement."
+            ],
+            "aliases": ["Le QG", "Le quartier général"],
+            "tags": ["lieu-clé", "militaire"],
+            "related": ["le-dernier-espoir--universe--futur-proche", "le-dernier-espoir--character--fondateur", "le-dernier-espoir--location--dedale", "le-dernier-espoir--location--thermophile", "le-dernier-espoir--era--effondrement"]
         }
     ]
 }

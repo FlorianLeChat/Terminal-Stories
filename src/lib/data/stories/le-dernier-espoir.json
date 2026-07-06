@@ -84,11 +84,11 @@
             "isEnding": true,
             "endingType": "bad",
             "text": [
-                "On te retire de la rotation, mais on ne te renvoie pas plus loin que le quartier général, en Europe. Tu y traînes les jours suivants, désœuvré, à observer les allées et venues près du centre de commandement, sans qu'on te confie la moindre tâche.",
+                "On te retire de la rotation, mais on ne te renvoie pas plus loin que le quartier général, en Europe. Tu y traînes le reste de la journée, désœuvré, à observer les allées et venues près du centre de commandement, sans qu'on te confie la moindre tâche.",
                 "Tu es là, à flâner dans un couloir, quand tous les écrans s'allument en même temps : « BOMBE LARGUÉE À NEW YORK ». Tu regardes, consterné, aux côtés d'officiers tout aussi impuissants que toi, sans savoir qu'il ne s'agit pas d'une bombe ordinaire. Une lumière blanche avale l'horizon par la fenêtre, silencieuse, et efface le quartier général avec le reste du continent avant que quiconque ait pu comprendre ce qui arrivait.",
-                "Loin de là, dans son quartier d'enfance, la sergente Yoneda reste jusqu'au bout, jusqu'à ce que son armure n'ait plus une once de batterie. Puis elle vieillit sur place, dans ces ruines qui furent chez elle, et regarde le monde retourner lentement à l'âge de pierre. Certaines nuits, elle rêve qu'elle aurait peut-être pu faire mieux, ailleurs, autrement. Mais au réveil, elle est chez elle.",
+                "Loin de là, dans son quartier d'enfance, à Tokyo, la sergente Yoneda reste jusqu'au crépuscule, jusqu'à ce que son armure n'ait plus une once de batterie. Les années passent, dans ces ruines qui furent chez elle, et regarde le monde retourner lentement à l'âge de pierre. Certaines nuits, elle rêve qu'elle aurait peut-être pu faire mieux, ailleurs, autrement. Mais au réveil, elle est chez elle.",
                 "Ce n'est pas la pire des fins. Tu as manqué à ton devoir, c'est vrai, et tu n'auras jamais su ce qui t'a emporté. Mais quelque part, une femme doit la vie sauve au fait que tu n'aies pas accompli la tienne aujourd'hui.",
-                "— FIN : « Le largage refusé » —"
+                "— FIN : « Le largage salvateur » —"
             ],
             "choices": []
         },
@@ -135,7 +135,7 @@
             "id": "contact-supervision",
             "speaker": "supervision",
             "text": [
-                "Supervision, ici supervision, Capitaine Howard. J'espère que vous allez bien.",
+                "Supervision à Howard, ici Supervision. Capitaine Howard, j'espère que vous allez bien.",
                 "Ici à Tokyo, heure locale 14h12, la situation est plutôt calme, vous êtes largués à 538 km, position 53.2°N, 139.8°E, altitude 10 000 mètres.",
                 "Vous allez rejoindre 10.113-B, sergente Yoneda, qui est en patrouille dans la zone depuis 3 heures. Elle vous attend pour vous guider vers la zone de patrouille.",
                 "Veuillez noter que le Dédale est en alerte maximale à New York, pas d'impact de votre côté. Vous risquez cependant de ne pas recevoir de renforts dans votre région si la situation se dégrade.",
@@ -980,11 +980,11 @@
                 },
                 {
                     "speaker": "fondateur",
-                    "text": "« J'ai bâti le Dédale pour nous protéger de nous-mêmes. Un labyrinthe si parfait que plus aucune guerre ne pourrait nous y retrouver. Des gardiens en armure, une main ferme, la stabilité. C'était le rêve. »"
+                    "text": "« J'ai développé Hyperloop pour nous protéger de nous-mêmes. Un labyrinthe si parfait que plus aucune guerre ne pourrait nous y retrouver. Des gardiens en armure, une main ferme, la stabilité. C'était le rêve. »"
                 },
                 {
                     "speaker": "fondateur",
-                    "text": "« Mais on ne construit pas un labyrinthe sans y enfermer aussi le Minotaure. La bombe à énergie noire n'était qu'une clé de sûreté. Une arme si terrible qu'elle ne devait jamais servir. Nous l'avons forgée quand même. Et quelqu'un, dans nos propres rangs, a fini par la tourner. »"
+                    "text": "« Mais on ne construit pas un labyrinthe sans y réveiller aussi le Minotaure. L'énergie noire, nous ne l'avons jamais cherchée : elle a surgi par accident, au détour des travaux sur Hyperloop. J'aurais dû l'enfouir à l'instant même. J'en ai fait une arme, une clé de sûreté brandie contre les gouvernements du monde. Une menace si terrible qu'elle ne devait jamais servir, seulement dissuader. Nous l'avons forgée quand même. Et quelqu'un, dans nos propres rangs, a fini par la tourner. »"
                 },
                 {
                     "speaker": "fondateur",
@@ -996,7 +996,7 @@
                 },
                 {
                     "speaker": "fondateur",
-                    "text": "« À vous, qui écoutez encore : ne refaites pas le Dédale. Ne rêvez plus de labyrinthes. Vivez, simplement, aussi longtemps qu'il vous restera à vivre. Pardonnez-moi. »"
+                    "text": "« À vous, qui écoutez encore : la bombe à énergie noire ne doit jamais renaître. Ne refaites aucune recherche sur elle. Ne cherchez pas ses traces, ne rassemblez pas ce qu'il en reste, ne tentez jamais de la reconstruire. Qu'elle disparaisse avec nous, et qu'on l'oublie à jamais. Vivez, simplement, aussi longtemps qu'il vous restera à vivre. Pardonnez-moi. »"
                 },
                 "L'enregistrement s'achève sur un souffle. La pièce retombe dans le silence."
             ],
@@ -1069,7 +1069,7 @@
                 "Tu refais le compte, encore et encore. Le verdict ne change pas. Même en cumulant vos deux réserves dans une seule armure, on n'atteint pas le Japon. À moins que l'un de vous ne reste ici, définitivement, et que l'autre parte allégé, à charge pleine, avec une chance mince, de rejoindre une terre encore vivante.",
                 {
                     "speaker": "howard",
-                    "text": "« Une seule de nos deux armures peut espérer rentrer. » dis-tu à voix basse."
+                    "text": "« Un seul d'entre nous peut espérer rentrer. » dis-tu à voix basse."
                 },
                 {
                     "speaker": "howard",
