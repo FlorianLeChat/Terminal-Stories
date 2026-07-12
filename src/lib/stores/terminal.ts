@@ -15,6 +15,7 @@ import type { AiGenerationParams,
 import { aiErrorMessage,
     availableGenres,
     availableLanguages,
+    availableWikiLanguages,
     categoryIds,
     computeStoryStats,
     deleteSave,
@@ -345,6 +346,26 @@ const buildStoryInfoLines = (
 };
 
 /**
+ * Resolves the default language filter from the user's current locale. The
+ * story/wiki data tags languages by their human-readable label ("English",
+ * "Français"), so the locale is mapped to that label through the translatable
+ * {@link m.language_self_name} message. Returns `null` when no shipped content
+ * matches the locale's language, so an unsupported locale simply shows
+ * everything rather than an empty list.
+ *
+ * @param available - The language labels present in the target dataset.
+ * @returns The matching language label, or `null` when none is available.
+ * @author Claude
+ */
+const defaultLanguageFilter = ( available: string[] ): string | null =>
+{
+    const localeLanguage = m.language_self_name();
+    const isAvailable = available.includes( localeLanguage );
+
+    return isAvailable ? localeLanguage : null;
+};
+
+/**
  * Creates the terminal store: a single Svelte store driving the whole UI
  * (boot, menu, story playback, and wiki) along with its action methods.
  *
@@ -356,12 +377,14 @@ const createTerminalStore = () =>
     const initial: TerminalStore = {
         view: "boot",
         selectedStoryIndex: 0,
-        filters: { genre: null, language: null },
+        // Default to the reader's locale so the catalog and wiki open on the
+        // language they can actually read; they stay free to switch or clear it.
+        filters: { genre: null, language: defaultLanguageFilter( availableLanguages ) },
         gameState: null,
         currentStory: null,
         lines: [],
         awaitingInput: false,
-        wiki: { category: "universe", language: null, universe: null, selectedIndex: 0, selectedEntryId: null },
+        wiki: { category: "universe", language: defaultLanguageFilter( availableWikiLanguages ), universe: null, selectedIndex: 0, selectedEntryId: null },
         searchQuery: "",
         searchActive: false,
         currentStoryIsGenerated: false,

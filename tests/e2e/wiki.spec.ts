@@ -46,7 +46,8 @@ test.describe( "Encyclopedia", () =>
         const languageButtons = page.locator( "[aria-labelledby=\"wiki-filter-language-label\"] button[aria-pressed]" );
         const englishButton = languageButtons.filter( { hasText: "English" } );
 
-        await englishButton.click();
+        // The encyclopedia opens pre-filtered to the reader's locale (English
+        // in tests), so the English language filter starts selected.
         await expect( englishButton ).toHaveAttribute( "aria-pressed", "true" );
 
         const universeButton = page.locator( "[aria-labelledby=\"wiki-filter-universe-label\"] button", { hasText: "Kingdom of Elarion" } );
