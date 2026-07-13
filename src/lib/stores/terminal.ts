@@ -85,6 +85,17 @@ interface TerminalStore {
     unlockedAchievements: AchievementId[];
     /** Ids just unlocked, awaiting display in the unlock notification (toast). */
     achievementToast: AchievementId[];
+    /** Newly discovered ending tally awaiting display in a toast, or null. */
+    endingToast: EndingDiscoveryToast | null;
+}
+
+export interface EndingDiscoveryToast {
+    /** Whether this was the last remaining ending for the story. */
+    allDiscovered: boolean;
+    /** Total endings discovered so far, including this one. */
+    found: number;
+    /** Total endings the story has. */
+    total: number;
 }
 
 export interface TerminalLine {
@@ -286,32 +297,28 @@ const resolveCatalogEndingData = (
 };
 
 /**
- * Builds the discovery congratulation lines shown below an ending's text.
- * Returns an empty array when the ending was already known.
+ * Builds the discovery toast payload shown for a newly reached ending.
+ * Returns null when the ending was already known.
  *
  * @param isNewEnding - Whether this ending has not been seen before.
  * @param endingsFound - Total endings discovered including this one.
  * @param endingsTotal - Total endings in the story.
- * @returns Lines to append after the ending narration, if any.
+ * @returns The toast payload, or null when nothing new was discovered.
  * @author Claude
  */
-const buildEndingDiscoveryLines = (
+const buildEndingDiscoveryToast = (
     isNewEnding: boolean,
     endingsFound: number,
     endingsTotal: number
-): Omit<TerminalLine, "id">[] =>
+): EndingDiscoveryToast | null =>
 {
-    if ( !isNewEnding ) return [];
+    if ( !isNewEnding ) return null;
 
-    const allDiscovered = endingsFound >= endingsTotal;
-    const message = allDiscovered
-        ? m.ending_all_discovered( { total: endingsTotal } )
-        : m.ending_new_discovered( { found: endingsFound, total: endingsTotal } );
-
-    return [
-        { text: "", type: "narrator" },
-        { text: message, type: "system" }
-    ];
+    return {
+        allDiscovered: endingsFound >= endingsTotal,
+        found: endingsFound,
+        total: endingsTotal
+    };
 };
 
 /**
@@ -491,7 +498,8 @@ const createTerminalStore = () =>
         shareOpen: false,
         storyStartedAt: null,
         unlockedAchievements: [],
-        achievementToast: []
+        achievementToast: [],
+        endingToast: null
     };
 
     const { subscribe, update } = writable<TerminalStore>( initial );
@@ -528,7 +536,7 @@ const createTerminalStore = () =>
     const startMenu = () =>
     {
         clearLines();
-        update( ( s ) => ( { ...s, view: "menu", selectedStoryIndex: 0, awaitingInput: true, searchQuery: "", searchActive: false, currentStoryIsGenerated: false, generatedEndings: [], aiStatus: "idle", aiError: null, shareOpen: false, achievementToast: [] } ) );
+        update( ( s ) => ( { ...s, view: "menu", selectedStoryIndex: 0, awaitingInput: true, searchQuery: "", searchActive: false, currentStoryIsGenerated: false, generatedEndings: [], aiStatus: "idle", aiError: null, shareOpen: false, achievementToast: [], endingToast: null } ) );
     };
 
     /**
@@ -664,7 +672,8 @@ const createTerminalStore = () =>
             awaitingInput: true,
             shareOpen: false,
             storyStartedAt: Date.now(),
-            achievementToast: []
+            achievementToast: [],
+            endingToast: null
         } ) );
 
         renderScene( story, story.startScene, gameState, true );
@@ -708,7 +717,8 @@ const createTerminalStore = () =>
             awaitingInput: true,
             shareOpen: false,
             storyStartedAt: Date.now(),
-            achievementToast: []
+            achievementToast: [],
+            endingToast: null
         } ) );
 
         renderScene( story, save.currentScene, gameState, true );
@@ -745,18 +755,20 @@ const createTerminalStore = () =>
         let nextUnlockedAchievements: AchievementId[] | null = null;
         // The just-unlocked ids to surface in the notification (toast), if any.
         let nextAchievementToast: AchievementId[] | null = null;
+        // The ending discovery toast to surface, if this ending is new.
+        let nextEndingToast: EndingDiscoveryToast | null = null;
 
         if ( scene.isEnding )
         {
             if ( currentStoryIsGenerated )
             {
                 // The restart/menu key hints live in the footer (TerminalControls);
-                // only the discovery congratulation is shown inline.
+                // the discovery congratulation is surfaced as a toast instead.
                 const data = resolveGeneratedEndingData( sceneId, story, generatedEndings );
                 nextEndings = data.nextEndings;
                 endingsFound = data.endingsFound;
                 endingsTotal = data.endingsTotal;
-                lines.push( ...buildEndingDiscoveryLines( data.isNewEnding, endingsFound, endingsTotal ) );
+                nextEndingToast = buildEndingDiscoveryToast( data.isNewEnding, endingsFound, endingsTotal );
             }
             else
             {
@@ -764,7 +776,7 @@ const createTerminalStore = () =>
                 const data = resolveCatalogEndingData( sceneId, story, state );
                 endingsFound = data.endingsFound;
                 endingsTotal = data.endingsTotal;
-                lines.push( ...buildEndingDiscoveryLines( data.isNewEnding, endingsFound, endingsTotal ) );
+                nextEndingToast = buildEndingDiscoveryToast( data.isNewEnding, endingsFound, endingsTotal );
 
                 // Generated stories are ephemeral and never award achievements.
                 const unlocked = evaluateEndingAchievements( story, sceneId, state.storyId, data, storyStartedAt );
@@ -788,6 +800,7 @@ const createTerminalStore = () =>
             endingsTotal,
             unlockedAchievements: nextUnlockedAchievements ?? s.unlockedAchievements,
             achievementToast: nextAchievementToast ?? s.achievementToast,
+            endingToast: nextEndingToast ?? s.endingToast,
             lines: [ ...s.lines, ...lines.map( ( l ) => ( { ...l, id: nextId() } ) ) ]
         } ) );
     };
@@ -974,6 +987,17 @@ const createTerminalStore = () =>
     const dismissAchievementToast = () =>
     {
         update( ( s ) => ( { ...s, achievementToast: [] } ) );
+    };
+
+    /**
+     * Dismisses the ending discovery notification (toast), clearing it so it
+     * disappears.
+     *
+     * @author Claude
+     */
+    const dismissEndingToast = () =>
+    {
+        update( ( s ) => ( { ...s, endingToast: null } ) );
     };
 
     /**
@@ -1372,6 +1396,7 @@ const createTerminalStore = () =>
         openAchievements,
         closeAchievements,
         dismissAchievementToast,
+        dismissEndingToast,
         openWiki,
         closeWiki,
         setWikiCategory,

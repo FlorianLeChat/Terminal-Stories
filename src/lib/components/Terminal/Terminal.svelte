@@ -10,6 +10,7 @@
     import WikiBrowser from "../Wiki/WikiBrowser.svelte";
     import AchievementsBrowser from "../Achievements/AchievementsBrowser.svelte";
     import AchievementToast from "../Achievements/AchievementToast.svelte";
+    import EndingToast from "../Story/EndingToast.svelte";
     import AiStorySetup from "../AiStorySetup.svelte";
     import TerminalControls from "./TerminalControls.svelte";
     import TerminalHeader from "./TerminalHeader.svelte";
@@ -168,6 +169,37 @@
     };
 
     /**
+     * Steps the highlighted menu story up or down by one position, wrapping
+     * around the visible list. Shared by the ArrowUp/ArrowDown keys and the
+     * footer's navigation buttons so both stay in sync.
+     *
+     * @param delta - -1 to move to the previous story, 1 for the next one.
+     * @author Claude
+     */
+    const handleMenuStep = ( delta: -1 | 1 ) =>
+    {
+        const count = visibleStories.length;
+        if ( count === 0 ) return;
+
+        terminal.update( ( s ) => ( { ...s, selectedStoryIndex: ( s.selectedStoryIndex + delta + count ) % count } ) );
+    };
+
+    /**
+     * Opens the story currently highlighted in the menu — the same action as
+     * pressing ENTER. Shared by the keyboard handler and the footer's select
+     * button.
+     *
+     * @author Claude
+     */
+    const handleMenuSelectCurrent = () =>
+    {
+        const count = visibleStories.length;
+        if ( count === 0 ) return;
+
+        terminal.selectStory( visibleStories[ $terminal.selectedStoryIndex ].id );
+    };
+
+    /**
      * Global key handler: dispatches the event to the handler for the current
      * view. Boot input is handled by the boot component itself.
      *
@@ -322,16 +354,16 @@
         if ( e.key === "ArrowDown" )
         {
             e.preventDefault();
-            terminal.update( ( s ) => ( { ...s, selectedStoryIndex: ( s.selectedStoryIndex + 1 ) % count } ) );
+            handleMenuStep( 1 );
         }
         else if ( e.key === "ArrowUp" )
         {
             e.preventDefault();
-            terminal.update( ( s ) => ( { ...s, selectedStoryIndex: ( s.selectedStoryIndex - 1 + count ) % count } ) );
+            handleMenuStep( -1 );
         }
         else if ( e.key === "Enter" )
         {
-            terminal.selectStory( visibleStories[ $terminal.selectedStoryIndex ].id );
+            handleMenuSelectCurrent();
         }
         else
         {
@@ -562,13 +594,18 @@
         endingsFound={$terminal.endingsFound}
         endingsTotal={$terminal.endingsTotal}
         onSkip={handleSkip}
+        onMenuNavigate={handleMenuStep}
+        onMenuSelect={handleMenuSelectCurrent}
     />
 
     {#if view === "story" || view === "story-info"}
         <ShareDialog />
     {/if}
 
-    <AchievementToast />
+    <div class="absolute left-1/2 top-4 z-20 flex w-[min(94%,32rem)] -translate-x-1/2 flex-col items-center gap-2">
+        <EndingToast />
+        <AchievementToast />
+    </div>
 </main>
 
 <style>

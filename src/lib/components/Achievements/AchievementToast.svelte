@@ -30,7 +30,7 @@
 
 {#if unlocked.length > 0}
     <div
-        class="toast absolute left-1/2 top-4 z-20 w-[min(92%,26rem)] -translate-x-1/2 border border-terminal-green/60 rounded bg-[rgba(0,20,0,0.95)] px-3 py-2 shadow-[0_0_20px_rgba(0,255,70,0.25)]"
+        class="toast w-full border border-terminal-green/60 rounded bg-[rgba(0,20,0,0.95)] px-3 py-2 shadow-[0_0_20px_rgba(0,255,70,0.25)]"
         role="status"
         aria-live="polite"
     >
@@ -42,7 +42,7 @@
             <button
                 type="button"
                 class="shrink-0 text-terminal-dim hover:text-terminal-white text-xs leading-none px-1"
-                aria-label={m.achievements_toast_dismiss()}
+                aria-label={m.toast_dismiss()}
                 onclick={() => terminal.dismissAchievementToast()}
             >
                 ✕
@@ -85,11 +85,11 @@
     @keyframes toast-in {
         from {
             opacity: 0;
-            transform: translate(-50%, -0.75rem);
+            transform: translateY(-0.75rem);
         }
         to {
             opacity: 1;
-            transform: translate(-50%, 0);
+            transform: translateY(0);
         }
     }
 </style>
