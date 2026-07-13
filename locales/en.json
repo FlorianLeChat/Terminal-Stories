@@ -117,8 +117,8 @@
 
 	"language_self_name": "English",
 
-    "menu_achievements_button": "✦ [A] Achievements",
-    "menu_ai_button": "✦ [I] AI story",
+	"menu_achievements_button": "✦ [A] Achievements",
+	"menu_ai_button": "✦ [I] AI story",
 	"menu_count_available": " available",
 	"menu_count_filtered": " filtered",
 	"menu_count_results": [{"declarations": ["input count", "input query", "local countPlural = count: plural"], "selectors": ["countPlural"], "match": {"countPlural=one": "{count} result for \"{query}\"", "countPlural=other": "{count} results for \"{query}\""}}],
