@@ -117,8 +117,8 @@
 
 	"language_self_name": "Français",
 
-	"menu_achievements_button": "✦ [A] Succès",
-	"menu_ai_button": "✦ [I] Histoire IA",
+    "menu_achievements_button": "✦ [A] Succès",
+    "menu_ai_button": "✦ [I] Histoire IA",
 	"menu_count_available": " disponibles",
 	"menu_count_filtered": " filtrées",
 	"menu_count_results": [{"declarations": ["input count", "input query", "local countPlural = count: plural"], "selectors": ["countPlural"], "match": {"countPlural=one": "{count} résultat pour « {query} »", "countPlural=other": "{count} résultats pour « {query} »"}}],

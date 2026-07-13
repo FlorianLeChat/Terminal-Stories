@@ -29,16 +29,34 @@ test.describe( "Main menu", () =>
         await expect( firstGenre ).toHaveAttribute( "aria-pressed", "false" );
     } );
 
+    test( "opens the catalog pre-filtered to the reader's language", async ( { page } ) =>
+    {
+        // The app renders the base locale (English) in tests, so the catalog
+        // opens pre-filtered to English and the Reset control is available.
+        const englishButton = page.locator( "[aria-labelledby=\"filter-language-label\"] button", { hasText: "English" } );
+        await expect( englishButton ).toHaveAttribute( "aria-pressed", "true" );
+        await expect( page.getByRole( "button", { name: "✕ Reset" } ) ).toBeVisible();
+
+        // The footer reflects the active filter rather than the full catalog.
+        await expect( page.getByText( /\/ \d+ stories filtered/ ) ).toBeVisible();
+    } );
+
     test( "cycles the language filter with the [L] shortcut", async ( { page } ) =>
     {
         const languageButtons = page.locator( "[aria-labelledby=\"filter-language-label\"] button[aria-pressed]" );
-        const firstLanguage = languageButtons.first();
 
+        // The first language (English) starts selected as the locale default.
+        await expect( languageButtons.nth( 0 ) ).toHaveAttribute( "aria-pressed", "true" );
+
+        // [L] advances to the next language in the cycle.
         await page.keyboard.press( "l" );
-        await expect( firstLanguage ).toHaveAttribute( "aria-pressed", "true" );
+        await expect( languageButtons.nth( 0 ) ).toHaveAttribute( "aria-pressed", "false" );
+        await expect( languageButtons.nth( 1 ) ).toHaveAttribute( "aria-pressed", "true" );
 
+        // [C] clears every filter, deselecting all languages.
         await page.keyboard.press( "c" );
-        await expect( firstLanguage ).toHaveAttribute( "aria-pressed", "false" );
+        await expect( languageButtons.nth( 0 ) ).toHaveAttribute( "aria-pressed", "false" );
+        await expect( languageButtons.nth( 1 ) ).toHaveAttribute( "aria-pressed", "false" );
     } );
 
     test( "searches the catalog and clears the query", async ( { page } ) =>
