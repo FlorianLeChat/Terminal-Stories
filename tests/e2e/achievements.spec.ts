@@ -148,6 +148,26 @@ test.describe( "Achievements", () =>
         await expect( achievementCard( page, "No Stone Unturned" ).getByText( "Unlocked", { exact: true } ) ).toBeVisible();
     } );
 
+    test( "resets every unlocked achievement back to locked", async ( { page } ) =>
+    {
+        const path = findPathToEnding( STORY_ID );
+
+        await gotoMenu( page, `/?story=${ STORY_ID }` );
+        await page.keyboard.press( "Enter" );
+        await playPath( page, path );
+
+        await page.keyboard.press( "Escape" );
+        await page.keyboard.press( "a" );
+
+        await expect( achievementCard( page, "First Steps" ).getByText( "Unlocked", { exact: true } ) ).toBeVisible();
+
+        await page.getByRole( "button", { name: "Reset achievements" } ).click();
+        await page.getByRole( "button", { name: "Reset everything" } ).click();
+
+        await expect( page.getByText( "0 / 7 unlocked" ) ).toBeVisible();
+        await expect( achievementCard( page, "First Steps" ).getByText( "Locked", { exact: true } ) ).toBeVisible();
+    } );
+
     test( "AI-generated stories never award achievements", async ( { page } ) =>
     {
         await page.route( MODELS_URL, ( route ) =>

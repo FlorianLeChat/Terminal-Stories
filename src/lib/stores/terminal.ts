@@ -35,6 +35,7 @@ import { aiErrorMessage,
     loadDiscoveredEndings,
     loadSave,
     loadUnlockedAchievements,
+    resetAchievements as resetAchievementsStorage,
     saveDiscoveredEnding,
     saveProgress,
     searchWikiEntries,
@@ -979,6 +980,18 @@ const createTerminalStore = () =>
     };
 
     /**
+     * Erases every unlocked achievement, letting the player start over from
+     * zero. The achievements screen re-renders every card as locked.
+     *
+     * @author Claude
+     */
+    const resetAchievements = () =>
+    {
+        resetAchievementsStorage();
+        update( ( s ) => ( { ...s, unlockedAchievements: [] } ) );
+    };
+
+    /**
      * Dismisses the achievement unlock notification (toast), clearing the queue
      * of just-unlocked ids so it disappears.
      *
@@ -1395,6 +1408,7 @@ const createTerminalStore = () =>
         closeShare,
         openAchievements,
         closeAchievements,
+        resetAchievements,
         dismissAchievementToast,
         dismissEndingToast,
         openWiki,

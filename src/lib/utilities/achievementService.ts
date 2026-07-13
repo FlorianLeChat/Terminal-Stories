@@ -105,6 +105,19 @@ export const countFullyCompletedStories = ( currentStoryId: string, currentScene
 export const totalStoriesCount = storiesMeta.length;
 
 /**
+ * Erases every unlocked achievement from localStorage, restoring a fresh
+ * start. No-op in SSR environments.
+ *
+ * @author Claude
+ */
+export const resetAchievements = (): void =>
+{
+    if ( globalThis.window === undefined ) return;
+
+    localStorage.removeItem( ACHIEVEMENTS_KEY );
+};
+
+/**
  * Evaluates every locked achievement against the given context, persists any
  * newly unlocked ones, and returns their ids. Idempotent: already-unlocked
  * achievements are never re-added or re-timestamped.
