@@ -105,6 +105,13 @@
             >
                 {m.menu_ai_button()}
             </button>
+
+            <button
+                class="px-2 py-1.5 sm:py-0.5 rounded border border-terminal-green/50 text-terminal-green hover:bg-terminal-green/10 motion-safe:transition-colors motion-safe:duration-100 w-full sm:w-auto"
+                onclick={() => terminal.openAchievements()}
+            >
+                {m.menu_achievements_button()}
+            </button>
         {/if}
     </nav>
 

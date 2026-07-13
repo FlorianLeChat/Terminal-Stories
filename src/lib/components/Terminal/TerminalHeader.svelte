@@ -29,6 +29,7 @@
             {#if view === "story-info"}{m.header_view_story_info()}{/if}
             {#if view === "story"}{m.header_view_story()}{/if}
             {#if view === "wiki"}{m.header_view_wiki()}{/if}
+            {#if view === "achievements"}{m.header_view_achievements()}{/if}
             {#if view === "ai-setup"}{m.header_view_ai_setup()}{/if}
         </span>
     </span>

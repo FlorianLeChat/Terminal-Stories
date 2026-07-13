@@ -1,6 +1,30 @@
 {
 	"$schema": "https://inlang.com/schema/inlang-message-format",
 
+	"achievement_all_endings_single_desc": "Découvrez toutes les fins d'une même histoire.",
+	"achievement_all_endings_single_name": "Sans rien oublier",
+	"achievement_balanced_desc": "Découvrez une fin heureuse et une fin tragique de la même histoire.",
+	"achievement_balanced_name": "Nuances de gris",
+	"achievement_completionist_desc": "Découvrez toutes les fins de toutes les histoires du catalogue.",
+	"achievement_completionist_name": "Perfectionniste",
+	"achievement_dedication_desc": "Passez plus de dix minutes sur une même partie.",
+	"achievement_dedication_name": "Lecture attentive",
+	"achievement_explorer_desc": "Terminez trois histoires différentes.",
+	"achievement_explorer_name": "Grand explorateur",
+	"achievement_first_ending_desc": "Terminez une histoire pour la première fois.",
+	"achievement_first_ending_name": "Premiers pas",
+	"achievement_speedrun_desc": "Atteignez une fin en moins d'une minute.",
+	"achievement_speedrun_name": "Vitesse éclair",
+	"achievements_count": "{unlocked} / {total} débloqués",
+	"achievements_hidden_desc": "Succès secret — continuez à jouer pour le révéler.",
+	"achievements_hidden_name": "? ? ?",
+	"achievements_nav_default": "[ÉCHAP] Retour au menu",
+	"achievements_status_locked": "Verrouillé",
+	"achievements_status_unlocked": "Débloqué",
+	"achievements_subtitle": "— SUCCÈS —",
+	"achievements_toast_dismiss": "Fermer la notification",
+	"achievements_toast_title": [{"declarations": ["input count", "local countPlural = count: plural"], "selectors": ["countPlural"], "match": {"countPlural=one": "Succès débloqué", "countPlural=other": "Succès débloqués"}}],
+
 	"ai_endings_progress": "Fins découvertes : {found} / {total}",
 	"ai_ephemeral_note": "Histoire à usage unique : aucune sauvegarde, aucun ajout au catalogue.",
 	"ai_err_api": "Erreur de l'API (code {status}). Réessayez plus tard.",
@@ -45,9 +69,11 @@
 	"boot_press_enter": "Appuyez sur ENTRÉE pour commencer.",
 	"boot_scenario": "[OK] Lecture des données de scénario",
 
+	"controls_achievements_menu": "[ÉCHAP] Menu principal",
 	"controls_ai_generate": "[ENTRÉE] Générer",
 	"controls_ai_restart": "[ENTRÉE] Recommencer",
 	"controls_source_code": "Code source",
+	"controls_menu_achievements": "[A] Succès",
 	"controls_menu_ai": "[I] IA",
 	"controls_menu_cancel_search": "[ÉCHAP] Annuler la recherche",
 	"controls_menu_genre": "[G] Genre",
@@ -81,6 +107,7 @@
 	"genre_thriller": "Thriller",
 
 	"header_aria": "Barre d'état",
+	"header_view_achievements": "SUCCÈS",
 	"header_view_ai_setup": "GÉNÉRATEUR IA",
 	"header_view_boot": "DÉMARRAGE",
 	"header_view_menu": "MENU PRINCIPAL",
@@ -90,6 +117,7 @@
 
 	"language_self_name": "Français",
 
+	"menu_achievements_button": "✦ [A] Succès",
 	"menu_ai_button": "✦ [I] Histoire IA",
 	"menu_count_available": " disponibles",
 	"menu_count_filtered": " filtrées",
