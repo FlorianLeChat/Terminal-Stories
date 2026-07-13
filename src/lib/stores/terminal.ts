@@ -1,6 +1,8 @@
 import * as m from "$lib/locales/messages";
 import { writable, get } from "svelte/store";
-import type { AiGenerationParams,
+import type { AchievementContext,
+    AchievementId,
+    AiGenerationParams,
     AiStatus,
     Choice,
     GameState,
@@ -17,7 +19,10 @@ import { aiErrorMessage,
     availableLanguages,
     categoryIds,
     computeStoryStats,
+    countCompletedStories,
+    countFullyCompletedStories,
     deleteSave,
+    evaluateAchievements,
     filterEntries,
     generateStory,
     genreLabel,
@@ -28,11 +33,13 @@ import { aiErrorMessage,
     loadAiSettings,
     loadDiscoveredEndings,
     loadSave,
+    loadUnlockedAchievements,
     saveDiscoveredEnding,
     saveProgress,
-    searchWikiEntries } from "$lib";
+    searchWikiEntries,
+    totalStoriesCount } from "$lib";
 
-export type TerminalView = "boot" | "menu" | "story-info" | "story" | "wiki" | "ai-setup";
+export type TerminalView = "boot" | "menu" | "story-info" | "story" | "wiki" | "ai-setup" | "achievements";
 
 interface TerminalStore {
     view: TerminalView;
@@ -53,6 +60,10 @@ interface TerminalStore {
     aiStatus: AiStatus;
     aiError: string | null;
     shareOpen: boolean;
+    storyStartedAt: number | null;
+    unlockedAchievements: AchievementId[];
+    /** Ids just unlocked, awaiting display in the unlock notification (toast). */
+    achievementToast: AchievementId[];
 }
 
 export interface TerminalLine {
@@ -276,6 +287,62 @@ const buildEndingDiscoveryLines = (
 };
 
 /**
+ * Evaluates and persists the achievements unlocked by reaching a catalog
+ * ending. Builds the evaluation context from the just reached ending (folded
+ * into the discovered sets and ending types so counts are current before the
+ * ending is persisted later in {@link goBack}/{@link restartStory}).
+ *
+ * @param story - The catalog story being played.
+ * @param sceneId - The id of the ending scene just reached.
+ * @param storyId - The id of the story (from the game state).
+ * @param endingData - The freshly computed ending tally for this story.
+ * @param storyStartedAt - Epoch ms when this playthrough began, or null.
+ * @returns The refreshed full list plus the just-unlocked ids when something
+ *          new was unlocked, or `null` when nothing changed.
+ * @author Claude
+ */
+const evaluateEndingAchievements = (
+    story: Story,
+    sceneId: string,
+    storyId: string,
+    endingData: { endingsFound: number; endingsTotal: number; isNewEnding: boolean },
+    storyStartedAt: number | null
+): { all: AchievementId[]; newly: AchievementId[] } | null =>
+{
+    // Fold the just reached ending into the persisted set so its type counts.
+    const discoveredIds = loadDiscoveredEndings( storyId );
+    discoveredIds.add( sceneId );
+
+    const discoveredEndingTypes = new Set<"good" | "bad" | "neutral">();
+
+    for ( const id of discoveredIds )
+    {
+        const endingType = story.scenes[ id ]?.endingType;
+        if ( endingType ) discoveredEndingTypes.add( endingType );
+    }
+
+    const elapsedMs = storyStartedAt === null ? 0 : Date.now() - storyStartedAt;
+
+    const context: AchievementContext = {
+        storyId,
+        isNewEnding: endingData.isNewEnding,
+        endingsFound: endingData.endingsFound,
+        endingsTotal: endingData.endingsTotal,
+        elapsedMs,
+        completedStoriesCount: countCompletedStories( storyId ),
+        fullyCompletedStoriesCount: countFullyCompletedStories( storyId, sceneId ),
+        totalStoriesCount,
+        discoveredEndingTypes
+    };
+
+    const newlyUnlocked = evaluateAchievements( context );
+    if ( newlyUnlocked.length === 0 ) return null;
+
+    // Re-read the persisted list so the store holds the full, current set.
+    return { all: loadUnlockedAchievements().map( ( a ) => a.id ), newly: newlyUnlocked };
+};
+
+/**
  * Builds the choice prompt block: the "que faites-vous" header, the indexed
  * available choices, and the escape hint.
  *
@@ -371,7 +438,10 @@ const createTerminalStore = () =>
         storyKey: 0,
         aiStatus: "idle",
         aiError: null,
-        shareOpen: false
+        shareOpen: false,
+        storyStartedAt: null,
+        unlockedAchievements: [],
+        achievementToast: []
     };
 
     const { subscribe, update } = writable<TerminalStore>( initial );
@@ -408,7 +478,7 @@ const createTerminalStore = () =>
     const startMenu = () =>
     {
         clearLines();
-        update( ( s ) => ( { ...s, view: "menu", selectedStoryIndex: 0, awaitingInput: true, searchQuery: "", searchActive: false, currentStoryIsGenerated: false, generatedEndings: [], aiStatus: "idle", aiError: null, shareOpen: false } ) );
+        update( ( s ) => ( { ...s, view: "menu", selectedStoryIndex: 0, awaitingInput: true, searchQuery: "", searchActive: false, currentStoryIsGenerated: false, generatedEndings: [], aiStatus: "idle", aiError: null, shareOpen: false, achievementToast: [] } ) );
     };
 
     /**
@@ -542,7 +612,9 @@ const createTerminalStore = () =>
             gameState,
             currentStoryIsGenerated: false,
             awaitingInput: true,
-            shareOpen: false
+            shareOpen: false,
+            storyStartedAt: Date.now(),
+            achievementToast: []
         } ) );
 
         renderScene( story, story.startScene, gameState, true );
@@ -584,7 +656,9 @@ const createTerminalStore = () =>
             gameState,
             currentStoryIsGenerated: false,
             awaitingInput: true,
-            shareOpen: false
+            shareOpen: false,
+            storyStartedAt: Date.now(),
+            achievementToast: []
         } ) );
 
         renderScene( story, save.currentScene, gameState, true );
@@ -606,7 +680,7 @@ const createTerminalStore = () =>
         const scene = story.scenes[ sceneId ];
         if ( !scene ) return;
 
-        const { currentStoryIsGenerated, generatedEndings } = get( { subscribe } );
+        const { currentStoryIsGenerated, generatedEndings, storyStartedAt } = get( { subscribe } );
 
         const lines: Omit<TerminalLine, "id">[] = buildBaseSceneLines( scene, story, isFirst );
 
@@ -615,6 +689,12 @@ const createTerminalStore = () =>
         let nextEndings = generatedEndings;
         let endingsFound = 0;
         let endingsTotal = 0;
+
+        // Stays null unless reaching a catalog ending unlocks new achievements,
+        // in which case it carries the refreshed list to fold into the state.
+        let nextUnlockedAchievements: AchievementId[] | null = null;
+        // The just-unlocked ids to surface in the notification (toast), if any.
+        let nextAchievementToast: AchievementId[] | null = null;
 
         if ( scene.isEnding )
         {
@@ -635,6 +715,15 @@ const createTerminalStore = () =>
                 endingsFound = data.endingsFound;
                 endingsTotal = data.endingsTotal;
                 lines.push( ...buildEndingDiscoveryLines( data.isNewEnding, endingsFound, endingsTotal ) );
+
+                // Generated stories are ephemeral and never award achievements.
+                const unlocked = evaluateEndingAchievements( story, sceneId, state.storyId, data, storyStartedAt );
+
+                if ( unlocked )
+                {
+                    nextUnlockedAchievements = unlocked.all;
+                    nextAchievementToast = unlocked.newly;
+                }
             }
         }
         else if ( scene.choices.length > 0 )
@@ -647,6 +736,8 @@ const createTerminalStore = () =>
             generatedEndings: nextEndings,
             endingsFound,
             endingsTotal,
+            unlockedAchievements: nextUnlockedAchievements ?? s.unlockedAchievements,
+            achievementToast: nextAchievementToast ?? s.achievementToast,
             lines: [ ...s.lines, ...lines.map( ( l ) => ( { ...l, id: nextId() } ) ) ]
         } ) );
     };
@@ -792,6 +883,47 @@ const createTerminalStore = () =>
         }
 
         startStory( state.currentStory.id );
+    };
+
+    /**
+     * Opens the achievements screen, refreshing the unlocked list from storage
+     * so it reflects anything earned earlier (including in another tab).
+     *
+     * @author Claude
+     */
+    const openAchievements = () =>
+    {
+        clearLines();
+        update( ( s ) => ( {
+            ...s,
+            view: "achievements",
+            awaitingInput: true,
+            searchQuery: "",
+            searchActive: false,
+            unlockedAchievements: loadUnlockedAchievements().map( ( a ) => a.id )
+        } ) );
+    };
+
+    /**
+     * Closes the achievements screen and returns to the main menu.
+     *
+     * @author Claude
+     */
+    const closeAchievements = () =>
+    {
+        update( ( s ) => ( { ...s, view: "menu" } ) );
+        startMenu();
+    };
+
+    /**
+     * Dismisses the achievement unlock notification (toast), clearing the queue
+     * of just-unlocked ids so it disappears.
+     *
+     * @author Claude
+     */
+    const dismissAchievementToast = () =>
+    {
+        update( ( s ) => ( { ...s, achievementToast: [] } ) );
     };
 
     /**
@@ -1187,6 +1319,9 @@ const createTerminalStore = () =>
         goBack,
         openShare,
         closeShare,
+        openAchievements,
+        closeAchievements,
+        dismissAchievementToast,
         openWiki,
         closeWiki,
         setWikiCategory,

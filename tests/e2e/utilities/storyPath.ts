@@ -99,3 +99,77 @@ export const findPathToEnding = ( storyId: string ): number[] =>
 
     return path;
 };
+
+/**
+ * Depth-first search collecting one choice path per distinct reachable ending
+ * scene. Mirrors the app's flag-gating (see `getAvailableChoices`) so every
+ * path a test replays is actually valid in the running story.
+ *
+ * @param scenesById - Every scene in the story, keyed by id.
+ * @param sceneId - The scene currently being explored.
+ * @param flags - Flags set so far along this path.
+ * @param path - 1-based choice indices taken so far.
+ * @param visited - Scene ids already visited on this path (loop guard).
+ * @param found - Accumulator mapping each ending scene id to its first path.
+ * @author Claude
+ */
+const collectEndingsFrom = (
+    scenesById: Record<string, StoryScene>,
+    sceneId: string,
+    flags: Set<string>,
+    path: number[],
+    visited: Set<string>,
+    found: Map<string, number[]>
+): void =>
+{
+    const scene = scenesById[ sceneId ];
+    if ( !scene ) return;
+
+    if ( scene.isEnding )
+    {
+        // Keep only the first path discovered for each distinct ending scene.
+        if ( !found.has( sceneId ) ) found.set( sceneId, path );
+
+        return;
+    }
+
+    if ( visited.has( sceneId ) ) return;
+
+    const nextVisited = new Set( visited );
+    nextVisited.add( sceneId );
+
+    const available = scene.choices.filter( ( c ) => !( c.requiresFlag && !flags.has( c.requiresFlag ) ) );
+
+    for ( let i = 0; i < available.length; i++ )
+    {
+        const choice = available[ i ];
+        const nextFlags = new Set( flags );
+        if ( choice.setsFlag ) nextFlags.add( choice.setsFlag );
+
+        collectEndingsFrom( scenesById, choice.nextScene, nextFlags, [ ...path, i + 1 ], nextVisited, found );
+    }
+};
+
+/**
+ * Computes one choice path per distinct ending reachable from the opening
+ * scene, so a test can visit every ending of a story in turn (e.g. to unlock
+ * the "all endings" achievement) without hardcoding any scene graph.
+ *
+ * @param storyId - The id of the story to walk.
+ * @returns One path (ordered 1-based choice indices) per reachable ending.
+ * @throws If no ending is reachable from the opening scene.
+ * @author Claude
+ */
+export const findAllEndingPaths = ( storyId: string ): number[][] =>
+{
+    const story = loadStoryFile( storyId );
+    const scenesById: Record<string, StoryScene> = {};
+    for ( const scene of story.scenes ) scenesById[ scene.id ] = scene;
+
+    const found = new Map<string, number[]>();
+    collectEndingsFrom( scenesById, story.startScene, new Set(), [], new Set(), found );
+
+    if ( found.size === 0 ) throw new Error( `No ending reachable for story "${ storyId }"` );
+
+    return [ ...found.values() ];
+};

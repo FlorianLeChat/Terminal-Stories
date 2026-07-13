@@ -8,6 +8,8 @@
     import StoryMenu from "../Story/StoryMenu.svelte";
     import TerminalOutput from "./TerminalOutput.svelte";
     import WikiBrowser from "../Wiki/WikiBrowser.svelte";
+    import AchievementsBrowser from "../Achievements/AchievementsBrowser.svelte";
+    import AchievementToast from "../Achievements/AchievementToast.svelte";
     import AiStorySetup from "../AiStorySetup.svelte";
     import TerminalControls from "./TerminalControls.svelte";
     import TerminalHeader from "./TerminalHeader.svelte";
@@ -249,6 +251,11 @@
             handleWikiKey( e );
             return;
         }
+        if ( view === "achievements" )
+        {
+            handleAchievementsKey( e );
+            return;
+        }
     };
 
     /**
@@ -298,6 +305,13 @@
             {
                 e.preventDefault();
                 terminal.openAiSetup();
+                return;
+            }
+
+            if ( key === "a" )
+            {
+                e.preventDefault();
+                terminal.openAchievements();
                 return;
             }
         }
@@ -428,6 +442,21 @@
     };
 
     /**
+     * Handles keys on the achievements screen: ESC returns to the main menu.
+     *
+     * @param e - The keyboard event.
+     * @author Claude
+     */
+    const handleAchievementsKey = ( e: KeyboardEvent ) =>
+    {
+        if ( e.key === "Escape" )
+        {
+            e.preventDefault();
+            terminal.closeAchievements();
+        }
+    };
+
+    /**
      * Skips the running typewriter animation by bumping the skip signal. Shared
      * by the SPACE shortcut and the touch control in the footer.
      *
@@ -516,6 +545,8 @@
         {/key}
     {:else if view === "wiki"}
         <WikiBrowser />
+    {:else if view === "achievements"}
+        <AchievementsBrowser />
     {:else if view === "ai-setup"}
         <AiStorySetup />
     {/if}
@@ -536,6 +567,8 @@
     {#if view === "story" || view === "story-info"}
         <ShareDialog />
     {/if}
+
+    <AchievementToast />
 </main>
 
 <style>

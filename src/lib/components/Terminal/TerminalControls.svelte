@@ -148,6 +148,7 @@
                 {@render control( m.controls_menu_reset(), () => terminal.clearFilters() )}
                 {@render control( m.controls_menu_wiki(), () => terminal.openWiki() )}
                 {@render control( m.controls_menu_ai(), () => terminal.openAiSetup() )}
+                {@render control( m.controls_menu_achievements(), () => terminal.openAchievements() )}
                 {@render control( m.controls_menu_search(), () => terminal.activateSearch() )}
             {/if}
         {:else if view === "wiki"}
@@ -160,6 +161,8 @@
                 {@render control( m.controls_story_menu(), () => terminal.closeWiki() )}
                 {@render control( m.controls_menu_search(), () => terminal.activateSearch() )}
             {/if}
+        {:else if view === "achievements"}
+            {@render control( m.controls_achievements_menu(), () => terminal.closeAchievements() )}
         {:else if view === "ai-setup"}
             {@render control( m.controls_story_menu(), () => terminal.startMenu() )}
         {/if}

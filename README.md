@@ -34,6 +34,7 @@ sequenceDiagram
     actor Joueur
     participant Terminal
     participant Histoire
+    participant Succès
     participant Encyclopédie
     participant IA as Histoire générée par IA
 
@@ -49,13 +50,19 @@ sequenceDiagram
         Histoire-->>Joueur: La suite de l'aventure
     end
 
+    Histoire->>Succès: J'atteins une fin
+    Succès-->>Joueur: Déblocage éventuel d'un succès
+
+    Joueur->>Succès: Je consulte mes succès
+    Succès-->>Joueur: Débloqués, verrouillés et succès secrets
+
     Joueur->>Encyclopédie: Je consulte le wiki (univers, personnages, lieux)
     Encyclopédie-->>Joueur: Détails sur l'univers
 
     Joueur->>IA: Je demande une histoire inédite
     IA-->>Joueur: Une aventure générée rien que pour moi
 
-    Note over Joueur,IA: Ma progression est sauvegardée et je peux partager un lien pour reprendre là où j'en étais
+    Note over Joueur,IA: Ma progression et mes succès sont sauvegardés sur cet appareil, je peux partager un lien pour reprendre là où j'en étais
 ```
 
 ### Installation
@@ -98,6 +105,7 @@ sequenceDiagram
     actor Player as Player
     participant Terminal as Terminal
     participant Story as Story
+    participant Achievements as Achievements
     participant Encyclopedia as Encyclopedia
     participant AI as AI-generated story
 
@@ -113,13 +121,19 @@ sequenceDiagram
         Story-->>Player: The next part of the adventure
     end
 
+    Story->>Achievements: I reach an ending
+    Achievements-->>Player: A new achievement may unlock
+
+    Player->>Achievements: I check my achievements
+    Achievements-->>Player: Unlocked, locked and secret ones
+
     Player->>Encyclopedia: I browse the wiki (universe, characters, locations)
     Encyclopedia-->>Player: Details about the universe
 
     Player->>AI: I request a brand-new story
     AI-->>Player: An adventure generated just for me
 
-    Note over Player,AI: My progress is saved and I can share a link to resume right where I left off
+    Note over Player,AI: My progress and achievements are saved on this device, I can share a link to resume right where I left off
 ```
 
 ### Setup
