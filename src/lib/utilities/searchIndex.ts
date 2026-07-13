@@ -28,18 +28,36 @@ const tokenize = ( text: string ): string[] =>
         .split( /[^a-z0-9]+/ )
         .filter( ( t ) => t.length >= 2 );
 
+/** A document field ready for scoring: its tokens paired with their weight. */
+type ScoredField = [ tokens: string[], weight: number ];
+
 /**
- * Scores a document's weighted text fields against a list of query tokens.
- * A doc token matches a query token when the doc token starts with it,
+ * Builds a weighted, pre-tokenized field from raw text. Tokenizing here (once,
+ * when the search doc cache is built) keeps {@link scoreFields} allocation-free
+ * on the hot path, where it runs for every document on every keystroke.
+ *
+ * @param text - The raw field text.
+ * @param weight - The relative importance of the field in the final score.
+ * @returns The field's tokens paired with its weight.
+ * @author Claude
+ */
+const scoredField = ( text: string, weight: number ): ScoredField =>
+{
+    return [ tokenize( text ), weight ];
+};
+
+/**
+ * Scores a document's weighted, pre-tokenized fields against a list of query
+ * tokens. A doc token matches a query token when the doc token starts with it,
  * enabling partial-word queries (e.g. "rev" matches "revenant").
  *
- * @param fields - Pairs of [text, weight] describing the document.
+ * @param fields - Pairs of [tokens, weight] describing the document.
  * @param queryTokens - The normalized query tokens to match against.
  * @returns The total match score; 0 means no match at all.
  * @author Claude
  */
 const scoreFields = (
-    fields: [ string, number ][],
+    fields: ScoredField[],
     queryTokens: string[]
 ): number =>
 {
@@ -47,10 +65,8 @@ const scoreFields = (
 
     let score = 0;
 
-    for ( const [ text, weight ] of fields )
+    for ( const [ docTokens, weight ] of fields )
     {
-        const docTokens = tokenize( text );
-
         for ( const qt of queryTokens )
         {
             for ( const dt of docTokens )
@@ -70,7 +86,7 @@ const scoreFields = (
 
 interface StorySearchDoc {
     meta: StoryMeta;
-    fields: [ string, number ][];
+    fields: ScoredField[];
 }
 
 let _storyDocs: StorySearchDoc[] | null = null;
@@ -97,13 +113,13 @@ const getStorySearchDocs = (): StorySearchDoc[] =>
         return {
             meta,
             fields: [
-                [ meta.title, 3 ],
-                [ meta.universe, 2 ],
-                [ genreLabel( meta.genre ), 2 ],
-                [ meta.tags.join( " " ), 2 ],
-                [ characterNames, 2 ],
-                [ meta.description, 1 ]
-            ] as [ string, number ][]
+                scoredField( meta.title, 3 ),
+                scoredField( meta.universe, 2 ),
+                scoredField( genreLabel( meta.genre ), 2 ),
+                scoredField( meta.tags.join( " " ), 2 ),
+                scoredField( characterNames, 2 ),
+                scoredField( meta.description, 1 )
+            ]
         };
     } );
 
@@ -114,7 +130,7 @@ const getStorySearchDocs = (): StorySearchDoc[] =>
 
 interface WikiSearchDoc {
     entry: KnowledgeEntry;
-    fields: [ string, number ][];
+    fields: ScoredField[];
 }
 
 let _wikiDocs: WikiSearchDoc[] | null = null;
@@ -140,13 +156,13 @@ const getWikiSearchDocs = (): WikiSearchDoc[] =>
         return {
             entry,
             fields: [
-                [ entry.name, 3 ],
-                [ aliases, 3 ],
-                [ tags, 2 ],
-                [ entry.summary, 2 ],
-                [ entry.universe, 1 ],
-                [ desc, 1 ]
-            ] as [ string, number ][]
+                scoredField( entry.name, 3 ),
+                scoredField( aliases, 3 ),
+                scoredField( tags, 2 ),
+                scoredField( entry.summary, 2 ),
+                scoredField( entry.universe, 1 ),
+                scoredField( desc, 1 )
+            ]
         };
     } );
 

@@ -39,6 +39,7 @@ import { aiErrorMessage,
     saveDiscoveredEnding,
     saveProgress,
     searchWikiEntries,
+    storiesMeta,
     totalStoriesCount } from "$lib";
 
 export type TerminalView = "boot" | "menu" | "story-info" | "story" | "wiki" | "ai-setup" | "achievements";
@@ -506,17 +507,16 @@ const createTerminalStore = () =>
     const { subscribe, update } = writable<TerminalStore>( initial );
 
     /**
-     * Appends rendered lines to the terminal, assigning each a unique id.
+     * Reads the current store state synchronously. Wraps the `get`/`subscribe`
+     * dance in one place so actions can grab a snapshot without re-allocating
+     * the `{ subscribe }` wrapper at every call site.
      *
-     * @param newLines - The lines to append (without their id).
+     * @returns The current terminal state.
      * @author Claude
      */
-    const addLines = ( newLines: Omit<TerminalLine, "id">[] ) =>
+    const snapshot = (): TerminalStore =>
     {
-        update( ( s ) => ( {
-            ...s,
-            lines: [ ...s.lines, ...newLines.map( ( l ) => ( { ...l, id: nextId() } ) ) ]
-        } ) );
+        return get( { subscribe } );
     };
 
     /**
@@ -536,8 +536,9 @@ const createTerminalStore = () =>
      */
     const startMenu = () =>
     {
-        clearLines();
-        update( ( s ) => ( { ...s, view: "menu", selectedStoryIndex: 0, awaitingInput: true, searchQuery: "", searchActive: false, currentStoryIsGenerated: false, generatedEndings: [], aiStatus: "idle", aiError: null, shareOpen: false, achievementToast: [], endingToast: null } ) );
+        // Single update: reset the whole menu state, drop any loaded story, and
+        // clear the output (bumping storyKey to force the story view to remount).
+        update( ( s ) => ( { ...s, view: "menu", selectedStoryIndex: 0, awaitingInput: true, searchQuery: "", searchActive: false, currentStory: null, gameState: null, currentStoryIsGenerated: false, generatedEndings: [], aiStatus: "idle", aiError: null, shareOpen: false, achievementToast: [], endingToast: null, lines: [], storyKey: s.storyKey + 1 } ) );
     };
 
     /**
@@ -622,7 +623,17 @@ const createTerminalStore = () =>
         const story = getStory( id );
         if ( !story ) return;
 
-        clearLines();
+        // Reuse the reading stats precomputed at module load rather than walking
+        // the whole scene graph again; fall back to a live compute only if the
+        // story somehow isn't in the catalog metadata.
+        const meta = storiesMeta.find( ( m ) => m.id === id );
+        const stats = meta ? meta.stats : computeStoryStats( story );
+        const saveExists = hasSave( id );
+        const save = saveExists ? loadSave( id ) : null;
+        const infoLines = buildStoryInfoLines( story, stats, saveExists, save );
+
+        // Single update: switch view, load the story, reset search/share, clear
+        // the output (bumping storyKey to remount), and render the info lines.
         update( ( s ) => ( {
             ...s,
             view: "story-info",
@@ -630,14 +641,10 @@ const createTerminalStore = () =>
             awaitingInput: true,
             searchQuery: "",
             searchActive: false,
-            shareOpen: false
+            shareOpen: false,
+            lines: infoLines.map( ( l ) => ( { ...l, id: nextId() } ) ),
+            storyKey: s.storyKey + 1
         } ) );
-
-        const stats = computeStoryStats( story );
-        const saveExists = hasSave( id );
-        const save = saveExists ? loadSave( id ) : null;
-
-        addLines( buildStoryInfoLines( story, stats, saveExists, save ) );
     };
 
     /**
@@ -741,7 +748,7 @@ const createTerminalStore = () =>
         const scene = story.scenes[ sceneId ];
         if ( !scene ) return;
 
-        const { currentStoryIsGenerated, generatedEndings, storyStartedAt } = get( { subscribe } );
+        const { currentStoryIsGenerated, generatedEndings, storyStartedAt } = snapshot();
 
         const lines: Omit<TerminalLine, "id">[] = buildBaseSceneLines( scene, story, isFirst );
 
@@ -815,7 +822,7 @@ const createTerminalStore = () =>
      */
     const makeChoice = ( choiceIndex: number ) =>
     {
-        const state = get( { subscribe } );
+        const state = snapshot();
         if ( !state.gameState || !state.currentStory ) return;
 
         const scene = state.currentStory.scenes[ state.gameState.currentScene ];
@@ -853,7 +860,7 @@ const createTerminalStore = () =>
             };
         } );
 
-        const freshState = get( { subscribe } );
+        const freshState = snapshot();
 
         if ( freshState.currentStory && freshState.gameState )
         {
@@ -877,7 +884,7 @@ const createTerminalStore = () =>
      */
     const goBack = () =>
     {
-        const state = get( { subscribe } );
+        const state = snapshot();
         const currentSceneId = state.gameState?.currentScene ?? "";
         const currentScene = state.currentStory?.scenes[ currentSceneId ];
         const isLeavingFromEnding = currentScene?.isEnding === true;
@@ -889,7 +896,7 @@ const createTerminalStore = () =>
             deleteSave( state.gameState.storyId );
         }
 
-        update( ( s ) => ( { ...s, view: "menu", currentStory: null, gameState: null } ) );
+        // startMenu already clears the loaded story and game state.
         startMenu();
     };
 
@@ -903,7 +910,7 @@ const createTerminalStore = () =>
      */
     const wikiVisibleEntries = () =>
     {
-        const { wiki, searchActive, searchQuery } = get( { subscribe } );
+        const { wiki, searchActive, searchQuery } = snapshot();
 
         const hasQuery = searchActive && searchQuery !== "";
 
@@ -930,7 +937,7 @@ const createTerminalStore = () =>
      */
     const restartStory = () =>
     {
-        const state = get( { subscribe } );
+        const state = snapshot();
 
         const canRestart = state.currentStory !== null && state.gameState !== null && !state.currentStoryIsGenerated;
         if ( !canRestart || !state.currentStory || !state.gameState ) return;
@@ -975,7 +982,6 @@ const createTerminalStore = () =>
      */
     const closeAchievements = () =>
     {
-        update( ( s ) => ( { ...s, view: "menu" } ) );
         startMenu();
     };
 
@@ -1038,7 +1044,6 @@ const createTerminalStore = () =>
      */
     const closeWiki = () =>
     {
-        update( ( s ) => ( { ...s, view: "menu" } ) );
         startMenu();
     };
 
@@ -1185,7 +1190,7 @@ const createTerminalStore = () =>
         const entry = getEntry( id );
         if ( !entry ) return;
 
-        const { wiki } = get( { subscribe } );
+        const { wiki } = snapshot();
         const entries = filterEntries( entry.category, wiki.language, wiki.universe );
         const idx = entries.findIndex( ( e ) => e.id === id );
 
@@ -1294,7 +1299,7 @@ const createTerminalStore = () =>
 
             // If the user navigated away (e.g. ESC) while generating, don't hijack
             // the current view with the now-stale result.
-            const wasCancelled = get( { subscribe } ).aiStatus !== "generating";
+            const wasCancelled = snapshot().aiStatus !== "generating";
             if ( wasCancelled ) return;
 
             const gameState: GameState = {
@@ -1323,7 +1328,7 @@ const createTerminalStore = () =>
         catch ( error )
         {
             // Only surface the error if the user is still waiting on this request.
-            const stillGenerating = get( { subscribe } ).aiStatus === "generating";
+            const stillGenerating = snapshot().aiStatus === "generating";
             if ( !stillGenerating ) return;
 
             update( ( s ) => ( { ...s, aiStatus: "error", aiError: aiErrorMessage( error ) } ) );
@@ -1339,7 +1344,7 @@ const createTerminalStore = () =>
      */
     const restartGeneratedStory = () =>
     {
-        const state = get( { subscribe } );
+        const state = snapshot();
 
         const canRestart = state.currentStory !== null && state.currentStoryIsGenerated;
         if ( !canRestart || !state.currentStory ) return;
@@ -1368,7 +1373,7 @@ const createTerminalStore = () =>
      */
     const openShare = () =>
     {
-        const state = get( { subscribe } );
+        const state = snapshot();
 
         const isShareableView = state.view === "story" || state.view === "story-info";
         const canShare = isShareableView && state.currentStory !== null && !state.currentStoryIsGenerated;

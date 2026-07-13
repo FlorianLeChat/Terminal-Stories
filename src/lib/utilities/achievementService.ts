@@ -31,29 +31,6 @@ export const loadUnlockedAchievements = (): UnlockedAchievement[] =>
 };
 
 /**
- * Returns whether a given achievement has already been unlocked.
- *
- * @param id - The achievement identifier to test.
- * @returns `true` when the achievement is unlocked, `false` otherwise.
- * @author Claude
- */
-export const isUnlocked = ( id: AchievementId ): boolean =>
-{
-    return loadUnlockedAchievements().some( ( a ) => a.id === id );
-};
-
-/**
- * Returns the set of ids the player has unlocked, for quick membership tests.
- *
- * @returns A set of unlocked achievement ids.
- * @author Claude
- */
-export const unlockedAchievementIds = (): Set<AchievementId> =>
-{
-    return new Set( loadUnlockedAchievements().map( ( a ) => a.id ) );
-};
-
-/**
  * Counts the distinct catalog stories with at least one discovered ending,
  * always counting `currentStoryId` as completed since the caller reaches this
  * only when an ending of that story was just hit (and not yet persisted).

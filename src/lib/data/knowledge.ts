@@ -102,21 +102,6 @@ export const filterEntries = ( category: KnowledgeCategory, language: string | n
 };
 
 /**
- * Counts the entries in a category for the given language/universe filter.
- * Used to display badge counts in the wiki browser.
- *
- * @param category - The category to count.
- * @param language - The language to keep, or `null` for any.
- * @param universe - The universe to keep, or `null` for any.
- * @returns The number of matching entries.
- * @author Claude
- */
-export const countByCategory = ( category: KnowledgeCategory, language: string | null, universe: string | null ): number =>
-{
-    return filterEntries( category, language, universe ).length;
-};
-
-/**
  * Counts entries for every category in a single pass over `knowledgeEntries`,
  * avoiding the N separate `filterEntries` scans that `countByCategory` would
  * trigger when called once per category tab.

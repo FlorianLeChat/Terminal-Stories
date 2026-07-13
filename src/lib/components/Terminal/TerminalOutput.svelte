@@ -146,13 +146,13 @@
         if ( typingLine )
         {
             typedIds.add( typingLine.id );
-            displayed = [ ...displayed, typingLine ];
+            displayed.push( typingLine );
             typingLine = null;
             typingText = "";
         }
 
         remaining.forEach( ( l ) => typedIds.add( l.id ) );
-        displayed = [ ...displayed, ...remaining ];
+        displayed.push( ...remaining );
         isProcessing = false;
         isAnimating = false;
     };
@@ -183,7 +183,7 @@
 
         if ( instantBatch.length > 0 )
         {
-            displayed = [ ...displayed, ...instantBatch ];
+            displayed.push( ...instantBatch );
         }
 
         if ( pendingQueue.length === 0 )
@@ -224,7 +224,7 @@
         if ( i >= line.text.length )
         {
             typedIds.add( line.id );
-            displayed = [ ...displayed, line ];
+            displayed.push( line );
             typingLine = null;
             typingText = "";
             processNext( gen );
@@ -235,12 +235,26 @@
         setTimeout( () => typeChar( line, i + 1, gen ), TYPING_SPEED );
     };
 
+    /** True while a scroll-to-bottom is already scheduled for the next frame. */
+    let scrollQueued = false;
+
+    /**
+     * Scrolls the terminal to the bottom, coalescing bursts of requests into a
+     * single write per animation frame. During the typewriter effect this fires
+     * every ~18 ms; batching it avoids a forced synchronous layout per character.
+     *
+     * @author Claude
+     */
     const scrollToBottom = () =>
     {
-        if ( container )
+        if ( !container || scrollQueued ) return;
+
+        scrollQueued = true;
+        requestAnimationFrame( () =>
         {
-            container.scrollTop = container.scrollHeight;
-        }
+            scrollQueued = false;
+            if ( container ) container.scrollTop = container.scrollHeight;
+        } );
     };
 
     // Keep the view scrolled to the bottom when displayed or typing text changes.
