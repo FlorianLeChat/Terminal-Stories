@@ -89,7 +89,7 @@
                     <span class="text-terminal-white font-bold text-sm">{story.title}</span>
 
                     <span class="text-terminal-cyan text-xs shrink-0" title={m.story_item_reading_time_title()}>
-                        ⏱ {formatReadingTime( story.stats.minutes )} / partie
+                        ⏱ {m.story_item_reading_time_value( { duration: formatReadingTime( story.stats.minutes ) } )}
                     </span>
                 </span>
 
@@ -122,7 +122,7 @@
 
                     <span class="flex items-center gap-3 flex-wrap mb-2 text-terminal-dim text-xs opacity-80">
                         <span title={m.story_item_scenes_title()}>⌬ {story.stats.scenes} {m.story_item_scenes_entries()}</span>
-                        <span title={m.story_item_explore_time_title()}>⧉ {formatReadingTime( story.stats.fullMinutes )} pour tout explorer</span>
+                        <span title={m.story_item_explore_time_title()}>⧉ {m.story_item_explore_time_value( { duration: formatReadingTime( story.stats.fullMinutes ) } )}</span>
                     </span>
 
                     {#if completion !== null}
