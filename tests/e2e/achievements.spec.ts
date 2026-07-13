@@ -77,7 +77,7 @@ test.describe( "Achievements", () =>
         await gotoMenu( page );
         await page.getByRole( "button", { name: "✦ [A] Achievements" } ).click();
 
-        await expect( page.getByText( "ACHIEVEMENTS" ) ).toBeVisible();
+        await expect( page.getByText( "ACHIEVEMENTS", { exact: true } ) ).toBeVisible();
         await expect( page.getByText( "0 / 7 unlocked" ) ).toBeVisible();
 
         // A regular achievement shows its real name and a Locked badge.
@@ -93,7 +93,7 @@ test.describe( "Achievements", () =>
         await gotoMenu( page );
 
         await page.keyboard.press( "a" );
-        await expect( page.getByText( "ACHIEVEMENTS" ) ).toBeVisible();
+        await expect( page.getByText( "ACHIEVEMENTS", { exact: true } ) ).toBeVisible();
 
         await page.keyboard.press( "Escape" );
         await expect( page.getByText( "— INTERACTIVE STORIES SYSTEM —" ) ).toBeVisible();
@@ -123,8 +123,10 @@ test.describe( "Achievements", () =>
         await playPath( page, path );
 
         // The toast is a status region naming the achievement just unlocked; it
-        // sits on the story view before the player leaves to the menu.
-        const toast = page.getByRole( "status" );
+        // sits on the story view before the player leaves to the menu. Filter out
+        // the unrelated "Endings discovered" <output>, which also has an implicit
+        // status role.
+        const toast = page.getByRole( "status" ).filter( { hasText: /Achievements? unlocked/ } );
         await expect( toast ).toBeVisible();
         await expect( toast.getByText( /Achievements? unlocked/ ) ).toBeVisible();
         await expect( toast.getByText( "First Steps" ) ).toBeVisible();
@@ -185,7 +187,7 @@ test.describe( "Achievements", () =>
         await page.keyboard.press( "Escape" );
 
         await page.keyboard.press( "a" );
-        await expect( page.getByText( "ACHIEVEMENTS" ) ).toBeVisible();
+        await expect( page.getByText( "ACHIEVEMENTS", { exact: true } ) ).toBeVisible();
         await expect( page.getByText( "0 / 7 unlocked" ) ).toBeVisible();
         await expect( achievementCard( page, "First Steps" ).getByText( "Locked", { exact: true } ) ).toBeVisible();
     } );
