@@ -43,33 +43,56 @@ import { aiErrorMessage,
 export type TerminalView = "boot" | "menu" | "story-info" | "story" | "wiki" | "ai-setup" | "achievements";
 
 interface TerminalStore {
+    /** View currently rendered by the terminal. */
     view: TerminalView;
+    /** Index of the story highlighted in the menu list. */
     selectedStoryIndex: number;
+    /** Active genre/language filters applied to the menu's catalog. */
     filters: StoryFilters;
+    /** Current playthrough state, or null when no story is loaded. */
     gameState: GameState | null;
+    /** Story currently loaded for playback, or null when none is active. */
     currentStory: Story | null;
+    /** Terminal lines rendered so far, in display order. */
     lines: TerminalLine[];
+    /** Whether the terminal is waiting for the player's next input. */
     awaitingInput: boolean;
+    /** Wiki browser's current category/filter/selection state. */
     wiki: WikiState;
+    /** Current text typed into the active search box. */
     searchQuery: string;
+    /** Whether search mode (menu or wiki) is currently active. */
     searchActive: boolean;
+    /** Whether the current story is an ephemeral, AI-generated one. */
     currentStoryIsGenerated: boolean;
+    /** Ending ids already discovered during this AI-generated playthrough (not persisted). */
     generatedEndings: string[];
+    /** Number of distinct endings discovered so far in the current story. */
     endingsFound: number;
+    /** Total number of endings the current story has. */
     endingsTotal: number;
+    /** Counter bumped to force the story view to remount (e.g. on restart). */
     storyKey: number;
+    /** Status of the current AI story generation request. */
     aiStatus: AiStatus;
+    /** Translated error message from the last failed AI generation, or null. */
     aiError: string | null;
+    /** Whether the share dialog is currently open. */
     shareOpen: boolean;
+    /** Epoch ms when the current playthrough started, or null. */
     storyStartedAt: number | null;
+    /** Ids of achievements unlocked so far, persisted across sessions. */
     unlockedAchievements: AchievementId[];
     /** Ids just unlocked, awaiting display in the unlock notification (toast). */
     achievementToast: AchievementId[];
 }
 
 export interface TerminalLine {
+    /** Stable, unique key assigned by {@link nextId}. */
     id: number;
+    /** Rendered text content of the line. */
     text: string;
+    /** Kind of line, driving how it is styled and rendered. */
     type:
       | "system"
       | "narrator"
@@ -83,9 +106,13 @@ export interface TerminalLine {
       | "separator"
       | "image"
       | "save";
+    /** Name of the speaker, for lines of type "speaker". */
     speaker?: string;
+    /** Index of the choice this line represents, for lines of type "choice". */
     choiceIndex?: number;
+    /** Path of the image asset, for lines of type "image". */
     imageSrc?: string;
+    /** Accessible alt text of the image, for lines of type "image". */
     imageAlt?: string;
     /** Completion percentage (0–100) carried by lines of type "save". */
     savePercent?: number;

@@ -7,6 +7,7 @@ export type AchievementId = "first-ending" | "all-endings-single" | "speedrun" |
  * achievement, and the pure predicate deciding when it unlocks.
  */
 export interface Achievement {
+    /** Stable slug identifying this achievement. */
     id: AchievementId;
     /** Static-asset path of the pixel-art icon (resolved through `asset()`). */
     icon: string;
