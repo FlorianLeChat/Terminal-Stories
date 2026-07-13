@@ -85,36 +85,6 @@
         </li>
     </ul>
 
-    <!-- Nav hint + shortcut buttons: stacked column on mobile, inline row from `sm`. -->
-    <nav class="flex flex-col items-stretch gap-3 sm:flex-row sm:items-center sm:justify-center mb-4 text-xs">
-        {#if searchActive}
-            <span class="text-terminal-dim text-center">{m.menu_nav_search_active()}</span>
-        {:else}
-            <span class="text-terminal-dim text-center sm:text-left">{m.menu_nav_default()}</span>
-
-            <button
-                class="px-2 py-1.5 sm:py-0.5 rounded border border-terminal-cyan/50 text-terminal-cyan hover:bg-terminal-cyan/10 motion-safe:transition-colors motion-safe:duration-100 w-full sm:w-auto"
-                onclick={() => terminal.openWiki()}
-            >
-                {m.menu_wiki_button()}
-            </button>
-
-            <button
-                class="px-2 py-1.5 sm:py-0.5 rounded border border-terminal-amber/50 text-terminal-amber hover:bg-terminal-amber/10 motion-safe:transition-colors motion-safe:duration-100 w-full sm:w-auto"
-                onclick={() => terminal.openAiSetup()}
-            >
-                {m.menu_ai_button()}
-            </button>
-
-            <button
-                class="px-2 py-1.5 sm:py-0.5 rounded border border-terminal-green/50 text-terminal-green hover:bg-terminal-green/10 motion-safe:transition-colors motion-safe:duration-100 w-full sm:w-auto"
-                onclick={() => terminal.openAchievements()}
-            >
-                {m.menu_achievements_button()}
-            </button>
-        {/if}
-    </nav>
-
     {#if searchActive}
         <div class="border border-terminal-green/40 bg-terminal-green/5 rounded px-3 py-2 mb-4 flex items-center gap-2">
             <span class="text-terminal-dim text-xs select-none shrink-0">{m.menu_search_label()}</span>

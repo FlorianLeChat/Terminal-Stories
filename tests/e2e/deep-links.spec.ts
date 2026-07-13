@@ -31,7 +31,7 @@ test.describe( "Shareable deep links", () =>
     test( "opening a wiki entry updates the address bar", async ( { page } ) =>
     {
         await gotoMenu( page );
-        await page.getByRole( "button", { name: "✦ [W] Encyclopedia" } ).click();
+        await page.getByRole( "button", { name: "[W] Encyclopedia" } ).click();
 
         await page.locator( "ol > li span.font-bold", { hasText: "Kingdom of Elarion" } ).click();
 

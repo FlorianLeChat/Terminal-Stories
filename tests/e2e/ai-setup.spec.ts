@@ -49,7 +49,7 @@ test.describe( "AI story generator", () =>
     test.beforeEach( async ( { page } ) =>
     {
         await gotoMenu( page );
-        await page.getByRole( "button", { name: "✦ [I] AI story" } ).click();
+        await page.getByRole( "button", { name: "[I] AI" } ).click();
     } );
 
     test( "keeps the generation options locked until a key is validated", async ( { page } ) =>
@@ -118,12 +118,5 @@ test.describe( "AI story generator", () =>
 
         await expect( page.getByText( "ERROR : API error (code 500). Try again later." ) ).toBeVisible();
         await expect( page.getByText( "AI GENERATOR" ) ).toBeVisible();
-    } );
-
-    test( "returns to the main menu with ESC", async ( { page } ) =>
-    {
-        await page.keyboard.press( "Escape" );
-
-        await expect( page.getByText( "— INTERACTIVE STORIES SYSTEM —" ) ).toBeVisible();
     } );
 } );

@@ -18,11 +18,9 @@
 	"achievements_count": "{unlocked} / {total} débloqués",
 	"achievements_hidden_desc": "Succès secret — continuez à jouer pour le révéler.",
 	"achievements_hidden_name": "? ? ?",
-	"achievements_nav_default": "[ÉCHAP] Retour au menu",
 	"achievements_status_locked": "Verrouillé",
 	"achievements_status_unlocked": "Débloqué",
 	"achievements_subtitle": "— SUCCÈS —",
-	"achievements_toast_dismiss": "Fermer la notification",
 	"achievements_toast_title": [{"declarations": ["input count", "local countPlural = count: plural"], "selectors": ["countPlural"], "match": {"countPlural=one": "Succès débloqué", "countPlural=other": "Succès débloqués"}}],
 
 	"ai_endings_progress": "Fins découvertes : {found} / {total}",
@@ -83,6 +81,8 @@
 	"controls_menu_search": "[/] Recherche",
 	"controls_menu_select": "[ENTRÉE] Sélectionner",
 	"controls_menu_wiki": "[W] Encyclopédie",
+	"controls_navigate_down": "[↓] Bas",
+	"controls_navigate_up": "[↑] Haut",
 	"controls_story_choice_prompt": "> Que faites-vous ?",
 	"controls_story_choices": "[1-9] Choix",
 	"controls_story_ending": "[ENTRÉE] Recommencer",
@@ -117,8 +117,6 @@
 
 	"language_self_name": "Français",
 
-	"menu_achievements_button": "✦ [A] Succès",
-	"menu_ai_button": "✦ [I] Histoire IA",
 	"menu_count_available": " disponibles",
 	"menu_count_filtered": " filtrées",
 	"menu_count_results": [{"declarations": ["input count", "input query", "local countPlural = count: plural"], "selectors": ["countPlural"], "match": {"countPlural=one": "{count} résultat pour « {query} »", "countPlural=other": "{count} résultats pour « {query} »"}}],
@@ -130,14 +128,11 @@
 	"menu_filter_genre": "GENRE",
 	"menu_filter_language": "LANGUE",
 	"menu_filter_reset": "✕ Réinitialiser",
-	"menu_nav_default": "↑ ↓ Naviguer | ENTRÉE Sélectionner | [1-9] Accès direct",
-	"menu_nav_search_active": "↑ ↓ Naviguer | ENTRÉE Sélectionner | ÉCHAP Annuler",
 	"menu_search_aria": "Rechercher une histoire",
 	"menu_search_cancel": "[ÉCHAP] Annuler",
 	"menu_search_label": "RECHERCHE",
 	"menu_search_placeholder": "Titre, genre, univers, personnage, tag...",
 	"menu_subtitle": "— SYSTÈME D'HISTOIRES INTERACTIVES —",
-	"menu_wiki_button": "✦ [W] Encyclopédie",
 
 	"share_close": "[ÉCHAP] Fermer",
 	"share_copied": "Copié !",
@@ -166,6 +161,8 @@
 	"terminal_save_label": "SAUVEGARDE TROUVÉE",
 	"terminal_save_progress": "progression",
 
+	"toast_dismiss": "Fermer la notification",
+
 	"wiki_count_entries": [{"declarations": ["input count", "local countPlural = count: plural"], "selectors": ["countPlural"], "match": {"countPlural=one": "{count} entrée", "countPlural=other": "{count} entrées"}}],
 	"wiki_count_results": [{"declarations": ["input count", "input query", "local countPlural = count: plural"], "selectors": ["countPlural"], "match": {"countPlural=one": "{count} résultat pour « {query} »", "countPlural=other": "{count} résultats pour « {query} »"}}],
 	"wiki_empty_category": "Aucune entrée dans cette rubrique pour ce filtre.",
@@ -177,8 +174,6 @@
 	"wiki_filter_category": "RUBRIQUE",
 	"wiki_filter_language": "LANGUE",
 	"wiki_filter_universe": "UNIVERS",
-	"wiki_nav_default": "[←→] Rubrique | [↑↓] Naviguer | [ENTRÉE] Consulter | [ÉCHAP] Menu",
-	"wiki_nav_search_active": "[↑↓] Naviguer | [ENTRÉE] Consulter | [ÉCHAP] Annuler",
 	"wiki_search_aria": "Rechercher une entrée encyclopédique",
 	"wiki_search_cancel": "[ÉCHAP] Annuler",
 	"wiki_search_label": "RECHERCHE",

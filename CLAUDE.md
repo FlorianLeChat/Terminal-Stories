@@ -126,6 +126,7 @@ Tests live in `tests/e2e/` (config: `playwright.config.ts`) and exercise the who
 - `tests/e2e/achievements.spec.ts` — achievements (view from the menu, first-ending/all-endings unlocks, unlock notification, secret achievements masked, AI stories excluded).
 - `tests/e2e/ai-setup.spec.ts` — AI story generator (key validation, locked/unlocked form, generation success/error, ephemeral playback).
 - `tests/e2e/deep-links.spec.ts` — shareable URLs (`?story=`, `?wiki=`) round-tripping through navigation and reloads.
+- `tests/e2e/navigation.spec.ts` — cross-view keyboard access: opening the encyclopedia/achievements/AI generator/a story from the main menu and returning to it with ESC.
 
 Conventions to follow:
 

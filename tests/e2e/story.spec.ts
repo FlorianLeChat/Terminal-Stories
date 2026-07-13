@@ -113,7 +113,10 @@ test.describe( "Story playback", () =>
         await page.keyboard.press( " " );
         await expect( page.getByRole( "button", { name: "[ENTER] Restart" } ) ).toBeVisible();
         await expect( page.getByRole( "button", { name: "[ESC] Main menu" } ) ).toBeVisible();
-        await expect( page.getByText( /Congratulations, (all \d+ endings|ending \d+) discovered/ ) ).toBeVisible();
+
+        // The discovery congratulation is a toast (status region), not inline text.
+        const toast = page.getByRole( "status" ).filter( { hasText: /Congratulations, (all \d+ endings|ending \d+) discovered/ } );
+        await expect( toast ).toBeVisible();
     } );
 
     test( "restarting from an ending replays the story from the start", async ( { page } ) =>
@@ -173,15 +176,5 @@ test.describe( "Story playback", () =>
         await page.goto( `/?story=${ STORY_ID }` );
         await skipBoot( page );
         await expect( page.getByText( "SAVE FOUND" ) ).not.toBeVisible();
-    } );
-
-    test( "leaving the story with ESC returns to the main menu", async ( { page } ) =>
-    {
-        await gotoMenu( page, `/?story=${ STORY_ID }` );
-        await page.keyboard.press( "Enter" );
-
-        await page.keyboard.press( "Escape" );
-
-        await expect( page.getByText( "— INTERACTIVE STORIES SYSTEM —" ) ).toBeVisible();
     } );
 } );

@@ -21,7 +21,7 @@ test.describe( "Encyclopedia", () =>
     test.beforeEach( async ( { page } ) =>
     {
         await gotoMenu( page );
-        await page.getByRole( "button", { name: "✦ [W] Encyclopedia" } ).click();
+        await page.getByRole( "button", { name: "[W] Encyclopedia" } ).click();
     } );
 
     test( "lists entries for the default category with a count footer", async ( { page } ) =>
@@ -39,6 +39,15 @@ test.describe( "Encyclopedia", () =>
 
         await page.keyboard.press( "ArrowRight" );
         await expect( firstCategory ).toHaveAttribute( "aria-pressed", "false" );
+    } );
+
+    test( "navigates the list and opens an entry with the footer buttons", async ( { page } ) =>
+    {
+        await page.getByRole( "button", { name: "[↓] Down" } ).click();
+        await page.getByRole( "button", { name: "[↑] Up" } ).click();
+
+        await page.getByRole( "button", { name: "[ENTER] Open" } ).click();
+        await expect( page.getByRole( "button", { name: "[ESC] Back to list" } ) ).toBeVisible();
     } );
 
     test( "filters by language then by universe", async ( { page } ) =>
@@ -90,12 +99,5 @@ test.describe( "Encyclopedia", () =>
 
         await expect( page.getByText( "KNOWLEDGE BASE" ) ).toBeVisible();
         await expect( page.getByRole( "button", { name: "[ESC] Back to list" } ) ).toBeVisible();
-    } );
-
-    test( "closes the encyclopedia and returns to the main menu with ESC", async ( { page } ) =>
-    {
-        await page.keyboard.press( "Escape" );
-
-        await expect( page.getByText( "— INTERACTIVE STORIES SYSTEM —" ) ).toBeVisible();
     } );
 } );

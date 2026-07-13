@@ -18,11 +18,9 @@
 	"achievements_count": "{unlocked} / {total} unlocked",
 	"achievements_hidden_desc": "Secret achievement — keep playing to reveal it.",
 	"achievements_hidden_name": "? ? ?",
-	"achievements_nav_default": "[ESC] Back to menu",
 	"achievements_status_locked": "Locked",
 	"achievements_status_unlocked": "Unlocked",
 	"achievements_subtitle": "— ACHIEVEMENTS —",
-	"achievements_toast_dismiss": "Dismiss notification",
 	"achievements_toast_title": [{"declarations": ["input count", "local countPlural = count: plural"], "selectors": ["countPlural"], "match": {"countPlural=one": "Achievement unlocked", "countPlural=other": "Achievements unlocked"}}],
 
 	"ai_endings_progress": "Endings discovered: {found} / {total}",
@@ -83,6 +81,8 @@
 	"controls_menu_search": "[/] Search",
 	"controls_menu_select": "[ENTER] Select",
 	"controls_menu_wiki": "[W] Encyclopedia",
+	"controls_navigate_down": "[↓] Down",
+	"controls_navigate_up": "[↑] Up",
 	"controls_story_choice_prompt": "> What will you do?",
 	"controls_story_choices": "[1-9] Choices",
 	"controls_story_ending": "[ENTER] Restart",
@@ -117,8 +117,6 @@
 
 	"language_self_name": "English",
 
-	"menu_achievements_button": "✦ [A] Achievements",
-	"menu_ai_button": "✦ [I] AI story",
 	"menu_count_available": " available",
 	"menu_count_filtered": " filtered",
 	"menu_count_results": [{"declarations": ["input count", "input query", "local countPlural = count: plural"], "selectors": ["countPlural"], "match": {"countPlural=one": "{count} result for \"{query}\"", "countPlural=other": "{count} results for \"{query}\""}}],
@@ -130,14 +128,11 @@
 	"menu_filter_genre": "GENRE",
 	"menu_filter_language": "LANGUAGE",
 	"menu_filter_reset": "✕ Reset",
-	"menu_nav_default": "↑ ↓ Navigate | ENTER Select | [1-9] Direct access",
-	"menu_nav_search_active": "↑ ↓ Navigate | ENTER Select | ESC Cancel",
 	"menu_search_aria": "Search for a story",
 	"menu_search_cancel": "[ESC] Cancel",
 	"menu_search_label": "SEARCH",
 	"menu_search_placeholder": "Title, genre, universe, character, tag...",
 	"menu_subtitle": "— INTERACTIVE STORIES SYSTEM —",
-	"menu_wiki_button": "✦ [W] Encyclopedia",
 
 	"share_close": "[ESC] Close",
 	"share_copied": "Copied!",
@@ -166,6 +161,8 @@
 	"terminal_save_label": "SAVE FOUND",
 	"terminal_save_progress": "progress",
 
+	"toast_dismiss": "Dismiss notification",
+
 	"wiki_count_entries": [{"declarations": ["input count", "local countPlural = count: plural"], "selectors": ["countPlural"], "match": {"countPlural=one": "{count} entry", "countPlural=other": "{count} entries"}}],
 	"wiki_count_results": [{"declarations": ["input count", "input query", "local countPlural = count: plural"], "selectors": ["countPlural"], "match": {"countPlural=one": "{count} result for \"{query}\"", "countPlural=other": "{count} results for \"{query}\""}}],
 	"wiki_empty_category": "No entry in this category for this filter.",
@@ -177,8 +174,6 @@
 	"wiki_filter_category": "CATEGORY",
 	"wiki_filter_language": "LANGUAGE",
 	"wiki_filter_universe": "UNIVERSE",
-	"wiki_nav_default": "[←→] Category | [↑↓] Navigate | [ENTER] Open | [ESC] Menu",
-	"wiki_nav_search_active": "[↑↓] Navigate | [ENTER] Open | [ESC] Cancel",
 	"wiki_search_aria": "Search an encyclopedia entry",
 	"wiki_search_cancel": "[ESC] Cancel",
 	"wiki_search_label": "SEARCH",

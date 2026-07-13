@@ -42,10 +42,6 @@
         <output>{m.achievements_count( { unlocked: unlockedCount, total: achievements.length } )}</output>
     </p>
 
-    <nav class="text-terminal-dim text-xs mb-4 text-center">
-        {m.achievements_nav_default()}
-    </nav>
-
     <ol class="border border-terminal-dim rounded px-2 py-1 mb-4">
         {#each achievements as achievement, i ( achievement.id )}
             {@const view = present( achievement.id, achievement.name(), achievement.description(), achievement.hidden === true )}

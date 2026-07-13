@@ -97,16 +97,27 @@ test.describe( "Main menu", () =>
         await expect( page.getByText( firstTitle ) ).toBeVisible();
     } );
 
-    test( "opens the encyclopedia from the menu button", async ( { page } ) =>
+    test( "navigates the list and opens a story with the footer buttons", async ( { page } ) =>
     {
-        await page.getByRole( "button", { name: "✦ [W] Encyclopedia" } ).click();
+        await page.getByRole( "button", { name: "[↓] Down" } ).click();
+        await expect( page.locator( "ol > li button[aria-current='true']" ) ).toHaveCount( 1 );
+
+        await page.getByRole( "button", { name: "[↑] Up" } ).click();
+        await page.getByRole( "button", { name: "[ENTER] Select" } ).click();
+
+        await expect( page.getByText( "STORY INFO" ) ).toBeVisible();
+    } );
+
+    test( "opens the encyclopedia from the footer button", async ( { page } ) =>
+    {
+        await page.getByRole( "button", { name: "[W] Encyclopedia" } ).click();
 
         await expect( page.getByText( "KNOWLEDGE BASE" ) ).toBeVisible();
     } );
 
-    test( "opens the AI story generator from the menu button", async ( { page } ) =>
+    test( "opens the AI story generator from the footer button", async ( { page } ) =>
     {
-        await page.getByRole( "button", { name: "✦ [I] AI story" } ).click();
+        await page.getByRole( "button", { name: "[I] AI" } ).click();
 
         await expect( page.getByText( "AI GENERATOR" ) ).toBeVisible();
     } );

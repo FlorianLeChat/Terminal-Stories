@@ -75,7 +75,7 @@ test.describe( "Achievements", () =>
     test( "opens from the menu button and lists locked and secret achievements", async ( { page } ) =>
     {
         await gotoMenu( page );
-        await page.getByRole( "button", { name: "✦ [A] Achievements" } ).click();
+        await page.getByRole( "button", { name: "[A] Achievements" } ).click();
 
         await expect( page.getByText( "ACHIEVEMENTS", { exact: true } ) ).toBeVisible();
         await expect( page.getByText( "0 / 7 unlocked" ) ).toBeVisible();
@@ -86,17 +86,6 @@ test.describe( "Achievements", () =>
         // Secret achievements stay masked until unlocked.
         await expect( page.getByRole( "heading", { name: "? ? ?" } ).first() ).toBeVisible();
         await expect( page.getByRole( "heading", { name: "Great Explorer" } ) ).toHaveCount( 0 );
-    } );
-
-    test( "opens with the A key and returns to the menu with ESC", async ( { page } ) =>
-    {
-        await gotoMenu( page );
-
-        await page.keyboard.press( "a" );
-        await expect( page.getByText( "ACHIEVEMENTS", { exact: true } ) ).toBeVisible();
-
-        await page.keyboard.press( "Escape" );
-        await expect( page.getByText( "— INTERACTIVE STORIES SYSTEM —" ) ).toBeVisible();
     } );
 
     test( "completing a story for the first time unlocks First Steps", async ( { page } ) =>
@@ -171,7 +160,7 @@ test.describe( "Achievements", () =>
             } ) );
 
         await gotoMenu( page );
-        await page.getByRole( "button", { name: "✦ [I] AI story" } ).click();
+        await page.getByRole( "button", { name: "[I] AI" } ).click();
 
         await page.getByLabel( "ANTHROPIC API KEY" ).fill( "sk-ant-valid" );
         await page.getByRole( "button", { name: "Validate" } ).click();

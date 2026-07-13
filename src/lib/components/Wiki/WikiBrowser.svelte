@@ -168,14 +168,6 @@
             </div>
         {/if}
 
-        <nav class="text-terminal-dim text-xs mb-4 text-center">
-            {#if searchActive}
-                {m.wiki_nav_search_active()}
-            {:else}
-                {m.wiki_nav_default()}
-            {/if}
-        </nav>
-
         {#if entries.length === 0}
             <div class="border border-terminal-dim/40 rounded px-3 py-8 mb-4 text-center text-terminal-dim text-sm">
                 {#if searchActive && searchQuery !== ""}

@@ -23,6 +23,10 @@
         endingsTotal: number;
         /** Skips the running typewriter animation (owned by the parent terminal). */
         onSkip: () => void;
+        /** Moves the highlighted menu story up (-1) or down (1), wrapping around the list. */
+        onMenuNavigate: ( delta: -1 | 1 ) => void;
+        /** Opens the menu story currently highlighted — the same action as pressing ENTER. */
+        onMenuSelect: () => void;
     }
 
     let {
@@ -35,7 +39,9 @@
         atStandardEnding,
         endingsFound,
         endingsTotal,
-        onSkip
+        onSkip,
+        onMenuNavigate,
+        onMenuSelect
     }: Props = $props();
 
     const showEndingsCount = $derived( ( atGeneratedEnding || atStandardEnding ) && endingsTotal > 0 );
@@ -47,6 +53,10 @@
     // Generated stories are ephemeral and have no shareable URL, so the share
     // control is offered for catalog stories only.
     let isGenerated = $derived( $terminal.currentStoryIsGenerated );
+
+    // Read here so the wiki open/navigate footer buttons can target the
+    // currently highlighted entry directly, the same as the ENTER key.
+    let wikiSelectedIndex = $derived( $terminal.wiki.selectedIndex );
 
     /**
      * Starts a fresh playthrough of the currently previewed story.
@@ -151,15 +161,27 @@
                 {@render control( m.controls_menu_achievements(), () => terminal.openAchievements() )}
                 {@render control( m.controls_menu_search(), () => terminal.activateSearch() )}
             {/if}
+
+            {@render control( m.controls_navigate_up(), () => onMenuNavigate( -1 ) )}
+            {@render control( m.controls_navigate_down(), () => onMenuNavigate( 1 ) )}
+            {@render control( m.controls_menu_select(), onMenuSelect )}
         {:else if view === "wiki"}
             {#if wikiEntryOpen}
                 {@render control( m.controls_wiki_back(), () => terminal.backToWikiList() )}
             {:else if searchActive}
+                <!-- Alphabetical by key: [ENTER], [ESC], [↑], [↓]. -->
+                {@render control( m.controls_wiki_consult(), () => terminal.selectWikiEntryAt( wikiSelectedIndex ) )}
                 {@render control( m.controls_menu_cancel_search(), () => terminal.deactivateSearch() )}
+                {@render control( m.controls_navigate_up(), () => terminal.moveWikiSelection( -1 ) )}
+                {@render control( m.controls_navigate_down(), () => terminal.moveWikiSelection( 1 ) )}
             {:else}
-                {@render control( m.controls_wiki_category(), () => terminal.cycleWikiCategory( 1 ) )}
-                {@render control( m.controls_story_menu(), () => terminal.closeWiki() )}
+                <!-- Alphabetical by key: [/], [ENTER], [ESC], [←→], [↑], [↓]. -->
                 {@render control( m.controls_menu_search(), () => terminal.activateSearch() )}
+                {@render control( m.controls_wiki_consult(), () => terminal.selectWikiEntryAt( wikiSelectedIndex ) )}
+                {@render control( m.controls_story_menu(), () => terminal.closeWiki() )}
+                {@render control( m.controls_wiki_category(), () => terminal.cycleWikiCategory( 1 ) )}
+                {@render control( m.controls_navigate_up(), () => terminal.moveWikiSelection( -1 ) )}
+                {@render control( m.controls_navigate_down(), () => terminal.moveWikiSelection( 1 ) )}
             {/if}
         {:else if view === "achievements"}
             {@render control( m.controls_achievements_menu(), () => terminal.closeAchievements() )}
