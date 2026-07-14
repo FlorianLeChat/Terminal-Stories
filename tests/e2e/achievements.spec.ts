@@ -40,6 +40,22 @@ const choiceButton = ( page: Page, choiceIndex: number ) =>
     page.getByRole( "button", { name: new RegExp( `^\\s*\\[${ choiceIndex }\\]` ) } ).last();
 
 /**
+ * Flushes the typewriter animation via the app's own space-to-skip shortcut,
+ * without letting the keypress land on whatever choice button is still
+ * focused from the previous click. A focused `<button>` natively activates on
+ * Space, so pressing it blindly would silently re-click the last choice
+ * instead of just skipping the animation.
+ *
+ * @param page - The page currently on the story view.
+ * @author Claude
+ */
+const skipTypewriter = async ( page: Page ): Promise<void> =>
+{
+    await page.evaluate( () => ( document.activeElement as HTMLElement | null )?.blur() );
+    await page.keyboard.press( " " );
+};
+
+/**
  * Locates the achievement card carrying the given heading, so its status badge
  * can be asserted independently of the other cards.
  *
@@ -63,11 +79,11 @@ const playPath = async ( page: Page, path: number[] ): Promise<void> =>
 {
     for ( const choiceIndex of path )
     {
-        await page.keyboard.press( " " );
+        await skipTypewriter( page );
         await choiceButton( page, choiceIndex ).click();
     }
 
-    await page.keyboard.press( " " );
+    await skipTypewriter( page );
 };
 
 test.describe( "Achievements", () =>
@@ -190,9 +206,9 @@ test.describe( "Achievements", () =>
         await expect( page.getByText( "NOW READING" ) ).toBeVisible();
 
         // Reach the generated story's ending, then leave to the menu.
-        await page.keyboard.press( " " );
+        await skipTypewriter( page );
         await choiceButton( page, 1 ).click();
-        await page.keyboard.press( " " );
+        await skipTypewriter( page );
         await page.keyboard.press( "Escape" );
 
         await page.keyboard.press( "a" );
