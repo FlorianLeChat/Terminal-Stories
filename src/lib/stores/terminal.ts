@@ -32,10 +32,13 @@ import { aiErrorMessage,
     filterEntries,
     generateStory,
     genreLabel,
+    getCustomStoryAsStory,
     getEntry,
     getLanguageForUniverse,
     getStory,
     hasSave,
+    isCustomStoryId,
+    listCustomStories,
     loadAiSettings,
     loadDiscoveredEndings,
     loadSave,
@@ -47,7 +50,16 @@ import { aiErrorMessage,
     storiesMeta,
     totalStoriesCount } from "$lib";
 
-export type TerminalView = "boot" | "menu" | "story-info" | "story" | "wiki" | "ai-setup" | "achievements";
+export type TerminalView
+    = | "boot"
+      | "menu"
+      | "story-info"
+      | "story"
+      | "wiki"
+      | "ai-setup"
+      | "achievements"
+      | "custom-stories"
+      | "editor";
 
 interface TerminalStore {
     /** View currently rendered by the terminal. */
@@ -100,6 +112,15 @@ interface TerminalStore {
      * revealed (or when the current scene isn't an ending).
      */
     pendingEndingReveal: PendingEndingReveal | null;
+    /** Index of the custom story highlighted in the "my stories" list. */
+    customSelectedIndex: number;
+    /** Id of the custom story open in the editor, or null when none is. */
+    editingStoryId: string | null;
+    /**
+     * Counter bumped whenever the custom-story storage changes (save, import,
+     * delete), so views listing custom stories recompute their data.
+     */
+    customStoriesVersion: number;
 }
 
 export interface PendingEndingReveal {
@@ -487,6 +508,19 @@ const defaultLanguageFilter = ( available: string[] ): string | null =>
 };
 
 /**
+ * Resolves a playable story by id from every source: the bundled catalog
+ * first, then the user's private custom stories.
+ *
+ * @param id - The story identifier.
+ * @returns The matching story, or `undefined` if none exists.
+ * @author Claude
+ */
+const findStoryById = ( id: string ): Story | undefined =>
+{
+    return getStory( id ) ?? getCustomStoryAsStory( id );
+};
+
+/**
  * Creates the terminal store: a single Svelte store driving the whole UI
  * (boot, menu, story playback, and wiki) along with its action methods.
  *
@@ -520,7 +554,10 @@ const createTerminalStore = () =>
         unlockedAchievements: [],
         achievementToast: [],
         endingToast: null,
-        pendingEndingReveal: null
+        pendingEndingReveal: null,
+        customSelectedIndex: 0,
+        editingStoryId: null,
+        customStoriesVersion: 0
     };
 
     const { subscribe, update } = writable<TerminalStore>( initial );
@@ -561,7 +598,7 @@ const createTerminalStore = () =>
 
         // Single update: reset the whole menu state, drop any loaded story, and
         // clear the output (bumping storyKey to force the story view to remount).
-        update( ( s ) => ( { ...s, view: "menu", selectedStoryIndex: 0, awaitingInput: true, searchQuery: "", searchActive: false, currentStory: null, gameState: null, currentStoryIsGenerated: false, generatedEndings: [], aiStatus: "idle", aiError: null, shareOpen: false, achievementToast: [], endingToast: null, pendingEndingReveal: null, lines: [], storyKey: s.storyKey + 1 } ) );
+        update( ( s ) => ( { ...s, view: "menu", selectedStoryIndex: 0, awaitingInput: true, searchQuery: "", searchActive: false, currentStory: null, gameState: null, currentStoryIsGenerated: false, generatedEndings: [], aiStatus: "idle", aiError: null, shareOpen: false, achievementToast: [], endingToast: null, pendingEndingReveal: null, customSelectedIndex: 0, editingStoryId: null, lines: [], storyKey: s.storyKey + 1 } ) );
     };
 
     /**
@@ -643,7 +680,7 @@ const createTerminalStore = () =>
      */
     const selectStory = ( id: string ) =>
     {
-        const story = getStory( id );
+        const story = findStoryById( id );
         if ( !story ) return;
 
         // Reuse the reading stats precomputed at module load rather than walking
@@ -679,7 +716,7 @@ const createTerminalStore = () =>
      */
     const startStory = ( storyId: string ) =>
     {
-        const story = getStory( storyId );
+        const story = findStoryById( storyId );
         if ( !story ) return;
 
         // Erase any prior save so a fresh run doesn't trigger the resume prompt.
@@ -720,7 +757,7 @@ const createTerminalStore = () =>
      */
     const resumeStory = ( storyId: string ) =>
     {
-        const story = getStory( storyId );
+        const story = findStoryById( storyId );
         const save = loadSave( storyId );
 
         const canResume = story !== undefined && save !== null;
@@ -829,8 +866,12 @@ const createTerminalStore = () =>
                 endingsTotal = data.endingsTotal;
                 nextEndingToast = buildEndingDiscoveryToast( data.isNewEnding, endingsFound, endingsTotal );
 
-                // Generated stories are ephemeral and never award achievements.
-                const unlocked = evaluateEndingAchievements( story, sceneId, state.storyId, data, storyStartedAt );
+                // Only catalog stories award achievements: generated stories are
+                // ephemeral, and custom stories could be tailored to farm unlocks.
+                const isCustomStory = isCustomStoryId( state.storyId );
+                const unlocked = isCustomStory
+                    ? null
+                    : evaluateEndingAchievements( story, sceneId, state.storyId, data, storyStartedAt );
 
                 if ( unlocked )
                 {
@@ -1353,6 +1394,116 @@ const createTerminalStore = () =>
     };
 
     /**
+     * Opens the "my stories" screen listing the user's private custom stories,
+     * clearing any prior playthrough and resetting the selection.
+     *
+     * @author Claude
+     */
+    const openCustomStories = () =>
+    {
+        clearLines();
+        update( ( s ) => ( {
+            ...s,
+            view: "custom-stories",
+            currentStory: null,
+            gameState: null,
+            currentStoryIsGenerated: false,
+            awaitingInput: true,
+            searchQuery: "",
+            searchActive: false,
+            customSelectedIndex: 0,
+            editingStoryId: null
+        } ) );
+    };
+
+    /**
+     * Moves the custom-story highlight up or down, wrapping around the list
+     * (bound to the ↑/↓ keys).
+     *
+     * @param direction - `1` to move down, `-1` to move up.
+     * @author Claude
+     */
+    const moveCustomSelection = ( direction: 1 | -1 ) =>
+    {
+        const count = listCustomStories().length;
+        if ( count === 0 ) return;
+
+        update( ( s ) => ( {
+            ...s,
+            customSelectedIndex: ( s.customSelectedIndex + direction + count ) % count
+        } ) );
+    };
+
+    /**
+     * Sets the highlighted custom story by index (e.g. on hover).
+     *
+     * @param index - The index of the custom story to highlight.
+     * @author Claude
+     */
+    const navigateCustom = ( index: number ) =>
+    {
+        update( ( s ) => ( { ...s, customSelectedIndex: index } ) );
+    };
+
+    /**
+     * Opens the info screen of the custom story at the given position in the
+     * list (used when confirming the highlighted story with ENTER).
+     *
+     * @param index - The index of the story within the list.
+     * @author Claude
+     */
+    const selectCustomStoryAt = ( index: number ) =>
+    {
+        const records = listCustomStories();
+        const record = records[ index ];
+
+        if ( record ) selectStory( record.story.id );
+    };
+
+    /**
+     * Opens the story editor on the given custom story.
+     *
+     * @param id - The id of the custom story to edit.
+     * @author Claude
+     */
+    const openEditor = ( id: string ) =>
+    {
+        clearLines();
+        update( ( s ) => ( {
+            ...s,
+            view: "editor",
+            editingStoryId: id,
+            currentStory: null,
+            gameState: null,
+            currentStoryIsGenerated: false,
+            awaitingInput: true,
+            searchQuery: "",
+            searchActive: false
+        } ) );
+    };
+
+    /**
+     * Closes the editor and returns to the "my stories" screen.
+     *
+     * @author Claude
+     */
+    const closeEditor = () =>
+    {
+        openCustomStories();
+    };
+
+    /**
+     * Signals that the custom-story storage changed (save, import, delete) so
+     * views listing custom stories recompute their data.
+     *
+     * @author Claude
+     */
+    const bumpCustomStories = () =>
+    {
+        update( ( s ) => ( { ...s, customStoriesVersion: s.customStoriesVersion + 1 } ) );
+    };
+
+    /**
      * Generates an ephemeral story from the given parameters and plays it through
      * the standard engine. Nothing is persisted: generated stories never touch
      * the save slots or the active-session record.
@@ -1451,7 +1602,11 @@ const createTerminalStore = () =>
         const state = snapshot();
 
         const isShareableView = state.view === "story" || state.view === "story-info";
-        const canShare = isShareableView && state.currentStory !== null && !state.currentStoryIsGenerated;
+        // Custom stories are private and have no shareable URL, just like
+        // generated ones; only bundled catalog stories can be linked to.
+        const isPrivateStory = state.currentStoryIsGenerated
+          || ( state.currentStory !== null && isCustomStoryId( state.currentStory.id ) );
+        const canShare = isShareableView && state.currentStory !== null && !isPrivateStory;
         if ( !canShare ) return;
 
         update( ( s ) => ( { ...s, shareOpen: true } ) );
@@ -1472,6 +1627,13 @@ const createTerminalStore = () =>
         update,
         startMenu,
         openAiSetup,
+        openCustomStories,
+        moveCustomSelection,
+        navigateCustom,
+        selectCustomStoryAt,
+        openEditor,
+        closeEditor,
+        bumpCustomStories,
         generateAndPlay,
         restartGeneratedStory,
         restartStory,

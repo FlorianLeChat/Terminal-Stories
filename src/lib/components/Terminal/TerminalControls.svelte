@@ -2,6 +2,7 @@
     import * as m from "$lib/locales/messages";
     import { terminal } from "$lib/stores/terminal";
     import type { TerminalView } from "$lib/stores/terminal";
+    import { isCustomStoryId } from "$lib";
 
     interface Props {
         view: TerminalView;
@@ -27,6 +28,10 @@
         onMenuNavigate: ( delta: -1 | 1 ) => void;
         /** Opens the menu story currently highlighted — the same action as pressing ENTER. */
         onMenuSelect: () => void;
+        /** Creates a blank custom story and opens it in the editor. */
+        onCustomNew: () => void;
+        /** Forks the currently previewed catalog story into the editor. */
+        onFork: () => void;
     }
 
     let {
@@ -41,7 +46,9 @@
         endingsTotal,
         onSkip,
         onMenuNavigate,
-        onMenuSelect
+        onMenuSelect,
+        onCustomNew,
+        onFork
     }: Props = $props();
 
     const showEndingsCount = $derived( ( atGeneratedEnding || atStandardEnding ) && endingsTotal > 0 );
@@ -53,6 +60,14 @@
     // Generated stories are ephemeral and have no shareable URL, so the share
     // control is offered for catalog stories only.
     let isGenerated = $derived( $terminal.currentStoryIsGenerated );
+
+    // Custom stories are private: no share control, and no fork control (they
+    // are already editable copies).
+    let isCustomStory = $derived( currentStory !== null && isCustomStoryId( currentStory.id ) );
+
+    // Read here so the "my stories" footer buttons can target the currently
+    // highlighted custom story directly, the same as the ENTER key.
+    let customSelectedIndex = $derived( $terminal.customSelectedIndex );
 
     // Read here so the wiki open/navigate footer buttons can target the
     // currently highlighted entry directly, the same as the ENTER key.
@@ -135,7 +150,7 @@
                 {@render control( m.controls_story_menu(), () => terminal.goBack() )}
             {/if}
 
-            {#if !isGenerated}
+            {#if !isGenerated && !isCustomStory}
                 {@render control( m.controls_story_share(), () => terminal.openShare() )}
             {/if}
         {:else if view === "story-info"}
@@ -148,7 +163,10 @@
                 {@render control( m.controls_story_menu(), () => terminal.startMenu() )}
             {/if}
 
-            {@render control( m.controls_story_share(), () => terminal.openShare() )}
+            {#if !isGenerated && !isCustomStory}
+                {@render control( m.controls_story_info_fork(), onFork )}
+                {@render control( m.controls_story_share(), () => terminal.openShare() )}
+            {/if}
         {:else if view === "menu"}
             {#if searchActive}
                 {@render control( m.controls_menu_cancel_search(), () => terminal.deactivateSearch() )}
@@ -159,6 +177,7 @@
                 {@render control( m.controls_menu_wiki(), () => terminal.openWiki() )}
                 {@render control( m.controls_menu_ai(), () => terminal.openAiSetup() )}
                 {@render control( m.controls_menu_achievements(), () => terminal.openAchievements() )}
+                {@render control( m.controls_menu_custom(), () => terminal.openCustomStories() )}
                 {@render control( m.controls_menu_search(), () => terminal.activateSearch() )}
             {/if}
 
@@ -187,6 +206,15 @@
             {@render control( m.controls_achievements_menu(), () => terminal.closeAchievements() )}
         {:else if view === "ai-setup"}
             {@render control( m.controls_story_menu(), () => terminal.startMenu() )}
+        {:else if view === "custom-stories"}
+            <!-- Alphabetical by key: [ENTER], [ESC], [N], [↑], [↓]. -->
+            {@render control( m.controls_custom_open(), () => terminal.selectCustomStoryAt( customSelectedIndex ) )}
+            {@render control( m.controls_story_menu(), () => terminal.startMenu() )}
+            {@render control( m.controls_custom_new(), onCustomNew )}
+            {@render control( m.controls_navigate_up(), () => terminal.moveCustomSelection( -1 ) )}
+            {@render control( m.controls_navigate_down(), () => terminal.moveCustomSelection( 1 ) )}
+        {:else if view === "editor"}
+            {@render control( m.controls_editor_back(), () => terminal.closeEditor() )}
         {/if}
     </nav>
 

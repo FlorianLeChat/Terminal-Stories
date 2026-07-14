@@ -32,6 +32,8 @@
             {#if view === "wiki"}{m.header_view_wiki()}{/if}
             {#if view === "achievements"}{m.header_view_achievements()}{/if}
             {#if view === "ai-setup"}{m.header_view_ai_setup()}{/if}
+            {#if view === "custom-stories"}{m.header_view_custom_stories()}{/if}
+            {#if view === "editor"}{m.header_view_editor()}{/if}
         </span>
     </span>
 
