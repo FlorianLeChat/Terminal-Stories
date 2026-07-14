@@ -13,6 +13,7 @@
         "moral choices"
     ],
     "author": "Terminal Stories",
+    "music": "tense",
     "characters": [
         {
             "id": "player",
@@ -97,6 +98,7 @@
         },
         {
             "id": "camera-revealed",
+            "sound": "glitch",
             "text": [
                 "Camera number 4. Corridor B. You had checked every camera.",
                 {
@@ -193,6 +195,7 @@
         },
         {
             "id": "gagged-man",
+            "sound": "impact",
             "text": [
                 "You remove the gag. The man is breathing fast. Fortyish, suit disheveled.",
                 "\"They told me... that if I talked...\" He swallows. \"I'm the technician. From camera number 4.\"",
@@ -448,6 +451,7 @@
         },
         {
             "id": "ending-confession",
+            "music": "calm",
             "isEnding": true,
             "endingType": "good",
             "text": [

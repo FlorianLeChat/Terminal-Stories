@@ -1,7 +1,7 @@
 <script lang="ts">
     import * as m from "$lib/locales/messages";
     import { onMount } from "svelte";
-    import { storiesMeta } from "$lib";
+    import { storiesMeta, playBoot, resumeAudio } from "$lib";
 
     interface Props {
         ondone: () => void;
@@ -34,6 +34,18 @@
     onMount( () =>
     {
         const prefersReducedMotion = window.matchMedia( "(prefers-reduced-motion: reduce)" ).matches;
+
+        // Startup fanfare, synced with the "initialize" boot line (index 3), so
+        // it accompanies the loading screen rather than the transition out of
+        // it. resumeAudio covers the case where the browser grants autoplay;
+        // otherwise it simply stays silent until sound is enabled (off by
+        // default, and both calls no-op when muted).
+        const fanfareDelay = prefersReducedMotion ? 0 : bootLines[ 3 ].delay;
+        setTimeout( () =>
+        {
+            resumeAudio();
+            playBoot();
+        }, fanfareDelay );
 
         if ( prefersReducedMotion )
         {

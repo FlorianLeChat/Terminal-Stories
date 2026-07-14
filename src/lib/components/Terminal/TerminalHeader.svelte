@@ -1,6 +1,7 @@
 <script lang="ts">
     import * as m from "$lib/locales/messages";
     import { terminal } from "$lib/stores/terminal";
+    import SoundControl from "./SoundControl.svelte";
 
     interface Props {
         view: string;
@@ -34,7 +35,10 @@
         </span>
     </span>
 
-    <span class="cursor-blink text-terminal-green shrink-0">█</span>
+    <span class="flex items-center gap-3 shrink-0">
+        <SoundControl />
+        <span class="cursor-blink text-terminal-green">█</span>
+    </span>
 </header>
 
 <style>

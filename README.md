@@ -44,6 +44,7 @@ sequenceDiagram
     Joueur->>Terminal: Je choisis une histoire
     Terminal->>Histoire: Lance la lecture
     Histoire-->>Joueur: Affiche la scène (effet machine à écrire)
+    Histoire-->>Joueur: Une musique d'ambiance s'installe (si le son est activé)
 
     loop À chaque scène
         Joueur->>Histoire: Je fais un choix
@@ -61,8 +62,6 @@ sequenceDiagram
 
     Joueur->>IA: Je demande une histoire inédite
     IA-->>Joueur: Une aventure générée rien que pour moi
-
-    Note over Joueur,IA: Ma progression et mes succès sont sauvegardés sur cet appareil, je peux partager un lien pour reprendre là où j'en étais
 ```
 
 ### Installation
@@ -115,6 +114,7 @@ sequenceDiagram
     Player->>Terminal: I pick a story
     Terminal->>Story: Starts the playback
     Story-->>Player: Displays the scene (with typewriter effect)
+    Story-->>Player: Ambient music sets the mood (when sound is on)
 
     loop On every scene
         Player->>Story: I make a choice
@@ -132,8 +132,6 @@ sequenceDiagram
 
     Player->>AI: I request a brand-new story
     AI-->>Player: An adventure generated just for me
-
-    Note over Player,AI: My progress and achievements are saved on this device, I can share a link to resume right where I left off
 ```
 
 ### Setup

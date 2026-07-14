@@ -12,6 +12,7 @@
         "stratégie"
     ],
     "author": "Florian Trayon",
+    "music": "melancholic",
     "characters": [
         {
             "id": "comte",
@@ -95,6 +96,7 @@
             "choices": [
                 {
                     "id": "reagir-intrus",
+                    "sound": "heartbeat",
                     "text": "Se redresser d'un bond, aux aguets",
                     "action": "Tu repousses les draps et te dresses face à l'intrus, le souffle court.",
                     "consequence": "L'homme masqué te toise à travers les fentes de son masque, puis prend la parole.",
@@ -449,6 +451,7 @@
         },
         {
             "id": "fin-triomphante",
+            "music": "heroic",
             "isEnding": true,
             "endingType": "good",
             "text": [
@@ -565,6 +568,7 @@
         },
         {
             "id": "fin-heroique",
+            "music": "heroic",
             "isEnding": true,
             "endingType": "good",
             "text": [

@@ -16,6 +16,11 @@ import type { AchievementContext,
     WikiState } from "$lib";
 import { aiErrorMessage,
     availableGenres,
+    playAchievement,
+    playEnding,
+    playError,
+    playSceneEffect,
+    startMusic,
     availableLanguages,
     availableWikiLanguages,
     categoryIds,
@@ -536,6 +541,10 @@ const createTerminalStore = () =>
      */
     const startMenu = () =>
     {
+        // Switch to the shell ambiance: leaving a story swaps its theme for the
+        // menu loop; arriving from boot keeps the same theme playing seamlessly.
+        startMusic( "menu" );
+
         // Single update: reset the whole menu state, drop any loaded story, and
         // clear the output (bumping storyKey to force the story view to remount).
         update( ( s ) => ( { ...s, view: "menu", selectedStoryIndex: 0, awaitingInput: true, searchQuery: "", searchActive: false, currentStory: null, gameState: null, currentStoryIsGenerated: false, generatedEndings: [], aiStatus: "idle", aiError: null, shareOpen: false, achievementToast: [], endingToast: null, lines: [], storyKey: s.storyKey + 1 } ) );
@@ -748,6 +757,16 @@ const createTerminalStore = () =>
         const scene = story.scenes[ sceneId ];
         if ( !scene ) return;
 
+        // Drive the background ambiance from the scene being entered: a scene's
+        // own `music` is a localized "moment" override, otherwise the story's
+        // default theme plays. startMusic is a no-op when the theme is unchanged,
+        // so calling it on every scene is cheap and reverts cleanly after a moment.
+        const sceneTheme = scene.music ?? story.music ?? "default";
+        startMusic( sceneTheme );
+
+        // Optional one-shot effect layered over the music to punctuate a moment.
+        if ( scene.sound ) playSceneEffect( scene.sound );
+
         const { currentStoryIsGenerated, generatedEndings, storyStartedAt } = snapshot();
 
         const lines: Omit<TerminalLine, "id">[] = buildBaseSceneLines( scene, story, isFirst );
@@ -768,6 +787,9 @@ const createTerminalStore = () =>
 
         if ( scene.isEnding )
         {
+            // Ending sting, tuned to the outcome (good/bad/neutral).
+            playEnding( scene.endingType ?? "neutral" );
+
             if ( currentStoryIsGenerated )
             {
                 // The restart/menu key hints live in the footer (TerminalControls);
@@ -793,6 +815,10 @@ const createTerminalStore = () =>
                 {
                     nextUnlockedAchievements = unlocked.all;
                     nextAchievementToast = unlocked.newly;
+
+                    // Celebrate a freshly unlocked achievement with its own jingle.
+                    const hasNewAchievement = unlocked.newly.length > 0;
+                    if ( hasNewAchievement ) playAchievement();
                 }
             }
         }
@@ -1330,6 +1356,9 @@ const createTerminalStore = () =>
             // Only surface the error if the user is still waiting on this request.
             const stillGenerating = snapshot().aiStatus === "generating";
             if ( !stillGenerating ) return;
+
+            // Audible cue that the generation failed.
+            playError();
 
             update( ( s ) => ( { ...s, aiStatus: "error", aiError: aiErrorMessage( error ) } ) );
         }

@@ -12,6 +12,7 @@
         "solitude"
     ],
     "author": "Terminal Stories",
+    "music": "mystery",
     "characters": [
         {
             "id": "traveler",
@@ -193,6 +194,8 @@
         },
         {
             "id": "spirit-confrontation",
+            "music": "tense",
+            "sound": "suspense",
             "text": [
                 "The trees draw closer. The ground heaves. Roots surge up like arms.",
                 "The Spirit takes shape, not a being, but a form: leaves, shadow, and wind interwoven.",
@@ -294,6 +297,8 @@
         },
         {
             "id": "source-tree",
+            "music": "dreamy",
+            "sound": "reveal",
             "text": [
                 "The hollow tree is immense. Three men could not encircle it.",
                 "The black sap running from its trunk forms words in the earth: 'REMEMBER'.",
@@ -388,6 +393,7 @@
         },
         {
             "id": "ending-withdrawal",
+            "music": "calm",
             "isEnding": true,
             "endingType": "good",
             "text": [
@@ -401,6 +407,7 @@
         },
         {
             "id": "ending-light",
+            "music": "calm",
             "isEnding": true,
             "endingType": "good",
             "text": [
