@@ -754,5 +754,11 @@ export const handleEnabledChange = ( nextEnabled: boolean ): void =>
         return;
     }
 
-    if ( currentTheme ) startMusicVoice( currentTheme );
+    // Idempotent on purpose: the sound store re-runs setEnabled on every
+    // volume change, so this can fire many times in a row while sound is
+    // already on. Only spin up a voice when a theme is requested and none is
+    // already playing — otherwise repeated calls would stack voices on top of
+    // each other (audible as duplication, clipping, and stray restarts).
+    const hasLiveVoice = musicGain !== null;
+    if ( currentTheme !== null && !hasLiveVoice ) startMusicVoice( currentTheme );
 };
