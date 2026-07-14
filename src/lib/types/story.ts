@@ -1,3 +1,5 @@
+import type { MusicTheme, SceneSoundEffect } from "$lib/types/audio";
+
 export type CharacterRole = "protagonist" | "antagonist" | "ally" | "npc" | "narrator";
 
 export interface Character {
@@ -41,6 +43,17 @@ export interface Scene {
     choices: Choice[];
     isEnding?: boolean;
     endingType?: "good" | "bad" | "neutral";
+    /**
+     * Optional music override for this specific "moment". When set, entering the
+     * scene switches the background ambiance to this theme; when absent, the
+     * story's own {@link Story.music} theme keeps playing.
+     */
+    music?: MusicTheme;
+    /**
+     * Optional one-shot sound effect fired once when the player enters the
+     * scene, layered over the background music to punctuate a moment.
+     */
+    sound?: SceneSoundEffect;
 }
 
 export interface Story {
@@ -52,6 +65,11 @@ export interface Story {
     description: string;
     tags: string[];
     author?: string;
+    /**
+     * Optional default background-music ambiance for the whole story, started
+     * when playback begins. Falls back to the `"default"` theme when absent.
+     */
+    music?: MusicTheme;
     characters: Character[];
     startScene: string;
     scenes: Record<string, Scene>;

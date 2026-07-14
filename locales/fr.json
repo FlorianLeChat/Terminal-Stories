@@ -150,6 +150,10 @@
 	"share_scan_hint": "Scannez ce code pour ouvrir l'histoire sur un autre appareil.",
 	"share_title": "Partager cette histoire",
 
+	"sound_toggle_off": "Couper le son",
+	"sound_toggle_on": "Activer le son",
+	"sound_volume": "Volume du son",
+
 	"story_item_all_endings_aria": "Toutes les fins découvertes",
 	"story_item_endings_count": [{"declarations": ["input count", "local countPlural = count: plural"], "selectors": ["countPlural"], "match": {"countPlural=one": "{count} fin :", "countPlural=other": "{count} fins :"}}],
 	"story_item_endings_title": "Fins découvertes : {found} / {total}",

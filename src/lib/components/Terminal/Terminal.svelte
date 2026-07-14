@@ -15,7 +15,8 @@
     import TerminalControls from "./TerminalControls.svelte";
     import TerminalHeader from "./TerminalHeader.svelte";
     import ShareDialog from "./ShareDialog.svelte";
-    import { storiesMeta, filterStories, searchStories, hasSave, parseDeepLink, deepLinkSearch, type DeepLinkTarget } from "$lib";
+    import { storiesMeta, filterStories, searchStories, hasSave, parseDeepLink, deepLinkSearch, playKeyPress, playNavigate, playSelect, playBack, resumeAudio, startMusic, type DeepLinkTarget } from "$lib";
+    import { sound } from "$lib/stores/sound";
 
     let view = $derived( $terminal.view );
     let lines = $derived( $terminal.lines );
@@ -135,6 +136,11 @@
      */
     const handleBoot = () =>
     {
+        // Pressing ENTER/clicking to leave boot is a user gesture: resume a
+        // context suspended by the autoplay policy so the menu ambiance that
+        // follows can play. No-op when sound is off.
+        resumeAudio();
+
         const target = parseDeepLink( page.url.searchParams );
 
         if ( target )
@@ -200,6 +206,36 @@
     };
 
     /**
+     * Plays a single interface sound matched to the key pressed: a selection
+     * chime on ENTER, a back blip on ESC, a navigation blip on arrows, and a
+     * subtle click for everything else. Held keys (auto-repeat) and bare
+     * modifier presses are ignored so the feedback never machine-guns.
+     *
+     * @param e - The keyboard event.
+     * @author Claude
+     */
+    const playKeySound = ( e: KeyboardEvent ) =>
+    {
+        if ( e.repeat ) return;
+
+        // This keydown is a user gesture: when sound is on, resume a context
+        // suspended by the autoplay policy so sound persisted as enabled comes
+        // back to life. Skipped while muted so no context is created needlessly.
+        if ( $sound.enabled ) resumeAudio();
+
+        const key = e.key;
+        const isModifier = key === "Shift" || key === "Control" || key === "Alt" || key === "Meta";
+        if ( isModifier ) return;
+
+        const isArrow = key === "ArrowUp" || key === "ArrowDown" || key === "ArrowLeft" || key === "ArrowRight";
+
+        if ( key === "Enter" ) playSelect();
+        else if ( key === "Escape" ) playBack();
+        else if ( isArrow ) playNavigate();
+        else playKeyPress();
+    };
+
+    /**
      * Global key handler: dispatches the event to the handler for the current
      * view. Boot input is handled by the boot component itself.
      *
@@ -213,6 +249,9 @@
         // While the share overlay is open, let the native <dialog> own the input
         // (ESC closes it); don't fire story/menu shortcuts underneath it.
         if ( $terminal.shareOpen ) return;
+
+        // Interface feedback: one subtle sound per key press (no-op when muted).
+        playKeySound( e );
 
         // The AI setup screen is a plain form: let typing flow to the focused
         // field, and only intercept ESC to return to the menu.
@@ -242,6 +281,15 @@
             {
                 return;
             }
+        }
+
+        // Global mute toggle: M works on any view, except while typing in an
+        // input (where it must stay a literal character).
+        if ( ( e.key === "m" || e.key === "M" ) && !isInputFocused )
+        {
+            e.preventDefault();
+            sound.toggle();
+            return;
         }
 
         // Global search trigger: / activates search on any searchable view.
@@ -553,14 +601,46 @@
         }
     };
 
+    /**
+     * Plays a click sound when the user activates any interactive control with
+     * a pointer (mouse/touch): menu entries, filters, story choices, footer
+     * actions, dialogs... Delegated on the window so every current and future
+     * button is covered without wiring each handler by hand. Pointer events
+     * never fire for keyboard activation, so this never doubles up with the
+     * per-key sound in handleKeydown.
+     *
+     * @param e - The pointer event.
+     * @author Claude
+     */
+    const handlePointerDown = ( e: PointerEvent ) =>
+    {
+        if ( !$sound.enabled ) return;
+
+        const target = e.target as HTMLElement | null;
+
+        // Only genuine controls click; the volume slider (a range input) is left
+        // out so dragging it stays silent.
+        const control = target?.closest( "button, a, [role=button]" );
+        if ( !control ) return;
+
+        // This pointer gesture can resume a context suspended by autoplay.
+        resumeAudio();
+        playSelect();
+    };
+
     // Grab focus on mount so keyboard input is captured without a click first.
     onMount( () =>
     {
         window.focus();
+
+        // Request the shell ambiance from the very first (boot) screen. It plays
+        // right away for returning users with sound on, and is simply remembered
+        // (until the first gesture) for everyone else, so startup has music too.
+        startMusic( "menu" );
     } );
 </script>
 
-<svelte:window onkeydown={handleKeydown} />
+<svelte:window onkeydown={handleKeydown} onpointerdown={handlePointerDown} />
 
 <main class="bg-terminal-bg monitor relative w-full h-full max-w-4xl flex flex-col">
     <div class="scanlines inset-0 absolute z-10 pointer-events-none"></div>

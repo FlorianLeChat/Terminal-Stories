@@ -150,6 +150,10 @@
 	"share_scan_hint": "Scan this code to open the story on another device.",
 	"share_title": "Share this story",
 
+	"sound_toggle_off": "Mute sound",
+	"sound_toggle_on": "Enable sound",
+	"sound_volume": "Sound volume",
+
 	"story_item_all_endings_aria": "All endings discovered",
 	"story_item_endings_count": [{"declarations": ["input count", "local countPlural = count: plural"], "selectors": ["countPlural"], "match": {"countPlural=one": "{count} ending:", "countPlural=other": "{count} endings:"}}],
 	"story_item_endings_title": "Endings discovered: {found} / {total}",

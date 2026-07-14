@@ -13,6 +13,7 @@
         "Futur"
     ],
     "author": "Florian Trayon",
+    "music": "melancholic",
     "characters": [
         {
             "id": "howard",
@@ -94,6 +95,7 @@
         },
         {
             "id": "largage",
+            "sound": "impact",
             "speaker": "system",
             "text": [
                 "*Bip* *Bip* *Bip*",
@@ -228,7 +230,7 @@
                 },
                 {
                     "id": "rejeter-yoneda",
-                    "text": "Rembarrer sèchement Yoneda et la sommer de vous laisser seule",
+                    "text": "Rembarrer sèchement Yoneda et la sommer de vous laisser seul",
                     "action": "« Je ne suis pas votre confesseur, sergente. Restez ici à vous apitoyer si vous voulez, moi j'ai une mission à accomplir. » dis-tu d'un ton cassant.",
                     "consequence": "Elle se redresse d'un coup, le visage fermé. « Très bien, Capitaine. Débrouillez-vous seul. » Elle décolle sans un regard en arrière, vous abandonnant sur la balançoire rouillée.",
                     "nextScene": "fin-abandon"
@@ -442,6 +444,8 @@
         },
         {
             "id": "charge",
+            "music": "action",
+            "sound": "alarm",
             "text": [
                 "Tu t'élances vers les forces anti-émeutes, ton armure vrombissant sous la montée en puissance. Les policiers reculent, désorientés par ta charge. Tu désarmes le premier d'un geste précis, projetant son lanceur de grenade au loin sans le blesser.",
                 {
@@ -546,7 +550,7 @@
         {
             "id": "chaos-civils",
             "text": [
-                "Vous vous précipitez vers la famille agressée. À votre approche, les pillards détalent, effrayés par vos armures. Vous aidez le père à se relever, tandis que la mère serre ses deux enfants contre elle.",
+                "Vous vous précipitez vers la famille agressée. À votre approche, les pillards détalent, effrayés par votre présence. Vous aidez le père à se relever, tandis que la mère serre ses deux enfants contre elle.",
                 "« Merci... merci... » balbutie l'homme, avant de fuir avec les siens dans les rues en flammes.",
                 "Mais pour une famille sauvée, dix autres scènes de violence éclatent autour de vous. Vous ne pouvez pas être partout. Vous en sauvez un, puis un autre, jusqu'à ce que l'évidence vous rattrape : la ville tout entière est en train de sombrer, et vous n'êtes que deux.",
                 {
@@ -848,7 +852,7 @@
             "endingType": "bad",
             "text": [
                 "Vous ôtez vos casques ensemble. L'air brûle, saturé de radiations, mais il n'a plus aucune importance. La voix de Safar vous enveloppe, chaude, maternelle, et vous comprenez enfin ce qu'elle promet : la fin de la fatigue, la fin de la peur, la fin de tout ce poids.",
-                "Le Thermophile, le Fondateur, le dernier espoir de l'Administration : plus rien de tout cela n'a de sens. Il n'y a plus que la lumière, là, tout près, ruisselant du mât auquel Safar s'est donné, si belle qu'on se demande comment on a pu la fuir.",
+                "Le Thermophile, Kira, le dernier espoir de l'Administration : plus rien de tout cela n'a de sens. Il n'y a plus que la lumière, là, tout près, ruisselant du mât auquel Safar s'est donné, si belle qu'on se demande comment on a pu la fuir.",
                 {
                     "speaker": "yoneda",
                     "text": "« Vous aviez raison, lieutenant. » souffle Yoneda, un sourire vide aux lèvres."
@@ -900,7 +904,7 @@
                     "speaker": "howard",
                     "text": "« Et le commandement légitime ? » demandes-tu. « Il n'y a personne aux commandes ? »"
                 },
-                "« Le Fondateur. » répond le commandant, la voix plus basse. « Le Fondateur en personne était à bord. Il s'est enfermé dans les quartiers de commandement il y a douze heures. Il n'a plus donné un seul ordre depuis. Personne n'entre, personne ne sort. »"
+                "« Le Fondateur. » répond le sergent, la voix plus basse. « Le Fondateur en personne était à bord. Il s'est enfermé dans les quartiers de commandement il y a douze heures. Il n'a plus donné un seul ordre depuis. Personne n'entre, personne ne sort. »"
             ],
             "choices": [
                 {
@@ -1190,6 +1194,7 @@
         },
         {
             "id": "fin-ensemble",
+            "music": "calm",
             "isEnding": true,
             "endingType": "good",
             "text": [

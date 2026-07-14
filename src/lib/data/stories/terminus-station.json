@@ -13,6 +13,7 @@
         "crew"
     ],
     "author": "Terminal Stories",
+    "music": "mystery",
     "characters": [
         {
             "id": "commander",
@@ -66,6 +67,7 @@
         },
         {
             "id": "scan-reading",
+            "sound": "glitch",
             "text": [
                 "Dax pulls up the data on his pad. His hands don't shake, but they should.",
                 {
@@ -160,6 +162,7 @@
         },
         {
             "id": "laboratory",
+            "music": "eerie",
             "text": [
                 "The biology lab is in a catastrophic state. Containers shattered. Data wiped.",
                 "Except one screen, still lit. A file open: 'ZETA-ORGANISM, FINAL REPORT'.",
@@ -320,6 +323,8 @@
                 },
                 {
                     "id": "seal-airlock",
+            "music": "tense",
+            "sound": "impact",
                     "text": "Seal the airlock and launch immediately",
                     "action": "\"I'm sorry.\" You seal the airlock.",
                     "consequence": "The ship launches. Through the porthole, you see the station. Then darkness.",
@@ -329,6 +334,7 @@
         },
         {
             "id": "tense-wait",
+            "sound": "heartbeat",
             "text": [
                 "17 minutes. The ducts groan rhythmically.",
                 "Vasiliev leans toward you.",
@@ -517,6 +523,7 @@
         },
         {
             "id": "ending-deal",
+            "music": "calm",
             "isEnding": true,
             "endingType": "good",
             "text": [
