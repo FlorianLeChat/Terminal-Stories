@@ -29,6 +29,12 @@ const genreLabels: Record<string, () => string> = {
 };
 
 /**
+ * Every genre code the UI knows how to label and color, offered as the
+ * preset choices of the story editor's genre picker.
+ */
+export const KNOWN_GENRES: string[] = Object.keys( genreLabels );
+
+/**
  * Returns the Tailwind text-color class for a genre code, falling back to the
  * dim terminal color for unknown genres.
  *

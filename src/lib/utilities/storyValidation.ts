@@ -1,8 +1,13 @@
-import type { Character, CharacterRole, Choice, Scene, SceneTextEntry, Story } from "$lib/types/story";
+import type { Character, CharacterRole, Choice, Scene, SceneTextEntry, Story, StoryFile } from "$lib/types/story";
+import type { MusicTheme, SceneSoundEffect } from "$lib/types/audio";
+import { MUSIC_THEMES, SCENE_SOUND_EFFECTS } from "$lib/types/audio";
 import { AiError } from "$lib/utilities/aiError";
+import { CustomStoryError } from "$lib/utilities/customStoryError";
 
-// The model is asked to return scenes as an array (easier to produce reliably
-// than a keyed map), which we normalize into the Record the engine expects.
+// The payload is expected to carry scenes as an array (easier to produce
+// reliably than a keyed map), which we normalize into the Record the engine
+// expects. The same raw shapes cover AI-generated payloads and user-imported
+// or user-edited stories, so every entry point shares one sanitization path.
 interface RawChoice {
     id?: string;
     text?: string;
@@ -22,9 +27,12 @@ interface RawScene {
     id?: string;
     speaker?: string;
     text?: ( string | RawDialogueLine )[];
+    image?: string;
     choices?: RawChoice[];
     isEnding?: boolean;
     endingType?: "good" | "bad" | "neutral";
+    music?: string;
+    sound?: string;
 }
 
 interface RawStory {
@@ -34,18 +42,83 @@ interface RawStory {
     universe?: string;
     description?: string;
     tags?: string[];
+    author?: string;
+    music?: string;
     characters?: Partial<Character>[];
     startScene?: string;
     scenes?: RawScene[] | Record<string, RawScene>;
 }
 
+/**
+ * Graph-level failure codes shared by every story normalization entry point.
+ * Wrappers translate them into their own error type ({@link AiError} for
+ * generated stories, {@link CustomStoryError} for imported/edited ones).
+ */
+type StoryGraphErrorCode = "not_object" | "no_scenes" | "no_scene_ids" | "no_ending";
+
+/**
+ * Internal error thrown by {@link normalizeStoryPayload} when a payload cannot
+ * be salvaged into a coherent story graph.
+ *
+ * @author Claude
+ */
+class StoryGraphError extends Error
+{
+    readonly code: StoryGraphErrorCode;
+
+    constructor( code: StoryGraphErrorCode )
+    {
+        super( code );
+        this.name = "StoryGraphError";
+        this.code = code;
+    }
+}
+
+// Hard caps applied to every normalized story. User-generated content is
+// clamped (never rejected) so a slightly oversized story still imports, while
+// a hostile payload cannot blow up localStorage or the rendering pipeline.
+const MAX_SCENES = 300;
+const MAX_CHOICES_PER_SCENE = 12;
+const MAX_TEXT_ENTRIES_PER_SCENE = 80;
+const MAX_TEXT_LENGTH = 2000;
+const MAX_SHORT_TEXT_LENGTH = 300;
+const MAX_ID_LENGTH = 64;
+const MAX_TAGS = 12;
+const MAX_CHARACTERS = 40;
+
+// Own-property names that would collide with Object.prototype internals when
+// used as scene-map keys; refused outright as scene ids.
+const UNSAFE_KEYS = [ "__proto__", "constructor", "prototype" ];
+
 /** Roles the engine recognizes; anything else is coerced to "npc". */
 const KNOWN_ROLES: CharacterRole[] = [ "protagonist", "antagonist", "ally", "npc", "narrator" ];
+
+// Scene images must point to an asset bundled with the app: a relative path
+// under assets/, no scheme, no host, no traversal. External URLs (http, data,
+// javascript...) are dropped so imported stories can never load remote or
+// script-bearing content on the reader's device.
+const LOCAL_ASSET_PATTERN = /^\/?assets\/[a-z0-9_/-]+\.(?:svg|png|jpe?g|webp|gif)$/i;
+
+/**
+ * Clamps an arbitrary value to a trimmed string of at most `max` characters.
+ * Non-string values collapse to the empty string.
+ *
+ * @param value - The raw value to sanitize.
+ * @param max - The maximum allowed length.
+ * @returns The clamped string (possibly empty).
+ * @author Claude
+ */
+const clampText = ( value: unknown, max: number ): string =>
+{
+    if ( typeof value !== "string" ) return "";
+
+    return value.trim().slice( 0, max );
+};
 
 /**
  * Coerces a character's role to a value the engine understands.
  *
- * @param role - The raw role string from the model.
+ * @param role - The raw role string from the payload.
  * @returns A valid {@link CharacterRole}.
  * @author Claude
  */
@@ -57,7 +130,50 @@ const coerceRole = ( role: unknown ): CharacterRole =>
 };
 
 /**
- * Turns the model's `scenes` (array or map) into an array of raw scenes, each
+ * Validates a raw music value against the known theme list.
+ *
+ * @param value - The raw `music` value from the payload.
+ * @returns The theme when valid, `undefined` otherwise.
+ * @author Claude
+ */
+const coerceMusicTheme = ( value: unknown ): MusicTheme | undefined =>
+{
+    const isKnown = typeof value === "string" && ( MUSIC_THEMES as readonly string[] ).includes( value );
+
+    return isKnown ? ( value as MusicTheme ) : undefined;
+};
+
+/**
+ * Validates a raw sound value against the known scene-effect list.
+ *
+ * @param value - The raw `sound` value from the payload.
+ * @returns The effect when valid, `undefined` otherwise.
+ * @author Claude
+ */
+const coerceSoundEffect = ( value: unknown ): SceneSoundEffect | undefined =>
+{
+    const isKnown = typeof value === "string" && ( SCENE_SOUND_EFFECTS as readonly string[] ).includes( value );
+
+    return isKnown ? ( value as SceneSoundEffect ) : undefined;
+};
+
+/**
+ * Validates a raw scene image path: only relative paths to bundled assets are
+ * kept, so a story can never reference remote content or non-image schemes.
+ *
+ * @param value - The raw `image` value from the payload.
+ * @returns The path when it targets a local asset, `undefined` otherwise.
+ * @author Claude
+ */
+const coerceImagePath = ( value: unknown ): string | undefined =>
+{
+    const isLocalAsset = typeof value === "string" && LOCAL_ASSET_PATTERN.test( value ) && !value.includes( ".." );
+
+    return isLocalAsset ? value : undefined;
+};
+
+/**
+ * Turns the payload's `scenes` (array or map) into an array of raw scenes, each
  * guaranteed to carry an `id` (falling back to its map key).
  *
  * @param scenes - The raw `scenes` value from the payload.
@@ -78,30 +194,36 @@ const collectRawScenes = ( scenes: RawStory[ "scenes" ] ): RawScene[] =>
 
 /**
  * Normalizes a single raw choice into a fully-formed {@link Choice}, filling in
- * sensible fallbacks for optional narration fields.
+ * sensible fallbacks for optional narration fields and clamping every string.
  *
- * @param raw - The raw choice from the model.
+ * @param raw - The raw choice from the payload.
  * @param index - The choice position, used to synthesize a stable id.
  * @returns A normalized choice, or `null` when it lacks a target scene.
  * @author Claude
  */
 const normalizeChoice = ( raw: RawChoice, index: number ): Choice | null =>
 {
-    const nextScene = typeof raw.nextScene === "string" ? raw.nextScene.trim() : "";
+    const nextScene = clampText( raw.nextScene, MAX_ID_LENGTH );
     if ( nextScene === "" ) return null;
 
-    const text = typeof raw.text === "string" && raw.text.trim() !== "" ? raw.text : `Option ${ index + 1 }`;
+    const rawText = clampText( raw.text, MAX_SHORT_TEXT_LENGTH );
+    const text = rawText !== "" ? rawText : `Option ${ index + 1 }`;
+
+    const id = clampText( raw.id, MAX_ID_LENGTH );
 
     const choice: Choice = {
-        id: typeof raw.id === "string" && raw.id !== "" ? raw.id : `choice-${ index }`,
+        id: id !== "" ? id : `choice-${ index }`,
         text,
-        action: typeof raw.action === "string" ? raw.action : "",
-        consequence: typeof raw.consequence === "string" ? raw.consequence : "",
+        action: clampText( raw.action, MAX_SHORT_TEXT_LENGTH ),
+        consequence: clampText( raw.consequence, MAX_SHORT_TEXT_LENGTH ),
         nextScene
     };
 
-    if ( typeof raw.requiresFlag === "string" ) choice.requiresFlag = raw.requiresFlag;
-    if ( typeof raw.setsFlag === "string" ) choice.setsFlag = raw.setsFlag;
+    const requiresFlag = clampText( raw.requiresFlag, MAX_ID_LENGTH );
+    const setsFlag = clampText( raw.setsFlag, MAX_ID_LENGTH );
+
+    if ( requiresFlag !== "" ) choice.requiresFlag = requiresFlag;
+    if ( setsFlag !== "" ) choice.setsFlag = setsFlag;
 
     return choice;
 };
@@ -111,41 +233,46 @@ const normalizeChoice = ( raw: RawChoice, index: number ): Choice | null =>
  * Collapses to a plain string whenever the entry's speaker matches that
  * default, keeping the `{ speaker, text }` form only for actual overrides.
  *
- * @param raw - The raw text entry from the model (a string or a dialogue line).
+ * @param raw - The raw text entry from the payload (a string or a dialogue line).
  * @param defaultSpeaker - The scene's own speaker, or the narrator sentinel.
  * @returns A normalized {@link SceneTextEntry}.
  * @author Claude
  */
 const normalizeTextEntry = ( raw: unknown, defaultSpeaker: string ): SceneTextEntry =>
 {
-    if ( typeof raw === "string" ) return raw;
+    if ( typeof raw === "string" ) return raw.slice( 0, MAX_TEXT_LENGTH );
 
     const isObject = raw !== null && typeof raw === "object";
     if ( !isObject ) return "";
 
     const rawLine = raw as RawDialogueLine;
-    const text = typeof rawLine.text === "string" ? rawLine.text : "";
-    const speaker = typeof rawLine.speaker === "string" && rawLine.speaker.trim() !== "" ? rawLine.speaker : defaultSpeaker;
+    const text = typeof rawLine.text === "string" ? rawLine.text.slice( 0, MAX_TEXT_LENGTH ) : "";
+    const rawSpeaker = clampText( rawLine.speaker, MAX_ID_LENGTH );
+    const speaker = rawSpeaker !== "" ? rawSpeaker : defaultSpeaker;
 
     return speaker === defaultSpeaker ? text : { speaker, text };
 };
 
 /**
  * Normalizes one raw scene into a {@link Scene}. Choices are normalized but not
- * yet validated against the scene map (that happens in a later pass).
+ * yet validated against the scene map (that happens in a later pass); music,
+ * sound, and image are dropped unless they match a known safe value.
  *
- * @param raw - The raw scene from the model.
+ * @param raw - The raw scene from the payload.
  * @returns A normalized scene.
  * @author Claude
  */
 const normalizeScene = ( raw: RawScene ): Scene =>
 {
-    const id = ( raw.id ?? "" ).trim();
-    const speaker = typeof raw.speaker === "string" && raw.speaker.trim() !== "" ? raw.speaker : undefined;
+    const id = clampText( raw.id, MAX_ID_LENGTH );
+    const rawSpeaker = clampText( raw.speaker, MAX_ID_LENGTH );
+    const speaker = rawSpeaker !== "" ? rawSpeaker : undefined;
     const defaultSpeaker = speaker ?? "narrator";
-    const text = Array.isArray( raw.text ) ? raw.text.map( ( entry ) => normalizeTextEntry( entry, defaultSpeaker ) ) : [];
 
-    const rawChoices = Array.isArray( raw.choices ) ? raw.choices : [];
+    const rawEntries = Array.isArray( raw.text ) ? raw.text.slice( 0, MAX_TEXT_ENTRIES_PER_SCENE ) : [];
+    const text = rawEntries.map( ( entry ) => normalizeTextEntry( entry, defaultSpeaker ) );
+
+    const rawChoices = Array.isArray( raw.choices ) ? raw.choices.slice( 0, MAX_CHOICES_PER_SCENE ) : [];
     const choices = rawChoices
         .map( ( choice, index ) => normalizeChoice( choice, index ) )
         .filter( ( choice ): choice is Choice => choice !== null );
@@ -159,6 +286,14 @@ const normalizeScene = ( raw: RawScene ): Scene =>
         scene.endingType = raw.endingType;
     }
 
+    const music = coerceMusicTheme( raw.music );
+    const sound = coerceSoundEffect( raw.sound );
+    const image = coerceImagePath( raw.image );
+
+    if ( music !== undefined ) scene.music = music;
+    if ( sound !== undefined ) scene.sound = sound;
+    if ( image !== undefined ) scene.image = image;
+
     return scene;
 };
 
@@ -171,7 +306,7 @@ const normalizeScene = ( raw: RawScene ): Scene =>
  * @returns `true` when an ending can be reached, `false` otherwise.
  * @author Claude
  */
-const hasReachableEnding = ( scenes: Record<string, Scene>, startScene: string ): boolean =>
+export const hasReachableEnding = ( scenes: Record<string, Scene>, startScene: string ): boolean =>
 {
     const visited = new Set<string>();
     const queue: string[] = [ startScene ];
@@ -198,8 +333,9 @@ const hasReachableEnding = ( scenes: Record<string, Scene>, startScene: string )
 };
 
 /**
- * Builds the scene map from the raw scenes, dropping any scene that lost its
- * id during generation.
+ * Builds the scene map from the raw scenes, dropping any scene without a
+ * usable id. The map is created without a prototype and unsafe key names are
+ * refused, so a hostile id (`__proto__`...) can never tamper with the map.
  *
  * @param rawScenes - The flat list of raw scenes to normalize.
  * @returns The normalized scene map, keyed by scene id.
@@ -207,12 +343,15 @@ const hasReachableEnding = ( scenes: Record<string, Scene>, startScene: string )
  */
 const buildSceneMap = ( rawScenes: RawScene[] ): Record<string, Scene> =>
 {
-    const scenes: Record<string, Scene> = {};
+    // Null prototype: scene ids are attacker-controlled property names.
+    const scenes: Record<string, Scene> = Object.create( null );
 
-    for ( const rawScene of rawScenes )
+    for ( const rawScene of rawScenes.slice( 0, MAX_SCENES ) )
     {
         const scene = normalizeScene( rawScene );
-        if ( scene.id !== "" ) scenes[ scene.id ] = scene;
+
+        const isUsableId = scene.id !== "" && !UNSAFE_KEYS.includes( scene.id );
+        if ( isUsableId ) scenes[ scene.id ] = scene;
     }
 
     return scenes;
@@ -272,15 +411,21 @@ const normalizeCharacters = ( rawCharacters: RawStory[ "characters" ] ): Charact
 {
     if ( !Array.isArray( rawCharacters ) ) return [];
 
-    return rawCharacters.map( ( character, index ) => ( {
-        id: typeof character.id === "string" && character.id !== "" ? character.id : `character-${ index }`,
-        name: typeof character.name === "string" ? character.name : `Personnage ${ index + 1 }`,
-        role: coerceRole( character.role )
-    } ) );
+    return rawCharacters.slice( 0, MAX_CHARACTERS ).map( ( character, index ) =>
+    {
+        const id = clampText( character.id, MAX_ID_LENGTH );
+        const name = clampText( character.name, MAX_SHORT_TEXT_LENGTH );
+
+        return {
+            id: id !== "" ? id : `character-${ index }`,
+            name: name !== "" ? name : `Personnage ${ index + 1 }`,
+            role: coerceRole( character.role )
+        };
+    } );
 };
 
 /**
- * Normalizes the raw `tags` payload, keeping only string entries.
+ * Normalizes the raw `tags` payload, keeping only non-empty string entries.
  *
  * @param rawTags - The raw `tags` value from the payload.
  * @returns A normalized list of tags.
@@ -290,7 +435,10 @@ const normalizeTags = ( rawTags: RawStory[ "tags" ] ): string[] =>
 {
     if ( !Array.isArray( rawTags ) ) return [];
 
-    return rawTags.filter( ( tag ): tag is string => typeof tag === "string" );
+    return rawTags
+        .slice( 0, MAX_TAGS )
+        .map( ( tag ) => clampText( tag, MAX_ID_LENGTH ) )
+        .filter( ( tag ) => tag !== "" );
 };
 
 /**
@@ -305,22 +453,75 @@ const normalizeStoryMetadata = (
     data: RawStory
 ): Pick<Story, "title" | "genre" | "language" | "universe" | "description"> =>
 {
-    const hasText = ( value: unknown ): boolean => typeof value === "string" && value.trim() !== "";
+    const title = clampText( data.title, MAX_SHORT_TEXT_LENGTH );
+    const genre = clampText( data.genre, MAX_ID_LENGTH );
+    const language = clampText( data.language, MAX_ID_LENGTH );
+    const universe = clampText( data.universe, MAX_SHORT_TEXT_LENGTH );
 
     return {
-        title: hasText( data.title ) ? ( data.title as string ) : "Histoire générée",
-        genre: hasText( data.genre ) ? ( data.genre as string ) : "Indéterminé",
-        language: hasText( data.language ) ? ( data.language as string ) : "Français",
-        universe: hasText( data.universe ) ? ( data.universe as string ) : "Univers généré",
-        description: typeof data.description === "string" ? data.description : ""
+        title: title !== "" ? title : "Histoire générée",
+        genre: genre !== "" ? genre : "Indéterminé",
+        language: language !== "" ? language : "Français",
+        universe: universe !== "" ? universe : "Univers généré",
+        description: clampText( data.description, MAX_TEXT_LENGTH )
     };
 };
 
 /**
+ * Validates and normalizes a raw story payload (AI-generated, imported, or
+ * edited) into a playable story without an id. Every string is clamped, ids
+ * and asset references are sanitized, dangling choices are pruned, choice-less
+ * non-ending scenes become endings, and the graph is guaranteed to reach at
+ * least one ending — throwing a {@link StoryGraphError} otherwise.
+ *
+ * @param raw - The parsed JSON payload to normalize.
+ * @returns A fully-formed story, minus its id (assigned by the caller).
+ * @throws {StoryGraphError} With a graph error code when the payload is unusable.
+ * @author Claude
+ */
+const normalizeStoryPayload = ( raw: unknown ): Omit<Story, "id"> =>
+{
+    const isObject = raw !== null && typeof raw === "object";
+    if ( !isObject ) throw new StoryGraphError( "not_object" );
+
+    const data = raw as RawStory;
+
+    const rawScenes = collectRawScenes( data.scenes );
+    if ( rawScenes.length === 0 ) throw new StoryGraphError( "no_scenes" );
+
+    const scenes = buildSceneMap( rawScenes );
+    const sceneIds = Object.keys( scenes );
+    if ( sceneIds.length === 0 ) throw new StoryGraphError( "no_scene_ids" );
+
+    const startScene = resolveStartScene( data, scenes, sceneIds );
+    pruneDeadEnds( scenes, sceneIds );
+
+    if ( !hasReachableEnding( scenes, startScene ) )
+    {
+        throw new StoryGraphError( "no_ending" );
+    }
+
+    const story: Omit<Story, "id"> = {
+        ...normalizeStoryMetadata( data ),
+        tags: normalizeTags( data.tags ),
+        characters: normalizeCharacters( data.characters ),
+        startScene,
+        scenes
+    };
+
+    const author = clampText( data.author, MAX_SHORT_TEXT_LENGTH );
+    const music = coerceMusicTheme( data.music );
+
+    if ( author !== "" ) story.author = author;
+    if ( music !== undefined ) story.music = music;
+
+    return story;
+};
+
+/**
  * Validates and normalizes a raw, model-generated payload into a playable
- * {@link Story}. Prunes dangling choices, turns choice-less non-ending scenes
- * into endings, and guarantees a coherent, reachable graph — throwing an
- * {@link AiError} when the payload cannot be salvaged.
+ * {@link Story}, throwing an {@link AiError} when the payload cannot be
+ * salvaged.
  *
  * @param raw - The parsed JSON returned by the model.
  * @returns A fully-formed, ephemeral story (id prefixed with `ai-`).
@@ -329,33 +530,58 @@ const normalizeStoryMetadata = (
  */
 export const normalizeGeneratedStory = ( raw: unknown ): Story =>
 {
-    const isObject = raw !== null && typeof raw === "object";
-    if ( !isObject ) throw new AiError( "not_object" );
-
-    const data = raw as RawStory;
-
-    const rawScenes = collectRawScenes( data.scenes );
-    if ( rawScenes.length === 0 ) throw new AiError( "no_scenes" );
-
-    const scenes = buildSceneMap( rawScenes );
-    const sceneIds = Object.keys( scenes );
-    if ( sceneIds.length === 0 ) throw new AiError( "no_scene_ids" );
-
-    const startScene = resolveStartScene( data, scenes, sceneIds );
-    pruneDeadEnds( scenes, sceneIds );
-
-    if ( !hasReachableEnding( scenes, startScene ) )
+    try
     {
-        throw new AiError( "no_ending" );
+        return {
+            id: `ai-${ Date.now() }`,
+            ...normalizeStoryPayload( raw ),
+            author: "IA"
+        };
     }
+    catch ( error )
+    {
+        if ( error instanceof StoryGraphError ) throw new AiError( error.code );
 
-    return {
-        id: `ai-${ Date.now() }`,
-        ...normalizeStoryMetadata( data ),
-        tags: normalizeTags( data.tags ),
-        author: "IA",
-        characters: normalizeCharacters( data.characters ),
-        startScene,
-        scenes
-    };
+        throw error;
+    }
+};
+
+/**
+ * Validates and normalizes a user-provided payload (imported file or editor
+ * draft) into a playable story without an id, throwing a
+ * {@link CustomStoryError} when the payload cannot be salvaged.
+ *
+ * @param raw - The parsed JSON payload to validate.
+ * @returns A fully-formed story, minus its id (assigned by the caller).
+ * @throws {CustomStoryError} With an error code when the payload is unusable.
+ * @author Claude
+ */
+export const normalizeCustomStory = ( raw: unknown ): Omit<Story, "id"> =>
+{
+    try
+    {
+        return normalizeStoryPayload( raw );
+    }
+    catch ( error )
+    {
+        if ( error instanceof StoryGraphError ) throw new CustomStoryError( error.code );
+
+        throw error;
+    }
+};
+
+/**
+ * Converts a normalized story back to the on-disk {@link StoryFile} shape
+ * (scenes as a flat array), used when persisting or exporting custom stories.
+ *
+ * @param story - The normalized story to flatten.
+ * @param id - The id to stamp on the file.
+ * @returns The story in its file shape.
+ * @author Claude
+ */
+export const toStoryFile = ( story: Omit<Story, "id">, id: string ): StoryFile =>
+{
+    const { scenes, ...rest } = story;
+
+    return { ...rest, id, scenes: Object.values( scenes ) };
 };
