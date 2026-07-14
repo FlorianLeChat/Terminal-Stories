@@ -53,6 +53,22 @@
 
     const showEndingsCount = $derived( ( atGeneratedEnding || atStandardEnding ) && endingsTotal > 0 );
 
+    // On mobile the control bar can hold many buttons that wrap onto several
+    // rows, eating precious vertical space. There it can be folded away behind
+    // a toggle; from `sm` up the bar is always shown and the toggle is hidden.
+    // Expanded by default so touch navigation stays discoverable; the choice is
+    // kept per session only (reset on reload).
+    let controlsExpanded = $state( true );
+
+    // The toggle is only meaningful when the nav actually holds controls, which
+    // is every view except the boot screen (whose footer is just a source link).
+    let canToggleControls = $derived( view !== "boot" );
+
+    // On mobile, fold the nav away (display: none) when collapsed; `contents`
+    // keeps it layout-invisible when shown. The `sm:contents` class in the
+    // markup always wins from `sm` up, so this only affects small screens.
+    let navVisibilityClass = $derived( controlsExpanded ? "contents" : "hidden" );
+
     // Read here so the story-info actions can target the current story directly,
     // letting every control work by touch as well as by keyboard.
     let currentStory = $derived( $terminal.currentStory );
@@ -119,25 +135,32 @@
     and the [KEY] labels keep doubling as shortcut reminders.
 -->
 {#snippet control( label: string, onclick: () => void )}
+    <!--
+        `flex-1` (grow + shrink + 0% basis) makes the buttons share each wrapped
+        row equally on mobile, so they stretch to fill the free space instead of
+        leaving a ragged right edge. `min-width: auto` still keeps a button from
+        shrinking below its label. From `sm` up, `sm:flex-none` restores the
+        natural pill width.
+    -->
     <button
         type="button"
-        class="inline-flex items-center min-h-8 px-2 py-1 border border-terminal-dim/30 rounded whitespace-nowrap text-terminal-dim hover:text-terminal-white hover:border-terminal-dim active:bg-terminal-green/15 active:text-terminal-white motion-safe:transition-colors motion-safe:duration-100"
+        class="flex-1 sm:flex-none inline-flex items-center justify-center min-h-8 px-2 py-1 border border-terminal-dim/30 rounded whitespace-nowrap text-terminal-dim hover:text-terminal-white hover:border-terminal-dim active:bg-terminal-green/15 active:text-terminal-white motion-safe:transition-colors motion-safe:duration-100"
         {onclick}
     >
         {label}
     </button>
 {/snippet}
 
-<!--
-    `class="contents"` on <nav> makes it layout-invisible (its children
-    participate directly in the footer's flex container) while preserving its
-    semantic role: these buttons navigate between app views.
--->
 <footer
     class="shrink-0 border-t border-terminal-dim/30 px-2 py-1.5 text-xs text-terminal-dim flex flex-wrap items-center gap-1.5 select-none bg-[rgba(0,20,0,0.6)]"
     style="padding-bottom: calc( 0.375rem + env( safe-area-inset-bottom ) )"
 >
-    <nav class="contents">
+    <!--
+        `contents` keeps the nav layout-invisible (children flex directly). On
+        mobile it collapses to `hidden` when folded; from `sm` up it is always
+        `contents` regardless of the toggle state.
+    -->
+    <nav id="terminal-controls-nav" class="{navVisibilityClass} sm:contents">
         {#if view === "story"}
             {#if atGeneratedEnding || atStandardEnding}
                 {@render control( m.controls_story_ending(), handleRestart )}
@@ -237,5 +260,25 @@
         <code class="ml-auto gap-3">
             1.0.0
         </code>
+    {/if}
+
+    <!--
+        Mobile-only fold toggle. Deliberately styled unlike the control pills
+        (no bordered pill, full width, its own divider) so it reads as footer
+        chrome rather than one more control. `order-last` + `w-full` drop it
+        onto its own row at the very bottom for easy thumb reach. Hidden from
+        `sm` up, where the bar is always shown.
+    -->
+    {#if canToggleControls}
+        <button
+            type="button"
+            class="sm:hidden order-last w-full flex items-center justify-center gap-2 min-h-9 mt-0.5 pt-2 border-t border-terminal-dim/25 tracking-wide uppercase text-terminal-dim/80 hover:text-terminal-white active:text-terminal-white motion-safe:transition-colors motion-safe:duration-100"
+            aria-expanded={controlsExpanded}
+            aria-controls="terminal-controls-nav"
+            onclick={() => ( controlsExpanded = !controlsExpanded )}
+        >
+            <span aria-hidden="true">{controlsExpanded ? "▾" : "▸"}</span>
+            {m.controls_toggle()}
+        </button>
     {/if}
 </footer>
