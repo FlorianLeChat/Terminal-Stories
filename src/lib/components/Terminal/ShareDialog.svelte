@@ -13,6 +13,8 @@
     let status = $state<"loading" | "ready" | "error">( "loading" );
     /** True for a short moment after the link is copied, to confirm the action. */
     let copied = $state( false );
+    /** True when the browser exposes the native Web Share API (navigator.share). */
+    const nativeShareAvailable = typeof navigator !== "undefined" && "share" in navigator;
 
     // The absolute, shareable URL of the story currently being read. Built from
     // the page origin so a phone scanning the code reaches the same deployment.
@@ -108,6 +110,24 @@
     };
 
     /**
+     * Opens the OS-level share sheet via the Web Share API, letting the user pick
+     * a target app (messaging, mail, social...) for the story link.
+     *
+     * @author Claude
+     */
+    const shareNatively = async () =>
+    {
+        try
+        {
+            await navigator.share( { title: $terminal.currentStory?.title, url: shareUrl } );
+        }
+        catch
+        {
+            // The user cancelled the share sheet, or the platform rejected it; nothing to recover.
+        }
+    };
+
+    /**
      * Closes the overlay when the backdrop (the dialog element itself) is clicked,
      * leaving clicks on the inner content untouched.
      *
@@ -181,6 +201,16 @@
                     {copied ? m.share_copied() : m.share_copy()}
                 </button>
             </div>
+
+            {#if nativeShareAvailable}
+                <button
+                    type="button"
+                    class="text-xs px-2 py-1.5 border border-terminal-dim/40 rounded text-terminal-dim hover:text-terminal-white hover:border-terminal-dim active:bg-terminal-green/15 motion-safe:transition-colors"
+                    onclick={shareNatively}
+                >
+                    {m.share_native()}
+                </button>
+            {/if}
         </div>
 
         <p class="text-terminal-amber/90 text-xs leading-relaxed border-t border-terminal-dim/30 pt-3">

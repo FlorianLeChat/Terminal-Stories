@@ -145,6 +145,7 @@
 	"share_error": "Could not generate the QR code.",
 	"share_generating": "Generating QR code...",
 	"share_link_label": "LINK",
+	"share_native": "Share elsewhere...",
 	"share_progress_note": "Heads-up: your progress is saved on this device only and won't follow you across devices.",
 	"share_qr_aria": "QR code linking to this story",
 	"share_scan_hint": "Scan this code to open the story on another device.",
