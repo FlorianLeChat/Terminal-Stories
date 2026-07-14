@@ -135,7 +135,7 @@
                     {/if}
 
                     <span
-                        class="flex items-baseline gap-1 mb-2"
+                        class="flex items-baseline gap-x-1 mb-2 flex-wrap"
                         title={m.story_item_endings_title( { found: found.size, total: story.endingIds.length } )}
                     >
                         <span class="text-terminal-dim text-xs opacity-80 mr-1">
