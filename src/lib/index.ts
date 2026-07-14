@@ -1,6 +1,7 @@
 export * from "$lib/types/achievement";
 export * from "$lib/types/ai";
 export * from "$lib/types/audio";
+export * from "$lib/types/customStory";
 export * from "$lib/types/story";
 export * from "$lib/types/knowledge";
 export * from "$lib/data";
@@ -8,6 +9,9 @@ export * from "$lib/data/achievements";
 export * from "$lib/data/knowledge";
 export * from "$lib/utilities/achievementService";
 export * from "$lib/utilities/aiError";
+export * from "$lib/utilities/customStoryError";
+export * from "$lib/utilities/customStoryService";
+export * from "$lib/utilities/storyValidation";
 export * from "$lib/utilities/audioEngine";
 export * from "$lib/utilities/aiService";
 export * from "$lib/utilities/aiSettings";

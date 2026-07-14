@@ -1,4 +1,5 @@
 <script lang="ts">
+    import * as m from "$lib/locales/messages";
     import { page } from "$app/state";
     import { onMount } from "svelte";
     import { resolve } from "$app/paths";
@@ -12,10 +13,12 @@
     import AchievementToast from "../Achievements/AchievementToast.svelte";
     import EndingToast from "../Story/EndingToast.svelte";
     import AiStorySetup from "../AiStorySetup.svelte";
+    import CustomStoriesMenu from "../CustomStories/CustomStoriesMenu.svelte";
+    import StoryEditor from "../Editor/StoryEditor.svelte";
     import TerminalControls from "./TerminalControls.svelte";
     import TerminalHeader from "./TerminalHeader.svelte";
     import ShareDialog from "./ShareDialog.svelte";
-    import { storiesMeta, filterStories, searchStories, hasSave, parseDeepLink, deepLinkSearch, playKeyPress, playNavigate, playSelect, playBack, resumeAudio, startMusic, type DeepLinkTarget } from "$lib";
+    import { storiesMeta, filterStories, searchStories, hasSave, parseDeepLink, deepLinkSearch, playKeyPress, playNavigate, playSelect, playBack, resumeAudio, startMusic, createBlankStory, forkStory, isCustomStoryId, customStoryErrorMessage, type DeepLinkTarget } from "$lib";
     import { sound } from "$lib/stores/sound";
 
     let view = $derived( $terminal.view );
@@ -76,13 +79,14 @@
 
     // The shareable location matching the current view: a story (info/playback)
     // or an open wiki entry. Any other view (menu, boot, wiki list, AI setup)
-    // has no dedicated URL and maps to `null`.
+    // has no dedicated URL and maps to `null`. Custom stories are private and
+    // never written to the address bar.
     let deepLinkTarget = $derived.by( (): DeepLinkTarget | null =>
     {
         const isStoryView = $terminal.view === "story-info" || $terminal.view === "story";
         const storyId = $terminal.currentStory?.id;
 
-        if ( isStoryView && storyId )
+        if ( isStoryView && storyId && !isCustomStoryId( storyId ) )
         {
             return { type: "story", id: storyId };
         }
@@ -216,6 +220,59 @@
     };
 
     /**
+     * Creates a blank custom story (seeded with localized starter content) and
+     * opens it in the editor. Shared by the [N] key and the footer button.
+     *
+     * @author Claude
+     */
+    const handleCustomNew = () =>
+    {
+        try
+        {
+            const record = createBlankStory( {
+                title: m.editor_new_story_title(),
+                language: m.language_self_name(),
+                universe: m.editor_new_universe(),
+                sceneText: m.editor_new_scene_text()
+            } );
+
+            terminal.bumpCustomStories();
+            terminal.openEditor( record.story.id );
+        }
+        catch ( error )
+        {
+            alert( customStoryErrorMessage( error ) );
+        }
+    };
+
+    /**
+     * Forks the currently previewed catalog story into a private custom copy
+     * and opens it in the editor. Shared by the [F] key and the footer button.
+     * Generated and custom stories cannot be forked.
+     *
+     * @author Claude
+     */
+    const handleFork = () =>
+    {
+        const story = $terminal.currentStory;
+
+        const canFork = story !== null && !$terminal.currentStoryIsGenerated && !isCustomStoryId( story.id );
+        if ( !canFork || !story ) return;
+
+        try
+        {
+            const record = forkStory( story );
+
+            terminal.bumpCustomStories();
+            terminal.openEditor( record.story.id );
+        }
+        catch ( error )
+        {
+            alert( customStoryErrorMessage( error ) );
+        }
+    };
+
+    /**
      * Plays a single interface sound matched to the key pressed: a selection
      * chime on ENTER, a back blip on ESC, a navigation blip on arrows, and a
      * subtle click for everything else. Held keys (auto-repeat) and bare
@@ -271,6 +328,19 @@
             {
                 e.preventDefault();
                 terminal.startMenu();
+            }
+
+            return;
+        }
+
+        // The editor is form-heavy too: let typing flow to the focused field,
+        // and only intercept ESC to return to the "my stories" screen.
+        if ( view === "editor" )
+        {
+            if ( e.key === "Escape" )
+            {
+                e.preventDefault();
+                terminal.closeEditor();
             }
 
             return;
@@ -346,6 +416,11 @@
             handleAchievementsKey( e );
             return;
         }
+        if ( view === "custom-stories" )
+        {
+            handleCustomStoriesKey( e );
+            return;
+        }
     };
 
     /**
@@ -404,6 +479,13 @@
                 terminal.openAchievements();
                 return;
             }
+
+            if ( key === "e" )
+            {
+                e.preventDefault();
+                terminal.openCustomStories();
+                return;
+            }
         }
 
         const count = visibleStories.length;
@@ -451,6 +533,13 @@
         {
             e.preventDefault();
             terminal.openShare();
+            return;
+        }
+
+        if ( e.key.toLowerCase() === "f" )
+        {
+            e.preventDefault();
+            handleFork();
             return;
         }
 
@@ -543,6 +632,43 @@
         {
             e.preventDefault();
             terminal.closeAchievements();
+        }
+    };
+
+    /**
+     * Handles keys on the "my stories" screen: arrows navigate the list, ENTER
+     * opens the highlighted story, N creates a new one, ESC returns to the
+     * main menu.
+     *
+     * @param e - The keyboard event.
+     * @author Claude
+     */
+    const handleCustomStoriesKey = ( e: KeyboardEvent ) =>
+    {
+        if ( e.key === "Escape" )
+        {
+            e.preventDefault();
+            terminal.startMenu();
+        }
+        else if ( e.key === "ArrowDown" )
+        {
+            e.preventDefault();
+            terminal.moveCustomSelection( 1 );
+        }
+        else if ( e.key === "ArrowUp" )
+        {
+            e.preventDefault();
+            terminal.moveCustomSelection( -1 );
+        }
+        else if ( e.key === "Enter" )
+        {
+            e.preventDefault();
+            terminal.selectCustomStoryAt( $terminal.customSelectedIndex );
+        }
+        else if ( e.key.toLowerCase() === "n" )
+        {
+            e.preventDefault();
+            handleCustomNew();
         }
     };
 
@@ -671,6 +797,12 @@
         <AchievementsBrowser />
     {:else if view === "ai-setup"}
         <AiStorySetup />
+    {:else if view === "custom-stories"}
+        <CustomStoriesMenu oncreate={handleCustomNew} />
+    {:else if view === "editor"}
+        {#key $terminal.editingStoryId}
+            <StoryEditor />
+        {/key}
     {/if}
 
     <TerminalControls
@@ -686,6 +818,8 @@
         onSkip={handleSkip}
         onMenuNavigate={handleMenuStep}
         onMenuSelect={handleMenuSelectCurrent}
+        onCustomNew={handleCustomNew}
+        onFork={handleFork}
     />
 
     {#if view === "story" || view === "story-info"}

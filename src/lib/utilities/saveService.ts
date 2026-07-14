@@ -138,3 +138,17 @@ export const saveDiscoveredEnding = ( storyId: string, sceneId: string ): void =
     discovered.add( sceneId );
     localStorage.setItem( endingsKey( storyId ), JSON.stringify( Array.from( discovered ) ) );
 };
+
+/**
+ * Removes the discovered-endings record for the given story from localStorage,
+ * used when a custom story is deleted so no orphaned data lingers.
+ *
+ * @param storyId - The story whose endings record to erase.
+ * @author Claude
+ */
+export const deleteDiscoveredEndings = ( storyId: string ): void =>
+{
+    if ( globalThis.window === undefined ) return;
+
+    localStorage.removeItem( endingsKey( storyId ) );
+};

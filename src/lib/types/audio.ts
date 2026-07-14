@@ -1,25 +1,51 @@
 /**
+ * Every valid background-music theme, as a runtime list so user-provided data
+ * (imported or edited stories) can be validated against it.
+ */
+export const MUSIC_THEMES = [
+    "default",
+    "menu",
+    "calm",
+    "tense",
+    "mystery",
+    "melancholic",
+    "heroic",
+    "eerie",
+    "dreamy",
+    "action"
+] as const;
+
+/**
  * A named background-music ambiance. Themes are fully synthesized by the audio
  * engine (no audio files): each maps to a set of parameters — musical scale,
  * tempo, and oscillator shape — rather than a track on disk.
  */
-export type MusicTheme
-    = | "default"
-      | "menu"
-      | "calm"
-      | "tense"
-      | "mystery"
-      | "melancholic"
-      | "heroic"
-      | "eerie"
-      | "dreamy"
-      | "action";
+export type MusicTheme = ( typeof MUSIC_THEMES )[ number ];
 
 /**
  * The kind of ending reached, mirroring {@link Scene.endingType}. Used to pick
  * the ending sting played when the player reaches a final scene.
  */
 export type EndingSoundType = "good" | "bad" | "neutral";
+
+/**
+ * Every valid one-shot scene sound effect, as a runtime list so user-provided
+ * data (imported or edited stories) can be validated against it.
+ */
+export const SCENE_SOUND_EFFECTS = [
+    "heartbeat",
+    "alarm",
+    "chime",
+    "impact",
+    "suspense",
+    "glitch",
+    "whoosh",
+    "thunder",
+    "bell",
+    "static",
+    "reveal",
+    "wind"
+] as const;
 
 /**
  * A one-shot sound effect a scene can fire when the player enters it, layered
@@ -38,19 +64,7 @@ export type EndingSoundType = "good" | "bad" | "neutral";
  * - `reveal`    — a rising shimmer, for an unveiling or a magical event.
  * - `wind`      — a long, soft gust of wind for atmosphere.
  */
-export type SceneSoundEffect
-    = | "heartbeat"
-      | "alarm"
-      | "chime"
-      | "impact"
-      | "suspense"
-      | "glitch"
-      | "whoosh"
-      | "thunder"
-      | "bell"
-      | "static"
-      | "reveal"
-      | "wind";
+export type SceneSoundEffect = ( typeof SCENE_SOUND_EFFECTS )[ number ];
 
 /**
  * User-tunable sound preferences, persisted across sessions. Sound is off by

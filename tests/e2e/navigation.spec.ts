@@ -49,6 +49,15 @@ const accessPoints: AccessPoint[] = [
         openedText: "AI GENERATOR"
     },
     {
+        name: "the custom stories screen with [E]",
+        open: async ( page ) =>
+        {
+            await gotoMenu( page );
+            await page.keyboard.press( "e" );
+        },
+        openedText: "MY STORIES"
+    },
+    {
         name: "a story with [ENTER]",
         open: async ( page ) =>
         {
