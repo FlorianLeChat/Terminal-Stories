@@ -259,6 +259,4 @@
             {/each}
         </ol>
     {/if}
-
-    <p class="text-terminal-dim text-xs text-center opacity-80 pb-4">{m.custom_private_note()}</p>
 </div>
