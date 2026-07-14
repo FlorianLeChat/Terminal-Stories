@@ -94,6 +94,19 @@ interface TerminalStore {
     achievementToast: AchievementId[];
     /** Newly discovered ending tally awaiting display in a toast, or null. */
     endingToast: EndingDiscoveryToast | null;
+    /**
+     * Achievement/ending toast data computed for the ending just reached, held
+     * back until the typewriter finishes displaying its dialogue. Null once
+     * revealed (or when the current scene isn't an ending).
+     */
+    pendingEndingReveal: PendingEndingReveal | null;
+}
+
+export interface PendingEndingReveal {
+    /** Ids just unlocked, to surface once revealed. */
+    achievementToast: AchievementId[];
+    /** Ending discovery tally to surface once revealed, or null. */
+    endingToast: EndingDiscoveryToast | null;
 }
 
 export interface EndingDiscoveryToast {
@@ -506,7 +519,8 @@ const createTerminalStore = () =>
         storyStartedAt: null,
         unlockedAchievements: [],
         achievementToast: [],
-        endingToast: null
+        endingToast: null,
+        pendingEndingReveal: null
     };
 
     const { subscribe, update } = writable<TerminalStore>( initial );
@@ -547,7 +561,7 @@ const createTerminalStore = () =>
 
         // Single update: reset the whole menu state, drop any loaded story, and
         // clear the output (bumping storyKey to force the story view to remount).
-        update( ( s ) => ( { ...s, view: "menu", selectedStoryIndex: 0, awaitingInput: true, searchQuery: "", searchActive: false, currentStory: null, gameState: null, currentStoryIsGenerated: false, generatedEndings: [], aiStatus: "idle", aiError: null, shareOpen: false, achievementToast: [], endingToast: null, lines: [], storyKey: s.storyKey + 1 } ) );
+        update( ( s ) => ( { ...s, view: "menu", selectedStoryIndex: 0, awaitingInput: true, searchQuery: "", searchActive: false, currentStory: null, gameState: null, currentStoryIsGenerated: false, generatedEndings: [], aiStatus: "idle", aiError: null, shareOpen: false, achievementToast: [], endingToast: null, pendingEndingReveal: null, lines: [], storyKey: s.storyKey + 1 } ) );
     };
 
     /**
@@ -690,7 +704,8 @@ const createTerminalStore = () =>
             shareOpen: false,
             storyStartedAt: Date.now(),
             achievementToast: [],
-            endingToast: null
+            endingToast: null,
+            pendingEndingReveal: null
         } ) );
 
         renderScene( story, story.startScene, gameState, true );
@@ -735,7 +750,8 @@ const createTerminalStore = () =>
             shareOpen: false,
             storyStartedAt: Date.now(),
             achievementToast: [],
-            endingToast: null
+            endingToast: null,
+            pendingEndingReveal: null
         } ) );
 
         renderScene( story, save.currentScene, gameState, true );
@@ -781,9 +797,14 @@ const createTerminalStore = () =>
         // in which case it carries the refreshed list to fold into the state.
         let nextUnlockedAchievements: AchievementId[] | null = null;
         // The just-unlocked ids to surface in the notification (toast), if any.
-        let nextAchievementToast: AchievementId[] | null = null;
-        // The ending discovery toast to surface, if this ending is new.
-        let nextEndingToast: EndingDiscoveryToast | null = null;
+        let nextAchievementToast: AchievementId[] = [];
+        // The ending discovery toast to surface, if this ending is new. Only
+        // read inside the `scene.isEnding` branch below, which always assigns
+        // it first.
+        let nextEndingToast: EndingDiscoveryToast | null;
+        // Holds the toast data above until the typewriter finishes displaying
+        // this scene's dialogue; stays null for non-ending scenes.
+        let nextPendingEndingReveal: PendingEndingReveal | null = null;
 
         if ( scene.isEnding )
         {
@@ -815,12 +836,12 @@ const createTerminalStore = () =>
                 {
                     nextUnlockedAchievements = unlocked.all;
                     nextAchievementToast = unlocked.newly;
-
-                    // Celebrate a freshly unlocked achievement with its own jingle.
-                    const hasNewAchievement = unlocked.newly.length > 0;
-                    if ( hasNewAchievement ) playAchievement();
                 }
             }
+
+            // The toast (and its jingle) are held back until the typewriter has
+            // finished displaying the ending's dialogue; see revealEndingToasts.
+            nextPendingEndingReveal = { achievementToast: nextAchievementToast, endingToast: nextEndingToast };
         }
         else if ( scene.choices.length > 0 )
         {
@@ -833,10 +854,35 @@ const createTerminalStore = () =>
             endingsFound,
             endingsTotal,
             unlockedAchievements: nextUnlockedAchievements ?? s.unlockedAchievements,
-            achievementToast: nextAchievementToast ?? s.achievementToast,
-            endingToast: nextEndingToast ?? s.endingToast,
+            pendingEndingReveal: nextPendingEndingReveal ?? s.pendingEndingReveal,
             lines: [ ...s.lines, ...lines.map( ( l ) => ( { ...l, id: nextId() } ) ) ]
         } ) );
+    };
+
+    /**
+     * Reveals the achievement/ending toast held back by {@link renderScene} for
+     * the ending just reached, once the typewriter has finished displaying its
+     * dialogue. Plays the achievement jingle in sync with the toast. No-op when
+     * nothing is pending (non-ending scenes, or an already-revealed ending).
+     *
+     * @author Claude
+     */
+    const revealEndingToasts = () =>
+    {
+        const pending = snapshot().pendingEndingReveal;
+        if ( !pending ) return;
+
+        update( ( s ) => ( {
+            ...s,
+            achievementToast: pending.achievementToast,
+            endingToast: pending.endingToast,
+            pendingEndingReveal: null
+        } ) );
+
+        // Celebrate a freshly unlocked achievement with its own jingle, timed to
+        // the toast's appearance rather than to the ending being reached.
+        const hasNewAchievement = pending.achievementToast.length > 0;
+        if ( hasNewAchievement ) playAchievement();
     };
 
     /**
@@ -1445,6 +1491,7 @@ const createTerminalStore = () =>
         resetAchievements,
         dismissAchievementToast,
         dismissEndingToast,
+        revealEndingToasts,
         openWiki,
         closeWiki,
         setWikiCategory,

@@ -40,6 +40,16 @@
     /** Bound to TerminalOutput — true while lines are being typed out. */
     let isAnimating = $state( false );
 
+    // Surfaces the achievement/ending toast for the ending just reached only
+    // once its dialogue has fully finished typing (or immediately when the
+    // typewriter is skipped/disabled), rather than the instant the ending
+    // scene is rendered.
+    $effect( () =>
+    {
+        if ( isAnimating ) return;
+        if ( $terminal.pendingEndingReveal ) terminal.revealEndingToasts();
+    } );
+
     // True when playing a generated story and sitting on an ending scene, so the
     // footer can offer restart/menu the same way classic stories surface hints.
     let atGeneratedEnding = $derived(
