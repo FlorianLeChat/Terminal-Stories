@@ -30,6 +30,7 @@ test.describe( "sound controls", () =>
         await expect( toggle ).toBeVisible();
         await expect( toggle ).toHaveAttribute( "aria-pressed", "false" );
 
+        // The volume slider is present on every viewport and disabled while muted.
         const volume = page.getByRole( "slider", { name: "Sound volume" } );
         await expect( volume ).toBeDisabled();
     } );

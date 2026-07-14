@@ -69,7 +69,7 @@
         oninput={handleVolume}
         disabled={!enabled}
         aria-label={m.sound_volume()}
-        class="sound-volume hidden sm:inline w-16 disabled:opacity-40"
+        class="sound-volume w-14 sm:w-16 disabled:opacity-40"
     />
 </span>
 
