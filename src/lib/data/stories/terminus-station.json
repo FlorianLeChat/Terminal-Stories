@@ -43,9 +43,9 @@
             "speaker": "commander",
             "text": [
                 "SHIP'S LOG, COMMANDER A. REYES, DAY 1",
-                "Docking successful at Terminus-7 Station. No response to hails for 72 hours.",
-                "The station drifts slightly out of its normal orbit. Systems partially online.",
-                "Dax and Vasiliev await my order in the airlock."
+                "Docking successful at Terminus-7 Station. No response to our hails for seventy-two hours. Not a distress beacon, not an automated handshake, just the long dead hiss of an open channel with no one left on the other end.",
+                "Through the viewport the station hangs against the black, one whole habitation ring gone dark, drifting a few degrees off its assigned orbit like a body that has stopped bothering to breathe. Systems only partially online.",
+                "Behind me, Dax and Vasiliev wait in the airlock, breath fogging the inside of their helmets. Neither of them has said a word since we matched locks."
             ],
             "choices": [
                 {
@@ -100,9 +100,9 @@
         {
             "id": "corridor-a",
             "text": [
-                "The emergency lights flash red. Half the panels have been torn off.",
-                "On the wall, someone has scrawled in jagged letters: 'DON'T LOOK FOR TANNER'.",
-                "Dr. Vasiliev crouches beside a dark stain on the floor.",
+                "The emergency lights pulse a slow, arterial red. Half the wall panels have been torn away from the inside, their edges peeled back as if something clawed its way out rather than in. The air is thick and warm and wrong: the recyclers are still running, feeding you someone else's last breaths.",
+                "On the bulkhead, gouged into the metal itself, jagged letters: 'DON'T LOOK FOR TANNER'.",
+                "Dr. Vasiliev crouches beside a dark stain spreading from beneath a sealed hatch. He rubs a little between two gloved fingers and holds them up to his lamp.",
                 {
                     "speaker": "doctor",
                     "text": "\"That's not human blood.\""
@@ -190,10 +190,10 @@
         {
             "id": "section-b",
             "text": [
-                "Eleven people. Barricaded in the Section B rec room.",
-                "Their faces when you walk in: relief, then... something else.",
-                "A woman steps forward. Chief mechanic, according to her badge. Her eyes are dry.",
-                "\"You came for us. Good. But one of you is going to have to stay.\""
+                "Eleven people, barricaded into the Section B rec room behind a wall of overturned lockers and lashed-down furniture. They have been living by the glow of a single emergency lantern and the dead blue light of a broken vending machine.",
+                "Their faces when you walk in: relief first, raw and total. Then, half a second later, something else: a flicker of calculation, quickly buried.",
+                "A woman steps forward, chief mechanic by her badge, jaw set, her eyes dry in a way no one's should be after six days of this.",
+                "\"You came for us. Good.\" A pause. \"But one of you is going to have to stay.\""
             ],
             "choices": [
                 {
@@ -209,6 +209,14 @@
                     "action": "\"We leave no one behind. Formation, move.\"",
                     "consequence": "In the corridor, the ducts open above you.",
                     "nextScene": "chaotic-evacuation"
+                },
+                {
+                    "id": "read-the-room",
+                    "requiresFlag": "scan-done",
+                    "text": "[SCAN] Pull up your pre-boarding bio-scan: the numbers don't add up",
+                    "action": "You bring up the readings you took before boarding and hold them against the eleven faces in front of you. Eleven human signatures. And one more that matched nothing in any database.",
+                    "consequence": "Your thumb hovers over the anomaly's marker. It is not out in the dark corridors. It is here, in this room, standing among the people who just begged you to save them.",
+                    "nextScene": "scan-confront"
                 }
             ]
         },
@@ -323,8 +331,6 @@
                 },
                 {
                     "id": "seal-airlock",
-            "music": "tense",
-            "sound": "impact",
                     "text": "Seal the airlock and launch immediately",
                     "action": "\"I'm sorry.\" You seal the airlock.",
                     "consequence": "The ship launches. Through the porthole, you see the station. Then darkness.",
@@ -401,9 +407,9 @@
         {
             "id": "engine-room",
             "text": [
-                "The engine room is half in darkness. The turbines idle low.",
-                "You locate the thermal control panel. Your fingers find the controls.",
-                "Behind you, breathing. Steady. Too steady."
+                "The engine room is a cathedral of dead machinery, half-drowned in darkness. The great turbines idle so low you feel them in your teeth more than hear them. Frost climbs the coolant lines; your breath hangs in the air and does not clear.",
+                "You find the thermal control panel by touch, wipe the rime from its display, and rest your fingers on the recessed keys.",
+                "Behind you: breathing. Slow. Even. Far too even for anyone who has been running these corridors tonight."
             ],
             "choices": [
                 {
@@ -447,6 +453,14 @@
                     "action": "You keep your weapon trained on it but you don't fire.",
                     "consequence": "\"I am what he knew. What he wanted.\" A pause. \"I can let you go.\"",
                     "nextScene": "alien-offer"
+                },
+                {
+                    "id": "read-the-tell",
+                    "requiresFlag": "knows-tanner",
+                    "text": "[LOG] Don't shoot, watch how it breathes",
+                    "action": "The audio log rings in your memory: it wears his face, but it doesn't breathe the same way. You lower your aim a fraction and you watch its chest instead of its eyes.",
+                    "consequence": "There it is. The rhythm is wrong: a beat too slow, too even, a machine imitating a bellows. Whatever this is, its disguise has a seam, and you have just found it.",
+                    "nextScene": "expose-mimic"
                 }
             ]
         },
@@ -478,10 +492,10 @@
         {
             "id": "systems-cut",
             "text": [
-                "The cold sets in fast. The station goes silent in a different way.",
-                "You gather the survivors. Dax keeps the count. Eleven. Still eleven.",
-                "The trek to the airlocks passes in absolute silence. As if the station were holding its breath.",
-                "Your ship is waiting."
+                "The cold comes down fast once the heaters die, and the station falls silent in a new and total way: the deep, patient hush of something that has decided to wait you out.",
+                "You gather the survivors and move. Dax keeps the count under his breath at every junction. Eleven. Still eleven. He says the number like a prayer, or a warning.",
+                "The trek back to the airlocks passes without a single word, boots ringing on frozen decking, everyone's eyes fixed on the black mouths of the ventilation ducts overhead.",
+                "Your ship is waiting, warm and bright and impossibly far away."
             ],
             "choices": [
                 {
@@ -490,6 +504,67 @@
                     "action": "\"Everyone aboard. We launch in three minutes.\"",
                     "consequence": "People file on. You count heads. Eleven plus your team. But...",
                     "nextScene": "ending-survival"
+                }
+            ]
+        },
+        {
+            "id": "scan-confront",
+            "music": "tense",
+            "sound": "heartbeat",
+            "text": [
+                "You don't raise your weapon. You raise your scanner, and you turn it slowly across the room, watching the anomaly marker crawl from face to face.",
+                "It stops on the chief mechanic. The dry-eyed woman who wanted one of you to stay behind.",
+                "\"There is a bio-signature in this room that isn't in any crew file,\" you say, evenly, to eleven frightened people. \"And it is standing right there.\"",
+                "The woman does not flinch. She smiles, slow and patient, and the temperature of the room seems to drop a full degree.",
+                {
+                    "speaker": "unknown",
+                    "text": "\"You're the first one who thought to check. The others only ever counted heads.\""
+                }
+            ],
+            "choices": [
+                {
+                    "id": "isolate-anomaly",
+                    "text": "Order the ten real survivors out and seal the anomaly in alone",
+                    "action": "\"Everyone behind me. Ten of you, to the airlock, now. Don't touch anything, don't look back.\" You keep the scanner and your weapon trained on the thing wearing a mechanic's face.",
+                    "consequence": "The survivors edge past you one by one. The impostor lets them go, its eyes never leaving yours, as the blast door grinds down between you.",
+                    "nextScene": "ending-headcount"
+                },
+                {
+                    "id": "panic-room",
+                    "text": "Shout the warning to the whole room at once",
+                    "action": "\"That's not one of you! Get away from her!\"",
+                    "consequence": "Panic detonates. People scramble in every direction, the lantern goes over, and in the sudden dark the thing among them is simply gone. You herd who you can toward the corridors.",
+                    "nextScene": "chaotic-evacuation"
+                }
+            ]
+        },
+        {
+            "id": "expose-mimic",
+            "music": "eerie",
+            "sound": "suspense",
+            "text": [
+                "\"You've got the face,\" you tell it, circling slow, keeping the thermal panel at your back. \"The voice. The smile. But you never learned to breathe. Tanner breathed like a man afraid of the dark. You don't breathe like anything at all.\"",
+                "The Tanner-thing tilts its head. The perfect smile holds, but something behind the eyes begins, visibly, to recalculate.",
+                {
+                    "speaker": "unknown",
+                    "text": "\"...Details. I have time to learn the details.\""
+                },
+                "\"No,\" you say. \"You don't.\" And your free hand finds the master coolant valve you have been standing in front of this whole time."
+            ],
+            "choices": [
+                {
+                    "id": "flood-cold",
+                    "text": "Vent the coolant and drop the room below freezing",
+                    "action": "You wrench the valve wide. Liquid-nitrogen vapour roars out in a white flood. The organism is ectothermic, Vasiliev said as much, and the cold hits it like a fist.",
+                    "consequence": "The thing that was Tanner seizes, its stolen face crazing over with frost, and topples rigid to the deck. You back out and seal the engine room on it, a monument in ice.",
+                    "nextScene": "ending-expose"
+                },
+                {
+                    "id": "hesitate-mimic",
+                    "text": "Hesitate, a part of you still sees Tanner's face",
+                    "action": "For half a heartbeat, the face wins. Your hand stalls on the valve.",
+                    "consequence": "Half a heartbeat is all it needs. It is gone into the ducts before the vapour clears, and you are running for the airlocks with the count already wrong.",
+                    "nextScene": "systems-cut"
                 }
             ]
         },
@@ -509,6 +584,8 @@
         },
         {
             "id": "ending-sacrifice",
+            "music": "melancholic",
+            "sound": "impact",
             "isEnding": true,
             "endingType": "bad",
             "text": [
@@ -548,6 +625,34 @@
                 "'I knew. I chose not to act.'",
                 "Sometimes, compassion and responsibility don't point the same way.",
                 "— ENDING: The Best of Intentions —"
+            ],
+            "choices": []
+        },
+        {
+            "id": "ending-headcount",
+            "music": "calm",
+            "isEnding": true,
+            "endingType": "neutral",
+            "text": [
+                "The blast door seals with the anomaly on the far side of it. Through the porthole, for just a moment, you watch the mechanic's face slacken and run like warm wax, no longer needing to pretend.",
+                "You launch with ten survivors and your crew intact. Ten, not eleven, because the eleventh was never human, and you were the only one who counted carefully enough to know it.",
+                "Terminus-7 shrinks behind you, sealed and quarantined, the thing you left inside it now truly, finally alone.",
+                "Your report will state exactly what you did, and why. The board may call it murder. You call it a headcount.",
+                "— ENDING: The Eleventh Signature —"
+            ],
+            "choices": []
+        },
+        {
+            "id": "ending-expose",
+            "music": "calm",
+            "isEnding": true,
+            "endingType": "good",
+            "text": [
+                "You reach the airlocks with the survivors and both of your crew, and for the first time since docking, you let yourself breathe.",
+                "The thing that wore Marcus Tanner's face is still back there, frozen mid-step in the dark of the engine room, undone by the one thing it could never counterfeit: the small, involuntary rhythm of a frightened human being staying alive.",
+                "Someone left that audio log for whoever came next, a warning gouged out of pure terror. It is the reason you are leaving Terminus-7 with everyone you brought aboard.",
+                "You will see the recording entered into the record, word for word. The dead earned that much.",
+                "— ENDING: The Tell —"
             ],
             "choices": []
         }

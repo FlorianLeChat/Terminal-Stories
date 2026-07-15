@@ -509,6 +509,7 @@
                     "text": "Mener tes hommes et protéger les archers menacés",
                     "action": "Tu rassembles une poignée de soldats autour de toi et vous vous jetez à la rencontre du détachement ennemi pour protéger les archers.",
                     "consequence": "Le choc est brutal, mais vous tenez bon. Sauvés, les archers reprennent leurs salves et déciment les lignes castillanes. Libérée de cette menace, Éléonore progresse jusqu'au cœur du dispositif ennemi.",
+                    "setsFlag": "archers-sauves",
                     "nextScene": "duel-defi"
                 },
                 {
@@ -516,6 +517,7 @@
                     "text": "Rester au côté d'Éléonore et couvrir ses flancs",
                     "action": "Tu choisis de ne pas quitter Éléonore et de garder ses arrières tandis qu'elle taille sa route vers le commandement ennemi.",
                     "consequence": "Dos à dos, vous repoussez chaque assaillant. Ta présence rassure les soldats, qui resserrent les rangs autour de vous et enrayent la percée castillane.",
+                    "setsFlag": "flanc-couvert",
                     "nextScene": "duel-defi"
                 },
                 {
@@ -563,8 +565,77 @@
                     "action": "Par pur orgueil, tu épargnes Éléonore et décides d'affronter Carlos toi-même.",
                     "consequence": "Tu t'avances seul vers Carlos, conscient de ton manque d'expérience en duel.",
                     "nextScene": "fin-incomprehensible"
+                },
+                {
+                    "id": "salve-archers",
+                    "requiresFlag": "archers-sauves",
+                    "text": "Ordonner aux archers que tu as sauvés de couvrir Éléonore",
+                    "action": "Tu lèves le bras vers les murailles, vers ces archers que tu as arrachés au détachement castillan quelques instants plus tôt. Ils n'attendaient que ton signal.",
+                    "consequence": "« POUR LE COMTE ! » Une pluie de flèches s'abat autour de Carlos, non pour le tuer, l'honneur du duel l'interdit, mais pour l'aveugler de poussière et de fer une fraction de seconde.",
+                    "nextScene": "fin-salve"
+                },
+                {
+                    "id": "charge-commune",
+                    "requiresFlag": "flanc-couvert",
+                    "text": "Refuser le duel singulier et fondre sur Carlos aux côtés d'Éléonore",
+                    "action": "Tu t'avances et te places à la droite d'Éléonore, épaule contre épaule. « Pas de duel. Vous vouliez une commandante seule à humilier, Carlos ? Vous nous aurez tous les deux. »",
+                    "consequence": "Éléonore te lance un regard, puis un sourire féroce. Derrière vous, les soldats que tu n'as pas quittés de toute la bataille resserrent les rangs, prêts à charger avec vous.",
+                    "nextScene": "assaut-coordonne"
                 }
             ]
+        },
+        {
+            "id": "assaut-coordonne",
+            "music": "heroic",
+            "sound": "impact",
+            "text": [
+                "Carlos rugit qu'on ne défie pas un fils de Castille par traîtrise, mais sa voix se perd déjà dans le fracas. Toi et Éléonore fondez sur lui de concert, et derrière vous s'ébranle la masse des soldats français que ta présence n'a jamais abandonnés.",
+                "Le duel qu'il espérait (un homme, une femme, l'honneur) se change en ce qu'il redoutait par-dessus tout : une armée soudée derrière deux chefs qui ne se quittent pas d'une semelle. Ses lieutenants, voyant leur commandant submergé, hésitent, puis refluent.",
+                {
+                    "speaker": "eleonore",
+                    "text": "« Vous voyez, Carlos ? » lance Éléonore en parant un coup destiné à ton flanc. « Voilà ce qu'un seigneur qui reste auprès des siens peut accomplir. »"
+                },
+                "Acculé, isolé, Carlos comprend qu'il a déjà perdu."
+            ],
+            "choices": [
+                {
+                    "id": "sommer-reddition",
+                    "text": "Sommer Carlos de se rendre plutôt que de l'abattre",
+                    "action": "Tu brises la garde de Carlos d'un coup concerté avec Éléonore, mais tu retiens ta lame contre sa gorge. « Rendez-vous, et vos hommes vivront. »",
+                    "consequence": "Le glaive d'Éléonore rejoint le tien contre le cou du Castillan. Vaincu, isolé de ses lieutenants, Carlos laisse tomber son arme dans la poussière.",
+                    "nextScene": "fin-union"
+                }
+            ]
+        },
+        {
+            "id": "fin-union",
+            "music": "heroic",
+            "isEnding": true,
+            "endingType": "good",
+            "text": [
+                "Carlos de Castille se rend, à genoux dans la poussière des arènes, devant un comte et une commandante qui n'ont jamais cessé de combattre côte à côte. Privées de leur chef, humiliées d'avoir été vaincues par l'union plutôt que par le fer d'un seul, les troupes castillanes déposent les armes.",
+                "Tu épargnes Carlos et le gardes en otage : monnaie d'échange, il vaudra bien plus vivant que mort. Cette clémence, autant que la victoire, se répand dans tout le royaume.",
+                "Les chroniques ne raconteront pas l'histoire d'un héros solitaire, ni celle d'une guerrière providentielle. Elles raconteront celle d'un comte qui, au lieu de courir après la gloire d'un duel, est resté auprès de sa commandante et de ses soldats jusqu'au bout, et qui, pour cela, a sauvé sa cité sans jamais la sacrifier à son orgueil.",
+                "La nouvelle de la reddition de Carlos court plus vite que les chevaux des messagers. Privées de leur commandant, et lui-même otage entre des mains françaises, les forces de Castille lèvent le siège et refluent vers la péninsule ibérique : l'invasion venue du sud s'arrête aux portes d'Arles. Le dernier rempart du royaume a tenu.",
+                "Libéré de la menace méridionale, le dauphin peut enfin retourner toutes ses forces contre les Anglais, au nord. Éléonore demeure à Arles ; ensemble, vous relevez les murailles éventrées et rendez à la cité meurtrie sa fierté. On se souviendra longtemps du comte qui a préféré rester auprès des siens plutôt que de courir après la gloire, et de la commandante aux cheveux d'or qui combattit à son côté. Vous avez, l'un par l'autre, changé le cours de la guerre et de l'histoire de la France et de l'Europe.",
+                "— FIN : « L'union fait la force » —"
+            ],
+            "choices": []
+        },
+        {
+            "id": "fin-salve",
+            "music": "heroic",
+            "isEnding": true,
+            "endingType": "good",
+            "text": [
+                "Aveuglé par la salve, Carlos recule d'un pas, un seul, mais c'est assez. Éléonore s'engouffre dans la faille et lui porte un coup fulgurant qui l'envoie au sol, désarmé, à sa merci.",
+                "Ce sont les archers que tu as sauvés qui ont fait pencher le duel. Ces hommes que le détachement castillan aurait massacrés sans ton intervention se sont souvenus de qui les avait couverts, et ils ont visé juste, au bon moment.",
+                "Éléonore laisse la vie sauve à Carlos et le fait prisonnier. Acclamée en héroïne, elle n'oublie pas de désigner, devant les troupes rassemblées, celui dont la clémence sur le champ de bataille a tout rendu possible : toi.",
+                "Carlos prisonnier, ses troupes privées de chef lèvent le siège et refluent vers la péninsule ibérique. Le royaume de France, que l'on croyait pris en tenaille, respire enfin du côté du sud : Arles, le dernier rempart, n'est pas tombée.",
+                "On relève les murailles, on pleure les morts, on rend grâce aux archers dont la loyauté a renversé la bataille. Loin au nord, le dauphin apprend qu'il n'aura pas à défendre deux fronts à la fois et peut se retourner tout entier contre les Anglais. Et dans les veillées d'Arles, on racontera longtemps l'histoire de ce comte qui, en épargnant une poignée d'hommes au plus fort du chaos, a sans le savoir sauvé sa cité, son royaume, et changé le cours de l'histoire de la France et de l'Europe.",
+                "— FIN : « La dette des archers » —"
+            ],
+            "choices": []
         },
         {
             "id": "fin-heroique",

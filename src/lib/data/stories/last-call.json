@@ -36,9 +36,9 @@
         {
             "id": "phone",
             "text": [
-                "11:47 PM. Your phone buzzes on the nightstand.",
-                "Unknown number.",
-                "You pick up, because detectives always pick up.",
+                "11:47 p.m. Your phone buzzes across the nightstand, rattling against a glass of water gone warm and a service pistol you haven't cleaned in a month.",
+                "Unknown number. No name, no location, just eight digits that shouldn't know this line exists.",
+                "You pick up, because detectives always pick up. It is either the first mistake of the night, or the last honest thing you do.",
                 {
                     "speaker": "voice",
                     "text": "\"Detective Morel. You have 13 minutes before it all comes crashing down.\""
@@ -132,10 +132,10 @@
         {
             "id": "meeting",
             "text": [
-                "12 Rue de la Roquette. A Haussmann-era building. A keypad on the door: 1419.",
-                "You go up. Third floor. The door is ajar.",
-                "Inside: a chair, a lamp, an envelope on a table.",
-                "And a voice in your earpiece, because your phone is still connected.",
+                "12 Rue de la Roquette. A Haussmann building with a dead bulb over the entrance and a keypad already blinking the code at you: 1419. The year, you notice. Someone chose it for you.",
+                "You climb to the third floor through a stairwell that smells of cold stone and old cigarettes. The door stands ajar, a blade of yellow light thrown across the landing.",
+                "Inside: a single chair, a lamp turned to face it like an interrogation, and a plain envelope centred on a bare table.",
+                "And a voice in your earpiece, calm, close, because your phone never stopped listening.",
                 {
                     "speaker": "voice",
                     "text": "\"The envelope. Open it.\""
@@ -276,6 +276,13 @@
                     "action": "You dial the Internal Affairs line. Hands steady.",
                     "consequence": "\"You're turning yourself in?\" The Voice sounds... almost admiring.",
                     "nextScene": "ending-confession"
+                },
+                {
+                    "id": "call-durand-witness",
+                    "text": "Call Durand now, with the technician beside you",
+                    "action": "You dial Durand's number. This time he answers on the second ring.",
+                    "consequence": "\"Morel? It's midnight. What's going on...\" His voice changes. \"...You're at la Roquette, aren't you.\"",
+                    "nextScene": "durand-knows"
                 }
             ]
         },
@@ -341,6 +348,22 @@
                     "action": "You don't reveal what you already know.",
                     "consequence": "\"On my way.\" He hangs up. You wait. The envelope is still on the table.",
                     "nextScene": "durand-arrival"
+                },
+                {
+                    "id": "remind-warned",
+                    "requiresFlag": "durand-warned",
+                    "text": "\"I called you an hour ago. You let it go to voicemail.\"",
+                    "action": "You lay it down quietly, without accusation, almost gently.",
+                    "consequence": "The silence that answers is not the Voice's kind of silence. It is the silence of a man who was hoping you would never say that.",
+                    "nextScene": "durand-guilt"
+                },
+                {
+                    "id": "play-witness",
+                    "requiresFlag": "witness-found",
+                    "text": "\"I have your technician. Camera four. And he talked.\"",
+                    "action": "You keep your voice level, the freed technician watching you from across the room.",
+                    "consequence": "You hear Durand's breath catch. Whatever he braced for tonight, it was not this.",
+                    "nextScene": "durand-cornered"
                 }
             ]
         },
@@ -435,6 +458,58 @@
             ]
         },
         {
+            "id": "durand-guilt",
+            "text": [
+                {
+                    "speaker": "partner",
+                    "text": "\"I saw the number.\" A long breath down the line. \"I couldn't pick up. Because if I did, I'd have had to tell you, and I've spent five years not telling you.\""
+                },
+                "Because you reached for him first tonight, before the photos, before the Voice's deadline, something in Durand has already decided how this ends.",
+                {
+                    "speaker": "partner",
+                    "text": "\"Stay where you are. I'm coming. No lawyers, no recording. Just us, and the truth, for once in our lives.\""
+                }
+            ],
+            "choices": [
+                {
+                    "id": "wait-for-durand",
+                    "text": "Set the phone down and wait for him, and mean it",
+                    "action": "You lay the phone on the table beside the envelope and you wait, the city silent three floors below.",
+                    "consequence": "For the first time in five years, you are not bracing for Durand. You are simply waiting for a friend.",
+                    "nextScene": "ending-headstart"
+                }
+            ]
+        },
+        {
+            "id": "durand-cornered",
+            "sound": "impact",
+            "text": [
+                {
+                    "speaker": "player",
+                    "text": "\"He's sitting right here, Durand. Camera four. He told me who paid him, for how long, and why.\""
+                },
+                "Silence. Not the calculating silence of the Voice, but the silence of a man who has just felt the floor open beneath him.",
+                {
+                    "speaker": "partner",
+                    "text": "\"...He was supposed to be insurance. Against you. In case you ever turned on me first.\""
+                },
+                "The Voice, still faint in your earpiece, says nothing now. This part was never its to script. You hold the one thing neither Durand nor the Voice can talk their way around: a living witness, and his testimony.",
+                {
+                    "speaker": "player",
+                    "text": "\"Then we do this properly. You, me, him, and a statement. Tonight.\""
+                }
+            ],
+            "choices": [
+                {
+                    "id": "take-it-in",
+                    "text": "Take the technician and his testimony straight to Internal Affairs",
+                    "action": "You help the technician to his feet, keep him close, and dial the after-hours line at Internal Affairs.",
+                    "consequence": "This time you are not confessing into a void. You are walking in with a witness, a name, and a paper trail.",
+                    "nextScene": "ending-leverage"
+                }
+            ]
+        },
+        {
             "id": "ending-confrontation",
             "isEnding": true,
             "endingType": "neutral",
@@ -523,6 +598,36 @@
                 "And the line goes dead forever.",
                 "What you make of this night is yours.",
                 "— ENDING: Facing the Mirror —"
+            ],
+            "choices": []
+        },
+        {
+            "id": "ending-headstart",
+            "music": "calm",
+            "isEnding": true,
+            "endingType": "good",
+            "text": [
+                "Durand arrives before dawn, coat thrown over his pyjamas, looking older than you have ever seen him.",
+                "You don't ambush each other. You don't perform for a hidden microphone. You lay the photographs on the table between you and you talk, the way you should have talked on the 15th of November, 2019.",
+                "By morning you have decided, together, to walk into the prosecutor's office. Not because the Voice cornered you, but because you called him first, and that small head start was enough to remember you were partners long before you were accomplices.",
+                "You both lose your badges. Neither of you loses the other.",
+                "The Voice never calls again. Whoever it was, it seems, only ever wanted exactly this.",
+                "— ENDING: The Head Start —"
+            ],
+            "choices": []
+        },
+        {
+            "id": "ending-leverage",
+            "music": "calm",
+            "isEnding": true,
+            "endingType": "neutral",
+            "text": [
+                "You walk into Internal Affairs at two in the morning with the camera-four technician at your side, and for once you are not the only one talking.",
+                "His testimony does what your word alone never could: it turns the Leclerc case from a rumour into a file. Durand is charged. So, in time, are you, but as the man who brought it in, not the one who buried it.",
+                "The technician is placed under protection. He spent five years afraid of a single phone call; now, he tells you later, he sleeps through the night for the first time in as long as he can remember.",
+                "You keep neither your badge nor your certainty. You gave a frightened man his life back, by first using his fear as a lever. You will spend a long time deciding what that makes you.",
+                "The Voice, when you think of it now, seems to have wanted the truth out cleanly. In the end, so did you.",
+                "— ENDING: State's Evidence —"
             ],
             "choices": []
         }

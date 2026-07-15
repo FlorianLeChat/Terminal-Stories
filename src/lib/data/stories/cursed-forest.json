@@ -119,9 +119,9 @@
         {
             "id": "treeline",
             "text": [
-                "The glow comes from an insect the size of your fist. A giant firefly, with translucent wings.",
-                "It flits toward you, hesitates, then heads off to the northeast.",
-                "Creatures like this don't exist in ordinary forests."
+                "The glow comes from an insect the size of your fist, a firefly grown monstrous, its translucent wings veined with the same cold light that leaks from its belly. It hovers at eye level, close enough that you feel the faint wind of its wings against your cheek.",
+                "It studies you the way a curious animal does, then drifts off to the northeast, pausing every few paces as if to make sure you follow.",
+                "Nothing this large, this luminous, this deliberate lives in an honest forest. Whatever else Mireval is, it is awake, and it has noticed you."
             ],
             "choices": [
                 {
@@ -143,8 +143,8 @@
         {
             "id": "weaver-cabin",
             "text": [
-                "The inside is cluttered with dried herbs, vials, and books whose titles read backward.",
-                "The old woman hands you a cup without looking at you. Her eyes are entirely white.",
+                "The inside is a warm chaos of dried herbs hung in bunches from the beams, glass vials furred with dust, and books whose titles read backward no matter how you turn them. A fire burns green in the hearth and gives off no smoke.",
+                "The old woman hands you a cup without once turning her head. Her eyes are white from lid to lid, blind as boiled eggs, and yet they track you across the room.",
                 {
                     "speaker": "old-weaver",
                     "text": "\"Sit down. I'll tell you what you came looking for, and what you stand to lose.\""
@@ -180,8 +180,8 @@
                     "id": "cross-bridge",
                     "text": "Cross the bridge",
                     "action": "You step onto the bridge. The planks creak with every step.",
-                    "consequence": "The faces turn their stone eyes toward you. They're waiting for something.",
-                    "nextScene": "forest-heart"
+                    "consequence": "The carved faces turn their stone eyes toward you. They are waiting for something.",
+                    "nextScene": "bridge-faces"
                 },
                 {
                     "id": "follow-stream",
@@ -189,6 +189,33 @@
                     "action": "You follow the current north.",
                     "consequence": "The source is a hollow tree whose trunk weeps a black sap.",
                     "nextScene": "source-tree"
+                }
+            ]
+        },
+        {
+            "id": "bridge-faces",
+            "music": "eerie",
+            "text": [
+                "You step onto the bridge and the planks moan beneath your boots, swollen black with a century of dead water. Below, the current turns over its slow inventory of coins, bones, and broken mirrors.",
+                "On every pillar the carved faces turn their stone eyes to follow you. These are no woodsman's crude idols: each is a portrait, eyelids heavy with sleep, mouths parted as if caught mid-word. Men, women, a child no taller than your knee. All of them waiting for you.",
+                "Halfway across, the faces lean inward as one, and a dry whisper rises from the grain of the wood, too low to make into words, insistent as a half-remembered prayer, pulling at something behind your ribs."
+            ],
+            "choices": [
+                {
+                    "id": "walk-on",
+                    "text": "Keep walking and refuse to answer them",
+                    "action": "You fix your eyes on the far bank and let the whispers break against your back like cold rain.",
+                    "consequence": "The faces settle, disappointed, back into their stone silence. The bridge delivers you to the white forest beyond.",
+                    "nextScene": "forest-heart"
+                },
+                {
+                    "id": "answer-faces",
+                    "requiresFlag": "spirit-calmed",
+                    "text": "Answer the faces with the Spirit's calm",
+                    "action": "You slow your step and speak to them as you once spoke to the Spirit at the water's edge: softly, without fear, asking only for passage and offering no bargain.",
+                    "consequence": "A warmth moves through the old wood. Somewhere behind you the Spirit stirs and takes your part; the whispers turn from pleading to welcome. What was a fragile truce has become something deeper.",
+                    "setsFlag": "spirit-ally",
+                    "nextScene": "forest-heart"
                 }
             ]
         },
@@ -224,9 +251,9 @@
         {
             "id": "lost",
             "text": [
-                "You walk. And walk again. The forest repeats itself in a loop.",
-                "The same twisted tree. The same moss-covered stone. The same crow watching you.",
-                "Exhaustion sets in. Night falls, or maybe it's always night here."
+                "You walk. And walk again. The forest repeats itself, a loop stitched together by some patient, malicious hand.",
+                "The same lightning-split tree. The same moss-furred stone. The same crow on the same dead branch, turning its head to keep one black eye on you. You have passed them three times now. Or thirty.",
+                "Exhaustion settles into your legs like cold water. Night comes down, or perhaps it was always night here, and you have only now found the strength to notice."
             ],
             "choices": [
                 {
@@ -281,9 +308,9 @@
         {
             "id": "depths",
             "text": [
-                "The forest grows denser. The ground disappears beneath a carpet of tangled roots.",
-                "Sounds follow you, not animals. More like breaths. Presences.",
-                "At last you reach a clearing. At its center: a white tree, colossal, its branches touching the low clouds."
+                "The forest thickens until the trees stand shoulder to shoulder, and the ground vanishes beneath a knotted carpet of roots that shift and settle under your weight like the flank of some sleeping beast.",
+                "Sounds trail you through the dark: not the scurry of animals, but slow, deliberate breaths, and now and then the wet sound of something turning over to watch you pass. You refuse it the satisfaction of looking back.",
+                "At last the trees fall away and you step into a clearing. At its center stands a white tree: colossal, pale as bone, its highest branches lost in the low grey cloud. The air here tastes of frost and of something older than frost."
             ],
             "choices": [
                 {
@@ -300,16 +327,17 @@
             "music": "dreamy",
             "sound": "reveal",
             "text": [
-                "The hollow tree is immense. Three men could not encircle it.",
-                "The black sap running from its trunk forms words in the earth: 'REMEMBER'.",
-                "Inside the hollow, something glows with a light you recognize."
+                "The hollow tree is immense: three men joining hands could not encircle it. Its bark is scored with old carvings, worn soft by rain: the same sleeping faces you will come to know, and above them, again and again, a single word gouged deep.",
+                "The black sap weeping from a split in the trunk pools in the snow and, as you watch, crawls into the shape of that word: 'REMEMBER'. Reading it, something settles cold and certain in your chest: you understand now what this forest hoards, and why. The heart of Mireval keeps what the living cannot bear to carry, and it does not give such things back for free.",
+                "Inside the hollow, something glows with a light you know better than you would like to admit."
             ],
             "choices": [
                 {
                     "id": "enter-tree",
                     "text": "Step into the hollow of the tree",
-                    "action": "You slip inside.",
-                    "consequence": "The space is impossible, far larger within. You find yourself facing the heart of the forest.",
+                    "action": "You slip inside, the word REMEMBER still burning behind your eyes.",
+                    "consequence": "The space is impossible, far larger within than without. You find yourself facing the heart of the forest, and you already half-know what it will ask of you.",
+                    "setsFlag": "knows-the-heart",
                     "nextScene": "forest-heart"
                 }
             ]
@@ -375,6 +403,22 @@
                     "consequence": "The tree lights up entirely. The faces in the bark smile.",
                     "nextScene": "ending-light",
                     "requiresFlag": "has-vial"
+                },
+                {
+                    "id": "commune-spirit",
+                    "text": "[SPIRIT] Call on the Spirit of the Forest to open the heart with you",
+                    "action": "You do not reach for the tree alone. You speak the Spirit's name into the dark and ask it to stand beside you.",
+                    "consequence": "The wind that has followed you all this way gathers at your shoulder and takes an almost-human shape. Together, you lay your hands on the warm bark.",
+                    "nextScene": "ending-communion",
+                    "requiresFlag": "spirit-ally"
+                },
+                {
+                    "id": "name-the-loss",
+                    "text": "[MEMORY] Name aloud what the tree guards",
+                    "action": "You remember what you learned of this place: what the tree hoards behind every sleeping face. So you name it, plainly, out loud.",
+                    "consequence": "The word leaves your mouth and the whole clearing shivers. The tree has been waiting a very long time for someone who came already knowing.",
+                    "nextScene": "ending-name",
+                    "requiresFlag": "knows-the-heart"
                 }
             ]
         },
@@ -421,6 +465,45 @@
                 "The Mireval Forest is no longer cursed.",
                 "And you, you go home, the vial empty but your heart full.",
                 "— ENDING: The Gift Given —"
+            ],
+            "choices": []
+        },
+        {
+            "id": "ending-communion",
+            "music": "calm",
+            "sound": "reveal",
+            "isEnding": true,
+            "endingType": "good",
+            "text": [
+                "Your hand and the Spirit's shape press to the bark in the same instant, and the white tree opens like a held breath finally let go.",
+                "The hundreds of faces do not scream. They wake. One after another they lift from the wood: a grandmother, a soldier, a child with a gap-toothed smile, and drift up through the branches like sparks off a fire, freed at last from the bargain that bound them here.",
+                {
+                    "speaker": "spirit",
+                    "text": "\"For a thousand winters I kept them, because no one would come and simply ask. You asked. You stayed. That is rarer than any courage.\""
+                },
+                "The Spirit turns to you, and for the first time its voice carries no threat, only something close to grief, and close to joy.",
+                {
+                    "speaker": "spirit",
+                    "text": "\"Go home, traveler. But come back, one day. A forest that has remembered how to let go still needs a friend who remembers why.\""
+                },
+                "You walk out of Mireval under a sky going pale with true dawn. Behind you, the trees are only trees again. Ahead lies the road. You did not take what the forest kept: you helped it give.",
+                "— ENDING: The Freeing —"
+            ],
+            "choices": []
+        },
+        {
+            "id": "ending-name",
+            "music": "melancholic",
+            "sound": "bell",
+            "isEnding": true,
+            "endingType": "neutral",
+            "text": [
+                "The name hangs in the frozen air. You had carried it unspoken for so long that saying it aloud feels like setting down a stone you had forgotten you were holding.",
+                "The tree answers. From the tangle of sleeping faces, one rises to the surface of the bark, the one you crossed a cursed forest to find, and for a single unbearable moment it looks back at you, and knows you.",
+                "Then it fades, gently, the way frost melts from a window when the sun finally reaches it. No triumph. No curse undone. Only a debt, at last, spoken aloud and owned.",
+                "You leave Mireval carrying the same grief you brought into it, but lighter now, because you finally called it by its name.",
+                "Sometimes that is the only thing a cursed place has to give: not your loss returned, but the words to hold it.",
+                "— ENDING: The Naming —"
             ],
             "choices": []
         }
