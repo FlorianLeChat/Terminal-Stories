@@ -44,6 +44,24 @@
     };
 
     /**
+     * Resolves the display label for a speaker id, for use as a tooltip on
+     * the (visually truncated) speaker select.
+     *
+     * @param speakerId - The speaker id, or the "no speaker" sentinel.
+     * @returns The label shown to the user for that speaker.
+     * @author Claude
+     */
+    const speakerLabel = ( speakerId: string ): string =>
+    {
+        if ( speakerId === NO_SPEAKER ) return m.editor_speaker_default();
+        if ( speakerId === "narrator" ) return m.editor_speaker_narrator();
+
+        const character = draft.characters.find( ( c ) => c.id === speakerId );
+
+        return character?.name !== "" ? character?.name ?? speakerId : speakerId;
+    };
+
+    /**
      * Updates the text of the entry at the given position, preserving its
      * speaker override when present.
      *
@@ -389,8 +407,9 @@
                     <li class="flex gap-2 items-start">
                         <select
                             value={entrySpeaker( entry )}
-                            class="w-32 shrink-0 bg-terminal-bg border border-terminal-dim/40 rounded px-2 py-1 text-terminal-green text-xs outline-none focus:border-terminal-green"
+                            class="w-36 shrink-0 truncate bg-terminal-bg border border-terminal-dim/40 rounded px-2 py-1 text-terminal-green text-xs outline-none focus:border-terminal-green"
                             aria-label={m.editor_entry_speaker_aria()}
+                            title={speakerLabel( entrySpeaker( entry ) )}
                             onchange={( e ) => handleEntrySpeakerChange( i, e )}
                         >
                             <option value={NO_SPEAKER}>{m.editor_speaker_default()}</option>

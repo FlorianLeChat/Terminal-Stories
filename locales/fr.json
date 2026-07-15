@@ -121,7 +121,7 @@
 	"custom_err_too_large": "Ce fichier est trop volumineux pour être importé.",
 	"custom_err_unknown": "L'opération a échoué. Réessayez.",
 	"custom_export_button": "Exporter",
-	"custom_forked_from": "dupliquée de {title}",
+	"custom_forked_from": "dupliquée de « {title} »",
 	"custom_import_button": "⇪ Importer une histoire (.json)",
 	"custom_intro": "Créez vos propres histoires, dupliquez celles du catalogue et partagez-les sous forme de fichiers. Tout reste privé sur cet appareil, et les succès ne sont pas disponibles pour les histoires personnalisées.",
 	"custom_new_button": "+ Nouvelle histoire",

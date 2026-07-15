@@ -121,7 +121,7 @@
 	"custom_err_too_large": "This file is too large to be imported.",
 	"custom_err_unknown": "The operation failed. Please try again.",
 	"custom_export_button": "Export",
-	"custom_forked_from": "forked from {title}",
+	"custom_forked_from": "forked from \"{title}\"",
 	"custom_import_button": "⇪ Import a story (.json)",
 	"custom_intro": "Create your own stories, fork the catalog ones, and share them as files. Everything stays private on this device, and achievements are not available for custom stories.",
 	"custom_new_button": "+ New story",

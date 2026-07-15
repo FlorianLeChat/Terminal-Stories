@@ -1,0 +1,755 @@
+{
+    "id": "l-affaire-du-raton-laveur",
+    "title": "L'affaire du raton-laveur",
+    "genre": "detective",
+    "language": "Français",
+    "universe": "Union Soviétique",
+    "description": "En plein déclin, à quelques jours de la chute de l'URSS, un inspecteur de police berlinois est confronté à une affaire qui pourrait mettre à mal des dirigeants soviétiques. Entre intrigue politique et corruption, arrivera-t-il à résoudre cette affaire avant que le pays ne s'effondre ?",
+    "tags": [
+        "guerre froide",
+        "corruption",
+        "espionnage",
+        "hiver"
+    ],
+    "author": "Florian Trayon",
+    "music": "tense",
+    "characters": [
+        {
+            "id": "werner",
+            "name": "Inspecteur Alexander Werner",
+            "role": "protagonist"
+        },
+        {
+            "id": "neumann",
+            "name": "Inspecteur Thorsten Neumann",
+            "role": "ally"
+        },
+        {
+            "id": "konig",
+            "name": "Commissaire König",
+            "role": "antagonist"
+        },
+        {
+            "id": "artemiev",
+            "name": "Leonid Artemiev",
+            "role": "antagonist"
+        },
+        {
+            "id": "aleksandrova",
+            "name": "Agent A.",
+            "role": "ally"
+        },
+        {
+            "id": "wright",
+            "name": "Angela Wright",
+            "role": "ally"
+        }
+    ],
+    "startScene": "bureau",
+    "scenes": [
+        {
+            "id": "bureau",
+            "text": [
+                "Berlin, décembre 1991. Le radiateur de fonte de ton bureau a rendu l'âme depuis trois jours, et ton haleine dessine des volutes blanches au-dessus de la paperasse. Dehors, la neige tombe sans relâche sur l'ancien secteur soviétique : sur les façades grises de la Karl-Marx-Allee, sur les Trabant abandonnées le long des trottoirs, sur les casernes de l'Armée rouge qui n'ont pas encore plié bagage.",
+                "À la radio, un présentateur annonce d'une voix lasse que Gorbatchev n'a presque plus de pays à gouverner. L'Union soviétique s'effondre par plaques entières, comme la glace sur la Spree.",
+                "Toi, inspecteur Alexander Werner, ancien de la Volkspolizei recyclé dans la nouvelle police de Berlin réunifiée, tu comptes les jours qui te séparent d'une retraite sans gloire. Puis la porte s'ouvre en coup de vent : ton binôme, l'inspecteur Thorsten Neumann, entre en secouant la neige de son manteau.",
+                {
+                    "speaker": "neumann",
+                    "text": "« Werner. On a un corps sur la berge de la Spree, à Friedrichshain. Et tu ne vas pas aimer : la victime avait un passeport diplomatique soviétique. »"
+                }
+            ],
+            "choices": [
+                {
+                    "id": "filer-scene",
+                    "text": "Attraper ton manteau et filer sur les lieux",
+                    "action": "Tu enfiles ton manteau élimé et tu suis Neumann dans l'escalier glacé.",
+                    "consequence": "La Wartburg de service peine à démarrer dans le froid mordant, puis vous filez vers la Spree, les essuie-glaces luttant contre les flocons.",
+                    "nextScene": "scene-crime"
+                },
+                {
+                    "id": "interroger-neumann",
+                    "text": "Demander à Neumann ce qu'il sait déjà",
+                    "action": "Tu le retiens par la manche : « Deux minutes. Qu'est-ce qu'on sait ? »",
+                    "consequence": "Il pose une fesse sur le coin de ton bureau et sort son calepin corné.",
+                    "nextScene": "bureau-contexte"
+                }
+            ]
+        },
+        {
+            "id": "bureau-contexte",
+            "text": [
+                {
+                    "speaker": "neumann",
+                    "text": "« La victime, c'est un dénommé Grigori Sokolov. Comptable de la mission commerciale soviétique, ici à Berlin. Un petit gris, le genre qu'on ne remarque jamais. »"
+                },
+                {
+                    "speaker": "neumann",
+                    "text": "« Sauf que ça fait deux semaines qu'il traînait dans les mauvais coins de l'ancien secteur. Et ce matin, un pêcheur l'a trouvé la tête prise dans la glace. »"
+                },
+                "Neumann referme son calepin. Par la fenêtre givrée, une colonne de camions militaires soviétiques passe lentement, phares allumés en plein jour, en route vers l'ouest et le rapatriement. Toute une armée qui s'en va, emportant Dieu sait quoi dans ses caisses."
+            ],
+            "choices": [
+                {
+                    "id": "vers-scene",
+                    "text": "En savoir plus directement sur place",
+                    "action": "« Un comptable soviétique mort à quelques jours de la fin de l'URSS. Allons voir ça de nos yeux. »",
+                    "consequence": "Vous descendez vers la Wartburg, dont le moteur toussote dans l'air glacial.",
+                    "nextScene": "scene-crime"
+                }
+            ]
+        },
+        {
+            "id": "scene-crime",
+            "music": "mystery",
+            "sound": "wind",
+            "text": [
+                "La berge de la Spree est figée sous une croûte de neige sale. Le fleuve charrie des plaques de glace grises qui s'entrechoquent avec un bruit sourd. Un vent coupant venu de l'est te gifle le visage et s'infiltre sous le manteau.",
+                "Le corps de Grigori Sokolov gît à moitié dans l'eau glacée, le manteau raidi par le gel. Un jeune agent en faction bat la semelle, le nez rouge, visiblement pressé d'en finir. Pas de trace de lutte évidente : juste un homme, seul, au bord d'un fleuve mourant.",
+                "Un peu plus loin, emmitouflé dans une chapka usée jusqu'à la corde, un vieux pêcheur attend, celui qui a découvert le corps."
+            ],
+            "choices": [
+                {
+                    "id": "fouiller-corps",
+                    "text": "Fouiller le corps avant que le froid ne durcisse tout",
+                    "action": "Tu t'agenouilles dans la neige et tu fouilles les poches raidies du mort, les doigts déjà gourds.",
+                    "consequence": "Sous le manteau trempé, tes doigts rencontrent du carton et du métal.",
+                    "nextScene": "indice-corps"
+                },
+                {
+                    "id": "interroger-temoin",
+                    "text": "Interroger le vieux pêcheur",
+                    "action": "Tu rejoins le pêcheur, qui te tend d'office un thermos de thé brûlant.",
+                    "consequence": "Il parle un allemand rocailleux, teinté d'un vieil accent silésien.",
+                    "nextScene": "indice-temoin"
+                }
+            ]
+        },
+        {
+            "id": "indice-corps",
+            "text": [
+                "Dans la poche intérieure, tu trouves trois choses. Une pochette d'allumettes d'un bar, le « Der Waschbär », le Raton-laveur, avec une adresse dans les ruelles derrière la gare de l'Est. Une clé de consigne numérotée. Et, épinglé sous le revers, un petit insigne d'étain : un raton-laveur stylisé, les pattes plongées dans l'eau.",
+                "Rien qui ressemble à de l'argent ou à des papiers de valeur. Pour un comptable soviétique en pleine débâcle, c'est étrange.",
+                {
+                    "speaker": "neumann",
+                    "text": "« Un raton-laveur ? Drôle de fétiche pour un apparatchik. »"
+                }
+            ],
+            "choices": [
+                {
+                    "id": "vers-konig-1",
+                    "text": "Rentrer au commissariat consigner tout ça",
+                    "action": "Tu glisses les indices dans un sachet et vous rentrez au chaud, les mains bleuies.",
+                    "consequence": "À peine arrivé, le planton te prévient : le commissaire König veut te voir. Tout de suite.",
+                    "nextScene": "konig-convocation"
+                }
+            ]
+        },
+        {
+            "id": "indice-temoin",
+            "text": [
+                "Le vieux souffle sur son thé. « Je l'ai vu avant-hier soir, votre bonhomme. Vivant. Il parlait avec un autre, un grand, manteau de cuir, une plaque de la mission. Ils se disputaient. »",
+                "« L'autre lui a fourré quelque chose dans la poche, une pochette d'allumettes je crois, et il a lâché un mot. Un nom d'animal. En russe. » Le pêcheur hausse les épaules. « Le russe, vous savez... quarante ans que je l'entends, et toujours pas un mot. »",
+                "Il désigne du menton la façade lointaine d'une caserne soviétique. « Tout ce que je sais, c'est que les gens de là-bas vendent tout ce qu'ils peuvent avant de rentrer chez eux. Même leurs morts, on dirait. »"
+            ],
+            "choices": [
+                {
+                    "id": "vers-konig-2",
+                    "text": "Le remercier et rentrer au commissariat",
+                    "action": "Tu notes son témoignage et tu le laisses à son thé et à son fleuve gelé.",
+                    "consequence": "De retour au chaud, le planton te prévient : le commissaire König veut te voir. Tout de suite.",
+                    "nextScene": "konig-convocation"
+                }
+            ]
+        },
+        {
+            "id": "konig-convocation",
+            "text": [
+                "Le bureau du commissaire König est le seul étage encore correctement chauffé du bâtiment. König, lui, a survécu à tout : à la RDA, à la Stasi, à la réunification. Un homme qui a toujours su de quel côté souffle le vent. Il ne lève pas les yeux de son dossier.",
+                {
+                    "speaker": "konig",
+                    "text": "« Sokolov. Un accident. Un ivrogne soviétique qui glisse sur la glace et se noie. Ça arrive tous les hivers. »"
+                },
+                {
+                    "speaker": "konig",
+                    "text": "« Tu classes ça en accident, ou au pire en vol qui a mal tourné, et tu passes à autre chose. L'URSS meurt dans huit jours, Werner. Personne n'a envie de remuer la vase d'un fleuve gelé. »"
+                }
+            ],
+            "choices": [
+                {
+                    "id": "accepter-facade",
+                    "text": "Acquiescer... et enquêter en douce",
+                    "action": "Tu hoches la tête. « Bien sûr, commissaire. Vol qui a mal tourné. » Mais tu n'en penses pas un mot.",
+                    "consequence": "König te congédie d'un geste. Dans le couloir, tu retrouves Neumann : vous n'allez rien classer du tout.",
+                    "nextScene": "enquete"
+                },
+                {
+                    "id": "protester",
+                    "text": "Protester : ce n'est pas un accident",
+                    "action": "« Un comptable qui ne boit pas, retrouvé sans un rouble alors qu'il devrait crouler sous les billets ? Ce n'est pas un accident, commissaire. »",
+                    "consequence": "Le visage de König se ferme. Il te fixe longuement, par-dessus ses lunettes.",
+                    "nextScene": "konig-defiance"
+                }
+            ]
+        },
+        {
+            "id": "konig-defiance",
+            "text": [
+                {
+                    "speaker": "konig",
+                    "text": "« Écoute-moi bien, Werner. Tu es un vieux cheval de la Volkspolizei qu'on a bien voulu garder. Un rien, et tu finis dehors, sans pension, dans ce pays neuf qui ne veut plus de gens comme nous. »"
+                },
+                {
+                    "speaker": "konig",
+                    "text": "« Alors tu vas être prudent. Très prudent. » Il se replonge dans son dossier. « Et surveille ton petit camarade Neumann. Ces temps-ci, on ne sait jamais pour qui les gens travaillent vraiment. »"
+                },
+                "Tu ressors, la mâchoire serrée. Neumann t'attend dans le couloir glacé, son calepin déjà à la main."
+            ],
+            "choices": [
+                {
+                    "id": "vers-enquete",
+                    "text": "Rejoindre Neumann et décider par où commencer",
+                    "action": "« Le commissaire veut qu'on enterre l'affaire », dis-tu à Neumann. « Justement. Creusons. »",
+                    "consequence": "Vous vous isolez dans la cage d'escalier, loin des oreilles indiscrètes, pour faire le point.",
+                    "nextScene": "enquete"
+                }
+            ]
+        },
+        {
+            "id": "enquete",
+            "text": [
+                "Dans la cage d'escalier, à l'abri des regards, vous étalez le peu que vous avez. Deux pistes se dessinent, et le temps vous manque : dans quelques jours, il n'y aura plus d'URSS, plus de mission, plus rien à quoi se raccrocher.",
+                {
+                    "speaker": "neumann",
+                    "text": "« La logeuse de Sokolov me l'a dit : il ne faisait confiance à personne. Il planquait tout chez lui, dans son appartement de Prenzlauer Berg. Si on veut trouver ses secrets, c'est là qu'ils sont. »"
+                },
+                {
+                    "speaker": "neumann",
+                    "text": "« L'autre piste, c'est ce bar, le Waschbär. Le repaire des combinards de l'ancien secteur. Plus dangereux, et rien ne dit qu'on y apprendra quoi que ce soit. À toi de voir. »"
+                }
+            ],
+            "choices": [
+                {
+                    "id": "vers-appartement",
+                    "text": "L'appartement de Sokolov, là où il planquait tout",
+                    "action": "« Ses secrets sont chez lui. On commence par là. »",
+                    "consequence": "Vous filez vers Prenzlauer Berg sous une neige de plus en plus dense, qui étouffe le bruit de la ville.",
+                    "nextScene": "appartement"
+                },
+                {
+                    "id": "vers-bar",
+                    "text": "Le bar Der Waschbär, le repaire des combinards",
+                    "action": "« Les réponses sont là où les hommes parlent. Le bar. »",
+                    "consequence": "Vous vous enfoncez dans les ruelles sombres derrière la gare de l'Est, là où les réverbères sont brisés depuis longtemps.",
+                    "nextScene": "bar"
+                }
+            ]
+        },
+        {
+            "id": "appartement",
+            "sound": "suspense",
+            "text": [
+                "L'appartement de Sokolov, au quatrième étage sans ascenseur d'un immeuble décrépit, sent le tabac froid et la poussière. Le papier peint se décolle par plaques humides. Sur les étagères, une passion incongrue : des dizaines d'animaux empaillés, figés dans des poses grotesques. Des renards, des corneilles, un lièvre borgne.",
+                "Et, trônant au centre, énorme, le regard de verre fixe : un raton-laveur empaillé, les pattes tendues devant lui, comme s'il lavait éternellement quelque chose d'invisible.",
+                "Un craquement dans la cage d'escalier. Peut-être rien. Peut-être quelqu'un. Le temps presse."
+            ],
+            "choices": [
+                {
+                    "id": "eventrer-raton",
+                    "text": "Éventrer le raton-laveur empaillé",
+                    "action": "Tu retournes l'animal et tu fends la couture du ventre d'un coup de canif.",
+                    "consequence": "Sous la bourre, tes doigts trouvent un étui de cuir plat : un carnet de comptes serré d'une écriture minuscule, et une bobine de microfilm.",
+                    "setsFlag": "registre",
+                    "nextScene": "appartement-suite"
+                },
+                {
+                    "id": "partir-discret",
+                    "text": "Ne pas t'attarder et filer avant d'être surpris",
+                    "action": "Le craquement se répète, plus proche. Tu fais signe à Neumann : on file.",
+                    "consequence": "Vous dévalez l'escalier de service. Vous êtes ressortis vivants, mais les mains vides.",
+                    "nextScene": "appartement-suite"
+                }
+            ]
+        },
+        {
+            "id": "appartement-suite",
+            "text": [
+                "Dehors, la nuit est tombée d'un coup, comme toujours en hiver ici. Les réverbères jettent une lumière jaune et malade sur la neige piétinée. Une Volga noire est garée au coin de la rue, moteur allumé, les vitres embuées. Elle ne bouge pas. Elle ne fait qu'attendre.",
+                "Vous pressez le pas, le col relevé. Ce soir, quelqu'un sait déjà que vous fouinez là où il ne faut pas."
+            ],
+            "choices": [
+                {
+                    "id": "vers-contact",
+                    "text": "Rentrer et attendre la suite",
+                    "action": "Vous vous fondez dans la foule clairsemée du métro, l'oeil sur les reflets dans les vitres.",
+                    "consequence": "Le lendemain matin, une enveloppe sans timbre t'attend, glissée sous ta porte.",
+                    "nextScene": "contact-a"
+                }
+            ]
+        },
+        {
+            "id": "bar",
+            "music": "eerie",
+            "text": [
+                "Le Waschbär est une cave enfumée où l'on paie en marks, en roubles, en dollars, en cartouches de cigarettes, en tout sauf en confiance. Des soldats soviétiques en fin de service, des trafiquants, des filles qui ont froid. Au-dessus du comptoir, une enseigne repeinte à la main : un raton-laveur qui se lave les pattes dans une chope de bière.",
+                "Tu montres discrètement l'insigne d'étain au barman. Son sourire se fige. Autour de toi, deux ou trois nuques se raidissent.",
+                "Au fond de la salle, un homme en manteau de cuir te fixe. Le même que le pêcheur a décrit. Il ne détourne pas les yeux ; au contraire, il te grave dans sa mémoire.",
+                "Le barman se penche vers toi, la voix basse. « Le raton-laveur, mon ami, c'est celui qui lave l'argent. Le comptable. Et vous, vous posez bien trop de questions pour quelqu'un qui tient à passer l'hiver. »"
+            ],
+            "choices": [
+                {
+                    "id": "bar-partir",
+                    "text": "Encaisser l'avertissement et sortir sans te retourner",
+                    "action": "Tu poses une pièce sur le comptoir et tu remontes lentement vers l'air glacé, la nuque brûlante sous les regards.",
+                    "consequence": "L'homme en cuir te suit des yeux jusqu'à la porte. Désormais, eux aussi savent qui tu es.",
+                    "setsFlag": "menace",
+                    "nextScene": "contact-a"
+                }
+            ]
+        },
+        {
+            "id": "contact-a",
+            "sound": "static",
+            "text": [
+                "L'enveloppe ne contient qu'une fréquence radio et une heure. À l'heure dite, entre deux nappes de grésillement, une voix de femme perce, calme, en allemand teinté d'un léger accent russe.",
+                {
+                    "speaker": "aleksandrova",
+                    "text": "« Inspecteur Werner. Appelez-moi Agent A. Nous voulons la même chose, vous et moi : savoir qui a tué Grigori Sokolov, et pourquoi. »"
+                },
+                {
+                    "speaker": "aleksandrova",
+                    "text": "« Retrouvez-moi demain, au mémorial soviétique de Treptow, sous la statue du soldat. Venez seul. Le temps nous est compté, à vous comme à moi. »"
+                }
+            ],
+            "choices": [
+                {
+                    "id": "accepter-rdv",
+                    "text": "Accepter le rendez-vous",
+                    "action": "Tu notes l'heure et le lieu. Une piste, enfin, ou bien un piège.",
+                    "consequence": "Le lendemain, tu t'enfonces seul dans la neige du parc de Treptow.",
+                    "nextScene": "rdv-a"
+                },
+                {
+                    "id": "refuser-rdv",
+                    "text": "Te méfier et refuser de jouer son jeu",
+                    "action": "Tu coupes la radio. Une inconnue qui te donne rendez-vous seul, c'est ainsi qu'on disparaît, à Berlin.",
+                    "consequence": "Tu choisis de rester avec Neumann et de creuser à ta manière, à l'ancienne.",
+                    "nextScene": "mefiance"
+                }
+            ]
+        },
+        {
+            "id": "mefiance",
+            "text": [
+                "Tu ne te fies qu'au vieux réflexe de flic : suivre l'argent, seul avec Neumann, sans filet russe. Pendant deux jours, vous remontez la piste des transferts, des comptes de la mission commerciale, des Volga noires qui font la navette vers l'ouest, pleines à l'aller, vides au retour.",
+                "Un nom finit par émerger, toujours le même, murmuré avec crainte : Leonid Artemiev. Un haut responsable soviétique, officiellement attaché commercial. Officieusement, l'homme qui fait sortir la fortune du Parti avant que le rideau ne tombe pour de bon.",
+                "Mais à mesure que vous approchez, l'étau se resserre. Le troisième soir, en rentrant chez toi, tu sens que quelque chose a changé dans l'air de la cage d'escalier."
+            ],
+            "choices": [
+                {
+                    "id": "mefiance-vers-pression",
+                    "text": "Continuer, quoi qu'il en coûte",
+                    "action": "Trop tard pour reculer : tu tiens le fil, tu ne le lâcheras pas.",
+                    "consequence": "Ce soir-là, en poussant la porte de ton immeuble, tu entends un déclic sec dans l'obscurité.",
+                    "nextScene": "pression"
+                }
+            ]
+        },
+        {
+            "id": "rdv-a",
+            "text": [
+                "Le mémorial aux soldats soviétiques de Treptow écrase le ciel de plomb : un géant de bronze, un enfant sauvé dans un bras, l'épée qui brise la croix gammée dans l'autre. À ses pieds, minuscule dans un manteau sombre, une femme t'attend. Agent A.",
+                {
+                    "speaker": "aleksandrova",
+                    "text": "« Sokolov tenait les comptes d'une opération que nous appelons, en interne, le Raton-laveur. Blanchir l'or et les caisses du Parti à travers Berlin, avant la dissolution. Des centaines de millions, inspecteur. »"
+                },
+                {
+                    "speaker": "aleksandrova",
+                    "text": "« L'homme qui la dirige s'appelle Leonid Artemiev. Sokolov a voulu parler, ou se servir au passage. Il est mort. Moi, je sers ceux qui veulent que cette fortune volée revienne au peuple, pas qu'elle engraisse la prochaine génération de vautours. Il me faut ses comptes. Et il vous faut ma protection. »"
+                },
+                "Elle te tend une main gantée. Ses yeux ne trahissent rien, ni le mensonge, ni la vérité."
+            ],
+            "choices": [
+                {
+                    "id": "accorder-confiance",
+                    "text": "Lui serrer la main et lui accorder ta confiance",
+                    "action": "Tu prends sa main gantée. Dans ce pays qui s'effondre, il faut bien parier sur quelqu'un.",
+                    "consequence": "« Marché conclu, Agent A. » Elle esquisse l'ombre d'un sourire, puis disparaît dans la neige.",
+                    "setsFlag": "confiance-a",
+                    "nextScene": "pression"
+                },
+                {
+                    "id": "prudence-a",
+                    "text": "Rester prudent et ne rien lui promettre",
+                    "action": "« Je note. Mais je ne promets rien à quelqu'un dont j'ignore jusqu'au vrai nom. »",
+                    "consequence": "Elle hoche la tête, sans insister. « Prudent. Peut-être trop. Vous savez où me trouver. » Puis elle s'efface.",
+                    "nextScene": "pression"
+                }
+            ]
+        },
+        {
+            "id": "pression",
+            "music": "action",
+            "sound": "impact",
+            "text": [
+                "Le déclic, c'était un cran de sûreté. Une silhouette jaillit de l'ombre de la cage d'escalier, un pistolet muni d'un silencieux au poing. La détonation claque, mate ; le plâtre explose à un centimètre de ta tempe.",
+                "Neumann, surgi derrière toi, plaque le tireur contre le mur. La lutte est brève, brutale. L'homme s'échappe dans la nuit en boitant, laissant tomber un objet sur le carrelage : une douille, et une plaque de la mission commerciale soviétique.",
+                "Vous restez là, le souffle court, dans l'odeur de poudre et de plâtre. Le message est clair : vous êtes allés trop loin."
+            ],
+            "choices": [
+                {
+                    "id": "riposter",
+                    "text": "Reprendre tes esprits et sécuriser les lieux",
+                    "action": "Tu ramasses la douille d'une main tremblante et tu barricades la porte avec la commode.",
+                    "consequence": "Neumann s'assoit lourdement sur une marche, livide, mais vivant.",
+                    "nextScene": "apres-attentat"
+                },
+                {
+                    "id": "reconnaitre-tueur",
+                    "requiresFlag": "menace",
+                    "text": "Reconnaître le tueur : c'est l'homme du bar",
+                    "action": "Aucun doute : ce boitement, ce manteau de cuir. C'est l'homme qui te fixait au fond du Waschbär.",
+                    "consequence": "Tu sais désormais à quoi ressemble ton ennemi. Mince consolation : lui aussi te connaît, maintenant.",
+                    "nextScene": "apres-attentat"
+                }
+            ]
+        },
+        {
+            "id": "apres-attentat",
+            "text": [
+                "Plus tard dans la nuit, autour d'un fond de vodka bue pour faire taire le tremblement des mains, Neumann te dévisage. La question flotte entre vous, lourde comme la neige au-dehors : jusqu'où peux-tu lui faire confiance ? König t'a mis en garde contre lui. Mais c'est Neumann qui vient de te sauver la vie.",
+                {
+                    "speaker": "neumann",
+                    "text": "« Werner. On est allés trop loin pour reculer. Mais si on continue, on y va ensemble, sans plus rien se cacher. Ou alors on arrête tout, ce soir. »"
+                }
+            ],
+            "choices": [
+                {
+                    "id": "confier-neumann",
+                    "text": "Tout lui dire et faire front commun",
+                    "action": "Tu poses sur la table ce que tu as, et tu lui racontes tout : König, l'insigne, Agent A., Artemiev.",
+                    "consequence": "Neumann encaisse en silence, puis hoche la tête, résolu. Désormais, vous êtes deux contre le reste du monde.",
+                    "setsFlag": "neumann",
+                    "nextScene": "agente-us"
+                },
+                {
+                    "id": "distance-neumann",
+                    "text": "Le tenir à distance : tu ne sais plus qui croire",
+                    "action": "Tu lui ressers un verre et tu détournes la conversation. Certaines choses, tu les garderas pour toi seul.",
+                    "consequence": "Neumann comprend. Quelque chose se referme dans son regard. Tu continueras en partie seul.",
+                    "nextScene": "agente-us"
+                }
+            ]
+        },
+        {
+            "id": "agente-us",
+            "music": "mystery",
+            "text": [
+                "Le lendemain, une femme t'aborde à la sortie du commissariat. Élégante, un carnet de presse américain dépassant de la poche de son manteau de laine, un léger accent de la côte Est. Elle se présente comme correspondante d'un grand journal de New York, venue couvrir l'agonie du bloc de l'Est.",
+                {
+                    "speaker": "wright",
+                    "text": "« Inspecteur Werner ? J'écris un article sur la mort d'un certain Grigori Sokolov. On me dit que vous connaissez ce dossier mieux que personne. J'aimerais beaucoup vous entendre. »"
+                },
+                "Trop de questions précises, trop de portes qui s'ouvrent devant elle. Une simple journaliste n'aurait ni ce carnet d'adresses, ni ce calme de marbre. Tu la laisses parler, et bientôt elle cesse de faire semblant.",
+                {
+                    "speaker": "wright",
+                    "text": "« Très bien. Pas de mensonge entre nous : je travaille pour le gouvernement des États-Unis. Ce que Sokolov tenait dans ses comptes, mes services le veulent. Pas pour l'étouffer : pour le rendre public au bon moment, et précipiter la chute de ce qui reste de l'Union soviétique. »"
+                },
+                {
+                    "speaker": "wright",
+                    "text": "« En échange, je peux vous faire disparaître. Un passeport, un avion, une nouvelle vie à l'Ouest, loin de König et d'Artemiev. Il n'y a plus de mur à franchir depuis deux ans, inspecteur : seulement un océan, et un aller sans retour. »"
+                }
+            ],
+            "choices": [
+                {
+                    "id": "accepter-us",
+                    "text": "Accepter son offre et passer de l'autre côté",
+                    "action": "Rester, c'est finir sous la glace de la Spree dans un pays qui n'existera bientôt plus. « Sortez-moi d'ici, et je vous dirai tout ce que je sais. »",
+                    "consequence": "Elle esquisse un sourire de professionnelle et glisse une carte dans ta poche. « Sage décision, inspecteur. Soyez prêt cette nuit. »",
+                    "nextScene": "fin-defection"
+                },
+                {
+                    "id": "refuser-us",
+                    "text": "Rester méfiant et décliner l'offre",
+                    "action": "« Une inconnue qui surgit pile au bon moment pour m'offrir une porte de sortie... Dans mon métier, ça sent le piège à plein nez. » Tu tournes les talons.",
+                    "consequence": "Elle ne te retient pas. « Vous savez où me trouver, si vous changez d'avis. Mais le temps presse, inspecteur, pour vous comme pour votre pays. »",
+                    "nextScene": "konig-ultimatum"
+                }
+            ]
+        },
+        {
+            "id": "konig-ultimatum",
+            "text": [
+                "Le lendemain, König te fait appeler. Cette fois, il n'est pas seul. Un homme se tient devant la fenêtre, dos à toi, contemplant la neige : grand, élégant, un manteau de cuir posé sur les épaules. Il se retourne enfin. Leonid Artemiev en personne.",
+                {
+                    "speaker": "artemiev",
+                    "text": "« Inspecteur. On me dit que vous êtes un homme obstiné. C'est une qualité rare, et coûteuse. » Il pose une épaisse enveloppe sur le bureau. « Des dollars. De quoi vivre au chaud, très loin d'ici, quand tout ceci se sera effondré. »"
+                },
+                {
+                    "speaker": "konig",
+                    "text": "« Prends l'argent, Werner. Dans huit jours, il n'y aura plus d'URSS, plus de mission, plus d'affaire. Il ne restera que toi. Vivant, ou mort. À toi de choisir. »"
+                }
+            ],
+            "choices": [
+                {
+                    "id": "prendre-argent",
+                    "text": "Prendre l'enveloppe et enterrer l'affaire",
+                    "action": "Tu regardes l'enveloppe. Trente ans de service pour une pension qu'on t'a déjà volée. Ta main se referme lentement dessus.",
+                    "consequence": "Artemiev sourit. König soupire d'aise. L'affaire du raton-laveur vient de mourir sur ce bureau bien chauffé.",
+                    "nextScene": "fin-silence"
+                },
+                {
+                    "id": "gagner-temps",
+                    "text": "Ne pas répondre et gagner du temps",
+                    "action": "« Laissez-moi la nuit », dis-tu. « Une décision pareille, ça ne se prend pas à froid. »",
+                    "consequence": "Artemiev incline la tête. « La nuit, alors. Mais pas davantage. Le temps nous manque à tous, inspecteur. »",
+                    "nextScene": "temporiser"
+                },
+                {
+                    "id": "refuser-agir",
+                    "text": "Refuser net et décider d'agir",
+                    "action": "Tu repousses l'enveloppe du dos de la main. « Gardez votre argent de mort, Artemiev. »",
+                    "consequence": "Le silence tombe. Artemiev n'est plus qu'un masque de glace. « Comme vous voudrez. » Tu sors, et tu sais que la course contre la montre vient de commencer.",
+                    "nextScene": "finale"
+                }
+            ]
+        },
+        {
+            "id": "temporiser",
+            "text": [
+                "Tu rentres chez toi, l'enveloppe hantant tes pensées. Une nuit, disais-tu. Mais une nuit en devient deux, puis trois. Chaque matin, tu remets la décision au lendemain, guettant par la fenêtre givrée les Volga noires, sursautant au moindre pas dans l'escalier.",
+                "Dehors, le compte à rebours s'accélère. La radio annonce la démission imminente de Gorbatchev. Le 25 décembre approche. Bientôt, il n'y aura plus rien à trahir, ni personne à confondre."
+            ],
+            "choices": [
+                {
+                    "id": "agir-enfin",
+                    "text": "Te ressaisir et agir avant qu'il ne soit trop tard",
+                    "action": "Tu te lèves d'un bond. Assez tergiversé. Tu attrapes ton manteau et ton arme de service.",
+                    "consequence": "Il te reste peut-être quelques heures pour tout faire basculer.",
+                    "nextScene": "finale"
+                },
+                {
+                    "id": "laisser-filer",
+                    "text": "Laisser passer encore un jour... puis un autre",
+                    "action": "Tu te rassieds. Demain. Tu décideras demain. Il fait si froid dehors, et l'enveloppe est si épaisse.",
+                    "consequence": "Tu tires le rideau et tu regardes la neige tomber sur un empire qui n'existe déjà presque plus.",
+                    "nextScene": "fin-trop-tard"
+                }
+            ]
+        },
+        {
+            "id": "finale",
+            "text": [
+                "Il te reste une nuit, peut-être moins, et tout ce que tu as pu réunir. Dans quelques jours, l'Union soviétique ne sera plus qu'un mot dans les manuels d'Histoire, et l'affaire du raton-laveur avec elle. Ce que tu feras de ces dernières heures décidera de tout.",
+                "Assis dans ta cuisine glacée, tu passes en revue tes maigres cartes. Puis tu te décides."
+            ],
+            "choices": [
+                {
+                    "id": "registre-ouest",
+                    "requiresFlag": "registre",
+                    "text": "Faire sortir les comptes de Sokolov vers l'Ouest",
+                    "action": "Tu récupères l'étui de cuir : le carnet et le microfilm. La preuve, noir sur blanc, du blanchiment de l'or du Parti.",
+                    "consequence": "Reste à savoir à qui les confier, et comment frapper pour que le coup porte.",
+                    "nextScene": "finale-ouest"
+                },
+                {
+                    "id": "via-agent-a",
+                    "requiresFlag": "confiance-a",
+                    "text": "Passer par Agent A. et son réseau",
+                    "action": "Tu allumes la radio et tu composes la fréquence. « Agent A. J'ai besoin de vous. Ce soir. »",
+                    "consequence": "La voix répond presque aussitôt, comme si elle n'avait jamais cessé d'attendre ton appel.",
+                    "nextScene": "finale-agent"
+                },
+                {
+                    "id": "foncer-artemiev",
+                    "text": "Aller confondre Artemiev toi-même, sans preuve solide",
+                    "action": "Tant pis pour les preuves. Tu empoignes ton arme de service et tu files vers la mission commerciale soviétique.",
+                    "consequence": "Tu comptes l'arrêter, ou lui arracher des aveux. Seul, dans la nuit, sans rien pour te couvrir.",
+                    "nextScene": "fin-savait-trop"
+                },
+                {
+                    "id": "denoncer-public",
+                    "text": "Dénoncer publiquement König et Artemiev, sans te protéger",
+                    "action": "Tu décroches ton téléphone et tu appelles un journal, un juge, n'importe qui, pour tout balancer, séance tenante.",
+                    "consequence": "Tu cries au scandale sans rien de solide entre les mains. Et tu oublies une chose : dans ce système, on n'accuse pas les puissants impunément.",
+                    "nextScene": "fin-pion"
+                }
+            ]
+        },
+        {
+            "id": "finale-ouest",
+            "text": [
+                "Le microfilm de Sokolov est une bombe. Chaque virement, chaque compte-écran, chaque nom, jusqu'aux plus hauts sommets d'un empire agonisant. De quoi éclabousser des dirigeants soviétiques bien au-delà d'Artemiev. Reste à choisir la manière de le faire exploser."
+            ],
+            "choices": [
+                {
+                    "id": "tout-publier",
+                    "text": "Tout livrer à la presse occidentale, sans filtre",
+                    "action": "Tu confies une copie à un correspondant du Spiegel, dans un café enfumé du Kurfürstendamm. « Publiez tout. Que le monde entier sache où est passé l'argent d'un empire. »",
+                    "consequence": "Il feuillette les documents, blêmit, et comprend qu'il tient là l'histoire de sa vie.",
+                    "nextScene": "fin-verite"
+                },
+                {
+                    "id": "frappe-neumann",
+                    "requiresFlag": "neumann",
+                    "text": "Frapper chirurgicalement, via Neumann et la justice",
+                    "action": "Avec Neumann, vous montez un dossier en béton et vous le remettez, en main propre, à un procureur de la nouvelle Allemagne réputé incorruptible.",
+                    "consequence": "« Pas de scandale de rue », dit Neumann. « Juste Artemiev, coincé par ses propres chiffres. Proprement. »",
+                    "nextScene": "fin-justice"
+                }
+            ]
+        },
+        {
+            "id": "finale-agent",
+            "text": [
+                "Agent A. te retrouve dans une église désaffectée de l'ancien secteur, à la lueur d'une lampe-tempête qui fait danser les ombres sur les icônes écaillées. Son visage est tendu ; pour la première fois, tu la sens pressée par le temps.",
+                {
+                    "speaker": "aleksandrova",
+                    "text": "« Il ne nous reste que quelques heures. Confiez-moi ce que vous avez, et je le mettrai hors de portée d'Artemiev pour toujours. Ensuite, nous disparaissons, vous et moi, avant que ce pays ne nous engloutisse tous les deux. »"
+                },
+                "Elle tend la main. Tout, dans son regard, t'invite à lâcher prise. Et pourtant, une part de toi hésite encore, sans savoir pourquoi."
+            ],
+            "choices": [
+                {
+                    "id": "confier-registre",
+                    "requiresFlag": "registre",
+                    "text": "Lui remettre les comptes de Sokolov et fuir avec elle",
+                    "action": "Tu déposes l'étui de cuir dans sa main tendue. « Tenez. Faites-en bon usage. »",
+                    "consequence": "Ses doigts se referment sur le cuir. Quelque chose, dans son sourire, change imperceptiblement.",
+                    "nextScene": "fin-raton"
+                },
+                {
+                    "id": "fuir-conditions",
+                    "text": "Partir avec elle, mais à tes conditions",
+                    "action": "« On disparaît ensemble. Mais ce que je sais reste avec moi, en lieu sûr. Une assurance. »",
+                    "consequence": "Elle te dévisage longuement, puis hoche la tête. « Vous apprenez vite, inspecteur. C'est ce qui vous gardera en vie. »",
+                    "nextScene": "fin-exil"
+                }
+            ]
+        },
+        {
+            "id": "fin-silence",
+            "music": "melancholic",
+            "isEnding": true,
+            "endingType": "neutral",
+            "text": [
+                "Tu signes le rapport : « Grigori Sokolov, décès accidentel par noyade. » König le contresigne sans un mot. L'enveloppe de dollars, elle, disparaît dans la doublure de ton manteau.",
+                "Le 26 décembre 1991, l'Union soviétique cesse officiellement d'exister. La mission commerciale ferme ses portes ; Artemiev s'envole vers une villa au bord d'un lac suisse, sa fortune volée bien à l'abri. Le raton-laveur a lavé jusqu'au dernier rouble.",
+                "Toi, tu prends une retraite anticipée et confortable, dans une petite maison au bord de la Baltique. Tu ne manques plus de rien. Sauf, certaines nuits d'hiver, du courage que tu as vendu au bord d'un fleuve gelé.",
+                "— FIN : « Le prix du silence » —"
+            ],
+            "choices": []
+        },
+        {
+            "id": "fin-trop-tard",
+            "music": "melancholic",
+            "isEnding": true,
+            "endingType": "neutral",
+            "text": [
+                "Le 25 décembre 1991, à la télévision, Mikhaïl Gorbatchev annonce sa démission d'une voix éteinte. Le drapeau rouge frappé de la faucille et du marteau descend une dernière fois du Kremlin. L'Union soviétique n'existe plus.",
+                "Avec elle disparaissent la mission commerciale, la juridiction, les preuves, les témoins. Artemiev n'est plus le représentant d'aucun État : juste un homme d'affaires comme un autre, riche et libre, dans un monde tout neuf. König classe l'affaire d'un trait de plume satisfait.",
+                "Tu n'as pas trahi. Tu n'as pas fléchi. Tu as simplement attendu un jour de trop, et l'Histoire, elle, ne t'a pas attendu.",
+                "— FIN : « Trop tard » —"
+            ],
+            "choices": []
+        },
+        {
+            "id": "fin-savait-trop",
+            "music": "eerie",
+            "sound": "impact",
+            "isEnding": true,
+            "endingType": "bad",
+            "text": [
+                "Tu forces l'entrée de la mission commerciale, arme au poing, le cœur cognant. Artemiev t'attend presque, dans un bureau aux murs déjà à moitié dégarnis, les cartons empilés. Il n'a pas l'air surpris de te voir.",
+                {
+                    "speaker": "artemiev",
+                    "text": "« Un inspecteur seul, sans preuve, sans mandat, sans témoin, la nuit, chez moi. » Il soupire, presque avec regret. « Vous n'êtes pas venu m'arrêter, inspecteur. Vous êtes venu disparaître. »"
+                },
+                "Deux hommes en manteau de cuir se détachent de l'ombre derrière toi. Le dernier bruit que tu entends, c'est le clic mat d'un silencieux qu'on arme.",
+                "On ne retrouvera jamais ton corps sous la glace de la Spree. Une semaine plus tard, l'URSS s'effondre, et plus personne ne cherche un vieux flic est-allemand disparu dans la neige. Tu en savais trop, et tu es venu seul.",
+                "— FIN : « L'homme qui en savait trop » —"
+            ],
+            "choices": []
+        },
+        {
+            "id": "fin-pion",
+            "isEnding": true,
+            "endingType": "bad",
+            "text": [
+                "Tu cries au scandale à tous les vents, mais sans le microfilm, sans le carnet, tu n'as que ta parole. Et la parole d'un ancien de la Volkspolizei ne pèse rien face à celle de König et d'Artemiev.",
+                "En quarante-huit heures, la machine se retourne contre toi. On « découvre » dans ton casier des liasses de dollars et de roubles, et la douille de ton propre pistolet près du corps de Sokolov. König, la mine grave devant les caméras, te présente comme le flic corrompu qui a tué le comptable pour lui voler sa caisse.",
+                "Artemiev quitte tranquillement l'Allemagne tandis qu'on te passe les menottes. Tu étais l'homme idéal : seul, usé, du mauvais côté de l'Histoire. Le pion parfait, sacrifié pour blanchir les rois.",
+                "— FIN : « Le pion sacrifié » —"
+            ],
+            "choices": []
+        },
+        {
+            "id": "fin-verite",
+            "music": "melancholic",
+            "isEnding": true,
+            "endingType": "good",
+            "text": [
+                "L'article paraît trois jours plus tard, en première page, dans toute l'Europe : « L'OR DU PARTI : COMMENT DES MILLIONS SOVIÉTIQUES ONT FUI PAR BERLIN. » Les comptes de Sokolov, noir sur blanc, avec les noms, jusqu'aux plus hauts sommets d'un empire à l'agonie.",
+                "Le scandale éclate au moment même où l'URSS rend son dernier souffle. Artemiev est arrêté à la frontière suisse ; d'autres, à Moscou, tombent avec lui. Une fortune volée est, en partie, rendue à ceux à qui on l'avait prise.",
+                "Toi, tu n'as plus de poste : la nouvelle police n'aime pas les héros encombrants, et König s'est arrangé pour que ton nom ne figure nulle part. Tu passes tes hivers dans une chambre glacée, oublié de tous. Mais quand tu regardes la neige tomber sur Berlin, tu sais que, cette fois, tu n'as pas détourné les yeux.",
+                "— FIN : « La vérité, coûte que coûte » —"
+            ],
+            "choices": []
+        },
+        {
+            "id": "fin-justice",
+            "music": "heroic",
+            "isEnding": true,
+            "endingType": "good",
+            "text": [
+                "Pas de une fracassante, pas de scandale de rue. Juste un dossier impeccable, remis à un procureur qui ne cède ni à l'argent ni à la peur. Chaque virement, chaque nom, recoupé, daté, prouvé.",
+                "Leonid Artemiev est arrêté discrètement le 24 décembre, la veille de la fin de l'URSS, coincé par ses propres chiffres avant d'avoir pu prendre la fuite. König, éclaboussé jusqu'au col, est mis à la retraite d'office. La fortune détournée est gelée sur les comptes où elle dormait.",
+                "Neumann et toi ne recevez aucune médaille ; ces choses-là se font dans l'ombre. Mais vous êtes toujours flics, toujours vivants, et ce soir-là, autour d'une vodka, Neumann lève son verre : « À Sokolov. On l'a eu, Werner. Proprement. »",
+                "— FIN : « Justice discrète » —"
+            ],
+            "choices": []
+        },
+        {
+            "id": "fin-exil",
+            "music": "melancholic",
+            "isEnding": true,
+            "endingType": "neutral",
+            "text": [
+                "Vous quittez Berlin la nuit du réveillon, tandis que le monde entier a les yeux rivés sur le drapeau rouge qui descend du Kremlin. Deux silhouettes dans un train qui file vers l'ouest, deux faux passeports, et quelque part, en lieu sûr, une copie des comptes de Sokolov : votre assurance-vie commune.",
+                "Tu ne sauras jamais tout à fait qui est Agent A., ni pour qui elle travaillait vraiment. Mais elle est là, en face de toi, dans la lumière tremblante du compartiment, et pour l'instant cela te suffit.",
+                "L'affaire du raton-laveur ne sera jamais résolue officiellement. Artemiev gardera sa fortune, König son bureau bien chauffé. Mais toi, tu as sauvé ta peau, et peut-être un peu plus. Dehors, la neige efface les rails derrière vous, et l'empire, et l'ancien monde.",
+                "— FIN : « L'exil » —"
+            ],
+            "choices": []
+        },
+        {
+            "id": "fin-raton",
+            "music": "eerie",
+            "isEnding": true,
+            "endingType": "bad",
+            "text": [
+                "Agent A. glisse l'étui de cuir dans sa poche. Son sourire, enfin, se révèle pour ce qu'il est : celui du chasseur, non de la proie.",
+                {
+                    "speaker": "aleksandrova",
+                    "text": "« Vous m'avez été précieux, inspecteur. Sokolov tenait mes comptes, les miens. Il a voulu me trahir, comme Artemiev a voulu me doubler. Grâce à vous, les deux sont hors jeu, et je récupère mes livres. »"
+                },
+                "Tu comprends, trop tard, le sens véritable du surnom. Le raton-laveur, celui qui lave l'argent, ce n'était pas Sokolov. C'était elle, depuis le tout début. Tu n'as jamais été qu'un limier qu'on lâche sur ses rivaux.",
+                "Elle s'évanouit dans la nuit de Berlin avec la fortune d'un empire mort, sans laisser de trace, pas même un vrai nom. Le 26 décembre, l'URSS disparaît ; Agent A. aussi. Il ne te reste que le froid, et la certitude d'avoir été joué par bien plus fort que toi.",
+                "— FIN : « Le vrai raton-laveur » —"
+            ],
+            "choices": []
+        },
+        {
+            "id": "fin-defection",
+            "music": "melancholic",
+            "isEnding": true,
+            "endingType": "neutral",
+            "text": [
+                "Trois jours plus tard, un avion militaire américain décolle de la base de Tempelhof. Tu es à bord, un faux passeport en poche, l'Allemagne enneigée qui rétrécit sous les nuages. Tu as livré aux services d'Angela Wright tout ce que tu savais de l'affaire du raton-laveur.",
+                "À Washington, ton témoignage, et les comptes de Sokolov si tu les détenais, nourrissent la campagne qui achève de discréditer les derniers caciques soviétiques. Le 26 décembre 1991, l'URSS s'effondre ; on murmure dans l'ombre que l'Ouest a donné, au bon moment, la dernière poussée.",
+                "Toi, tu vis désormais dans une petite ville américaine, sous un nom qui n'est pas le tien. En sécurité, au chaud, libre. Mais chaque hiver, quand la neige tombe, tu penses à Neumann, à Berlin, et à ce pays que tu as aidé à enterrer pour sauver ta peau.",
+                "— FIN : « L'autre côté du mur » —"
+            ],
+            "choices": []
+        }
+    ]
+}
