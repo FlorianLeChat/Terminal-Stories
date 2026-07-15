@@ -141,7 +141,7 @@ test.describe( "My stories", () =>
 
         await page.keyboard.press( "Escape" );
         await expect( page.getByText( "MY STORIES", { exact: true } ) ).toBeVisible();
-        await expect( page.getByText( `forked from ${ catalogStoryTitle }` ) ).toBeVisible();
+        await expect( page.getByText( `forked from "${ catalogStoryTitle }"` ) ).toBeVisible();
     } );
 
     test( "exports a custom story as a JSON file", async ( { page } ) =>
