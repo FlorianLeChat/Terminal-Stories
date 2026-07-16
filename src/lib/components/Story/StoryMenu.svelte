@@ -94,7 +94,7 @@
             <input
                 bind:this={searchInputEl}
                 type="text"
-                class="flex-1 bg-transparent text-terminal-green text-xs outline-none placeholder-terminal-dim/50 caret-terminal-green"
+                class="flex-1 min-w-0 bg-transparent text-terminal-green text-xs outline-none placeholder-terminal-dim/50 caret-terminal-green"
                 placeholder={m.menu_search_placeholder()}
                 value={searchQuery}
                 oninput={( e ) => terminal.setSearchQuery( e.currentTarget.value )}
@@ -102,7 +102,30 @@
                 autocomplete="off"
                 spellcheck={false}
             />
+
+            <button
+                class="shrink-0 text-terminal-amber text-sm leading-none px-1 hover:text-terminal-white motion-safe:transition-colors motion-safe:duration-100"
+                aria-label={m.action_cancel_search()}
+                onclick={() => terminal.deactivateSearch()}
+            >
+                ✕
+            </button>
         </div>
+    {:else}
+        <!--
+            Inactive search field: a button dressed as the search box above, so
+            tapping it visibly "opens" the same field. Clearer than a lone pill
+            and consistent on both touch and desktop.
+        -->
+        <button
+            class="w-full flex items-center gap-2 border border-terminal-dim/40 rounded px-3 py-2 mb-4 hover:border-terminal-dim motion-safe:transition-colors motion-safe:duration-100"
+            aria-label={m.menu_search_aria()}
+            onclick={() => terminal.activateSearch()}
+        >
+            <span class="text-terminal-dim text-xs select-none shrink-0">{m.menu_search_label()}</span>
+            <span class="text-terminal-green text-xs shrink-0">›</span>
+            <span class="flex-1 min-w-0 text-left text-terminal-dim/50 text-xs truncate">{m.menu_search_placeholder()}</span>
+        </button>
     {/if}
 
     <div class="text-terminal-dim text-xs text-center opacity-80 mb-4 break-words">

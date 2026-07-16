@@ -45,22 +45,6 @@
         onFork
     }: Props = $props();
 
-    // On mobile the control bar can hold many buttons that wrap onto several
-    // rows, eating precious vertical space. There it can be folded away behind
-    // a toggle; from `sm` up the bar is always shown and the toggle is hidden.
-    // Expanded by default so touch navigation stays discoverable; the choice is
-    // kept per session only (reset on reload).
-    let controlsExpanded = $state( true );
-
-    // The toggle is only meaningful when the nav actually holds controls, which
-    // is every view except the boot screen (whose footer is just a source link).
-    let canToggleControls = $derived( view !== "boot" );
-
-    // On mobile, fold the nav away (display: none) when collapsed; `contents`
-    // keeps it layout-invisible when shown. The `sm:contents` class in the
-    // markup always wins from `sm` up, so this only affects small screens.
-    let navVisibilityClass = $derived( controlsExpanded ? "contents" : "hidden" );
-
     // Read here so the story-info actions can target the current story directly,
     // letting every control work by touch as well as by keyboard.
     let currentStory = $derived( $terminal.currentStory );
@@ -121,22 +105,37 @@
 </script>
 
 <!--
-    Control bar — every hint is a real, tappable button so the whole app is
-    usable by touch on mobile, while remaining clickable on desktop. The
-    underlying keyboard shortcuts (handled in Terminal.svelte) are unchanged,
-    and the [KEY] labels keep doubling as shortcut reminders.
+    Two footers in one, chosen by screen size:
+      - Desktop (>= sm): the full keyboard-shortcut legend. Every hint keeps its
+        [KEY] label as a reminder and stays clickable for mouse users.
+      - Mobile (< sm): page-navigation buttons only (short labels, no [KEY]).
+        Every other action is reachable by tapping the matching on-page control
+        (filters, list items, the story action bar, the search button).
+    The underlying keyboard shortcuts (handled in Terminal.svelte) are unchanged.
 -->
 {#snippet control( label: string, onclick: () => void )}
     <!--
-        `flex-1` (grow + shrink + 0% basis) makes the buttons share each wrapped
-        row equally on mobile, so they stretch to fill the free space instead of
-        leaving a ragged right edge. `min-width: auto` still keeps a button from
-        shrinking below its label. From `sm` up, `sm:flex-none` restores the
-        natural pill width.
+        A single legend hint. It only renders inside the desktop legend (from
+        `sm` up), so `sm:flex-none` gives it its natural pill width; `flex-1`
+        is the harmless below-`sm` fallback while the legend itself is hidden.
     -->
     <button
         type="button"
         class="flex-1 sm:flex-none inline-flex items-center justify-center min-h-8 px-2 py-1 border border-terminal-dim/30 rounded whitespace-nowrap text-terminal-dim hover:text-terminal-white hover:border-terminal-dim active:bg-terminal-green/15 active:text-terminal-white motion-safe:transition-colors motion-safe:duration-100"
+        {onclick}
+    >
+        {label}
+    </button>
+{/snippet}
+
+<!--
+    Mobile page-navigation button: fills the row equally with its siblings and
+    reads as a real touch target (larger hit area, no [KEY] prefix).
+-->
+{#snippet navButton( label: string, onclick: () => void )}
+    <button
+        type="button"
+        class="flex-1 inline-flex items-center justify-center min-h-9 px-3 py-1.5 border border-terminal-dim/40 rounded whitespace-nowrap text-terminal-dim hover:text-terminal-white active:bg-terminal-green/15 active:text-terminal-white motion-safe:transition-colors motion-safe:duration-100"
         {onclick}
     >
         {label}
@@ -148,11 +147,10 @@
     style="padding-bottom: calc( 0.375rem + env( safe-area-inset-bottom ) )"
 >
     <!--
-        `contents` keeps the nav layout-invisible (children flex directly). On
-        mobile it collapses to `hidden` when folded; from `sm` up it is always
-        `contents` regardless of the toggle state.
+        Desktop keyboard-shortcut legend. Hidden on mobile; from `sm` up it uses
+        `contents` so its buttons flex directly into the footer row.
     -->
-    <nav id="terminal-controls-nav" class="{navVisibilityClass} sm:contents">
+    <nav id="terminal-controls-legend" class="hidden sm:contents" aria-label={m.controls_legend_aria()}>
         {#if view === "story"}
             {#if atGeneratedEnding || atStandardEnding}
                 {#if isAnimating}
@@ -238,6 +236,39 @@
         {/if}
     </nav>
 
+    <!--
+        Mobile navigation. Only buttons that reach another page live here; every
+        other action (filters, list selection, start/skip/share, search) is done
+        by tapping its dedicated on-page control. Hidden from `sm` up, where the
+        legend above takes over.
+    -->
+    <nav class="contents sm:hidden" aria-label={m.controls_nav_aria()}>
+        {#if view === "menu"}
+            {@render navButton( m.nav_wiki(), () => terminal.openWiki() )}
+            {@render navButton( m.nav_ai(), () => terminal.openAiSetup() )}
+            {@render navButton( m.nav_achievements(), () => terminal.openAchievements() )}
+            {@render navButton( m.nav_custom(), () => terminal.openCustomStories() )}
+        {:else if view === "story"}
+            {@render navButton( m.nav_back_to_stories(), () => terminal.goBack() )}
+        {:else if view === "story-info"}
+            {@render navButton( m.nav_back_to_stories(), () => terminal.startMenu() )}
+        {:else if view === "wiki"}
+            {#if wikiEntryOpen}
+                {@render navButton( m.nav_back_to_list(), () => terminal.backToWikiList() )}
+            {:else}
+                {@render navButton( m.nav_back_to_stories(), () => terminal.closeWiki() )}
+            {/if}
+        {:else if view === "achievements"}
+            {@render navButton( m.nav_back_to_stories(), () => terminal.closeAchievements() )}
+        {:else if view === "ai-setup"}
+            {@render navButton( m.nav_back_to_stories(), () => terminal.startMenu() )}
+        {:else if view === "custom-stories"}
+            {@render navButton( m.nav_back_to_stories(), () => terminal.startMenu() )}
+        {:else if view === "editor"}
+            {@render navButton( m.nav_back_to_custom(), () => terminal.closeEditor() )}
+        {/if}
+    </nav>
+
     {#if view === "boot"}
         <a
             rel="noopener noreferrer"
@@ -251,25 +282,5 @@
         <code class="ml-auto gap-3">
             1.0.0
         </code>
-    {/if}
-
-    <!--
-        Mobile-only fold toggle. Deliberately styled unlike the control pills
-        (no bordered pill, full width, its own divider) so it reads as footer
-        chrome rather than one more control. `order-last` + `w-full` drop it
-        onto its own row at the very bottom for easy thumb reach. Hidden from
-        `sm` up, where the bar is always shown.
-    -->
-    {#if canToggleControls}
-        <button
-            type="button"
-            class="sm:hidden order-last w-full flex items-center justify-center gap-2 min-h-9 mt-0.5 pt-2 border-t border-terminal-dim/25 tracking-wide uppercase text-terminal-dim/80 hover:text-terminal-white active:text-terminal-white motion-safe:transition-colors motion-safe:duration-100"
-            aria-expanded={controlsExpanded}
-            aria-controls="terminal-controls-nav"
-            onclick={() => ( controlsExpanded = !controlsExpanded )}
-        >
-            <span aria-hidden="true">{controlsExpanded ? "▾" : "▸"}</span>
-            {m.controls_toggle()}
-        </button>
     {/if}
 </footer>

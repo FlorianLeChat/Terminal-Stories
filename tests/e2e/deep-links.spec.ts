@@ -1,5 +1,5 @@
 import { test, expect } from "@playwright/test";
-import { gotoMenu } from "./utilities/fixtures";
+import { gotoMenu, openEncyclopedia, leaveToMenu } from "./utilities/fixtures";
 
 test.describe( "Shareable deep links", () =>
 {
@@ -7,8 +7,7 @@ test.describe( "Shareable deep links", () =>
     {
         await gotoMenu( page );
 
-        await page.keyboard.press( "ArrowDown" );
-        await page.keyboard.press( "Enter" );
+        await page.locator( "ol > li button" ).first().click();
 
         await expect( page ).toHaveURL( /\?story=[^&]+$/ );
     } );
@@ -31,7 +30,7 @@ test.describe( "Shareable deep links", () =>
     test( "opening a wiki entry updates the address bar", async ( { page } ) =>
     {
         await gotoMenu( page );
-        await page.getByRole( "button", { name: "[W] Encyclopedia" } ).click();
+        await openEncyclopedia( page );
 
         await page.locator( "ol > li span.font-bold", { hasText: "Kingdom of Elarion" } ).click();
 
@@ -42,7 +41,7 @@ test.describe( "Shareable deep links", () =>
     {
         await gotoMenu( page, "/?story=cursed-forest" );
 
-        await page.keyboard.press( "Escape" );
+        await leaveToMenu( page );
 
         await expect( page ).toHaveURL( /^[^?]*\/?$/ );
     } );

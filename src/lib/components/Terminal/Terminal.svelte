@@ -7,6 +7,7 @@
     import { terminal } from "$lib/stores/terminal";
     import BootSequence from "../BootSequence.svelte";
     import StoryMenu from "../Story/StoryMenu.svelte";
+    import StoryActionBar from "../Story/StoryActionBar.svelte";
     import TerminalOutput from "./TerminalOutput.svelte";
     import WikiBrowser from "../Wiki/WikiBrowser.svelte";
     import AchievementsBrowser from "../Achievements/AchievementsBrowser.svelte";
@@ -795,6 +796,16 @@
         {#key $terminal.storyKey}
             <TerminalOutput {lines} animated={view === "story"} skipSignal={effectiveSkipSignal} bind:isAnimating onchoice={terminal.makeChoice} />
         {/key}
+
+        <StoryActionBar
+            {view}
+            hasSave={currentStoryHasSave}
+            {isAnimating}
+            {atGeneratedEnding}
+            {atStandardEnding}
+            onSkip={handleSkip}
+            onFork={handleFork}
+        />
     {:else if view === "wiki"}
         <WikiBrowser />
     {:else if view === "achievements"}

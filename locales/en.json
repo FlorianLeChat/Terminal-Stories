@@ -28,6 +28,15 @@
 	"achievements_subtitle": "— ACHIEVEMENTS —",
 	"achievements_toast_title": [{"declarations": ["input count", "local countPlural = count: plural"], "selectors": ["countPlural"], "match": {"countPlural=one": "Achievement unlocked", "countPlural=other": "Achievements unlocked"}}],
 
+	"action_cancel_search": "Cancel search",
+	"action_fork": "Fork & edit",
+	"action_new_game": "New game",
+	"action_restart": "Restart",
+	"action_resume": "Resume",
+	"action_share": "Share",
+	"action_skip": "Skip",
+	"action_start": "Start",
+
 	"ai_ephemeral_note": "One-shot story: no save, never added to the catalog.",
 	"ai_err_api": "API error (code {status}). Try again later.",
 	"ai_err_auth": "API key refused. Check your Anthropic key.",
@@ -77,6 +86,8 @@
 	"controls_custom_new": "[N] New story",
 	"controls_custom_open": "[ENTER] Open",
 	"controls_editor_back": "[ESC] My stories",
+	"controls_legend_aria": "Keyboard shortcuts",
+	"controls_nav_aria": "Navigation",
 	"controls_source_code": "Source code",
 	"controls_menu_achievements": "[A] Achievements",
 	"controls_menu_ai": "[I] AI",
@@ -101,7 +112,6 @@
 	"controls_story_menu": "[ESC] Main menu",
 	"controls_story_share": "[S] Share",
 	"controls_story_skip": "[SPACE] Skip",
-	"controls_toggle": "Controls",
 	"controls_wiki_back": "[ESC] Back to list",
 	"controls_wiki_category": "[←→] Category",
 	"controls_wiki_consult": "[ENTER] Open",
@@ -218,6 +228,8 @@
 
 	"language_self_name": "English",
 
+	"list_open_hint": "Tap again to read",
+
 	"menu_count_available": " available",
 	"menu_count_filtered": " filtered",
 	"menu_count_results": [{"declarations": ["input count", "input query", "local countPlural = count: plural"], "selectors": ["countPlural"], "match": {"countPlural=one": "{count} result for \"{query}\"", "countPlural=other": "{count} results for \"{query}\""}}],
@@ -230,10 +242,17 @@
 	"menu_filter_language": "LANGUAGE",
 	"menu_filter_reset": "✕ Reset",
 	"menu_search_aria": "Search for a story",
-	"menu_search_cancel": "[ESC] Cancel",
 	"menu_search_label": "SEARCH",
 	"menu_search_placeholder": "Title, genre, universe, character, tag...",
 	"menu_subtitle": "— INTERACTIVE STORIES SYSTEM —",
+
+	"nav_achievements": "Achievements",
+	"nav_ai": "AI",
+	"nav_back_to_custom": "Back to my stories",
+	"nav_back_to_list": "Back to list",
+	"nav_back_to_stories": "Back to stories",
+	"nav_custom": "My stories",
+	"nav_wiki": "Encyclopedia",
 
 	"share_close": "[ESC] Close",
 	"share_copied": "Copied!",
@@ -283,7 +302,6 @@
 	"wiki_filter_language": "LANGUAGE",
 	"wiki_filter_universe": "UNIVERSE",
 	"wiki_search_aria": "Search an encyclopedia entry",
-	"wiki_search_cancel": "[ESC] Cancel",
 	"wiki_search_label": "SEARCH",
 	"wiki_search_placeholder": "Name, summary, description, alias...",
 	"wiki_subtitle": "— ENCYCLOPEDIA OF INTERACTIVE UNIVERSES —"

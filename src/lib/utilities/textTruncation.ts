@@ -13,5 +13,5 @@ export const truncateQueryForDisplay = ( query: string ): string =>
 {
     const isTooLong = query.length > MAX_DISPLAY_QUERY_LENGTH;
 
-    return isTooLong ? `${ query.slice( 0, MAX_DISPLAY_QUERY_LENGTH ) }…` : query;
+    return isTooLong ? `${ query.slice( 0, MAX_DISPLAY_QUERY_LENGTH ) }...` : query;
 };

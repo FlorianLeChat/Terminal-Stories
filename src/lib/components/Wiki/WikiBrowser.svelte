@@ -165,8 +165,29 @@
                     spellcheck={false}
                 />
 
-                <span class="text-terminal-dim text-xs shrink-0 select-none">{m.wiki_search_cancel()}</span>
+                <button
+                    class="shrink-0 text-terminal-amber text-sm leading-none px-1 hover:text-terminal-white motion-safe:transition-colors motion-safe:duration-100"
+                    aria-label={m.action_cancel_search()}
+                    onclick={() => terminal.deactivateSearch()}
+                >
+                    ✕
+                </button>
             </div>
+        {:else}
+            <!--
+                Inactive search field: a button dressed as the search box above,
+                so tapping it visibly "opens" the same field. Clearer than a lone
+                pill and consistent on both touch and desktop.
+            -->
+            <button
+                class="w-full flex items-center gap-2 border border-terminal-dim/40 rounded px-3 py-2 mb-3 hover:border-terminal-dim motion-safe:transition-colors motion-safe:duration-100"
+                aria-label={m.wiki_search_aria()}
+                onclick={() => terminal.activateSearch()}
+            >
+                <span class="text-terminal-dim text-xs select-none shrink-0">{m.wiki_search_label()}</span>
+                <span class="text-terminal-green text-xs shrink-0">›</span>
+                <span class="flex-1 min-w-0 text-left text-terminal-dim/50 text-xs truncate">{m.wiki_search_placeholder()}</span>
+            </button>
         {/if}
 
         <div class="text-terminal-dim text-xs text-center opacity-80 mb-4 break-words">
@@ -216,6 +237,13 @@
                                     <span class="block text-terminal-green text-xs mt-0.5 opacity-80 leading-relaxed">
                                         {entry.summary}
                                     </span>
+
+                                    {#if i === wiki.selectedIndex}
+                                        <span class="open-hint mt-2 items-center gap-1.5 rounded border border-terminal-green/50 bg-terminal-green/10 px-2 py-1 text-terminal-green text-xs motion-safe:animate-pulse">
+                                            <span aria-hidden="true">▸</span>
+                                            {m.list_open_hint()}
+                                        </span>
+                                    {/if}
                                 </span>
                             </span>
                         </button>
@@ -233,6 +261,22 @@
 </div>
 
 <style>
+    /*
+        Touch-only affordance. On devices without hover the entry list uses a
+        two-tap pattern (first tap selects, second tap opens), which is not
+        obvious; the selected entry then shows a hint that a second tap opens it.
+        Hidden on hover-capable devices, where a click opens directly.
+    */
+    .open-hint {
+        display: none;
+    }
+
+    @media (hover: none) {
+        .open-hint {
+            display: inline-flex;
+        }
+    }
+
     .scrollbar-terminal::-webkit-scrollbar {
         width: 4px;
     }

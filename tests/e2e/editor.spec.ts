@@ -2,7 +2,7 @@ import { test, expect } from "@playwright/test";
 import type { Page } from "@playwright/test";
 import { readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
-import { gotoMenu } from "./utilities/fixtures";
+import { gotoMenu, openMyStories, backToMyStories } from "./utilities/fixtures";
 
 const CATALOG_STORY_ID = "cursed-forest";
 
@@ -70,7 +70,7 @@ const MALICIOUS_IMPORT = {
 const gotoMyStories = async ( page: Page ): Promise<void> =>
 {
     await gotoMenu( page );
-    await page.keyboard.press( "e" );
+    await openMyStories( page );
     await expect( page.getByText( "MY STORIES", { exact: true } ) ).toBeVisible();
 };
 
@@ -98,8 +98,10 @@ test.describe( "My stories", () =>
         await gotoMyStories( page );
         await expect( page.getByText( "No custom story yet", { exact: false } ) ).toBeVisible();
 
-        // [N] creates a blank story and opens the editor on it.
-        await page.keyboard.press( "n" );
+        // The "New story" button creates a blank story and opens the editor.
+        // The footer shortcut ("[N] New story") shares the "New story" phrasing,
+        // so match the on-page action exactly to stay unambiguous.
+        await page.getByRole( "button", { name: "+ New story", exact: true } ).click();
         await expect( page.getByText( "STORY EDITOR", { exact: true } ) ).toBeVisible();
 
         await page.getByLabel( "TITLE" ).fill( "My Test Story" );
@@ -108,21 +110,22 @@ test.describe( "My stories", () =>
         await page.getByRole( "button", { name: "Save", exact: true } ).click();
         await expect( page.getByText( "✓ Saved." ) ).toBeVisible();
 
-        // ESC returns to the list, which now shows the saved story.
-        await page.keyboard.press( "Escape" );
+        // Leaving the editor returns to the list, now showing the saved story.
+        await backToMyStories( page );
         await expect( page.getByText( "MY STORIES", { exact: true } ) ).toBeVisible();
         await expect( page.getByText( "My Test Story" ) ).toBeVisible();
 
-        // ENTER opens the highlighted story's info screen, ENTER again plays it.
-        await page.keyboard.press( "Enter" );
+        // Play opens the story's info screen, then Start plays it.
+        await page.getByRole( "button", { name: "Play" } ).click();
         await expect( page.getByText( "STORY INFO", { exact: true } ) ).toBeVisible();
 
-        await page.keyboard.press( "Enter" );
+        await page.getByRole( "button", { name: "Start", exact: true } ).click();
         await expect( page.getByText( "NOW READING", { exact: true } ) ).toBeVisible();
         await expect( page.getByText( "The adventure starts and ends here." ) ).toBeVisible();
 
-        // The single scene is an ending, so the restart control is offered.
-        await expect( page.getByRole( "button", { name: "[ENTER] Restart" } ) ).toBeVisible();
+        // The single scene is an ending, so the on-page restart control is
+        // offered (shown on every viewport, unlike the desktop footer legend).
+        await expect( page.getByRole( "button", { name: "Restart", exact: true } ) ).toBeVisible();
 
         // Custom stories never award achievements, even on a first ending.
         const achievements = await page.evaluate( () => localStorage.getItem( "terminal-stories:achievements" ) );
@@ -134,12 +137,12 @@ test.describe( "My stories", () =>
         await gotoMenu( page, `/?story=${ CATALOG_STORY_ID }` );
         await expect( page.getByText( "STORY INFO", { exact: true } ) ).toBeVisible();
 
-        // [F] forks the previewed story and opens the copy in the editor.
-        await page.keyboard.press( "f" );
+        // The "Fork & edit" action copies the previewed story into the editor.
+        await page.getByRole( "button", { name: "Fork & edit", exact: true } ).click();
         await expect( page.getByText( "STORY EDITOR", { exact: true } ) ).toBeVisible();
         await expect( page.getByLabel( "TITLE" ) ).toHaveValue( catalogStoryTitle );
 
-        await page.keyboard.press( "Escape" );
+        await backToMyStories( page );
         await expect( page.getByText( "MY STORIES", { exact: true } ) ).toBeVisible();
         await expect( page.getByText( `forked from "${ catalogStoryTitle }"` ) ).toBeVisible();
     } );
@@ -148,11 +151,11 @@ test.describe( "My stories", () =>
     {
         await gotoMyStories( page );
 
-        await page.keyboard.press( "n" );
+        await page.getByRole( "button", { name: "+ New story", exact: true } ).click();
         await page.getByLabel( "TITLE" ).fill( "Export Me" );
         await page.getByRole( "button", { name: "Save", exact: true } ).click();
         await expect( page.getByText( "✓ Saved." ) ).toBeVisible();
-        await page.keyboard.press( "Escape" );
+        await backToMyStories( page );
 
         const downloadPromise = page.waitForEvent( "download" );
         await page.getByRole( "button", { name: "Export" } ).click();
@@ -217,9 +220,9 @@ test.describe( "My stories", () =>
         await expect( page.getByText( MALICIOUS_IMPORT.title ) ).toBeVisible();
 
         // Play the story: the HTML-looking line must appear as literal text.
-        await page.keyboard.press( "Enter" );
+        await page.getByRole( "button", { name: "Play" } ).click();
         await expect( page.getByText( "STORY INFO", { exact: true } ) ).toBeVisible();
-        await page.keyboard.press( "Enter" );
+        await page.getByRole( "button", { name: "Start", exact: true } ).click();
         await expect( page.getByText( "NOW READING", { exact: true } ) ).toBeVisible();
         await expect( page.getByText( MALICIOUS_IMPORT.scenes[ 1 ].text[ 0 ] as string ) ).toBeVisible();
 

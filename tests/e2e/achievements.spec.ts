@@ -1,6 +1,6 @@
 import { test, expect } from "@playwright/test";
 import type { Page } from "@playwright/test";
-import { gotoMenu } from "./utilities/fixtures";
+import { gotoMenu, openAchievements, openAiGenerator, leaveToMenu } from "./utilities/fixtures";
 import { findPathToEnding, findAllEndingPaths } from "./utilities/storyPath";
 
 const STORY_ID = "cursed-forest";
@@ -88,10 +88,10 @@ const playPath = async ( page: Page, path: number[] ): Promise<void> =>
 
 test.describe( "Achievements", () =>
 {
-    test( "opens from the menu button and lists locked and secret achievements", async ( { page } ) =>
+    test( "opens the achievements screen and lists locked and secret achievements", async ( { page } ) =>
     {
         await gotoMenu( page );
-        await page.getByRole( "button", { name: "[A] Achievements" } ).click();
+        await openAchievements( page );
 
         await expect( page.getByText( "ACHIEVEMENTS", { exact: true } ) ).toBeVisible();
         await expect( page.getByText( "0 / 7 unlocked" ) ).toBeVisible();
@@ -109,12 +109,12 @@ test.describe( "Achievements", () =>
         const path = findPathToEnding( STORY_ID );
 
         await gotoMenu( page, `/?story=${ STORY_ID }` );
-        await page.keyboard.press( "Enter" );
+        await page.getByRole( "button", { name: "Start", exact: true } ).click();
         await playPath( page, path );
 
         // Leave to the menu, then open the achievements screen.
-        await page.keyboard.press( "Escape" );
-        await page.keyboard.press( "a" );
+        await leaveToMenu( page );
+        await openAchievements( page );
 
         await expect( achievementCard( page, "First Steps" ).getByText( "Unlocked", { exact: true } ) ).toBeVisible();
     } );
@@ -124,7 +124,7 @@ test.describe( "Achievements", () =>
         const path = findPathToEnding( STORY_ID );
 
         await gotoMenu( page, `/?story=${ STORY_ID }` );
-        await page.keyboard.press( "Enter" );
+        await page.getByRole( "button", { name: "Start", exact: true } ).click();
         await playPath( page, path );
 
         // The toast is a status region naming the achievement just unlocked; it
@@ -142,7 +142,7 @@ test.describe( "Achievements", () =>
         const paths = findAllEndingPaths( STORY_ID );
 
         await gotoMenu( page, `/?story=${ STORY_ID }` );
-        await page.keyboard.press( "Enter" );
+        await page.getByRole( "button", { name: "Start", exact: true } ).click();
 
         for ( let i = 0; i < paths.length; i++ )
         {
@@ -151,15 +151,16 @@ test.describe( "Achievements", () =>
             const isLastPath = i === paths.length - 1;
 
             // Restart from the ending to hunt the next one; the last ending stays
-            // on screen so we can leave to the menu afterwards.
+            // on screen so we can leave to the menu afterwards. The action bar's
+            // restart button is shown on every viewport.
             if ( !isLastPath )
             {
-                await page.getByRole( "button", { name: "[ENTER] Restart" } ).click();
+                await page.getByRole( "button", { name: "Restart", exact: true } ).click();
             }
         }
 
-        await page.keyboard.press( "Escape" );
-        await page.keyboard.press( "a" );
+        await leaveToMenu( page );
+        await openAchievements( page );
 
         await expect( achievementCard( page, "No Stone Unturned" ).getByText( "Unlocked", { exact: true } ) ).toBeVisible();
     } );
@@ -169,11 +170,11 @@ test.describe( "Achievements", () =>
         const path = findPathToEnding( STORY_ID );
 
         await gotoMenu( page, `/?story=${ STORY_ID }` );
-        await page.keyboard.press( "Enter" );
+        await page.getByRole( "button", { name: "Start", exact: true } ).click();
         await playPath( page, path );
 
-        await page.keyboard.press( "Escape" );
-        await page.keyboard.press( "a" );
+        await leaveToMenu( page );
+        await openAchievements( page );
 
         await expect( achievementCard( page, "First Steps" ).getByText( "Unlocked", { exact: true } ) ).toBeVisible();
 
@@ -196,7 +197,7 @@ test.describe( "Achievements", () =>
             } ) );
 
         await gotoMenu( page );
-        await page.getByRole( "button", { name: "[I] AI" } ).click();
+        await openAiGenerator( page );
 
         await page.getByLabel( "ANTHROPIC API KEY" ).fill( "sk-ant-valid" );
         await page.getByRole( "button", { name: "Validate" } ).click();
@@ -209,9 +210,9 @@ test.describe( "Achievements", () =>
         await skipTypewriter( page );
         await choiceButton( page, 1 ).click();
         await skipTypewriter( page );
-        await page.keyboard.press( "Escape" );
+        await leaveToMenu( page );
 
-        await page.keyboard.press( "a" );
+        await openAchievements( page );
         await expect( page.getByText( "ACHIEVEMENTS", { exact: true } ) ).toBeVisible();
         await expect( page.getByText( "0 / 7 unlocked" ) ).toBeVisible();
         await expect( achievementCard( page, "First Steps" ).getByText( "Locked", { exact: true } ) ).toBeVisible();

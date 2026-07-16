@@ -120,7 +120,12 @@
                         {story.description}
                     </span>
 
-                    <span class="flex items-center gap-3 flex-wrap mb-2 text-terminal-dim text-xs opacity-80">
+                    <span class="open-hint mb-2 items-center gap-1.5 rounded border border-terminal-green/50 bg-terminal-green/10 px-2 py-1 text-terminal-green text-xs motion-safe:animate-pulse">
+                        <span aria-hidden="true">▸</span>
+                        {m.list_open_hint()}
+                    </span>
+
+                    <span class="flex items-center gap-2 flex-wrap text-terminal-dim text-xs opacity-80">
                         <span title={m.story_item_scenes_title()}>⌬ {story.stats.scenes} {m.story_item_scenes_entries()}</span>
                         <span title={m.story_item_explore_time_title()}>⧉ {m.story_item_explore_time_value( { duration: formatReadingTime( story.stats.fullMinutes ) } )}</span>
                     </span>
@@ -128,7 +133,7 @@
                     {#if completion !== null}
                         {@const bar = buildProgressBar( completion, 6 )}
 
-                        <span class="flex items-center mb-2 text-xs" title={m.story_item_progress_title()}>
+                        <span class="flex items-center mb-1 mt-3 text-xs" title={m.story_item_progress_title()}>
                             <span class="text-terminal-amber">◉ {bar.filled}</span><span class="text-terminal-dim/50">{bar.empty}</span>
                             <span class="ml-2 text-terminal-amber">{m.story_item_progress_value( { value: completion / 100 } )}</span>
                         </span>
@@ -163,3 +168,21 @@
         <div class="border-t border-terminal-dim/20 mx-3" aria-hidden="true"></div>
     {/if}
 </li>
+
+<style>
+    /*
+        Touch-only affordance. On devices without hover the list uses a two-tap
+        pattern (first tap expands the item, second tap opens it), which is not
+        obvious; the selected item then shows a hint that a second tap starts
+        reading. Hidden on hover-capable devices, where a click opens directly.
+    */
+    .open-hint {
+        display: none;
+    }
+
+    @media (hover: none) {
+        .open-hint {
+            display: inline-flex;
+        }
+    }
+</style>

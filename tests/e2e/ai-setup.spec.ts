@@ -1,6 +1,6 @@
 import { test, expect } from "@playwright/test";
 import type { Page } from "@playwright/test";
-import { gotoMenu } from "./utilities/fixtures";
+import { gotoMenu, openAiGenerator } from "./utilities/fixtures";
 
 const MODELS_URL = "https://api.anthropic.com/v1/models*";
 const MESSAGES_URL = "https://api.anthropic.com/v1/messages";
@@ -49,7 +49,7 @@ test.describe( "AI story generator", () =>
     test.beforeEach( async ( { page } ) =>
     {
         await gotoMenu( page );
-        await page.getByRole( "button", { name: "[I] AI" } ).click();
+        await openAiGenerator( page );
     } );
 
     test( "keeps the generation options locked until a key is validated", async ( { page } ) =>

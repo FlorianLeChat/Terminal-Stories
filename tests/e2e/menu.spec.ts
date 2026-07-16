@@ -1,5 +1,5 @@
 import { test, expect } from "@playwright/test";
-import { gotoMenu } from "./utilities/fixtures";
+import { gotoMenu, openEncyclopedia, openAiGenerator } from "./utilities/fixtures";
 
 test.describe( "Main menu", () =>
 {
@@ -61,7 +61,7 @@ test.describe( "Main menu", () =>
 
     test( "searches the catalog and clears the query", async ( { page } ) =>
     {
-        await page.keyboard.press( "/" );
+        await page.getByRole( "button", { name: "Search for a story" } ).click();
 
         const searchInput = page.getByRole( "textbox", { name: "Search for a story" } );
         await expect( searchInput ).toBeFocused();
@@ -80,11 +80,11 @@ test.describe( "Main menu", () =>
 
     test( "truncates a long search query in the count and empty-state messages", async ( { page } ) =>
     {
-        await page.keyboard.press( "/" );
+        await page.getByRole( "button", { name: "Search for a story" } ).click();
 
         const searchInput = page.getByRole( "textbox", { name: "Search for a story" } );
         const longQuery = "z".repeat( 60 );
-        const truncatedQuery = `${ "z".repeat( 40 ) }…`;
+        const truncatedQuery = `${ "z".repeat( 40 ) }...`;
 
         await searchInput.fill( longQuery );
 
@@ -111,8 +111,12 @@ test.describe( "Main menu", () =>
         await expect( page.getByText( firstTitle ) ).toBeVisible();
     } );
 
-    test( "navigates the list and opens a story with the footer buttons", async ( { page } ) =>
+    test( "navigates the list and opens a story with the footer buttons", async ( { page, isMobile } ) =>
     {
+        // The footer is the keyboard-shortcut legend on desktop only; on mobile
+        // list navigation is done by tapping the list directly (see controls.spec).
+        test.skip( isMobile, "footer legend is desktop-only" );
+
         await page.getByRole( "button", { name: "[↓] Down" } ).click();
         await expect( page.locator( "ol > li button[aria-current='true']" ) ).toHaveCount( 1 );
 
@@ -122,16 +126,16 @@ test.describe( "Main menu", () =>
         await expect( page.getByText( "STORY INFO" ) ).toBeVisible();
     } );
 
-    test( "opens the encyclopedia from the footer button", async ( { page } ) =>
+    test( "opens the encyclopedia from the navigation", async ( { page } ) =>
     {
-        await page.getByRole( "button", { name: "[W] Encyclopedia" } ).click();
+        await openEncyclopedia( page );
 
         await expect( page.getByText( "KNOWLEDGE BASE" ) ).toBeVisible();
     } );
 
-    test( "opens the AI story generator from the footer button", async ( { page } ) =>
+    test( "opens the AI story generator from the navigation", async ( { page } ) =>
     {
-        await page.getByRole( "button", { name: "[I] AI" } ).click();
+        await openAiGenerator( page );
 
         await expect( page.getByText( "AI GENERATOR" ) ).toBeVisible();
     } );

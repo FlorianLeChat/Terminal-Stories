@@ -1,6 +1,6 @@
 import { test, expect } from "@playwright/test";
 import type { Page } from "@playwright/test";
-import { gotoMenu, skipBoot } from "./utilities/fixtures";
+import { gotoMenu, skipBoot, leaveToMenu } from "./utilities/fixtures";
 import { findPathToEnding } from "./utilities/storyPath";
 
 const STORY_ID = "cursed-forest";
@@ -27,14 +27,14 @@ test.describe( "Story playback", () =>
 
         await expect( page.getByText( "STORY INFO" ) ).toBeVisible();
         await expect( page.getByText( STORY_TITLE ) ).toBeVisible();
-        await expect( page.getByRole( "button", { name: "[ENTER] Start" } ) ).toBeVisible();
+        await expect( page.getByRole( "button", { name: "Start", exact: true } ) ).toBeVisible();
     } );
 
     test( "starts the story and renders the opening scene with choices", async ( { page } ) =>
     {
         await gotoMenu( page, `/?story=${ STORY_ID }` );
 
-        await page.keyboard.press( "Enter" );
+        await page.getByRole( "button", { name: "Start", exact: true } ).click();
         await expect( page.getByText( "NOW READING" ) ).toBeVisible();
 
         // Flush the typewriter so the choice buttons are all present immediately.
@@ -48,7 +48,7 @@ test.describe( "Story playback", () =>
         await gotoMenu( page, `/?story=${ STORY_ID }` );
         await expect( page.getByText( "STORY INFO" ) ).toBeVisible();
 
-        await page.getByRole( "button", { name: "[S] Share" } ).click();
+        await page.getByRole( "button", { name: "Share", exact: true } ).click();
 
         const dialog = page.getByRole( "dialog" );
         await expect( dialog ).toBeVisible();
@@ -59,10 +59,10 @@ test.describe( "Story playback", () =>
     test( "sharing a story shows a QR overlay with the link and a device-local note", async ( { page } ) =>
     {
         await gotoMenu( page, `/?story=${ STORY_ID }` );
-        await page.keyboard.press( "Enter" );
+        await page.getByRole( "button", { name: "Start", exact: true } ).click();
         await expect( page.getByText( "NOW READING" ) ).toBeVisible();
 
-        await page.getByRole( "button", { name: "[S] Share" } ).click();
+        await page.getByRole( "button", { name: "Share", exact: true } ).click();
 
         const dialog = page.getByRole( "dialog" );
         await expect( dialog ).toBeVisible();
@@ -82,7 +82,7 @@ test.describe( "Story playback", () =>
     test( "the S key opens the share overlay and ESC closes it without leaving the story", async ( { page } ) =>
     {
         await gotoMenu( page, `/?story=${ STORY_ID }` );
-        await page.keyboard.press( "Enter" );
+        await page.getByRole( "button", { name: "Start", exact: true } ).click();
         await expect( page.getByText( "NOW READING" ) ).toBeVisible();
 
         await page.keyboard.press( "s" );
@@ -100,7 +100,7 @@ test.describe( "Story playback", () =>
         const path = findPathToEnding( STORY_ID );
 
         await gotoMenu( page, `/?story=${ STORY_ID }` );
-        await page.keyboard.press( "Enter" );
+        await page.getByRole( "button", { name: "Start", exact: true } ).click();
 
         for ( const choiceIndex of path )
         {
@@ -111,8 +111,7 @@ test.describe( "Story playback", () =>
         }
 
         await page.keyboard.press( " " );
-        await expect( page.getByRole( "button", { name: "[ENTER] Restart" } ) ).toBeVisible();
-        await expect( page.getByRole( "button", { name: "[ESC] Main menu" } ) ).toBeVisible();
+        await expect( page.getByRole( "button", { name: "Restart", exact: true } ) ).toBeVisible();
 
         // The discovery congratulation is a toast (status region), not inline text.
         const toast = page.getByRole( "status" ).filter( { hasText: /Congratulations, (all \d+ endings|ending \d+) discovered/ } );
@@ -124,7 +123,7 @@ test.describe( "Story playback", () =>
         const path = findPathToEnding( STORY_ID );
 
         await gotoMenu( page, `/?story=${ STORY_ID }` );
-        await page.keyboard.press( "Enter" );
+        await page.getByRole( "button", { name: "Start", exact: true } ).click();
 
         for ( const choiceIndex of path )
         {
@@ -133,7 +132,7 @@ test.describe( "Story playback", () =>
         }
 
         await page.keyboard.press( " " );
-        await page.getByRole( "button", { name: "[ENTER] Restart" } ).click();
+        await page.getByRole( "button", { name: "Restart", exact: true } ).click();
 
         await page.keyboard.press( " " );
         await expect( choiceButton( page, 1 ) ).toBeVisible();
@@ -142,36 +141,36 @@ test.describe( "Story playback", () =>
     test( "returning to the menu mid-story creates a resumable save", async ( { page } ) =>
     {
         await gotoMenu( page, `/?story=${ STORY_ID }` );
-        await page.keyboard.press( "Enter" );
+        await page.getByRole( "button", { name: "Start", exact: true } ).click();
 
         await page.keyboard.press( " " );
         await choiceButton( page, 1 ).click();
 
-        await page.keyboard.press( "Escape" );
+        await leaveToMenu( page );
         await expect( page.getByText( "— INTERACTIVE STORIES SYSTEM —" ) ).toBeVisible();
 
         await page.goto( `/?story=${ STORY_ID }` );
         await skipBoot( page );
 
         await expect( page.getByText( "SAVE FOUND" ) ).toBeVisible();
-        await expect( page.getByRole( "button", { name: "[ENTER] Resume" } ) ).toBeVisible();
-        await expect( page.getByRole( "button", { name: "[N] New game" } ) ).toBeVisible();
+        await expect( page.getByRole( "button", { name: "Resume", exact: true } ) ).toBeVisible();
+        await expect( page.getByRole( "button", { name: "New game", exact: true } ) ).toBeVisible();
     } );
 
     test( "starting a new game from the info screen discards the previous save", async ( { page } ) =>
     {
         await gotoMenu( page, `/?story=${ STORY_ID }` );
-        await page.keyboard.press( "Enter" );
+        await page.getByRole( "button", { name: "Start", exact: true } ).click();
         await page.keyboard.press( " " );
         await choiceButton( page, 1 ).click();
-        await page.keyboard.press( "Escape" );
+        await leaveToMenu( page );
 
         await page.goto( `/?story=${ STORY_ID }` );
         await skipBoot( page );
-        await page.getByRole( "button", { name: "[N] New game" } ).click();
+        await page.getByRole( "button", { name: "New game", exact: true } ).click();
 
         await expect( page.getByText( "NOW READING" ) ).toBeVisible();
-        await page.keyboard.press( "Escape" );
+        await leaveToMenu( page );
 
         await page.goto( `/?story=${ STORY_ID }` );
         await skipBoot( page );

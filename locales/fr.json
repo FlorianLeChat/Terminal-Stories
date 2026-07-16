@@ -28,6 +28,15 @@
 	"achievements_subtitle": "— SUCCÈS —",
 	"achievements_toast_title": [{"declarations": ["input count", "local countPlural = count: plural"], "selectors": ["countPlural"], "match": {"countPlural=one": "Succès débloqué", "countPlural=other": "Succès débloqués"}}],
 
+	"action_cancel_search": "Annuler la recherche",
+	"action_fork": "Bifurquer et éditer",
+	"action_new_game": "Nouvelle partie",
+	"action_restart": "Rejouer",
+	"action_resume": "Reprendre",
+	"action_share": "Partager",
+	"action_skip": "Passer",
+	"action_start": "Démarrer",
+
 	"ai_ephemeral_note": "Histoire à usage unique : aucune sauvegarde, aucun ajout au catalogue.",
 	"ai_err_api": "Erreur de l'API (code {status}). Réessayez plus tard.",
 	"ai_err_auth": "Clé API refusée. Vérifiez votre clé Anthropic.",
@@ -77,6 +86,8 @@
 	"controls_custom_new": "[N] Nouvelle histoire",
 	"controls_custom_open": "[ENTRÉE] Ouvrir",
 	"controls_editor_back": "[ÉCHAP] Mes histoires",
+	"controls_legend_aria": "Raccourcis clavier",
+	"controls_nav_aria": "Navigation",
 	"controls_source_code": "Code source",
 	"controls_menu_achievements": "[A] Succès",
 	"controls_menu_ai": "[I] IA",
@@ -101,7 +112,6 @@
 	"controls_story_menu": "[ÉCHAP] Menu principal",
 	"controls_story_share": "[S] Partager",
 	"controls_story_skip": "[ESPACE] Passer",
-	"controls_toggle": "Contrôles",
 	"controls_wiki_back": "[ÉCHAP] Retour à la liste",
 	"controls_wiki_category": "[←→] Rubrique",
 	"controls_wiki_consult": "[ENTRÉE] Consulter",
@@ -218,6 +228,8 @@
 
 	"language_self_name": "Français",
 
+	"list_open_hint": "Touchez à nouveau pour lire",
+
 	"menu_count_available": " disponibles",
 	"menu_count_filtered": " filtrées",
 	"menu_count_results": [{"declarations": ["input count", "input query", "local countPlural = count: plural"], "selectors": ["countPlural"], "match": {"countPlural=one": "{count} résultat pour « {query} »", "countPlural=other": "{count} résultats pour « {query} »"}}],
@@ -230,10 +242,17 @@
 	"menu_filter_language": "LANGUE",
 	"menu_filter_reset": "✕ Réinitialiser",
 	"menu_search_aria": "Rechercher une histoire",
-	"menu_search_cancel": "[ÉCHAP] Annuler",
 	"menu_search_label": "RECHERCHE",
 	"menu_search_placeholder": "Titre, genre, univers, personnage, tag...",
 	"menu_subtitle": "— SYSTÈME D'HISTOIRES INTERACTIVES —",
+
+	"nav_achievements": "Succès",
+	"nav_ai": "IA",
+	"nav_back_to_custom": "Retour à mes histoires",
+	"nav_back_to_list": "Retour à la liste",
+	"nav_back_to_stories": "Retour aux histoires",
+	"nav_custom": "Mes histoires",
+	"nav_wiki": "Encyclopédie",
 
 	"share_close": "[ÉCHAP] Fermer",
 	"share_copied": "Copié !",
@@ -283,7 +302,6 @@
 	"wiki_filter_language": "LANGUE",
 	"wiki_filter_universe": "UNIVERS",
 	"wiki_search_aria": "Rechercher une entrée encyclopédique",
-	"wiki_search_cancel": "[ÉCHAP] Annuler",
 	"wiki_search_label": "RECHERCHE",
 	"wiki_search_placeholder": "Nom, résumé, description, alias...",
 	"wiki_subtitle": "— ENCYCLOPÉDIE DES UNIVERS INTERACTIFS —"

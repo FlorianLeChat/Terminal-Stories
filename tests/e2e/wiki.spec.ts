@@ -1,6 +1,6 @@
 import { test, expect } from "@playwright/test";
 import type { Page } from "@playwright/test";
-import { gotoMenu } from "./utilities/fixtures";
+import { gotoMenu, openEncyclopedia, backToWikiList } from "./utilities/fixtures";
 
 const ENTRY_NAME = "Kingdom of Elarion";
 const ENTRY_ID = "cursed-forest--universe--elarion";
@@ -21,13 +21,13 @@ test.describe( "Encyclopedia", () =>
     test.beforeEach( async ( { page } ) =>
     {
         await gotoMenu( page );
-        await page.getByRole( "button", { name: "[W] Encyclopedia" } ).click();
+        await openEncyclopedia( page );
     } );
 
     test( "lists entries for the default category with a count footer", async ( { page } ) =>
     {
         await expect( entryTitle( page ) ).toBeVisible();
-        await expect( page.getByText( /\d+ entr(y|ies) —/ ) ).toBeVisible();
+        await expect( page.getByText( /\d+ entr(y|ies)/ ) ).toBeVisible();
     } );
 
     test( "switches category with the [←→] shortcut", async ( { page } ) =>
@@ -41,13 +41,13 @@ test.describe( "Encyclopedia", () =>
         await expect( firstCategory ).toHaveAttribute( "aria-pressed", "false" );
     } );
 
-    test( "navigates the list and opens an entry with the footer buttons", async ( { page } ) =>
+    test( "opens an entry by clicking it in the list", async ( { page } ) =>
     {
-        await page.getByRole( "button", { name: "[↓] Down" } ).click();
-        await page.getByRole( "button", { name: "[↑] Up" } ).click();
+        await entryTitle( page ).click();
 
-        await page.getByRole( "button", { name: "[ENTER] Open" } ).click();
-        await expect( page.getByRole( "button", { name: "[ESC] Back to list" } ) ).toBeVisible();
+        // Opening an entry swaps the list (and its category filters) for the
+        // detail view, on every viewport.
+        await expect( page.locator( "#wiki-filter-category-label" ) ).toBeHidden();
     } );
 
     test( "filters by language then by universe", async ( { page } ) =>
@@ -67,7 +67,7 @@ test.describe( "Encyclopedia", () =>
 
     test( "searches entries and clears the query", async ( { page } ) =>
     {
-        await page.keyboard.press( "/" );
+        await page.getByRole( "button", { name: "Search an encyclopedia entry" } ).click();
 
         const searchInput = page.getByRole( "textbox", { name: "Search an encyclopedia entry" } );
         await expect( searchInput ).toBeFocused();
@@ -84,11 +84,11 @@ test.describe( "Encyclopedia", () =>
 
     test( "truncates a long search query in the count and empty-state messages", async ( { page } ) =>
     {
-        await page.keyboard.press( "/" );
+        await page.getByRole( "button", { name: "Search an encyclopedia entry" } ).click();
 
         const searchInput = page.getByRole( "textbox", { name: "Search an encyclopedia entry" } );
         const longQuery = "z".repeat( 60 );
-        const truncatedQuery = `${ "z".repeat( 40 ) }…`;
+        const truncatedQuery = `${ "z".repeat( 40 ) }...`;
 
         await searchInput.fill( longQuery );
 
@@ -96,13 +96,14 @@ test.describe( "Encyclopedia", () =>
         await expect( page.getByText( longQuery, { exact: false } ) ).not.toBeVisible();
     } );
 
-    test( "opens an entry detail and navigates back with ESC", async ( { page } ) =>
+    test( "opens an entry detail and returns to the list", async ( { page } ) =>
     {
         await entryTitle( page ).click();
 
-        await expect( page.getByRole( "button", { name: "[ESC] Back to list" } ) ).toBeVisible();
+        // In the detail view the category filters are gone.
+        await expect( page.locator( "#wiki-filter-category-label" ) ).toBeHidden();
 
-        await page.keyboard.press( "Escape" );
+        await backToWikiList( page );
 
         await expect( page.locator( "#wiki-filter-category-label" ) ).toBeVisible();
     } );
@@ -112,6 +113,9 @@ test.describe( "Encyclopedia", () =>
         await gotoMenu( page, `/?wiki=${ ENTRY_ID }` );
 
         await expect( page.getByText( "KNOWLEDGE BASE" ) ).toBeVisible();
-        await expect( page.getByRole( "button", { name: "[ESC] Back to list" } ) ).toBeVisible();
+
+        // A deep-linked entry opens straight into its detail view, so the list
+        // category filters are not rendered.
+        await expect( page.locator( "#wiki-filter-category-label" ) ).toBeHidden();
     } );
 } );
