@@ -78,8 +78,8 @@
         ></textarea>
     </div>
 
-    <div class="flex gap-3 flex-wrap">
-        <div class="space-y-1 flex-1 min-w-32">
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+        <div class="space-y-1 min-w-0">
             <label for="editor-genre" class="block text-terminal-dim text-xs select-none">{m.editor_genre_label()}</label>
             <select
                 bind:value={draft.genre}
@@ -92,7 +92,7 @@
             </select>
         </div>
 
-        <div class="space-y-1 flex-1 min-w-32">
+        <div class="space-y-1 min-w-0">
             <label for="editor-language" class="block text-terminal-dim text-xs select-none">{m.editor_language_label()}</label>
             <input
                 bind:value={draft.language}
@@ -103,7 +103,7 @@
             />
         </div>
 
-        <div class="space-y-1 flex-1 min-w-32">
+        <div class="space-y-1 min-w-0">
             <label for="editor-universe" class="block text-terminal-dim text-xs select-none">{m.editor_universe_label()}</label>
             <input
                 bind:value={draft.universe}
@@ -115,8 +115,8 @@
         </div>
     </div>
 
-    <div class="flex gap-3 flex-wrap">
-        <div class="space-y-1 flex-1 min-w-32">
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <div class="space-y-1 min-w-0">
             <label for="editor-tags" class="block text-terminal-dim text-xs select-none">{m.editor_tags_label()}</label>
             <input
                 id="editor-tags"
@@ -128,7 +128,7 @@
             />
         </div>
 
-        <div class="space-y-1 flex-1 min-w-32">
+        <div class="space-y-1 min-w-0">
             <label for="editor-music" class="block text-terminal-dim text-xs select-none">{m.editor_music_label()}</label>
             <select
                 id="editor-music"

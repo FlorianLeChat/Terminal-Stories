@@ -311,8 +311,8 @@
 
 {#if scene}
     <section class="border border-terminal-dim/40 rounded px-4 py-3 space-y-3 flex-1 min-w-0" aria-label={m.editor_scene_form_aria()}>
-        <div class="flex gap-2 items-end flex-wrap">
-            <div class="space-y-1 flex-1 min-w-32">
+        <div class="flex flex-col sm:flex-row gap-2 sm:items-end">
+            <div class="space-y-1 flex-1 min-w-0">
                 <label for="editor-scene-id" class="block text-terminal-dim text-xs select-none">{m.editor_scene_id_label()}</label>
                 <input
                     id="editor-scene-id"
@@ -325,32 +325,35 @@
                 />
             </div>
 
-            {#if draft.startScene === scene.id}
-                <p class="text-terminal-cyan text-xs px-2 py-1 border border-terminal-cyan/40 rounded select-none">
-                    {m.editor_scene_is_start()}
-                </p>
-            {:else}
+            <!-- Start marker and delete keep together on their own row on mobile. -->
+            <div class="flex gap-2 items-center flex-wrap">
+                {#if draft.startScene === scene.id}
+                    <p class="text-terminal-cyan text-xs px-2 py-1 border border-terminal-cyan/40 rounded select-none">
+                        {m.editor_scene_is_start()}
+                    </p>
+                {:else}
+                    <button
+                        type="button"
+                        class="text-xs px-2 py-1 rounded border border-terminal-cyan/50 text-terminal-cyan hover:bg-terminal-cyan/10 motion-safe:transition-colors motion-safe:duration-100"
+                        onclick={handleMakeStart}
+                    >
+                        {m.editor_scene_make_start()}
+                    </button>
+                {/if}
+
                 <button
                     type="button"
-                    class="text-xs px-2 py-1 rounded border border-terminal-cyan/50 text-terminal-cyan hover:bg-terminal-cyan/10 motion-safe:transition-colors motion-safe:duration-100"
-                    onclick={handleMakeStart}
+                    class="text-xs px-2 py-1 rounded border border-terminal-amber/50 text-terminal-amber hover:bg-terminal-amber/10 disabled:opacity-50 disabled:cursor-not-allowed motion-safe:transition-colors motion-safe:duration-100"
+                    disabled={draft.scenes.length <= 1}
+                    onclick={handleDeleteScene}
                 >
-                    {m.editor_scene_make_start()}
+                    {m.editor_scene_delete()}
                 </button>
-            {/if}
-
-            <button
-                type="button"
-                class="text-xs px-2 py-1 rounded border border-terminal-amber/50 text-terminal-amber hover:bg-terminal-amber/10 disabled:opacity-50 disabled:cursor-not-allowed motion-safe:transition-colors motion-safe:duration-100"
-                disabled={draft.scenes.length <= 1}
-                onclick={handleDeleteScene}
-            >
-                {m.editor_scene_delete()}
-            </button>
+            </div>
         </div>
 
-        <div class="flex gap-3 flex-wrap">
-            <div class="space-y-1 flex-1 min-w-32">
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <div class="space-y-1 min-w-0">
                 <label for="editor-scene-speaker" class="block text-terminal-dim text-xs select-none">{m.editor_scene_speaker_label()}</label>
                 <select
                     id="editor-scene-speaker"
@@ -366,7 +369,7 @@
                 </select>
             </div>
 
-            <div class="space-y-1 flex-1 min-w-32">
+            <div class="space-y-1 min-w-0">
                 <label for="editor-scene-music" class="block text-terminal-dim text-xs select-none">{m.editor_music_label()}</label>
                 <select
                     id="editor-scene-music"
@@ -382,7 +385,7 @@
                 </select>
             </div>
 
-            <div class="space-y-1 flex-1 min-w-32">
+            <div class="space-y-1 min-w-0">
                 <label for="editor-scene-sound" class="block text-terminal-dim text-xs select-none">{m.editor_scene_sound_label()}</label>
                 <select
                     id="editor-scene-sound"
@@ -404,10 +407,10 @@
 
             <ul class="space-y-2">
                 {#each scene.text as entry, i ( i )}
-                    <li class="flex gap-2 items-start">
+                    <li class="flex flex-col sm:flex-row gap-2 sm:items-start">
                         <select
                             value={entrySpeaker( entry )}
-                            class="w-36 shrink-0 truncate bg-terminal-bg border border-terminal-dim/40 rounded px-2 py-1 text-terminal-green text-xs outline-none focus:border-terminal-green"
+                            class="w-full sm:w-36 shrink-0 truncate bg-terminal-bg border border-terminal-dim/40 rounded px-2 py-1 text-terminal-green text-xs outline-none focus:border-terminal-green"
                             aria-label={m.editor_entry_speaker_aria()}
                             title={speakerLabel( entrySpeaker( entry ) )}
                             onchange={( e ) => handleEntrySpeakerChange( i, e )}
@@ -420,22 +423,25 @@
                             {/each}
                         </select>
 
-                        <textarea
-                            value={entryText( entry )}
-                            rows="2"
-                            class="flex-1 bg-transparent border border-terminal-dim/40 rounded px-2 py-1 text-terminal-green text-xs outline-none focus:border-terminal-green caret-terminal-green resize-y"
-                            aria-label={m.editor_entry_text_aria()}
-                            oninput={( e ) => handleEntryTextInput( i, e )}
-                        ></textarea>
+                        <!-- Textarea and its remove button stay paired on one row across all sizes. -->
+                        <div class="flex gap-2 items-start flex-1 min-w-0">
+                            <textarea
+                                value={entryText( entry )}
+                                rows="2"
+                                class="flex-1 min-w-0 bg-transparent border border-terminal-dim/40 rounded px-2 py-1 text-terminal-green text-xs outline-none focus:border-terminal-green caret-terminal-green resize-y"
+                                aria-label={m.editor_entry_text_aria()}
+                                oninput={( e ) => handleEntryTextInput( i, e )}
+                            ></textarea>
 
-                        <button
-                            type="button"
-                            class="text-terminal-amber text-xs px-1.5 py-1 rounded border border-terminal-amber/50 hover:bg-terminal-amber/10 motion-safe:transition-colors motion-safe:duration-100"
-                            aria-label={m.editor_text_remove()}
-                            onclick={() => handleRemoveEntry( i )}
-                        >
-                            ✕
-                        </button>
+                            <button
+                                type="button"
+                                class="shrink-0 text-terminal-amber text-xs px-1.5 py-1 rounded border border-terminal-amber/50 hover:bg-terminal-amber/10 motion-safe:transition-colors motion-safe:duration-100"
+                                aria-label={m.editor_text_remove()}
+                                onclick={() => handleRemoveEntry( i )}
+                            >
+                                ✕
+                            </button>
+                        </div>
                     </li>
                 {/each}
             </ul>

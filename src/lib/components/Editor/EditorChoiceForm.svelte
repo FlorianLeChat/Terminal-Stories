@@ -57,8 +57,8 @@
 
 {#if scene && choice}
     <li class="border border-terminal-dim/30 rounded px-3 py-2 space-y-2">
-        <div class="flex gap-2 items-end flex-wrap">
-            <div class="space-y-1 flex-1 min-w-40">
+        <div class="flex flex-col sm:flex-row gap-2 sm:items-end">
+            <div class="space-y-1 flex-1 min-w-0">
                 <label for={`editor-choice-text-${ index }`} class="block text-terminal-dim text-xs select-none">
                     {m.editor_choice_text_label()}
                 </label>
@@ -71,32 +71,35 @@
                 />
             </div>
 
-            <div class="space-y-1 w-40">
-                <label for={`editor-choice-target-${ index }`} class="block text-terminal-dim text-xs select-none">
-                    {m.editor_choice_target_label()}
-                </label>
-                <select
-                    bind:value={choice.nextScene}
-                    id={`editor-choice-target-${ index }`}
-                    class="w-full bg-terminal-bg border border-terminal-dim/40 rounded px-2 py-1 text-terminal-green text-xs outline-none focus:border-terminal-green"
-                >
-                    {#each draft.scenes as target ( target.id )}
-                        <option value={target.id}>{target.id}</option>
-                    {/each}
-                </select>
-            </div>
+            <!-- Target select and remove stay paired below the text on mobile. -->
+            <div class="flex gap-2 items-end">
+                <div class="space-y-1 flex-1 min-w-0 sm:flex-none sm:w-40">
+                    <label for={`editor-choice-target-${ index }`} class="block text-terminal-dim text-xs select-none">
+                        {m.editor_choice_target_label()}
+                    </label>
+                    <select
+                        bind:value={choice.nextScene}
+                        id={`editor-choice-target-${ index }`}
+                        class="w-full bg-terminal-bg border border-terminal-dim/40 rounded px-2 py-1 text-terminal-green text-xs outline-none focus:border-terminal-green"
+                    >
+                        {#each draft.scenes as target ( target.id )}
+                            <option value={target.id}>{target.id}</option>
+                        {/each}
+                    </select>
+                </div>
 
-            <button
-                type="button"
-                class="text-xs px-2 py-1 rounded border border-terminal-amber/50 text-terminal-amber hover:bg-terminal-amber/10 motion-safe:transition-colors motion-safe:duration-100"
-                onclick={handleRemove}
-            >
-                {m.editor_choice_remove()}
-            </button>
+                <button
+                    type="button"
+                    class="shrink-0 text-xs px-2 py-1 rounded border border-terminal-amber/50 text-terminal-amber hover:bg-terminal-amber/10 motion-safe:transition-colors motion-safe:duration-100"
+                    onclick={handleRemove}
+                >
+                    {m.editor_choice_remove()}
+                </button>
+            </div>
         </div>
 
-        <div class="flex gap-2 flex-wrap">
-            <div class="space-y-1 flex-1 min-w-40">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+            <div class="space-y-1 min-w-0">
                 <label for={`editor-choice-action-${ index }`} class="block text-terminal-dim text-xs select-none">
                     {m.editor_choice_action_label()}
                 </label>
@@ -109,7 +112,7 @@
                 />
             </div>
 
-            <div class="space-y-1 flex-1 min-w-40">
+            <div class="space-y-1 min-w-0">
                 <label for={`editor-choice-consequence-${ index }`} class="block text-terminal-dim text-xs select-none">
                     {m.editor_choice_consequence_label()}
                 </label>
@@ -123,8 +126,8 @@
             </div>
         </div>
 
-        <div class="flex gap-2 flex-wrap">
-            <div class="space-y-1 flex-1 min-w-32">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+            <div class="space-y-1 min-w-0">
                 <label for={`editor-choice-requires-${ index }`} class="block text-terminal-dim text-xs select-none">
                     {m.editor_choice_requires_label()}
                 </label>
@@ -138,7 +141,7 @@
                 />
             </div>
 
-            <div class="space-y-1 flex-1 min-w-32">
+            <div class="space-y-1 min-w-0">
                 <label for={`editor-choice-sets-${ index }`} class="block text-terminal-dim text-xs select-none">
                     {m.editor_choice_sets_label()}
                 </label>

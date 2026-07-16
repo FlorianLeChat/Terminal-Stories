@@ -69,8 +69,8 @@
     {#if draft.characters.length > 0}
         <ul class="space-y-2">
             {#each draft.characters as character, i ( character.id )}
-                <li class="flex gap-2 items-end flex-wrap">
-                    <div class="space-y-1 flex-1 min-w-32">
+                <li class="flex flex-col sm:flex-row gap-2 sm:items-end">
+                    <div class="space-y-1 flex-1 min-w-0">
                         <label for={`editor-character-name-${ i }`} class="block text-terminal-dim text-xs select-none">
                             {m.editor_character_name_label()}
                         </label>
@@ -83,28 +83,31 @@
                         />
                     </div>
 
-                    <div class="space-y-1 w-36">
-                        <label for={`editor-character-role-${ i }`} class="block text-terminal-dim text-xs select-none">
-                            {m.editor_character_role_label()}
-                        </label>
-                        <select
-                            bind:value={character.role}
-                            id={`editor-character-role-${ i }`}
-                            class="w-full bg-terminal-bg border border-terminal-dim/40 rounded px-2 py-1 text-terminal-green text-xs outline-none focus:border-terminal-green"
-                        >
-                            {#each ROLES as role ( role )}
-                                <option value={role}>{roleLabel( role )}</option>
-                            {/each}
-                        </select>
-                    </div>
+                    <!-- Role select and remove keep together below the name on mobile. -->
+                    <div class="flex gap-2 items-end">
+                        <div class="space-y-1 flex-1 min-w-0 sm:flex-none sm:w-36">
+                            <label for={`editor-character-role-${ i }`} class="block text-terminal-dim text-xs select-none">
+                                {m.editor_character_role_label()}
+                            </label>
+                            <select
+                                bind:value={character.role}
+                                id={`editor-character-role-${ i }`}
+                                class="w-full bg-terminal-bg border border-terminal-dim/40 rounded px-2 py-1 text-terminal-green text-xs outline-none focus:border-terminal-green"
+                            >
+                                {#each ROLES as role ( role )}
+                                    <option value={role}>{roleLabel( role )}</option>
+                                {/each}
+                            </select>
+                        </div>
 
-                    <button
-                        type="button"
-                        class="text-xs px-2 py-1 rounded border border-terminal-amber/50 text-terminal-amber hover:bg-terminal-amber/10 motion-safe:transition-colors motion-safe:duration-100"
-                        onclick={() => handleRemoveCharacter( i )}
-                    >
-                        {m.editor_character_remove()}
-                    </button>
+                        <button
+                            type="button"
+                            class="shrink-0 text-xs px-2 py-1 rounded border border-terminal-amber/50 text-terminal-amber hover:bg-terminal-amber/10 motion-safe:transition-colors motion-safe:duration-100"
+                            onclick={() => handleRemoveCharacter( i )}
+                        >
+                            {m.editor_character_remove()}
+                        </button>
+                    </div>
                 </li>
             {/each}
         </ul>

@@ -215,7 +215,10 @@
                             </span>
 
                             {#if origin}
-                                <span class="text-terminal-amber text-xs shrink-0">⑂ {m.custom_forked_from( { title: origin } )}</span>
+                                <span
+                                    class="text-terminal-amber text-xs min-w-0 max-w-full truncate"
+                                    title={m.custom_forked_from( { title: origin } )}
+                                >⑂ {m.custom_forked_from( { title: origin } )}</span>
                             {/if}
                         </p>
 
