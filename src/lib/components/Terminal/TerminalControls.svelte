@@ -18,10 +18,6 @@
         atGeneratedEnding: boolean;
         /** True when playing a catalog story and sitting on an ending scene. */
         atStandardEnding: boolean;
-        /** Number of endings discovered so far (meaningful only when at an ending). */
-        endingsFound: number;
-        /** Total endings in the current story (meaningful only when at an ending). */
-        endingsTotal: number;
         /** Skips the running typewriter animation (owned by the parent terminal). */
         onSkip: () => void;
         /** Moves the highlighted menu story up (-1) or down (1), wrapping around the list. */
@@ -42,16 +38,12 @@
         searchActive,
         atGeneratedEnding,
         atStandardEnding,
-        endingsFound,
-        endingsTotal,
         onSkip,
         onMenuNavigate,
         onMenuSelect,
         onCustomNew,
         onFork
     }: Props = $props();
-
-    const showEndingsCount = $derived( ( atGeneratedEnding || atStandardEnding ) && endingsTotal > 0 );
 
     // On mobile the control bar can hold many buttons that wrap onto several
     // rows, eating precious vertical space. There it can be folded away behind
@@ -240,12 +232,6 @@
             {@render control( m.controls_editor_back(), () => terminal.closeEditor() )}
         {/if}
     </nav>
-
-    {#if showEndingsCount}
-        <output class="ml-auto flex items-center gap-3">
-            {m.ai_endings_progress( { found: endingsFound, total: endingsTotal } )}
-        </output>
-    {/if}
 
     {#if view === "boot"}
         <a

@@ -28,7 +28,6 @@
 	"achievements_subtitle": "— ACHIEVEMENTS —",
 	"achievements_toast_title": [{"declarations": ["input count", "local countPlural = count: plural"], "selectors": ["countPlural"], "match": {"countPlural=one": "Achievement unlocked", "countPlural=other": "Achievements unlocked"}}],
 
-	"ai_endings_progress": "Endings discovered: {found} / {total}",
 	"ai_ephemeral_note": "One-shot story: no save, never added to the catalog.",
 	"ai_err_api": "API error (code {status}). Try again later.",
 	"ai_err_auth": "API key refused. Check your Anthropic key.",

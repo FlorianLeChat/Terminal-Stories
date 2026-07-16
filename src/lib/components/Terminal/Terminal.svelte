@@ -813,8 +813,6 @@
         searchActive={$terminal.searchActive}
         {atGeneratedEnding}
         {atStandardEnding}
-        endingsFound={$terminal.endingsFound}
-        endingsTotal={$terminal.endingsTotal}
         onSkip={handleSkip}
         onMenuNavigate={handleMenuStep}
         onMenuSelect={handleMenuSelectCurrent}

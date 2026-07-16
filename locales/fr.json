@@ -28,7 +28,6 @@
 	"achievements_subtitle": "— SUCCÈS —",
 	"achievements_toast_title": [{"declarations": ["input count", "local countPlural = count: plural"], "selectors": ["countPlural"], "match": {"countPlural=one": "Succès débloqué", "countPlural=other": "Succès débloqués"}}],
 
-	"ai_endings_progress": "Fins découvertes : {found} / {total}",
 	"ai_ephemeral_note": "Histoire à usage unique : aucune sauvegarde, aucun ajout au catalogue.",
 	"ai_err_api": "Erreur de l'API (code {status}). Réessayez plus tard.",
 	"ai_err_auth": "Clé API refusée. Vérifiez votre clé Anthropic.",
