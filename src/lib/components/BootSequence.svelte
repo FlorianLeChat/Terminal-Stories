@@ -1,7 +1,7 @@
 <script lang="ts">
     import * as m from "$lib/locales/messages";
     import { onMount } from "svelte";
-    import { storiesMeta, playBoot, resumeAudio } from "$lib";
+    import { storiesMeta, playBoot, playTypingTick, resumeAudio } from "$lib";
 
     interface Props {
         ondone: () => void;
@@ -59,6 +59,11 @@
             setTimeout( () =>
             {
                 visible[ i ] = true;
+
+                // Each printed line lands with a soft typing tick; blank
+                // spacer lines stay silent.
+                const hasText = bootLines[ i ].text !== "";
+                if ( hasText ) playTypingTick();
 
                 if ( i === bootLines.length - 1 )
                 {

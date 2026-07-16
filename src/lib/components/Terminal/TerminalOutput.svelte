@@ -1,9 +1,9 @@
 <script lang="ts">
     import * as m from "$lib/locales/messages";
-    import { untrack } from "svelte";
+    import { onDestroy, untrack } from "svelte";
     import { SvelteSet } from "svelte/reactivity";
     import { asset } from "$app/paths";
-    import { buildProgressBar } from "$lib";
+    import { buildProgressBar, playTypingTick } from "$lib";
     import type { TerminalLine } from "$lib/stores/terminal";
 
     /**
@@ -82,6 +82,10 @@
     const TYPED_TYPES = new Set( [ "narrator", "speaker", "ending", "action", "consequence" ] );
     /** Milliseconds between each revealed character. */
     const TYPING_SPEED = 18;
+    /** Minimum milliseconds between two typing ticks — chars reveal every 18 ms, a sound per char would be a machine-gun. */
+    const TICK_INTERVAL = 50;
+    /** Timestamp of the last typing tick played, for throttling. */
+    let lastTickAt = 0;
     /** True when the OS requests reduced motion — disables the typewriter effect. */
     const prefersReducedMotion = typeof window !== "undefined"
         ? window.matchMedia( "(prefers-reduced-motion: reduce)" ).matches
@@ -120,6 +124,14 @@
                 processNext( generation );
             }
         } );
+    } );
+
+    // Invalidate any pending typeChar timeout when the component unmounts
+    // (e.g. leaving a story mid-animation), so the typewriter — and its
+    // typing sound — doesn't keep running over the next view.
+    onDestroy( () =>
+    {
+        generation++;
     } );
 
     $effect( () =>
@@ -235,7 +247,29 @@
         }
 
         typingText = line.text.slice( 0, i + 1 );
+        playTickThrottled( line.text[ i ] );
         setTimeout( () => typeChar( line, i + 1, gen ), TYPING_SPEED );
+    };
+
+    /**
+     * Plays the soft typewriter tick for a revealed character, skipping
+     * whitespace and enforcing a minimum interval between two ticks so the
+     * rapid character reveal doesn't turn into a continuous buzz.
+     *
+     * @param char - The character just revealed.
+     * @author Claude
+     */
+    const playTickThrottled = ( char: string ) =>
+    {
+        const isWhitespace = char.trim() === "";
+        if ( isWhitespace ) return;
+
+        const now = performance.now();
+        const isTooSoon = now - lastTickAt < TICK_INTERVAL;
+        if ( isTooSoon ) return;
+
+        lastTickAt = now;
+        playTypingTick();
     };
 
     /** True while a scroll-to-bottom is already scheduled for the next frame. */

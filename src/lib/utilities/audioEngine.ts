@@ -48,6 +48,26 @@ export const playKeyPress = (): void =>
     } );
 };
 
+/**
+ * Very short, quiet tick accompanying the typewriter reveal of a text. Much
+ * softer than {@link playKeyPress} (which voices the user's own keystrokes)
+ * so it can repeat rapidly under narration without drowning it: lower pitch,
+ * lower gain, and a heavy jitter to keep the stream from sounding mechanical.
+ *
+ * @author Claude
+ */
+export const playTypingTick = (): void =>
+{
+    const start = jitter( 190, 35 );
+
+    playTone( start, 0.02, {
+        wave: "square",
+        gain: 0.022,
+        glideTo: start * 0.85,
+        filterFreq: 1200
+    } );
+};
+
 /** Soft blip that glides upward when moving the selection through a list. */
 export const playNavigate = (): void =>
 {
