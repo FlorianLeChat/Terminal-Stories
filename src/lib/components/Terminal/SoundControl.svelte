@@ -47,10 +47,10 @@
         aria-pressed={enabled}
         aria-label={toggleLabel}
         title={toggleLabel}
-        class="sound-toggle flex items-center shrink-0 {toggleColor}"
+        class="sound-toggle flex items-center justify-center shrink-0 min-w-11 min-h-11 -m-2.5 {toggleColor}"
     >
         <!-- Speaker glyph; sound waves when enabled, a cross when muted. -->
-        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <svg viewBox="0 0 24 24" class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
             <path d="M4 9v6h4l5 4V5L8 9H4z" fill="currentColor" stroke="none" />
             {#if enabled}
                 <path d="M16 8.5a5 5 0 0 1 0 7" />
@@ -61,6 +61,8 @@
         </svg>
     </button>
 
+    <!-- Fine volume control only makes sense with a mouse/trackpad's precision;
+         on mobile the toggle button above is the only sound control. -->
     <input
         type="range"
         min="0"
@@ -69,7 +71,7 @@
         oninput={handleVolume}
         disabled={!enabled}
         aria-label={m.sound_volume()}
-        class="sound-volume w-14 sm:w-16 disabled:opacity-40"
+        class="sound-volume hidden sm:block sm:w-16 disabled:opacity-40"
     />
 </span>
 
@@ -78,7 +80,9 @@
         transition: color 0.15s ease;
     }
 
-    /* Keep the slider on-brand: thin terminal-green track and thumb. */
+    /* Keep the slider on-brand: thin terminal-green track and thumb. Shown
+       from `sm` up only (see markup), where a mouse/trackpad gives it the
+       precision a touch drag would not. */
     .sound-volume {
         accent-color: var( --color-terminal-green, #00ff46 );
         cursor: pointer;

@@ -21,6 +21,13 @@ const readSoundSettings = async ( page: Page ): Promise<{ enabled: boolean; volu
 
 test.describe( "sound controls", () =>
 {
+    // The volume slider is hidden below the `sm` breakpoint (640px): on
+    // mobile the toggle button is the only sound control.
+    const sliderIsVisibleAtThisViewport = ( page: Page ): boolean =>
+    {
+        return ( page.viewportSize()?.width ?? 0 ) >= 640;
+    };
+
     test( "sound is muted by default, with a disabled volume slider", async ( { page } ) =>
     {
         await gotoMenu( page );
@@ -30,9 +37,16 @@ test.describe( "sound controls", () =>
         await expect( toggle ).toBeVisible();
         await expect( toggle ).toHaveAttribute( "aria-pressed", "false" );
 
-        // The volume slider is present on every viewport and disabled while muted.
         const volume = page.getByRole( "slider", { name: "Sound volume" } );
-        await expect( volume ).toBeDisabled();
+
+        if ( sliderIsVisibleAtThisViewport( page ) )
+        {
+            await expect( volume ).toBeDisabled();
+        }
+        else
+        {
+            await expect( volume ).toBeHidden();
+        }
     } );
 
     test( "clicking the toggle enables sound and persists the choice", async ( { page } ) =>
@@ -44,7 +58,11 @@ test.describe( "sound controls", () =>
         // Once enabled, the button offers the opposite action and the slider unlocks.
         const toggle = page.getByRole( "button", { name: "Mute sound" } );
         await expect( toggle ).toHaveAttribute( "aria-pressed", "true" );
-        await expect( page.getByRole( "slider", { name: "Sound volume" } ) ).toBeEnabled();
+
+        if ( sliderIsVisibleAtThisViewport( page ) )
+        {
+            await expect( page.getByRole( "slider", { name: "Sound volume" } ) ).toBeEnabled();
+        }
 
         const settings = await readSoundSettings( page );
         expect( settings?.enabled ).toBe( true );
