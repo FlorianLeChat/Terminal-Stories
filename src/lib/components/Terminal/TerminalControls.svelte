@@ -155,7 +155,12 @@
     <nav id="terminal-controls-nav" class="{navVisibilityClass} sm:contents">
         {#if view === "story"}
             {#if atGeneratedEnding || atStandardEnding}
-                {@render control( m.controls_story_ending(), handleRestart )}
+                {#if isAnimating}
+                    {@render control( m.controls_story_skip(), onSkip )}
+                {:else}
+                    {@render control( m.controls_story_ending(), handleRestart )}
+                {/if}
+
                 {@render control( m.controls_story_menu(), () => terminal.goBack() )}
             {:else}
                 {#if isAnimating}

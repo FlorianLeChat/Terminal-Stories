@@ -724,6 +724,10 @@
             const scene = $terminal.currentStory?.scenes[ $terminal.gameState?.currentScene ?? "" ];
             if ( !scene?.isEnding ) return;
 
+            // Block the restart while the ending's dialogue is still typing out,
+            // so ENTER can't skip past it the way SPACE deliberately can.
+            if ( isAnimating ) return;
+
             // ENTER replays the story from the start on any ending, whether
             // AI-generated or catalog. ESC returns to the menu instead.
             if ( $terminal.currentStoryIsGenerated )
