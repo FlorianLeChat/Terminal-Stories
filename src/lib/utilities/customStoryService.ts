@@ -203,7 +203,6 @@ export const createBlankStory = ( seed: { title: string; language: string; unive
         language: seed.language,
         universe: seed.universe,
         description: "",
-        tags: [],
         characters: [],
         startScene: "start",
         scenes: [

@@ -19,7 +19,7 @@
     let draft = $state<StoryFile>(
         record
             ? structuredClone( record.story )
-            : { id: "", title: "", genre: "", language: "", universe: "", description: "", tags: [], characters: [], startScene: "", scenes: [] }
+            : { id: "", title: "", genre: "", language: "", universe: "", description: "", characters: [], startScene: "", scenes: [] }
     );
 
     let selectedSceneId = $state( record ? record.story.startScene : "" );

@@ -13,7 +13,6 @@
         "The roads always skirt the deep woods. The elders say that some forests remember, and that the memory of trees forgets neither promises nor betrayals.",
         "The Mireval Forest, in the north of the kingdom, is the most feared of these places."
       ],
-      "tags": ["fantasy", "medieval", "magic", "lore"],
       "related": ["cursed-forest--location--mireval", "cursed-forest--era--age-of-whispers"]
     },
     {
@@ -28,7 +27,6 @@
         "Their journey is no quest for gold or glory, but a reckoning with a memory they have been fleeing."
       ],
       "aliases": ["The lone traveler"],
-      "tags": ["protagonist", "human"],
       "related": ["cursed-forest--location--mireval", "cursed-forest--character--spirit", "cursed-forest--character--old-weaver"]
     },
     {
@@ -43,7 +41,6 @@
         "It scorns those who flee and takes interest in those who dare to stay. To one who knows how to ask for passage rather than demand it, it sometimes grants its protection."
       ],
       "aliases": ["The Guardian", "The voice of Mireval"],
-      "tags": ["antagonist", "spirit", "guardian"],
       "related": ["cursed-forest--location--forest-heart", "cursed-forest--event--curse"]
     },
     {
@@ -58,7 +55,6 @@
         "To one who knows how to listen, she gives a vial of golden light, 'to tame what guards.' To one who spurns her, she recalls that 'that's what all the ones who never come back say.'"
       ],
       "aliases": ["The Weaver", "The exiled witch"],
-      "tags": ["ally", "witch", "magic"],
       "related": ["cursed-forest--location--cabin", "cursed-forest--location--forest-heart"]
     },
     {
@@ -73,7 +69,6 @@
         "The forest does not always kill. Sometimes, it merely keeps what men refuse to face."
       ],
       "aliases": ["Mireval"],
-      "tags": ["forest", "cursed place"],
       "related": ["cursed-forest--location--forest-heart", "cursed-forest--location--black-stream", "cursed-forest--event--curse"]
     },
     {
@@ -88,7 +83,6 @@
         "It is here that the final choice plays out, and it wears many faces: reach into the bark to reclaim the memory the tree guards, turn away and leave it its secrets, pour the Old Weaver's golden vial over the roots, call on the befriended Spirit to open the heart together, or name aloud what the tree hoards. Each path leaves Mireval, and the traveler, changed in a different way."
       ],
       "aliases": ["The White Tree", "The heart-tree"],
-      "tags": ["tree", "sanctuary", "key location"],
       "related": ["cursed-forest--character--spirit", "cursed-forest--location--mireval"]
     },
     {
@@ -103,7 +97,6 @@
         "The Spirit sometimes advises peaceful travelers to 'follow the water.'"
       ],
       "aliases": ["The bridge of faces"],
-      "tags": ["water", "border", "passage"],
       "related": ["cursed-forest--location--mireval", "cursed-forest--location--forest-heart"]
     },
     {
@@ -116,7 +109,6 @@
         "The inside overflows with dried herbs, vials, and grimoires with inverted titles; the tea there smells of pine and sulfur.",
         "It is the home of the Old Weaver, one of the few places in Mireval where a traveler can sit down and hear the truth."
       ],
-      "tags": ["refuge", "dwelling"],
       "related": ["cursed-forest--character--old-weaver"]
     },
     {
@@ -129,7 +121,6 @@
         "Then came the time when the trees began to hold the voices, faces, and memories of those who ventured in.",
         "Since then, time in Mireval is no longer measured in years but in silences: here it is always dusk, and memory does not age."
       ],
-      "tags": ["era", "lore"],
       "related": ["cursed-forest--event--curse", "cursed-forest--location--mireval"]
     },
     {
@@ -142,7 +133,6 @@
         "The faces carved into the bark of the White Tree are said to be those of travelers who never came back out.",
         "It is said the curse can be broken, never by force: either by a gift given with nothing asked in return ('It has been a long time since anyone knew how to give without taking'), or by one who reaches the heart with the Spirit as a friend and asks it to release what it holds rather than taking from it. Then the sleeping faces wake and rise free, and the trees of Mireval are only trees again."
       ],
-      "tags": ["event", "curse", "lore"],
       "related": ["cursed-forest--character--spirit", "cursed-forest--location--forest-heart"]
     }
   ]

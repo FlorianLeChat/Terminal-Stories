@@ -12,7 +12,6 @@
         "This is the Paris of precincts, custody cells, hallway cameras, and files someone would rather see disappear.",
         "A moral-thriller universe where the line between justice and personal survival is thinner than anyone admits, and where a single anonymous call can bring down ten years of a career."
       ],
-      "tags": ["thriller", "contemporary", "crime", "lore"],
       "related": ["last-call--location--roquette", "last-call--era--present-night"]
     },
     {
@@ -27,7 +26,6 @@
         "Calm and professional, Morel must decide in a single night what is worth the most: the badge, the partner, or the truth."
       ],
       "aliases": ["Morel"],
-      "tags": ["protagonist", "police"],
       "related": ["last-call--character--voice", "last-call--character--durand", "last-call--event--leclerc-case"]
     },
     {
@@ -42,7 +40,6 @@
         "What it demands isn't a ransom but a performance, to expose the truth 'cleanly.' No one will ever know who it was."
       ],
       "aliases": ["The voice on the phone", "The anonymous caller"],
-      "tags": ["antagonist", "anonymous"],
       "related": ["last-call--location--roquette", "last-call--event--last-call"]
     },
     {
@@ -57,7 +54,6 @@
         "Insurance against a future betrayal, or plain cowardice? 'For the same reasons you would have, in my place.'"
       ],
       "aliases": ["Durand"],
-      "tags": ["ally", "police", "ambiguous"],
       "related": ["last-call--character--morel", "last-call--event--leclerc-case"]
     },
     {
@@ -72,7 +68,6 @@
         "He knows. He has known all this time. His fate rests entirely on Morel's choices."
       ],
       "aliases": ["The camera 4 technician"],
-      "tags": ["npc", "witness"],
       "related": ["last-call--character--durand", "last-call--location--roquette"]
     },
     {
@@ -87,7 +82,6 @@
         "In the bathroom, sometimes, a bound man waits to be found."
       ],
       "aliases": ["The Roquette apartment"],
-      "tags": ["apartment", "key location"],
       "related": ["last-call--character--voice", "last-call--character--technician"]
     },
     {
@@ -101,7 +95,6 @@
         "The footage from this corridor is the only proof of what happened to the suspect Leclerc in custody."
       ],
       "aliases": ["Corridor B", "Camera number 4"],
-      "tags": ["location", "police", "evidence"],
       "related": ["last-call--event--leclerc-case", "last-call--character--durand"]
     },
     {
@@ -114,7 +107,6 @@
         "The countdown is constant: 'You have 13 minutes before it all comes crashing down.'",
         "This era has no date in the history books, it's the intimate, brief moment of an impossible decision, made in the heart of the Paris night."
       ],
-      "tags": ["era", "real time", "contemporary"],
       "related": ["last-call--event--last-call"]
     },
     {
@@ -127,7 +119,6 @@
         "The official version speaks of cardiac arrest. Morel and Durand know what really happened.",
         "Camera number 4 in corridor B filmed everything, and that file, kept secret for five years, is the sword of Damocles hanging over the whole plot."
       ],
-      "tags": ["event", "misconduct", "past"],
       "related": ["last-call--location--precinct", "last-call--character--durand", "last-call--character--morel"]
     },
     {
@@ -140,7 +131,6 @@
         "The Voice grants thirteen minutes, then a meeting, then an envelope, and a choice with no right answer.",
         "Depending on Morel's decisions, the night ends in confession, in betrayal, in confrontation, or in the silence of a truth never published."
       ],
-      "tags": ["event", "trigger"],
       "related": ["last-call--character--voice", "last-call--era--present-night"]
     }
   ]

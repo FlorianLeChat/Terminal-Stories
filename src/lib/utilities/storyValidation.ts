@@ -41,7 +41,6 @@ interface RawStory {
     language?: string;
     universe?: string;
     description?: string;
-    tags?: string[];
     author?: string;
     music?: string;
     characters?: Partial<Character>[];
@@ -83,7 +82,6 @@ const MAX_TEXT_ENTRIES_PER_SCENE = 80;
 const MAX_TEXT_LENGTH = 2000;
 const MAX_SHORT_TEXT_LENGTH = 300;
 const MAX_ID_LENGTH = 64;
-const MAX_TAGS = 12;
 const MAX_CHARACTERS = 40;
 
 // Own-property names that would collide with Object.prototype internals when
@@ -425,23 +423,6 @@ const normalizeCharacters = ( rawCharacters: RawStory[ "characters" ] ): Charact
 };
 
 /**
- * Normalizes the raw `tags` payload, keeping only non-empty string entries.
- *
- * @param rawTags - The raw `tags` value from the payload.
- * @returns A normalized list of tags.
- * @author Claude
- */
-const normalizeTags = ( rawTags: RawStory[ "tags" ] ): string[] =>
-{
-    if ( !Array.isArray( rawTags ) ) return [];
-
-    return rawTags
-        .slice( 0, MAX_TAGS )
-        .map( ( tag ) => clampText( tag, MAX_ID_LENGTH ) )
-        .filter( ( tag ) => tag !== "" );
-};
-
-/**
  * Normalizes the story-level metadata (title, genre, language, universe,
  * description), filling in sensible fallbacks for missing or blank fields.
  *
@@ -503,7 +484,6 @@ const normalizeStoryPayload = ( raw: unknown ): Omit<Story, "id"> =>
 
     const story: Omit<Story, "id"> = {
         ...normalizeStoryMetadata( data ),
-        tags: normalizeTags( data.tags ),
         characters: normalizeCharacters( data.characters ),
         startScene,
         scenes

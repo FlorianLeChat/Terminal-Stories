@@ -28,7 +28,7 @@ export const stories: Story[] = Object.values( storyModules ).map( toStory );
 // stats so the full scene graph never has to be walked during rendering.
 export const storiesMeta: StoryMeta[] = stories.map( ( story ) =>
 {
-    const { id, title, genre, language, universe, description, tags } = story;
+    const { id, title, genre, language, universe, description } = story;
 
     const endingIds = Object.entries( story.scenes )
         .filter( ( [ , s ] ) => s.isEnding )
@@ -41,7 +41,6 @@ export const storiesMeta: StoryMeta[] = stories.map( ( story ) =>
         language,
         universe,
         description,
-        tags,
         stats: computeStoryStats( story ),
         endingIds
     };

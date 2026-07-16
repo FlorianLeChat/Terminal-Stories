@@ -12,7 +12,6 @@
                 "Avec l'avènement des nanotechnologies et de l'intelligence artificielle, les gouvernements ont perdu le contrôle de la société, laissant place à une nouvelle classe dirigeante : les Administrateurs.",
                 "Ces femmes et ces hommes, dotés d'armures issues du projet militaire « Hyperloop », veillent à la stabilité et à la sécurité de la population à travers le globe, jusqu'au jour où une menace dépasse leurs compétences."
             ],
-            "tags": ["science-fiction", "dystopie", "lore"],
             "related": ["le-dernier-espoir--era--effondrement", "le-dernier-espoir--character--howard", "le-dernier-espoir--event--bombe-new-york", "le-dernier-espoir--event--projet-hyperloop", "le-dernier-espoir--location--quartier-general"]
         },
         {
@@ -25,7 +24,6 @@
                 "En quelques instants, elle efface la côte est américaine, l'Europe et une large part de l'hémisphère : plus de réseau, plus d'Administration, plus de commandement.",
                 "Partout ailleurs, la nouvelle se répand comme une traînée de poudre et les villes basculent dans la panique, livrées à elles-mêmes."
             ],
-            "tags": ["époque", "catastrophe", "lore"],
             "related": ["le-dernier-espoir--universe--futur", "le-dernier-espoir--event--bombe-new-york", "le-dernier-espoir--event--incident-dedale", "le-dernier-espoir--event--naufrage-thermophile", "le-dernier-espoir--location--dedale", "le-dernier-espoir--location--quartier-general", "le-dernier-espoir--location--tokyo-shibuya"]
         },
         {
@@ -40,7 +38,6 @@
                 "Selon ses choix, il peut sombrer avec la voix de Safar, se sacrifier pour Yoneda, la laisser se sacrifier pour lui, ou refuser jusqu'au bout de se séparer d'elle."
             ],
             "aliases": ["Howard", "10.60-D", "Le Capitaine"],
-            "tags": ["protagoniste", "administrateur", "humain"],
             "related": ["le-dernier-espoir--character--yoneda", "le-dernier-espoir--character--kira", "le-dernier-espoir--event--bombe-new-york"]
         },
         {
@@ -55,7 +52,6 @@
                 "Fidèle jusqu'au sacrifice, elle peut aussi bien mourir à sa place que le voir mourir à la sienne, ou choisir de rester avec lui jusqu'à la fin."
             ],
             "aliases": ["Yoneda", "10.113-B", "La sergente"],
-            "tags": ["alliée", "administratrice", "humain"],
             "related": ["le-dernier-espoir--character--howard", "le-dernier-espoir--location--quartier-yoneda", "le-dernier-espoir--character--safar"]
         },
         {
@@ -70,7 +66,6 @@
                 "Son dernier mot est un espoir : peut-être existe-t-il encore, sur ce navire, un commandement pour donner un sens à ce qui reste."
             ],
             "aliases": ["Kira", "6A", "La Commandante"],
-            "tags": ["alliée", "commandante", "humain"],
             "related": ["le-dernier-espoir--character--howard", "le-dernier-espoir--event--bombe-new-york", "le-dernier-espoir--location--thermophile"]
         },
         {
@@ -85,7 +80,6 @@
                 "Selon les choix de Howard, sa litanie peut être réduite au silence ou, au contraire, avoir raison de sa volonté."
             ],
             "aliases": ["Safar", "10.742-P", "La voix"],
-            "tags": ["antagoniste", "administrateur", "humain"],
             "related": ["le-dernier-espoir--character--yoneda", "le-dernier-espoir--location--thermophile", "le-dernier-espoir--event--bombe-new-york"]
         },
         {
@@ -100,7 +94,6 @@
                 "Son dernier enregistrement révèle que la bombe à énergie noire était une arme de l'Administration elle-même, et supplie qu'on ne refasse jamais de recherche sur elle : ne pas retrouver ses traces, ne pas la reconstruire, la laisser disparaître avec lui."
             ],
             "aliases": ["Le Fondateur", "0A"],
-            "tags": ["allié", "administrateur", "humain"],
             "related": ["le-dernier-espoir--event--projet-hyperloop", "le-dernier-espoir--location--dedale", "le-dernier-espoir--location--thermophile", "le-dernier-espoir--event--naufrage-thermophile"]
         },
         {
@@ -115,7 +108,6 @@
                 "Son silence soudain, après la bombe, est l'un des premiers signes que le monde entier vient de basculer."
             ],
             "aliases": ["La supervision"],
-            "tags": ["alliée", "commandement"],
             "related": ["le-dernier-espoir--character--howard", "le-dernier-espoir--event--bombe-new-york", "le-dernier-espoir--location--dedale"]
         },
         {
@@ -128,7 +120,6 @@
                 "C'est là, près d'une aire de jeux abandonnée, que Yoneda attend Howard au tout début de leur mission commune.",
                 "Ce lieu figé dans le temps referme, en creux, tout ce que le monde va perdre dans les heures qui suivent."
             ],
-            "tags": ["lieu", "tokyo"],
             "related": ["le-dernier-espoir--character--yoneda", "le-dernier-espoir--character--howard"]
         },
         {
@@ -143,7 +134,6 @@
                 "Quand la bombe efface New York, Tokyo bascule en quelques minutes dans le pillage et la violence ; le réseau de l'Administration passe hors ligne, et Howard et Yoneda se retrouvent seuls, deux silhouettes perdues dans le chaos."
             ],
             "aliases": ["Tokyo", "Shibuya"],
-            "tags": ["lieu", "tokyo"],
             "related": ["le-dernier-espoir--character--howard", "le-dernier-espoir--character--yoneda", "le-dernier-espoir--location--quartier-yoneda", "le-dernier-espoir--era--effondrement", "le-dernier-espoir--event--bombe-new-york"]
         },
         {
@@ -156,7 +146,6 @@
                 "Les radiations y sont critiques, et les rares survivants entrent en silence dans la mer, le regard vide, aimantés par la voix qui monte du large.",
                 "Au large de cette côte dévastée croise le Thermophile, blessé, à la cime duquel Safar a fondu sa voix."
             ],
-            "tags": ["lieu", "ruines"],
             "related": ["le-dernier-espoir--character--safar", "le-dernier-espoir--location--thermophile", "le-dernier-espoir--event--bombe-new-york"]
         },
         {
@@ -169,7 +158,6 @@
                 "Unique en son genre, il tourne sans relâche autour du globe aux côtés du Thermophile, assurant chacun à leur tour la supervision et la coordination des missions des Administrateurs, en complément du quartier général.",
                 "Il est déployé à New York pour une mission de sécurisation critique, après que le Conseil de sécurité des Nations Unies s'est réuni en urgence face à la guerre civile qui embrase plusieurs pays. C'est à son bord qu'était embarquée la bombe à énergie noire, prototype ultra-secret dont le largage a précipité l'effondrement du monde."
             ],
-            "tags": ["lieu-clé", "militaire"],
             "related": ["le-dernier-espoir--event--bombe-new-york", "le-dernier-espoir--event--incident-dedale", "le-dernier-espoir--location--thermophile", "le-dernier-espoir--character--fondateur", "le-dernier-espoir--event--projet-hyperloop"]
         },
         {
@@ -183,7 +171,6 @@
                 "Privé de chaîne de commandement, son équipage s'entre-déchire en plusieurs factions, jusqu'à ce qu'un tir perdu ouvre une voie d'eau fatale."
             ],
             "aliases": ["Le porte-avions"],
-            "tags": ["lieu-clé", "militaire"],
             "related": ["le-dernier-espoir--character--kira", "le-dernier-espoir--character--fondateur", "le-dernier-espoir--character--safar", "le-dernier-espoir--event--naufrage-thermophile"]
         },
         {
@@ -197,7 +184,6 @@
                 "Larguée depuis ce vaisseau par des mains restées inconnues, elle n'explose pas au sens classique : elle efface, sans bruit, tout ce qu'elle touche.",
                 "Les rares survivants trop proches pour mourir mais trop loin pour en réchapper perdent la raison, happés par une énergie qui ronge autant l'esprit que les corps."
             ],
-            "tags": ["événement", "catastrophe"],
             "related": ["le-dernier-espoir--event--projet-hyperloop", "le-dernier-espoir--location--dedale", "le-dernier-espoir--event--incident-dedale", "le-dernier-espoir--character--kira", "le-dernier-espoir--character--fondateur", "le-dernier-espoir--location--los-angeles"]
         },
         {
@@ -210,7 +196,6 @@
                 "Un tir manqué déchire la coque sous la ligne de flottaison, provoquant une voie d'eau majeure que rien ne peut plus colmater.",
                 "Le navire sombre en quelques minutes, emportant avec lui le corps du Fondateur et le dernier espoir d'un commandement pour l'Administration."
             ],
-            "tags": ["événement", "catastrophe"],
             "related": ["le-dernier-espoir--location--thermophile", "le-dernier-espoir--character--fondateur", "le-dernier-espoir--character--howard"]
         },
         {
@@ -226,7 +211,6 @@
                 "Cette bombe à énergie noire, censée n'être jamais utilisée, ne devait servir que d'ultime moyen de dissuasion face aux gouvernements du monde. Elle finira pourtant par retourner le rêve du Fondateur en cauchemar et par précipiter l'effondrement."
             ],
             "aliases": ["Hyperloop"],
-            "tags": ["technologie", "militaire", "lore"],
             "related": ["le-dernier-espoir--character--fondateur", "le-dernier-espoir--universe--futur", "le-dernier-espoir--location--dedale", "le-dernier-espoir--location--thermophile", "le-dernier-espoir--event--bombe-new-york"]
         },
         {
@@ -239,7 +223,6 @@
                 "Quelques secondes seulement après l'impact, le vaisseau est happé par l'onde de l'arme : sa structure se replie sur elle-même et il implose en plein vol, sans laisser à son équipage le temps de comprendre ce qui l'emporte.",
                 "Il n'en reste rien : ni épave, ni enregistrement, ni témoin. L'unique porte-hélicoptères volant de commandement de l'Administration disparaît en même temps que la moitié du globe, emportant avec lui la vérité sur les mains qui ont pressé la détente."
             ],
-            "tags": ["événement", "catastrophe"],
             "related": ["le-dernier-espoir--location--dedale", "le-dernier-espoir--event--bombe-new-york", "le-dernier-espoir--era--effondrement", "le-dernier-espoir--event--projet-hyperloop"]
         },
         {
@@ -254,7 +237,6 @@
                 "Il n'y survivra pas : le jour de l'Effondrement, la vague de la bombe à énergie noire efface l'Europe entière, et le quartier général avec elle, laissant l'Administration sans tête et le monde sans commandement."
             ],
             "aliases": ["Le QG", "Le quartier général"],
-            "tags": ["lieu-clé", "militaire"],
             "related": ["le-dernier-espoir--universe--futur", "le-dernier-espoir--character--fondateur", "le-dernier-espoir--location--dedale", "le-dernier-espoir--location--thermophile", "le-dernier-espoir--era--effondrement"]
         }
     ]

@@ -63,7 +63,6 @@ export interface Story {
     language: string;
     universe: string;
     description: string;
-    tags: string[];
     author?: string;
     /**
      * Optional default background-music ambiance for the whole story, started
@@ -99,7 +98,6 @@ export interface StoryMeta {
     language: string;
     universe: string;
     description: string;
-    tags: string[];
     stats: StoryStats;
     endingIds: string[];
 }

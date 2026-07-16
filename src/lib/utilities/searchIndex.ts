@@ -116,7 +116,6 @@ const getStorySearchDocs = (): StorySearchDoc[] =>
                 scoredField( meta.title, 3 ),
                 scoredField( meta.universe, 2 ),
                 scoredField( genreLabel( meta.genre ), 2 ),
-                scoredField( meta.tags.join( " " ), 2 ),
                 scoredField( characterNames, 2 ),
                 scoredField( meta.description, 1 )
             ]
@@ -148,7 +147,6 @@ const getWikiSearchDocs = (): WikiSearchDoc[] =>
     _wikiDocs = knowledgeEntries.map( ( entry ) =>
     {
         const aliases = entry.aliases?.join( " " ) ?? "";
-        const tags = entry.tags?.join( " " ) ?? "";
         const desc = Array.isArray( entry.description )
             ? entry.description.join( " " )
             : entry.description;
@@ -158,7 +156,6 @@ const getWikiSearchDocs = (): WikiSearchDoc[] =>
             fields: [
                 scoredField( entry.name, 3 ),
                 scoredField( aliases, 3 ),
-                scoredField( tags, 2 ),
                 scoredField( entry.summary, 2 ),
                 scoredField( entry.universe, 1 ),
                 scoredField( desc, 1 )

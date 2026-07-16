@@ -32,7 +32,6 @@ const buildSystemPrompt = (): string =>
         "  \"language\": string,",
         "  \"universe\": string,            // short name of the story world",
         "  \"description\": string,         // 1-2 sentence teaser",
-        "  \"tags\": string[],",
         "  \"characters\": [ { \"id\": string, \"name\": string, \"role\": \"protagonist\"|\"antagonist\"|\"ally\"|\"npc\"|\"narrator\" } ],",
         "  \"startScene\": string,          // must equal one scene id",
         "  \"scenes\": [",

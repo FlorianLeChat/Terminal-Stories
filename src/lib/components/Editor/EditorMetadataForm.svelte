@@ -17,22 +17,6 @@
     );
 
     /**
-     * Rebuilds the tag list from the comma-separated input value.
-     *
-     * @param event - The input change event.
-     * @author Claude
-     */
-    const handleTagsChange = ( event: Event ) =>
-    {
-        const value = ( event.currentTarget as HTMLInputElement ).value;
-
-        draft.tags = value
-            .split( "," )
-            .map( ( tag ) => tag.trim() )
-            .filter( ( tag ) => tag !== "" );
-    };
-
-    /**
      * Applies the picked default music theme, removing the field entirely when
      * the default option is selected.
      *
@@ -115,33 +99,19 @@
         </div>
     </div>
 
-    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-        <div class="space-y-1 min-w-0">
-            <label for="editor-tags" class="block text-terminal-dim text-xs select-none">{m.editor_tags_label()}</label>
-            <input
-                id="editor-tags"
-                type="text"
-                value={draft.tags.join( ", " )}
-                class="w-full bg-transparent border border-terminal-dim/40 rounded px-2 py-1 text-terminal-green text-xs outline-none focus:border-terminal-green caret-terminal-green"
-                autocomplete="off"
-                onchange={handleTagsChange}
-            />
-        </div>
+    <div class="space-y-1 min-w-0">
+        <label for="editor-music" class="block text-terminal-dim text-xs select-none">{m.editor_music_label()}</label>
+        <select
+            id="editor-music"
+            value={draft.music ?? ""}
+            class="w-full bg-terminal-bg border border-terminal-dim/40 rounded px-2 py-1 text-terminal-green text-xs outline-none focus:border-terminal-green"
+            onchange={handleMusicChange}
+        >
+            <option value="">{m.editor_music_none()}</option>
 
-        <div class="space-y-1 min-w-0">
-            <label for="editor-music" class="block text-terminal-dim text-xs select-none">{m.editor_music_label()}</label>
-            <select
-                id="editor-music"
-                value={draft.music ?? ""}
-                class="w-full bg-terminal-bg border border-terminal-dim/40 rounded px-2 py-1 text-terminal-green text-xs outline-none focus:border-terminal-green"
-                onchange={handleMusicChange}
-            >
-                <option value="">{m.editor_music_none()}</option>
-
-                {#each MUSIC_THEMES as theme ( theme )}
-                    <option value={theme}>{theme}</option>
-                {/each}
-            </select>
-        </div>
+            {#each MUSIC_THEMES as theme ( theme )}
+                <option value={theme}>{theme}</option>
+            {/each}
+        </select>
     </div>
 </fieldset>

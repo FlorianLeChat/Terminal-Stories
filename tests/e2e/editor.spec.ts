@@ -20,7 +20,6 @@ const VALID_IMPORT = {
     language: "English",
     universe: "Import Universe",
     description: "A story imported from a file.",
-    tags: [ "import" ],
     characters: [],
     startScene: "start",
     scenes: [

@@ -140,7 +140,7 @@
                     {/if}
 
                     <span
-                        class="flex items-baseline gap-x-1 mb-2 flex-wrap"
+                        class="flex items-baseline gap-x-1 flex-wrap"
                         title={m.story_item_endings_title( { found: found.size, total: story.endingIds.length } )}
                     >
                         <span class="text-terminal-dim text-xs opacity-80 mr-1">
@@ -153,12 +153,6 @@
                             </span>
                         {/each}
                     </span>
-
-                    <ul class="flex gap-1 flex-wrap">
-                        {#each story.tags as tag ( tag )}
-                            <li class="text-terminal-dim text-xs opacity-80">#{tag}</li>
-                        {/each}
-                    </ul>
                 {/if}
             </span>
         </span>

@@ -10,7 +10,6 @@ export interface KnowledgeEntry {
     storyId?: string;
     image?: string;
     aliases?: string[];
-    tags?: string[];
     related?: string[];
 }
 

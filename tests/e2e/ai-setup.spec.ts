@@ -13,7 +13,6 @@ const MOCK_STORY = {
     language: "English",
     universe: "Test Universe",
     description: "A story generated for testing.",
-    tags: [ "test" ],
     characters: [],
     startScene: "start",
     scenes: [

@@ -678,7 +678,7 @@ const createTerminalStore = () =>
 
     /**
      * Opens the info screen for a story, rendering its summary, characters,
-     * tags, and reading statistics before the player commits to playing it.
+     * and reading statistics before the player commits to playing it.
      * When a save exists for the story, shows resume and new-game options
      * instead of the default start prompt.
      *

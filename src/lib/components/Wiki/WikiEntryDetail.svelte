@@ -78,14 +78,6 @@
         {/each}
     </div>
 
-    {#if entry.tags && entry.tags.length > 0}
-        <ul class="flex gap-1 mt-4 flex-wrap">
-            {#each entry.tags as tag ( tag )}
-                <li class="text-terminal-dim text-xs opacity-80">#{tag}</li>
-            {/each}
-        </ul>
-    {/if}
-
     {#if entry.related && entry.related.length > 0}
         <aside class="border-t border-terminal-dim/30 mt-4 pt-3">
             <h3 class="text-terminal-dim text-xs mb-2 select-none">
