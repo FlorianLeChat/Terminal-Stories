@@ -75,7 +75,7 @@
         </button>
     </p>
 
-    <ol class="border border-terminal-dim rounded px-2 py-1 mb-4">
+    <ol class="border border-terminal-dim rounded px-2 py-1 mb-2">
         {#each achievements as achievement, i ( achievement.id )}
             {@const view = present( achievement.id, achievement.name(), achievement.description(), achievement.hidden === true )}
 

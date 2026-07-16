@@ -7,7 +7,6 @@
         availableWikiLanguages,
         categories,
         categoryIconMap,
-        categoryLabel,
         countAllCategories,
         filterEntries,
         getEntry,
@@ -168,6 +167,15 @@
             </div>
         {/if}
 
+        <div class="text-terminal-dim text-xs text-center opacity-80 mb-4">
+            {#if searchActive && searchQuery !== ""}
+                {m.wiki_count_results( { count: entries.length, query: searchQuery } )}
+            {:else}
+                {m.wiki_count_entries( { count: entries.length } )}
+                {wiki.universe ? `· ${ wiki.universe }` : ""}
+            {/if}
+        </div>
+
         {#if entries.length === 0}
             <div class="border border-terminal-dim/40 rounded px-3 py-8 mb-4 text-center text-terminal-dim text-sm">
                 {#if searchActive && searchQuery !== ""}
@@ -181,7 +189,7 @@
                 {/if}
             </div>
         {:else}
-            <ol class="border border-terminal-dim rounded px-2 py-1 mb-4">
+            <ol class="border border-terminal-dim rounded px-2 py-1 mb-2">
                 {#each entries as entry, i ( entry.id )}
                     <li>
                         <button
@@ -217,15 +225,6 @@
                 {/each}
             </ol>
         {/if}
-
-        <div class="text-terminal-dim text-xs text-center opacity-80 pb-4">
-            {#if searchActive && searchQuery !== ""}
-                {m.wiki_count_results( { count: entries.length, query: searchQuery } )}
-            {:else}
-                {m.wiki_count_entries( { count: entries.length } )} — {categoryLabel( wiki.category )}
-                {wiki.universe ? `· ${ wiki.universe }` : ""}
-            {/if}
-        </div>
     {:else}
         <WikiEntryDetail entry={currentEntry} />
     {/if}

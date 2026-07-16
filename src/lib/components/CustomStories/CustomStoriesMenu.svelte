@@ -189,7 +189,7 @@
             <p>{m.custom_empty()}</p>
         </div>
     {:else}
-        <ol class="border border-terminal-dim rounded px-2 py-1 mb-4">
+        <ol class="border border-terminal-dim rounded px-2 py-1 mb-2">
             {#each records as record, i ( record.story.id )}
                 {@const origin = forkOriginTitle( record )}
                 {@const isSelected = i === selectedIndex}
