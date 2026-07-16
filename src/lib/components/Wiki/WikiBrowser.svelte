@@ -11,7 +11,8 @@
         filterEntries,
         getEntry,
         getLanguageForUniverse,
-        searchWikiEntries } from "$lib";
+        searchWikiEntries,
+        truncateQueryForDisplay } from "$lib";
 
     let wiki = $derived( $terminal.wiki );
     let searchActive = $derived( $terminal.searchActive );
@@ -25,6 +26,7 @@
             : filterEntries( wiki.category, wiki.language, wiki.universe )
     );
     let currentEntry = $derived( wiki.selectedEntryId ? getEntry( wiki.selectedEntryId ) : null );
+    let displayQuery = $derived( truncateQueryForDisplay( searchQuery ) );
     let categoryCounts = $derived( countAllCategories( wiki.language, wiki.universe ) );
     let filteredUniverses = $derived( wiki.language
         ? availableUniverses.filter( ( u ) => getLanguageForUniverse( u ) === wiki.language )
@@ -154,7 +156,7 @@
                 <input
                     bind:this={searchInputEl}
                     type="text"
-                    class="flex-1 bg-transparent text-terminal-green text-xs outline-none placeholder-terminal-dim/50 caret-terminal-green"
+                    class="flex-1 min-w-0 bg-transparent text-terminal-green text-xs outline-none placeholder-terminal-dim/50 caret-terminal-green"
                     placeholder={m.wiki_search_placeholder()}
                     value={searchQuery}
                     oninput={( e ) => terminal.setSearchQuery( e.currentTarget.value )}
@@ -167,9 +169,9 @@
             </div>
         {/if}
 
-        <div class="text-terminal-dim text-xs text-center opacity-80 mb-4">
+        <div class="text-terminal-dim text-xs text-center opacity-80 mb-4 break-words">
             {#if searchActive && searchQuery !== ""}
-                {m.wiki_count_results( { count: entries.length, query: searchQuery } )}
+                {m.wiki_count_results( { count: entries.length, query: displayQuery } )}
             {:else}
                 {m.wiki_count_entries( { count: entries.length } )}
                 {wiki.universe ? `· ${ wiki.universe }` : ""}
@@ -179,7 +181,7 @@
         {#if entries.length === 0}
             <div class="border border-terminal-dim/40 rounded px-3 py-8 mb-4 text-center text-terminal-dim text-sm">
                 {#if searchActive && searchQuery !== ""}
-                    <p>{m.wiki_empty_search( { query: searchQuery } )}</p>
+                    <p class="break-words">{m.wiki_empty_search( { query: displayQuery } )}</p>
 
                     <button class="block mx-auto mt-3 text-terminal-amber text-xs underline" onclick={() => terminal.deactivateSearch()}>
                         {m.wiki_empty_search_clear()}

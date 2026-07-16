@@ -78,6 +78,20 @@ test.describe( "Main menu", () =>
         await expect( searchInput ).not.toBeVisible();
     } );
 
+    test( "truncates a long search query in the count and empty-state messages", async ( { page } ) =>
+    {
+        await page.keyboard.press( "/" );
+
+        const searchInput = page.getByRole( "textbox", { name: "Search for a story" } );
+        const longQuery = "z".repeat( 60 );
+        const truncatedQuery = `${ "z".repeat( 40 ) }…`;
+
+        await searchInput.fill( longQuery );
+
+        await expect( page.getByText( `No story matches "${ truncatedQuery }".` ) ).toBeVisible();
+        await expect( page.getByText( longQuery, { exact: false } ) ).not.toBeVisible();
+    } );
+
     test( "navigates the list with arrow keys and opens a story with ENTER", async ( { page } ) =>
     {
         await page.keyboard.press( "ArrowDown" );

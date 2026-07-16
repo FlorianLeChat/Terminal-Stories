@@ -23,3 +23,4 @@ export * from "$lib/utilities/readingTime";
 export * from "$lib/utilities/saveService";
 export * from "$lib/utilities/searchIndex";
 export * from "$lib/utilities/soundSettings";
+export * from "$lib/utilities/textTruncation";

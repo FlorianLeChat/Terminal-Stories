@@ -3,7 +3,7 @@
     import { terminal } from "$lib/stores/terminal";
     import TerminalLogo from "../Terminal/TerminalLogo.svelte";
     import StoryListItem from "./StoryListItem.svelte";
-    import { storiesMeta, filterStories, availableGenres, availableLanguages, searchStories, genreColor, genreLabel } from "$lib";
+    import { storiesMeta, filterStories, availableGenres, availableLanguages, searchStories, genreColor, genreLabel, truncateQueryForDisplay } from "$lib";
 
     interface Props {
         selectedIndex?: number;
@@ -22,6 +22,7 @@
             : filterStories( storiesMeta, filters )
     );
     let hasFilters = $derived( filters.genre !== null || filters.language !== null );
+    let displayQuery = $derived( truncateQueryForDisplay( searchQuery ) );
 
     let searchInputEl: HTMLInputElement | undefined = $state();
 
@@ -104,9 +105,9 @@
         </div>
     {/if}
 
-    <div class="text-terminal-dim text-xs text-center opacity-80 mb-4">
+    <div class="text-terminal-dim text-xs text-center opacity-80 mb-4 break-words">
         {#if searchActive && searchQuery !== ""}
-            {m.menu_count_results( { count: visibleStories.length, query: searchQuery } )}
+            {m.menu_count_results( { count: visibleStories.length, query: displayQuery } )}
         {:else}
             {m.menu_count_stories( { visible: visibleStories.length, total: storiesMeta.length } )}{hasFilters
                 ? m.menu_count_filtered()
@@ -117,7 +118,7 @@
     {#if visibleStories.length === 0}
         <div class="border border-terminal-dim/40 rounded px-3 py-8 mb-2 text-center text-terminal-dim text-sm">
             {#if searchActive && searchQuery !== ""}
-                <p>{m.menu_empty_search( { query: searchQuery } )}</p>
+                <p class="break-words">{m.menu_empty_search( { query: displayQuery } )}</p>
 
                 <button class="mt-3 text-terminal-amber text-xs underline" onclick={() => terminal.deactivateSearch()}>
                     {m.menu_empty_search_clear()}

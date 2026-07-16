@@ -82,6 +82,20 @@ test.describe( "Encyclopedia", () =>
         await expect( searchInput ).not.toBeVisible();
     } );
 
+    test( "truncates a long search query in the count and empty-state messages", async ( { page } ) =>
+    {
+        await page.keyboard.press( "/" );
+
+        const searchInput = page.getByRole( "textbox", { name: "Search an encyclopedia entry" } );
+        const longQuery = "z".repeat( 60 );
+        const truncatedQuery = `${ "z".repeat( 40 ) }…`;
+
+        await searchInput.fill( longQuery );
+
+        await expect( page.getByText( `No entry matches "${ truncatedQuery }".` ) ).toBeVisible();
+        await expect( page.getByText( longQuery, { exact: false } ) ).not.toBeVisible();
+    } );
+
     test( "opens an entry detail and navigates back with ESC", async ( { page } ) =>
     {
         await entryTitle( page ).click();
