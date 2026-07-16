@@ -1,11 +1,11 @@
 {
-    "universe": "France médiévale",
+    "universe": "Moyen-Âge",
     "storyId": "la-femme-aux-cheveux-en-or",
     "entries": [
         {
-            "id": "la-femme-aux-cheveux-en-or--universe--france-medievale",
+            "id": "la-femme-aux-cheveux-en-or--universe--moyen-age",
             "category": "universe",
-            "name": "France médiévale",
+            "name": "Moyen-Âge",
             "summary": "Un royaume exsangue du XIVe siècle, rongé par la guerre et la peste, où la cité d'Arles tient lieu de dernier rempart.",
             "description": [
                 "Au XIVe siècle, la France saigne sur deux fronts : la guerre de Cent Ans contre l'Angleterre au nord, la peste noire partout.",
@@ -26,7 +26,7 @@
                 "L'Église, elle, dépêche l'Inquisition pour traquer hérétiques et prétendus semeurs de peste, ajoutant la peur du bûcher à celle de l'ennemi."
             ],
             "tags": ["époque", "médiéval", "lore"],
-            "related": ["la-femme-aux-cheveux-en-or--universe--france-medievale", "la-femme-aux-cheveux-en-or--character--inquisition", "la-femme-aux-cheveux-en-or--event--siege-arles"]
+            "related": ["la-femme-aux-cheveux-en-or--universe--moyen-age", "la-femme-aux-cheveux-en-or--character--inquisition", "la-femme-aux-cheveux-en-or--event--siege-arles"]
         },
         {
             "id": "la-femme-aux-cheveux-en-or--character--comte",

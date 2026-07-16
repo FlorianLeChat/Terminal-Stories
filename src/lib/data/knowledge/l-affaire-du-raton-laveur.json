@@ -1,0 +1,288 @@
+{
+    "universe": "Guerre Froide",
+    "storyId": "l-affaire-du-raton-laveur",
+    "entries": [
+        {
+            "id": "l-affaire-du-raton-laveur--universe--guerre-froide",
+            "category": "universe",
+            "name": "Guerre Froide",
+            "summary": "Berlin, décembre 1991 : l'ancien secteur soviétique d'une ville réunifiée, à quelques jours de la disparition de l'URSS.",
+            "description": [
+                "Deux ans après la chute du Mur, Berlin reste coupée en deux dans les têtes. À l'est, l'ancien secteur soviétique s'enfonce dans le froid et l'abandon : façades grises de la Karl-Marx-Allee, Trabant laissées le long des trottoirs, casernes de l'Armée rouge qui n'ont pas encore plié bagage.",
+                "À la radio, on annonce que Gorbatchev n'a presque plus de pays à gouverner : l'Union soviétique s'effondre par plaques entières, comme la glace sur la Spree.",
+                "C'est un entre-deux mondes, où la loi d'hier n'existe déjà plus et celle de demain n'est pas encore écrite. Le terrain rêvé pour ceux qui veulent faire disparaître un homme, ou une fortune, avant que le rideau ne tombe pour de bon."
+            ],
+            "tags": ["guerre froide", "espionnage", "lore"],
+            "related": ["l-affaire-du-raton-laveur--era--chute-urss", "l-affaire-du-raton-laveur--location--berlin", "l-affaire-du-raton-laveur--character--werner", "l-affaire-du-raton-laveur--event--operation-raton"]
+        },
+        {
+            "id": "l-affaire-du-raton-laveur--era--chute-urss",
+            "category": "era",
+            "name": "La chute de l'URSS (décembre 1991)",
+            "summary": "Les derniers jours de l'Union soviétique, où juridiction, mission et témoins s'apprêtent à disparaître d'un seul trait de plume.",
+            "description": [
+                "En décembre 1991, l'Union soviétique vit ses dernières heures. Le 25, Mikhaïl Gorbatchev annoncera sa démission et le drapeau rouge frappé de la faucille et du marteau descendra une dernière fois du Kremlin.",
+                "À Berlin, l'Armée rouge se rapatrie : des colonnes de camions militaires filent vers l'est, phares allumés en plein jour, emportant Dieu sait quoi dans leurs caisses.",
+                "Pour un enquêteur, le compte à rebours est un piège. Dans huit jours, il n'y aura plus de mission commerciale, plus de juridiction soviétique, plus de preuves ni de témoins. Attendre un jour de trop, c'est laisser l'Histoire refermer l'affaire à sa place."
+            ],
+            "tags": ["époque", "guerre froide", "lore"],
+            "related": ["l-affaire-du-raton-laveur--universe--guerre-froide", "l-affaire-du-raton-laveur--event--rapatriement", "l-affaire-du-raton-laveur--event--operation-raton", "l-affaire-du-raton-laveur--character--artemiev"]
+        },
+        {
+            "id": "l-affaire-du-raton-laveur--character--werner",
+            "category": "character",
+            "name": "Inspecteur Alexander Werner",
+            "summary": "Un vieux flic est-allemand recyclé dans la police réunifiée, dernier honnête homme d'une ville qui n'en a plus les moyens.",
+            "description": [
+                "Rôle : Protagoniste.",
+                "Ancien de la Volkspolizei recyclé dans la nouvelle police de Berlin réunifiée, Werner compte les jours qui le séparent d'une retraite sans gloire, dans un bureau où le radiateur a rendu l'âme.",
+                "Sommé d'enterrer la mort d'un comptable soviétique, il choisit au contraire de tirer le fil, au risque de sa pension, de sa liberté et de sa vie.",
+                "Selon ses choix, il peut finir sous la glace de la Spree, vendre son silence contre une enveloppe de dollars, faire éclater la vérité dans la presse, coincer Artemiev proprement par la justice, fuir à l'Ouest, ou n'être que le pion qu'on sacrifie pour blanchir les rois."
+            ],
+            "aliases": ["Werner", "L'inspecteur"],
+            "tags": ["protagoniste", "policier", "humain"],
+            "related": ["l-affaire-du-raton-laveur--character--neumann", "l-affaire-du-raton-laveur--character--konig", "l-affaire-du-raton-laveur--character--sokolov", "l-affaire-du-raton-laveur--character--agent-a", "l-affaire-du-raton-laveur--event--attentat"]
+        },
+        {
+            "id": "l-affaire-du-raton-laveur--character--neumann",
+            "category": "character",
+            "name": "Inspecteur Thorsten Neumann",
+            "summary": "Le binôme de Werner, dont la loyauté est le seul pari qu'il reste à tenir dans une ville où l'on ne sait plus pour qui les gens travaillent.",
+            "description": [
+                "Rôle : Allié.",
+                "Binôme de Werner, c'est lui qui apporte l'affaire : un corps sur la berge de la Spree, muni d'un passeport diplomatique soviétique.",
+                "König met Werner en garde contre lui — « on ne sait jamais pour qui les gens travaillent vraiment » — mais c'est Neumann qui lui sauve la vie en plaquant le tueur lors de l'attentat.",
+                "Si Werner lui accorde toute sa confiance, ils montent ensemble le dossier qui coince Artemiev par la justice, sans scandale de rue et sans effusion de sang."
+            ],
+            "aliases": ["Neumann"],
+            "tags": ["allié", "policier", "humain"],
+            "related": ["l-affaire-du-raton-laveur--character--werner", "l-affaire-du-raton-laveur--character--konig", "l-affaire-du-raton-laveur--event--attentat", "l-affaire-du-raton-laveur--event--mort-sokolov"]
+        },
+        {
+            "id": "l-affaire-du-raton-laveur--character--konig",
+            "category": "character",
+            "name": "Commissaire König",
+            "summary": "Le supérieur de Werner, survivant de tous les régimes, décidé à enterrer l'affaire au nom de sa propre tranquillité.",
+            "description": [
+                "Rôle : Antagoniste.",
+                "Commissaire au bureau bien chauffé, König a survécu à tout : à la RDA, à la Stasi, à la réunification. Un homme qui a toujours su de quel côté souffle le vent.",
+                "Il ordonne à Werner de classer la mort de Sokolov en accident, puis le menace : un rien, et le vieux flic finit dehors, sans pension, dans ce pays neuf qui ne veut plus des gens comme eux.",
+                "Compromis jusqu'au col avec Artemiev, il peut, selon les fins, être mis à la retraite d'office quand la justice frappe, ou conserver son bureau bien chauffé pendant que d'autres tombent."
+            ],
+            "aliases": ["König", "Le commissaire"],
+            "tags": ["antagoniste", "policier", "humain"],
+            "related": ["l-affaire-du-raton-laveur--character--werner", "l-affaire-du-raton-laveur--character--artemiev", "l-affaire-du-raton-laveur--event--operation-raton"]
+        },
+        {
+            "id": "l-affaire-du-raton-laveur--character--sokolov",
+            "category": "character",
+            "name": "Grigori Sokolov",
+            "summary": "Le comptable de la mission commerciale soviétique, retrouvé mort dans la glace de la Spree : le fil qui déroule toute l'affaire.",
+            "description": [
+                "Rôle : Victime.",
+                "Comptable de la mission commerciale soviétique de Berlin, « un petit gris, le genre qu'on ne remarque jamais », il tenait les livres de l'opération Raton-laveur.",
+                "Passionné de taxidermie, il planquait ses secrets — un carnet de comptes et une bobine de microfilm — dans le ventre d'un raton-laveur empaillé, au cœur de son appartement de Prenzlauer Berg.",
+                "Retrouvé la tête prise dans la glace, sans un rouble sur lui, il a payé de sa vie d'avoir voulu parler, se servir au passage, ou trahir celui ou celle qui dirigeait vraiment l'opération."
+            ],
+            "aliases": ["Sokolov", "Le comptable"],
+            "tags": ["victime", "comptable", "humain"],
+            "related": ["l-affaire-du-raton-laveur--event--mort-sokolov", "l-affaire-du-raton-laveur--event--operation-raton", "l-affaire-du-raton-laveur--location--appartement-sokolov", "l-affaire-du-raton-laveur--location--spree", "l-affaire-du-raton-laveur--character--artemiev"]
+        },
+        {
+            "id": "l-affaire-du-raton-laveur--character--artemiev",
+            "category": "character",
+            "name": "Leonid Artemiev",
+            "summary": "Le haut responsable soviétique qui fait sortir la fortune du Parti de Berlin avant la dissolution, prêt à tuer pour la préserver.",
+            "description": [
+                "Rôle : Antagoniste.",
+                "Officiellement attaché commercial de la mission soviétique, officieusement l'homme qui fait fuir l'or et les caisses du Parti à travers Berlin avant que le rideau ne tombe.",
+                "C'est lui qui dirige l'opération Raton-laveur, et lui, sans doute, qui a fait taire Sokolov. Il tente d'acheter le silence de Werner d'une épaisse enveloppe de dollars, avec la bénédiction de König.",
+                "Selon les choix de l'inspecteur, il s'envole vers une villa au bord d'un lac suisse avec sa fortune intacte, ou se fait arrêter — à la frontière suisse, ou la veille de la fin de l'URSS — coincé par les propres chiffres de Sokolov."
+            ],
+            "aliases": ["Artemiev"],
+            "tags": ["antagoniste", "soviétique", "humain"],
+            "related": ["l-affaire-du-raton-laveur--character--konig", "l-affaire-du-raton-laveur--character--sokolov", "l-affaire-du-raton-laveur--character--tueur", "l-affaire-du-raton-laveur--event--operation-raton", "l-affaire-du-raton-laveur--location--mission"]
+        },
+        {
+            "id": "l-affaire-du-raton-laveur--character--agent-a",
+            "category": "character",
+            "name": "Agent A.",
+            "summary": "Une voix de femme sortie du grésillement radio, qui promet la vérité et la protection — et qui pourrait bien être le vrai raton-laveur.",
+            "description": [
+                "Rôle : Alliée ambiguë.",
+                "Contact clandestin qui aborde Werner par radio et lui donne rendez-vous au mémorial de Treptow, elle prétend servir ceux qui veulent que la fortune volée revienne au peuple, et lui offre sa protection contre les comptes de Sokolov.",
+                "Werner ne connaîtra jamais son vrai nom, ni ceux pour qui elle travaille vraiment.",
+                "S'il lui remet les comptes en toute confiance, elle révèle son vrai visage : le raton-laveur, celui qui lave l'argent, ce n'était pas Sokolov mais elle, depuis le tout début, et l'inspecteur n'aura été qu'un limier lâché sur ses rivaux. À ses conditions, en revanche, il peut fuir avec elle en gardant les preuves comme assurance-vie."
+            ],
+            "aliases": ["Agent A.", "La voix"],
+            "tags": ["alliée", "espionne", "humain"],
+            "related": ["l-affaire-du-raton-laveur--character--werner", "l-affaire-du-raton-laveur--character--sokolov", "l-affaire-du-raton-laveur--character--artemiev", "l-affaire-du-raton-laveur--location--treptow", "l-affaire-du-raton-laveur--event--operation-raton"]
+        },
+        {
+            "id": "l-affaire-du-raton-laveur--character--wright",
+            "category": "character",
+            "name": "Angela Wright",
+            "summary": "Une prétendue correspondante américaine qui offre à Werner un aller sans retour vers l'Ouest, en échange de ce que savait Sokolov.",
+            "description": [
+                "Rôle : Alliée.",
+                "Elle se présente comme correspondante d'un grand journal new-yorkais venue couvrir l'agonie du bloc de l'Est, avant d'avouer travailler pour le gouvernement des États-Unis.",
+                "Ses services veulent les comptes de Sokolov, non pour les étouffer mais pour les rendre publics au bon moment et précipiter la chute de ce qui reste de l'Union soviétique.",
+                "En échange, elle propose de faire disparaître Werner : un passeport, un avion depuis Tempelhof, une nouvelle vie de l'autre côté de l'océan. S'il accepte, l'affaire s'achève sur un exil confortable, mais rongé par la culpabilité."
+            ],
+            "aliases": ["Angela Wright", "La journaliste américaine"],
+            "tags": ["alliée", "espionne", "humain"],
+            "related": ["l-affaire-du-raton-laveur--character--werner", "l-affaire-du-raton-laveur--event--operation-raton", "l-affaire-du-raton-laveur--location--mission"]
+        },
+        {
+            "id": "l-affaire-du-raton-laveur--character--tueur",
+            "category": "character",
+            "name": "Le tueur au manteau de cuir",
+            "summary": "L'homme de main d'Artemiev, croisé au Waschbär puis embusqué dans la cage d'escalier de Werner, une plaque de la mission en poche.",
+            "description": [
+                "Rôle : Antagoniste.",
+                "Grand, le manteau de cuir, une plaque de la mission commerciale soviétique : c'est lui que le pêcheur a vu se disputer avec Sokolov la veille de sa mort, et lui qui fixe Werner au fond du bar Der Waschbär.",
+                "Un soir, il embusque l'inspecteur dans sa propre cage d'escalier et tire au silencieux ; Neumann le met en fuite, mais il laisse derrière lui une douille et une plaque de la mission.",
+                "Bras armé d'Artemiev, sans pitié ni hésitation, il incarne la menace qui pèse sur Werner dès qu'il fouine là où il ne faut pas."
+            ],
+            "aliases": ["L'homme au manteau de cuir", "L'homme du bar"],
+            "tags": ["antagoniste", "tueur", "humain"],
+            "related": ["l-affaire-du-raton-laveur--character--artemiev", "l-affaire-du-raton-laveur--character--sokolov", "l-affaire-du-raton-laveur--location--waschbar", "l-affaire-du-raton-laveur--event--attentat"]
+        },
+        {
+            "id": "l-affaire-du-raton-laveur--location--berlin",
+            "category": "location",
+            "name": "Berlin, l'ancien secteur soviétique",
+            "summary": "L'Est d'une ville réunifiée mais toujours coupée en deux, où l'ancien monde agonise dans le froid.",
+            "description": [
+                "Deux ans après la chute du Mur, l'ancien secteur soviétique de Berlin s'enfonce dans l'hiver et l'abandon : façades grises de la Karl-Marx-Allee, Trabant laissées le long des trottoirs, réverbères brisés des ruelles derrière la gare de l'Est.",
+                "Les casernes de l'Armée rouge n'ont pas encore plié bagage, et des Volga noires font la navette vers l'ouest, pleines à l'aller, vides au retour.",
+                "C'est le décor de toute l'affaire : un no man's land entre deux mondes, où l'on paie en marks, en roubles, en dollars ou en cartouches de cigarettes, en tout sauf en confiance."
+            ],
+            "aliases": ["Berlin", "Berlin-Est", "L'ancien secteur soviétique"],
+            "tags": ["lieu principal", "ville"],
+            "related": ["l-affaire-du-raton-laveur--universe--guerre-froide", "l-affaire-du-raton-laveur--location--spree", "l-affaire-du-raton-laveur--location--waschbar", "l-affaire-du-raton-laveur--location--appartement-sokolov", "l-affaire-du-raton-laveur--location--mission"]
+        },
+        {
+            "id": "l-affaire-du-raton-laveur--location--spree",
+            "category": "location",
+            "name": "La berge de la Spree",
+            "summary": "La scène de crime : une rive gelée de Friedrichshain où l'on a repêché le corps de Sokolov.",
+            "description": [
+                "À Friedrichshain, la berge de la Spree est figée sous une croûte de neige sale ; le fleuve charrie des plaques de glace grises qui s'entrechoquent avec un bruit sourd.",
+                "C'est là qu'un vieux pêcheur au vieil accent silésien a trouvé Grigori Sokolov, le corps à moitié dans l'eau, le manteau raidi par le gel, sans trace de lutte évidente.",
+                "La Spree hante toute l'histoire : plusieurs fins y ramènent, à sa glace où l'on fait disparaître les corps qu'on ne veut pas voir remonter."
+            ],
+            "aliases": ["La Spree"],
+            "tags": ["scène de crime", "lieu"],
+            "related": ["l-affaire-du-raton-laveur--event--mort-sokolov", "l-affaire-du-raton-laveur--character--sokolov", "l-affaire-du-raton-laveur--location--berlin"]
+        },
+        {
+            "id": "l-affaire-du-raton-laveur--location--waschbar",
+            "category": "location",
+            "name": "Le bar Der Waschbär",
+            "summary": "Une cave enfumée derrière la gare de l'Est, repaire des combinards, où l'enseigne du raton-laveur donne son nom à toute l'affaire.",
+            "description": [
+                "« Der Waschbär » — le Raton-laveur — est une cave enfumée des ruelles derrière la gare de l'Est, où se croisent soldats soviétiques en fin de service, trafiquants et filles qui ont froid.",
+                "Au-dessus du comptoir, une enseigne repeinte à la main : un raton-laveur qui se lave les pattes dans une chope de bière. C'est le barman qui livre la clé du surnom : le raton-laveur, c'est celui qui lave l'argent.",
+                "Y montrer l'insigne d'étain de Sokolov, c'est se faire remarquer du tueur au manteau de cuir et gagner un avertissement sans équivoque : on n'y pose pas de questions sans risquer de ne pas passer l'hiver."
+            ],
+            "aliases": ["Der Waschbär", "Le Waschbär", "Le Raton-laveur"],
+            "tags": ["lieu-clé", "bar"],
+            "related": ["l-affaire-du-raton-laveur--location--berlin", "l-affaire-du-raton-laveur--character--tueur", "l-affaire-du-raton-laveur--character--sokolov", "l-affaire-du-raton-laveur--event--operation-raton"]
+        },
+        {
+            "id": "l-affaire-du-raton-laveur--location--appartement-sokolov",
+            "category": "location",
+            "name": "L'appartement de Sokolov",
+            "summary": "Un quatrième étage sans ascenseur de Prenzlauer Berg, peuplé d'animaux empaillés, où le comptable planquait ses secrets.",
+            "description": [
+                "Au quatrième étage sans ascenseur d'un immeuble décrépit de Prenzlauer Berg, l'appartement de Sokolov sent le tabac froid et la poussière, le papier peint se décollant par plaques humides.",
+                "Sur les étagères s'entassent des dizaines d'animaux empaillés — renards, corneilles, un lièvre borgne — et, trônant au centre, un énorme raton-laveur au regard de verre, les pattes tendues comme s'il lavait éternellement quelque chose d'invisible.",
+                "C'est dans le ventre de ce raton-laveur qu'est cousu l'étui de cuir contenant le carnet de comptes et le microfilm : la preuve, noir sur blanc, du blanchiment de l'or du Parti. Dehors guette déjà une Volga noire, moteur allumé."
+            ],
+            "aliases": ["L'appartement de Prenzlauer Berg"],
+            "tags": ["lieu-clé", "planque"],
+            "related": ["l-affaire-du-raton-laveur--character--sokolov", "l-affaire-du-raton-laveur--event--operation-raton", "l-affaire-du-raton-laveur--location--berlin"]
+        },
+        {
+            "id": "l-affaire-du-raton-laveur--location--treptow",
+            "category": "location",
+            "name": "Le mémorial soviétique de Treptow",
+            "summary": "Le colossal monument aux soldats de l'Armée rouge, où Agent A. donne rendez-vous à Werner.",
+            "description": [
+                "Le mémorial aux soldats soviétiques de Treptow écrase le ciel de plomb : un géant de bronze, un enfant sauvé dans un bras, l'épée qui brise la croix gammée dans l'autre.",
+                "C'est à ses pieds qu'Agent A. donne rendez-vous à Werner et lui expose l'opération Raton-laveur, le rôle d'Artemiev et le marché qu'elle propose.",
+                "Monument à une victoire d'hier, il devient le théâtre des jeux d'ombre d'un empire à l'agonie."
+            ],
+            "aliases": ["Le mémorial de Treptow", "Treptow"],
+            "tags": ["lieu", "monument"],
+            "related": ["l-affaire-du-raton-laveur--character--agent-a", "l-affaire-du-raton-laveur--character--werner", "l-affaire-du-raton-laveur--event--operation-raton"]
+        },
+        {
+            "id": "l-affaire-du-raton-laveur--location--mission",
+            "category": "location",
+            "name": "La mission commerciale soviétique",
+            "summary": "La façade officielle de l'opération de blanchiment, aux bureaux qu'on vide déjà dans des cartons.",
+            "description": [
+                "Représentation commerciale soviétique à Berlin, elle emploie Sokolov comme comptable et sert de couverture officielle à Artemiev.",
+                "C'est de là que partent les transferts, les comptes-écrans et les Volga noires qui font la navette vers l'ouest ; c'est de là, aussi, que proviennent les plaques qui relient le tueur à sa hiérarchie.",
+                "Quand Werner s'y présente seul et sans preuve, il y trouve des bureaux à demi dégarnis, les cartons empilés — et, parfois, la mort qui l'attend au fond d'une pièce."
+            ],
+            "aliases": ["La mission commerciale", "La mission soviétique"],
+            "tags": ["lieu-clé", "administration"],
+            "related": ["l-affaire-du-raton-laveur--character--artemiev", "l-affaire-du-raton-laveur--character--sokolov", "l-affaire-du-raton-laveur--character--tueur", "l-affaire-du-raton-laveur--event--operation-raton"]
+        },
+        {
+            "id": "l-affaire-du-raton-laveur--event--operation-raton",
+            "category": "event",
+            "name": "L'opération Raton-laveur",
+            "summary": "Le blanchiment de l'or et des caisses du Parti à travers Berlin, avant la dissolution : des centaines de millions au cœur de l'affaire.",
+            "description": [
+                "Baptisée en interne « le Raton-laveur », l'opération consiste à blanchir l'or et les caisses du Parti à travers Berlin avant la dissolution de l'URSS : des centaines de millions détournés au profit de quelques-uns.",
+                "Sokolov en tenait les comptes ; Artemiev la dirige ; König la couvre. Le surnom dit tout : le raton-laveur, c'est celui qui lave l'argent.",
+                "Le microfilm de Sokolov recense chaque virement, chaque compte-écran, chaque nom, jusqu'aux plus hauts sommets d'un empire agonisant : de quoi éclabousser des dirigeants soviétiques bien au-delà d'Artemiev, si quelqu'un ose le faire exploser."
+            ],
+            "tags": ["événement", "corruption"],
+            "related": ["l-affaire-du-raton-laveur--character--sokolov", "l-affaire-du-raton-laveur--character--artemiev", "l-affaire-du-raton-laveur--character--agent-a", "l-affaire-du-raton-laveur--character--konig", "l-affaire-du-raton-laveur--location--mission", "l-affaire-du-raton-laveur--event--mort-sokolov"]
+        },
+        {
+            "id": "l-affaire-du-raton-laveur--event--mort-sokolov",
+            "category": "event",
+            "name": "La mort de Grigori Sokolov",
+            "summary": "Le meurtre maquillé en accident qui ouvre l'enquête et que tout le monde voudrait enterrer.",
+            "description": [
+                "Un matin de décembre, un pêcheur découvre Grigori Sokolov la tête prise dans la glace de la Spree, sans un rouble ni un papier de valeur sur lui — étrange, pour un comptable en pleine débâcle.",
+                "König exige qu'on classe l'affaire en accident, ou au pire en vol qui a mal tourné : l'URSS meurt dans huit jours, et personne n'a envie de remuer la vase d'un fleuve gelé.",
+                "Selon la vérité qu'on finit par débusquer, Sokolov a été tué pour avoir voulu parler, se servir au passage, ou trahir le véritable maître de l'opération Raton-laveur."
+            ],
+            "tags": ["événement", "meurtre"],
+            "related": ["l-affaire-du-raton-laveur--character--sokolov", "l-affaire-du-raton-laveur--character--werner", "l-affaire-du-raton-laveur--location--spree", "l-affaire-du-raton-laveur--event--operation-raton"]
+        },
+        {
+            "id": "l-affaire-du-raton-laveur--event--attentat",
+            "category": "event",
+            "name": "L'attentat contre Werner",
+            "summary": "L'embuscade au silencieux dans la cage d'escalier de l'inspecteur : le signal qu'il est allé trop loin.",
+            "description": [
+                "Un soir, une silhouette embusquée dans la cage d'escalier de Werner tire au pistolet muni d'un silencieux ; le plâtre explose à un centimètre de sa tempe.",
+                "Neumann, surgi derrière lui, plaque le tireur contre le mur avant qu'il ne s'échappe en boitant, laissant tomber une douille et une plaque de la mission commerciale soviétique.",
+                "Le message est clair : Werner est allé trop loin. C'est aussi l'épreuve qui décide de sa confiance en Neumann, celui qui vient, précisément, de lui sauver la vie."
+            ],
+            "tags": ["événement", "violence"],
+            "related": ["l-affaire-du-raton-laveur--character--werner", "l-affaire-du-raton-laveur--character--neumann", "l-affaire-du-raton-laveur--character--tueur", "l-affaire-du-raton-laveur--event--operation-raton"]
+        },
+        {
+            "id": "l-affaire-du-raton-laveur--event--rapatriement",
+            "category": "event",
+            "name": "Le rapatriement de l'Armée rouge",
+            "summary": "Le lent départ des forces soviétiques de Berlin, toile de fond d'un empire qui remballe et brade tout ce qu'il peut.",
+            "description": [
+                "À mesure que l'URSS s'effondre, l'Armée rouge quitte Berlin : des colonnes de camions militaires filent vers l'est, phares allumés en plein jour, emportant leurs caisses vers le rapatriement.",
+                "Dans les casernes que l'on vide, on brade tout ce qui peut l'être avant de rentrer — « même leurs morts, on dirait », soupire le vieux pêcheur.",
+                "Ce grand reflux offre à l'opération Raton-laveur sa couverture idéale : dans le désordre d'une armée qui s'en va, une fortune peut disparaître sans que personne ne s'en aperçoive."
+            ],
+            "tags": ["événement", "guerre froide"],
+            "related": ["l-affaire-du-raton-laveur--era--chute-urss", "l-affaire-du-raton-laveur--universe--guerre-froide", "l-affaire-du-raton-laveur--event--operation-raton", "l-affaire-du-raton-laveur--location--mission"]
+        }
+    ]
+}

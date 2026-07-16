@@ -1,11 +1,11 @@
 {
-    "universe": "Futur proche",
+    "universe": "Futur",
     "storyId": "le-dernier-espoir",
     "entries": [
         {
-            "id": "le-dernier-espoir--universe--futur-proche",
+            "id": "le-dernier-espoir--universe--futur",
             "category": "universe",
-            "name": "Futur proche",
+            "name": "Futur",
             "summary": "Un monde rongé par la crise climatique et les tensions géopolitiques, tenu à bout de bras par des armures d'élite.",
             "description": [
                 "Dans un futur proche, la Terre est en proie à des conflits géopolitiques et à des tensions sociales, exacerbés par la crise climatique et la raréfaction des ressources.",
@@ -26,7 +26,7 @@
                 "Partout ailleurs, la nouvelle se répand comme une traînée de poudre et les villes basculent dans la panique, livrées à elles-mêmes."
             ],
             "tags": ["époque", "catastrophe", "lore"],
-            "related": ["le-dernier-espoir--universe--futur-proche", "le-dernier-espoir--event--bombe-new-york", "le-dernier-espoir--event--incident-dedale", "le-dernier-espoir--event--naufrage-thermophile", "le-dernier-espoir--location--dedale", "le-dernier-espoir--location--quartier-general"]
+            "related": ["le-dernier-espoir--universe--futur", "le-dernier-espoir--event--bombe-new-york", "le-dernier-espoir--event--incident-dedale", "le-dernier-espoir--event--naufrage-thermophile", "le-dernier-espoir--location--dedale", "le-dernier-espoir--location--quartier-general"]
         },
         {
             "id": "le-dernier-espoir--character--howard",
@@ -212,7 +212,7 @@
             ],
             "aliases": ["Hyperloop"],
             "tags": ["technologie", "militaire", "lore"],
-            "related": ["le-dernier-espoir--character--fondateur", "le-dernier-espoir--universe--futur-proche", "le-dernier-espoir--location--dedale", "le-dernier-espoir--location--thermophile", "le-dernier-espoir--event--bombe-new-york"]
+            "related": ["le-dernier-espoir--character--fondateur", "le-dernier-espoir--universe--futur", "le-dernier-espoir--location--dedale", "le-dernier-espoir--location--thermophile", "le-dernier-espoir--event--bombe-new-york"]
         },
         {
             "id": "le-dernier-espoir--event--incident-dedale",
@@ -240,7 +240,7 @@
             ],
             "aliases": ["Le QG", "Le quartier général"],
             "tags": ["lieu-clé", "militaire"],
-            "related": ["le-dernier-espoir--universe--futur-proche", "le-dernier-espoir--character--fondateur", "le-dernier-espoir--location--dedale", "le-dernier-espoir--location--thermophile", "le-dernier-espoir--era--effondrement"]
+            "related": ["le-dernier-espoir--universe--futur", "le-dernier-espoir--character--fondateur", "le-dernier-espoir--location--dedale", "le-dernier-espoir--location--thermophile", "le-dernier-espoir--era--effondrement"]
         }
     ]
 }
