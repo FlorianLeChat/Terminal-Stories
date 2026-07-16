@@ -134,6 +134,21 @@
             "related": ["la-femme-aux-cheveux-en-or--character--eleonore", "la-femme-aux-cheveux-en-or--character--comte", "la-femme-aux-cheveux-en-or--event--siege-arles"]
         },
         {
+            "id": "la-femme-aux-cheveux-en-or--character--archers",
+            "category": "character",
+            "name": "Les archers d'Arles",
+            "summary": "Les villageois convertis en archers sur les murailles, dont les salves tiennent la bataille à bout de flèches.",
+            "description": [
+                "Rôle : Alliés.",
+                "Faute de soldats aguerris en nombre suffisant, une partie des villageois d'Arles est postée en archers au pied et au sommet des murailles ; leurs salves déciment les premières lignes castillanes et tiennent la bataille à bout de flèches.",
+                "Au plus fort de l'assaut, un détachement castillan contourne la mêlée pour les massacrer. Le comte peut se porter à leur secours, et les archers sauvés reprennent aussitôt leurs tirs, ou rester couvrir Éléonore et les abandonner à leur sort.",
+                "S'il les a sauvés, il peut, à l'heure du duel, leur ordonner de couvrir Éléonore d'une salve : ces hommes se souviennent de qui les a protégés et font, sans le savoir, pencher le sort d'Arles (fin « La dette des archers »)."
+            ],
+            "aliases": ["Les archers", "Les villageois-archers"],
+            "tags": ["allié", "soldats"],
+            "related": ["la-femme-aux-cheveux-en-or--character--comte", "la-femme-aux-cheveux-en-or--character--eleonore", "la-femme-aux-cheveux-en-or--location--arenes", "la-femme-aux-cheveux-en-or--event--siege-arles"]
+        },
+        {
             "id": "la-femme-aux-cheveux-en-or--location--arles",
             "category": "location",
             "name": "La Cité et le Château d'Arles",
@@ -193,11 +208,12 @@
             "summary": "L'assaut castillan qui, en une matinée, décide du sort de la cité et du royaume.",
             "description": [
                 "Profitant de la faiblesse de la France, l'armée de Castille encercle Arles au petit matin et ouvre le feu de ses engins de siège.",
-                "La cité ne peut compter que sur ses troupes de réserve, le reste des forces combattant au nord aux côtés du dauphin.",
-                "Selon les décisions du comte, le siège s'achève en victoire triomphante, en duel héroïque, ou en massacre et la chute d'Arles laisse toute la France exposée à l'envahisseur venu de la péninsule ibérique."
+                "La cité ne peut compter que sur ses troupes de réserve et sur des villageois convertis en archers, le reste des forces combattant au nord aux côtés du dauphin.",
+                "Selon les décisions du comte, le siège peut s'achever en victoire triomphante ou en duel héroïque d'Éléonore, mais aussi par la revanche des archers qu'il a sauvés, ou par la reddition de Carlos, épargné et gardé en otage par un seigneur resté auprès des siens.",
+                "À l'inverse, son orgueil, une charge téméraire ou une trahison peuvent le condamner et livrer Arles, et avec elle toute la France, à l'envahisseur venu de la péninsule ibérique."
             ],
             "tags": ["événement", "bataille"],
-            "related": ["la-femme-aux-cheveux-en-or--location--arles", "la-femme-aux-cheveux-en-or--character--carlos", "la-femme-aux-cheveux-en-or--character--eleonore", "la-femme-aux-cheveux-en-or--character--comte"]
+            "related": ["la-femme-aux-cheveux-en-or--location--arles", "la-femme-aux-cheveux-en-or--character--carlos", "la-femme-aux-cheveux-en-or--character--eleonore", "la-femme-aux-cheveux-en-or--character--comte", "la-femme-aux-cheveux-en-or--character--archers"]
         },
         {
             "id": "la-femme-aux-cheveux-en-or--event--banquet",

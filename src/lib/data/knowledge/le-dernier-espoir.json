@@ -26,7 +26,7 @@
                 "Partout ailleurs, la nouvelle se répand comme une traînée de poudre et les villes basculent dans la panique, livrées à elles-mêmes."
             ],
             "tags": ["époque", "catastrophe", "lore"],
-            "related": ["le-dernier-espoir--universe--futur", "le-dernier-espoir--event--bombe-new-york", "le-dernier-espoir--event--incident-dedale", "le-dernier-espoir--event--naufrage-thermophile", "le-dernier-espoir--location--dedale", "le-dernier-espoir--location--quartier-general"]
+            "related": ["le-dernier-espoir--universe--futur", "le-dernier-espoir--event--bombe-new-york", "le-dernier-espoir--event--incident-dedale", "le-dernier-espoir--event--naufrage-thermophile", "le-dernier-espoir--location--dedale", "le-dernier-espoir--location--quartier-general", "le-dernier-espoir--location--tokyo-shibuya"]
         },
         {
             "id": "le-dernier-espoir--character--howard",
@@ -130,6 +130,21 @@
             ],
             "tags": ["lieu", "tokyo"],
             "related": ["le-dernier-espoir--character--yoneda", "le-dernier-espoir--character--howard"]
+        },
+        {
+            "id": "le-dernier-espoir--location--tokyo-shibuya",
+            "category": "location",
+            "name": "Tokyo et le quartier de Shibuya",
+            "summary": "La métropole où commence l'histoire, secouée par les émeutes de Shibuya à la veille de l'effondrement.",
+            "description": [
+                "Zone de patrouille de Howard et Yoneda : une métropole de gratte-ciel et de rues bondées, où des quartiers entiers se sont pourtant vidés, désertés par l'exode et le déclin.",
+                "La veille, de violentes émeutes ont éclaté à Shibuya, poussées par l'inflation, le chômage et la pauvreté. Colonnes de fumée, forces anti-émeutes, manifestants brandissant pancartes et banderoles contre le gouvernement : c'est là que débute la mission de routine des deux administrateurs.",
+                "Sur les écrans publicitaires géants défilent déjà les images de la guerre civile de New York et l'alerte maximale du Dédale, dernier répit avant la nouvelle qui va tout emporter.",
+                "Quand la bombe efface New York, Tokyo bascule en quelques minutes dans le pillage et la violence ; le réseau de l'Administration passe hors ligne, et Howard et Yoneda se retrouvent seuls, deux silhouettes perdues dans le chaos."
+            ],
+            "aliases": ["Tokyo", "Shibuya"],
+            "tags": ["lieu", "tokyo"],
+            "related": ["le-dernier-espoir--character--howard", "le-dernier-espoir--character--yoneda", "le-dernier-espoir--location--quartier-yoneda", "le-dernier-espoir--era--effondrement", "le-dernier-espoir--event--bombe-new-york"]
         },
         {
             "id": "le-dernier-espoir--location--los-angeles",

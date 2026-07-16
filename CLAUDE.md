@@ -9,6 +9,11 @@ A terminal-style interactive fiction system, built with SvelteKit + TypeScript +
 - **Error and status messages follow the same rule.** Non-UI layers (services, utilities) must throw or return **machine-readable codes** (not localized strings); the UI maps those codes to Paraglide messages. Never throw, return, or store a hardcoded user-facing sentence.
 - Commit messages are in English.
 
+## Content typography (stories & wikis)
+
+- **Never use the em dash `—` (or the en dash `–`) in story or wiki content.** This applies to all narrative text and to every `summary`/`description` field in stories (`src/lib/data/stories/`) and knowledge bases (`src/lib/data/knowledge/`). Use commas, parentheses, a colon, or separate sentences instead.
+- **Only exception:** the ending-name markers in stories, e.g. `"— FIN : « Le prix du silence » —"`, which keep their em dashes.
+
 ## Comments and JSDoc
 
 - Document **functions, and especially exported functions**, with a JSDoc block.

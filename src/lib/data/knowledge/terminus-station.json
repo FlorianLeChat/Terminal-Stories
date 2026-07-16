@@ -69,11 +69,12 @@
         "Role: Antagonist.",
         "A creature with perfect mimicry: it absorbs the memory of its victims and becomes undetectable to the naked eye.",
         "Ectothermic, it hunts body heat through the station's ducts.",
-        "It wears the face and voice of Marcus Tanner. 'I am what he knew. What he wanted.' It may not be seeking only to kill, but to understand what it means to be human."
+        "It wears the face and voice of those it has taken, Marcus Tanner among them, and among the eleven survivors it may be hiding behind the chief mechanic herself. 'I am what he knew. What he wanted.' It may not be seeking only to kill, but to understand what it means to be human.",
+        "Its mimicry has two flaws a careful commander can exploit: a bio-signature that matches no crew file, which a patient scan can single out, and a body that never learned to breathe like a frightened human. Either tell can undo it."
       ],
       "aliases": ["???", "The creature", "Zeta"],
       "tags": ["antagonist", "alien", "mimicry"],
-      "related": ["terminus-station--character--tanner", "terminus-station--event--zeta-project", "terminus-station--location--laboratory"]
+      "related": ["terminus-station--character--tanner", "terminus-station--event--zeta-project", "terminus-station--location--laboratory", "terminus-station--location--section-b"]
     },
     {
       "id": "terminus-station--character--tanner",
@@ -113,10 +114,11 @@
       "description": [
         "On level 3, the Section B rec room has become a makeshift bunker.",
         "Eleven people have barricaded themselves in, grouped together to limit the thermal trails.",
-        "Their chief mechanic greets the rescue team with a chilling warning: 'You came for us. Good. But one of you is going to have to stay.'"
+        "Their chief mechanic greets the rescue team with a chilling warning: 'You came for us. Good. But one of you is going to have to stay.'",
+        "A careful scan of the room tells a darker story: one of the eleven bio-signatures matches no crew file. The dry-eyed chief mechanic may be no survivor at all, but the eleventh signature the others never thought to count."
       ],
       "tags": ["refuge", "location"],
-      "related": ["terminus-station--location--terminus-7"]
+      "related": ["terminus-station--location--terminus-7", "terminus-station--character--zeta-organism"]
     },
     {
       "id": "terminus-station--location--laboratory",

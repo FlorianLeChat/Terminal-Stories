@@ -20,12 +20,12 @@
       "id": "cursed-forest--character--traveler",
       "category": "character",
       "name": "The Traveler",
-      "summary": "An adventurer worn down by the road, come to seek in the forest what he lost elsewhere.",
+      "summary": "An adventurer worn down by the road, come to seek in the forest what they lost elsewhere.",
       "description": [
         "Role: Protagonist.",
-        "A man whose coat has known too many winters and whose blade long ago surrendered its edge to rust.",
-        "No one knows what he came looking for in Mireval, not even him, until the forest reminds him.",
-        "His journey is no quest for gold or glory, but a reckoning with a memory he has been fleeing."
+        "A wanderer whose coat has known too many winters, whose blade long ago surrendered its edge to rust.",
+        "No one knows what they came looking for in Mireval, not even them, until the forest reminds them.",
+        "Their journey is no quest for gold or glory, but a reckoning with a memory they have been fleeing."
       ],
       "aliases": ["The lone traveler"],
       "tags": ["protagonist", "human"],
@@ -50,7 +50,7 @@
       "id": "cursed-forest--character--old-weaver",
       "category": "character",
       "name": "The Old Weaver",
-      "summary": "An exiled witch living in the heart of the woods; she knows things others have forgotten.",
+      "summary": "An exiled witch dwelling in a cabin along the forest trail; she knows things others have forgotten.",
       "description": [
         "Role: Ambiguous ally.",
         "Blind, with entirely white eyes, she dwells in a cabin cluttered with dried herbs, vials, and books whose titles read backward.",
@@ -85,7 +85,7 @@
         "At the center of a clearing stands a single tree, white as bone, its branches touching the low clouds.",
         "Its bark is covered in faces, hundreds of them, that visitors sometimes recognize.",
         "The tree pulses like a heart and guards 'something that belongs to you, or belonged to someone you loved.'",
-        "It is here that the final choice plays out: take what is guarded, walk away, or offer the golden light to free the forest."
+        "It is here that the final choice plays out, and it wears many faces: reach into the bark to reclaim the memory the tree guards, turn away and leave it its secrets, pour the Old Weaver's golden vial over the roots, call on the befriended Spirit to open the heart together, or name aloud what the tree hoards. Each path leaves Mireval, and the traveler, changed in a different way."
       ],
       "aliases": ["The White Tree", "The heart-tree"],
       "tags": ["tree", "sanctuary", "key location"],
@@ -140,7 +140,7 @@
       "description": [
         "No one tells the curse of Mireval the same way, but all agree on the result: the forest swallows those who enter, and keeps within its heart what they were trying to forget.",
         "The faces carved into the bark of the White Tree are said to be those of travelers who never came back out.",
-        "It is said the curse can be lifted, not by force, but by a gift given with nothing asked in return. 'It has been a long time since anyone knew how to give without taking.'"
+        "It is said the curse can be broken, never by force: either by a gift given with nothing asked in return ('It has been a long time since anyone knew how to give without taking'), or by one who reaches the heart with the Spirit as a friend and asks it to release what it holds rather than taking from it. Then the sleeping faces wake and rise free, and the trees of Mireval are only trees again."
       ],
       "tags": ["event", "curse", "lore"],
       "related": ["cursed-forest--character--spirit", "cursed-forest--location--forest-heart"]

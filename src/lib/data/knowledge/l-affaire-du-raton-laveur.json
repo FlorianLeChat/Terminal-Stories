@@ -22,7 +22,7 @@
             "summary": "Les derniers jours de l'Union soviétique, où juridiction, mission et témoins s'apprêtent à disparaître d'un seul trait de plume.",
             "description": [
                 "En décembre 1991, l'Union soviétique vit ses dernières heures. Le 25, Mikhaïl Gorbatchev annoncera sa démission et le drapeau rouge frappé de la faucille et du marteau descendra une dernière fois du Kremlin.",
-                "À Berlin, l'Armée rouge se rapatrie : des colonnes de camions militaires filent vers l'est, phares allumés en plein jour, emportant Dieu sait quoi dans leurs caisses.",
+                "À Berlin, l'Armée rouge se rapatrie : des colonnes de camions militaires filent vers l'ouest, phares allumés en plein jour, emportant Dieu sait quoi dans leurs caisses.",
                 "Pour un enquêteur, le compte à rebours est un piège. Dans huit jours, il n'y aura plus de mission commerciale, plus de juridiction soviétique, plus de preuves ni de témoins. Attendre un jour de trop, c'est laisser l'Histoire refermer l'affaire à sa place."
             ],
             "tags": ["époque", "guerre froide", "lore"],
@@ -51,7 +51,7 @@
             "description": [
                 "Rôle : Allié.",
                 "Binôme de Werner, c'est lui qui apporte l'affaire : un corps sur la berge de la Spree, muni d'un passeport diplomatique soviétique.",
-                "König met Werner en garde contre lui — « on ne sait jamais pour qui les gens travaillent vraiment » — mais c'est Neumann qui lui sauve la vie en plaquant le tueur lors de l'attentat.",
+                "König met Werner en garde contre lui, « on ne sait jamais pour qui les gens travaillent vraiment », mais c'est Neumann qui lui sauve la vie en plaquant le tueur lors de l'attentat.",
                 "Si Werner lui accorde toute sa confiance, ils montent ensemble le dossier qui coince Artemiev par la justice, sans scandale de rue et sans effusion de sang."
             ],
             "aliases": ["Neumann"],
@@ -81,7 +81,7 @@
             "description": [
                 "Rôle : Victime.",
                 "Comptable de la mission commerciale soviétique de Berlin, « un petit gris, le genre qu'on ne remarque jamais », il tenait les livres de l'opération Raton-laveur.",
-                "Passionné de taxidermie, il planquait ses secrets — un carnet de comptes et une bobine de microfilm — dans le ventre d'un raton-laveur empaillé, au cœur de son appartement de Prenzlauer Berg.",
+                "Passionné de taxidermie, il planquait ses secrets (un carnet de comptes et une bobine de microfilm) dans le ventre d'un raton-laveur empaillé, au cœur de son appartement de Prenzlauer Berg.",
                 "Retrouvé la tête prise dans la glace, sans un rouble sur lui, il a payé de sa vie d'avoir voulu parler, se servir au passage, ou trahir celui ou celle qui dirigeait vraiment l'opération."
             ],
             "aliases": ["Sokolov", "Le comptable"],
@@ -97,7 +97,7 @@
                 "Rôle : Antagoniste.",
                 "Officiellement attaché commercial de la mission soviétique, officieusement l'homme qui fait fuir l'or et les caisses du Parti à travers Berlin avant que le rideau ne tombe.",
                 "C'est lui qui dirige l'opération Raton-laveur, et lui, sans doute, qui a fait taire Sokolov. Il tente d'acheter le silence de Werner d'une épaisse enveloppe de dollars, avec la bénédiction de König.",
-                "Selon les choix de l'inspecteur, il s'envole vers une villa au bord d'un lac suisse avec sa fortune intacte, ou se fait arrêter — à la frontière suisse, ou la veille de la fin de l'URSS — coincé par les propres chiffres de Sokolov."
+                "Selon les choix de l'inspecteur, il s'envole vers une villa au bord d'un lac suisse avec sa fortune intacte, ou se fait arrêter (à la frontière suisse, ou la veille de la fin de l'URSS), coincé par les propres chiffres de Sokolov."
             ],
             "aliases": ["Artemiev"],
             "tags": ["antagoniste", "soviétique", "humain"],
@@ -107,7 +107,7 @@
             "id": "l-affaire-du-raton-laveur--character--agent-a",
             "category": "character",
             "name": "Agent A.",
-            "summary": "Une voix de femme sortie du grésillement radio, qui promet la vérité et la protection — et qui pourrait bien être le vrai raton-laveur.",
+            "summary": "Une voix de femme sortie du grésillement radio, qui promet la vérité et la protection, et qui pourrait bien être le vrai raton-laveur.",
             "description": [
                 "Rôle : Alliée ambiguë.",
                 "Contact clandestin qui aborde Werner par radio et lui donne rendez-vous au mémorial de Treptow, elle prétend servir ceux qui veulent que la fortune volée revienne au peuple, et lui offre sa protection contre les comptes de Sokolov.",
@@ -182,7 +182,7 @@
             "name": "Le bar Der Waschbär",
             "summary": "Une cave enfumée derrière la gare de l'Est, repaire des combinards, où l'enseigne du raton-laveur donne son nom à toute l'affaire.",
             "description": [
-                "« Der Waschbär » — le Raton-laveur — est une cave enfumée des ruelles derrière la gare de l'Est, où se croisent soldats soviétiques en fin de service, trafiquants et filles qui ont froid.",
+                "« Der Waschbär », le Raton-laveur, est une cave enfumée des ruelles derrière la gare de l'Est, où se croisent soldats soviétiques en fin de service, trafiquants et filles qui ont froid.",
                 "Au-dessus du comptoir, une enseigne repeinte à la main : un raton-laveur qui se lave les pattes dans une chope de bière. C'est le barman qui livre la clé du surnom : le raton-laveur, c'est celui qui lave l'argent.",
                 "Y montrer l'insigne d'étain de Sokolov, c'est se faire remarquer du tueur au manteau de cuir et gagner un avertissement sans équivoque : on n'y pose pas de questions sans risquer de ne pas passer l'hiver."
             ],
@@ -197,7 +197,7 @@
             "summary": "Un quatrième étage sans ascenseur de Prenzlauer Berg, peuplé d'animaux empaillés, où le comptable planquait ses secrets.",
             "description": [
                 "Au quatrième étage sans ascenseur d'un immeuble décrépit de Prenzlauer Berg, l'appartement de Sokolov sent le tabac froid et la poussière, le papier peint se décollant par plaques humides.",
-                "Sur les étagères s'entassent des dizaines d'animaux empaillés — renards, corneilles, un lièvre borgne — et, trônant au centre, un énorme raton-laveur au regard de verre, les pattes tendues comme s'il lavait éternellement quelque chose d'invisible.",
+                "Sur les étagères s'entassent des dizaines d'animaux empaillés (renards, corneilles, un lièvre borgne) et, trônant au centre, un énorme raton-laveur au regard de verre, les pattes tendues comme s'il lavait éternellement quelque chose d'invisible.",
                 "C'est dans le ventre de ce raton-laveur qu'est cousu l'étui de cuir contenant le carnet de comptes et le microfilm : la preuve, noir sur blanc, du blanchiment de l'or du Parti. Dehors guette déjà une Volga noire, moteur allumé."
             ],
             "aliases": ["L'appartement de Prenzlauer Berg"],
@@ -226,7 +226,7 @@
             "description": [
                 "Représentation commerciale soviétique à Berlin, elle emploie Sokolov comme comptable et sert de couverture officielle à Artemiev.",
                 "C'est de là que partent les transferts, les comptes-écrans et les Volga noires qui font la navette vers l'ouest ; c'est de là, aussi, que proviennent les plaques qui relient le tueur à sa hiérarchie.",
-                "Quand Werner s'y présente seul et sans preuve, il y trouve des bureaux à demi dégarnis, les cartons empilés — et, parfois, la mort qui l'attend au fond d'une pièce."
+                "Quand Werner s'y présente seul et sans preuve, il y trouve des bureaux à demi dégarnis, les cartons empilés, et parfois la mort qui l'attend au fond d'une pièce."
             ],
             "aliases": ["La mission commerciale", "La mission soviétique"],
             "tags": ["lieu-clé", "administration"],
@@ -251,7 +251,7 @@
             "name": "La mort de Grigori Sokolov",
             "summary": "Le meurtre maquillé en accident qui ouvre l'enquête et que tout le monde voudrait enterrer.",
             "description": [
-                "Un matin de décembre, un pêcheur découvre Grigori Sokolov la tête prise dans la glace de la Spree, sans un rouble ni un papier de valeur sur lui — étrange, pour un comptable en pleine débâcle.",
+                "Un matin de décembre, un pêcheur découvre Grigori Sokolov la tête prise dans la glace de la Spree, sans un rouble ni un papier de valeur sur lui, ce qui est étrange pour un comptable en pleine débâcle.",
                 "König exige qu'on classe l'affaire en accident, ou au pire en vol qui a mal tourné : l'URSS meurt dans huit jours, et personne n'a envie de remuer la vase d'un fleuve gelé.",
                 "Selon la vérité qu'on finit par débusquer, Sokolov a été tué pour avoir voulu parler, se servir au passage, ou trahir le véritable maître de l'opération Raton-laveur."
             ],
@@ -277,8 +277,8 @@
             "name": "Le rapatriement de l'Armée rouge",
             "summary": "Le lent départ des forces soviétiques de Berlin, toile de fond d'un empire qui remballe et brade tout ce qu'il peut.",
             "description": [
-                "À mesure que l'URSS s'effondre, l'Armée rouge quitte Berlin : des colonnes de camions militaires filent vers l'est, phares allumés en plein jour, emportant leurs caisses vers le rapatriement.",
-                "Dans les casernes que l'on vide, on brade tout ce qui peut l'être avant de rentrer — « même leurs morts, on dirait », soupire le vieux pêcheur.",
+                "À mesure que l'URSS s'effondre, l'Armée rouge quitte Berlin : des colonnes de camions militaires filent vers l'ouest, phares allumés en plein jour, emportant leurs caisses vers le rapatriement.",
+                "Dans les casernes que l'on vide, on brade tout ce qui peut l'être avant de rentrer. « Même leurs morts, on dirait », soupire le vieux pêcheur.",
                 "Ce grand reflux offre à l'opération Raton-laveur sa couverture idéale : dans le désordre d'une armée qui s'en va, une fortune peut disparaître sans que personne ne s'en aperçoive."
             ],
             "tags": ["événement", "guerre froide"],
