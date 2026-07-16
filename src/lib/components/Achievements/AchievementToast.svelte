@@ -4,9 +4,6 @@
     import { terminal } from "$lib/stores/terminal";
     import { getAchievement, hideOnError, type Achievement } from "$lib";
 
-    /** How long the notification stays on screen before auto-dismissing. */
-    const AUTO_DISMISS_MS = 6000;
-
     // Resolve the just-unlocked ids into their full definitions, skipping any
     // unknown id defensively (e.g. a renamed achievement in an old save).
     let unlocked = $derived(
@@ -14,18 +11,6 @@
             .map( ( id ) => getAchievement( id ) )
             .filter( ( a ): a is Achievement => a !== undefined )
     );
-
-    // Auto-dismiss whenever a new batch appears; the timer resets on each change
-    // and is cleared if the component unmounts or the toast is dismissed early.
-    $effect( () =>
-    {
-        const hasToast = unlocked.length > 0;
-        if ( !hasToast ) return;
-
-        const timer = setTimeout( () => terminal.dismissAchievementToast(), AUTO_DISMISS_MS );
-
-        return () => clearTimeout( timer );
-    } );
 </script>
 
 {#if unlocked.length > 0}

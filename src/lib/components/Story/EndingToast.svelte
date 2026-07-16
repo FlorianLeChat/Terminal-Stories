@@ -2,9 +2,6 @@
     import * as m from "$lib/locales/messages";
     import { terminal } from "$lib/stores/terminal";
 
-    /** How long the notification stays on screen before auto-dismissing. */
-    const AUTO_DISMISS_MS = 6000;
-
     let toast = $derived( $terminal.endingToast );
 
     let message = $derived(
@@ -14,17 +11,6 @@
                 ? m.ending_all_discovered( { total: toast.total } )
                 : m.ending_new_discovered( { found: toast.found, total: toast.total } )
     );
-
-    // Auto-dismiss whenever a new toast appears; the timer resets on each
-    // change and is cleared if the component unmounts or it is dismissed early.
-    $effect( () =>
-    {
-        if ( toast === null ) return;
-
-        const timer = setTimeout( () => terminal.dismissEndingToast(), AUTO_DISMISS_MS );
-
-        return () => clearTimeout( timer );
-    } );
 </script>
 
 {#if toast !== null}
