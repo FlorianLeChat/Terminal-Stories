@@ -100,6 +100,7 @@ if ( scene?.isEnding === true ) terminal.goBack();
 - Before wrapping up, run both checks in order and fix any error before committing:
   1. `npm run check` — TypeScript + Svelte type checking
   2. `npm run lint` — ESLint rules
+ run- Whenever a story or a wiki entry (files under `src/lib/data/`) is modified, run `npm run check-spell` at the end of the changes and fix any reported issue before committing.
 
 ## Planning before implementation
 
