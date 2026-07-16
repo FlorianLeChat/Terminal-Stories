@@ -162,6 +162,12 @@ export interface TerminalLine {
     speaker?: string;
     /** Index of the choice this line represents, for lines of type "choice". */
     choiceIndex?: number;
+    /**
+     * Id of the scene this choice line belongs to, for lines of type
+     * "choice". Lets {@link makeChoice} ignore clicks on choices left over
+     * from a scene the player has already moved past.
+     */
+    choiceSceneId?: string;
     /** Path of the image asset, for lines of type "image". */
     imageSrc?: string;
     /** Accessible alt text of the image, for lines of type "image". */
@@ -441,7 +447,8 @@ const buildChoiceLines = ( scene: Scene, state: GameState ): Omit<TerminalLine, 
         lines.push( {
             text: `  [${ i + 1 }] ${ choice.text }`,
             type: "choice",
-            choiceIndex: i + 1
+            choiceIndex: i + 1,
+            choiceSceneId: scene.id
         } );
     } );
 
@@ -931,12 +938,19 @@ const createTerminalStore = () =>
      * resulting flag, advances the game state, and renders the next scene.
      *
      * @param choiceIndex - The 1-based index of the chosen option as displayed.
+     * @param choiceSceneId - Id of the scene the clicked choice line belongs
+     * to. When provided and it no longer matches the current scene, the
+     * click is ignored — this happens when the player clicks a choice left
+     * over from a scene they already moved past.
      * @author Claude
      */
-    const makeChoice = ( choiceIndex: number ) =>
+    const makeChoice = ( choiceIndex: number, choiceSceneId?: string ) =>
     {
         const state = snapshot();
         if ( !state.gameState || !state.currentStory ) return;
+
+        const isStaleChoice = choiceSceneId !== undefined && choiceSceneId !== state.gameState.currentScene;
+        if ( isStaleChoice ) return;
 
         const scene = state.currentStory.scenes[ state.gameState.currentScene ];
         if ( !scene ) return;

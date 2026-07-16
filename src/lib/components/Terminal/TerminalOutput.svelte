@@ -47,8 +47,11 @@
         skipSignal?: number;
         /** True while lines are being typed out; bound to the parent for hint display. */
         isAnimating?: boolean;
-        /** Called when the user clicks a choice button; receives the 1-based choice index. */
-        onchoice?: ( choiceIndex: number ) => void;
+        /**
+         * Called when the user clicks a choice button; receives the 1-based
+         * choice index and the id of the scene the choice belongs to.
+         */
+        onchoice?: ( choiceIndex: number, choiceSceneId?: string ) => void;
     }
 
     let { lines = [], animated = true, skipSignal = 0, isAnimating = $bindable( false ), onchoice }: Props = $props();
@@ -301,7 +304,7 @@
         {:else if line.type === "choice"}
             <button
                 class="wrap-break-word choice-line py-1.5 px-2 -mx-2 rounded {lineClass( line.type )} {typedIds.has( line.id ) ? "" : "animate-fadein"} w-full text-left"
-                onclick={() => onchoice?.( line.choiceIndex ?? 0 )}
+                onclick={() => onchoice?.( line.choiceIndex ?? 0, line.choiceSceneId )}
             >
                 {line.text}
             </button>
