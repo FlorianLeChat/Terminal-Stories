@@ -14,6 +14,30 @@ let masterGain: GainNode | null = null;
 let enabled = false;
 let volume = 0.5;
 
+// Guards against attaching the visibility listener more than once across
+// repeated `ensureContext` calls (the context itself is a lasting singleton).
+let visibilityListenerAttached = false;
+
+/**
+ * Suspends the shared AudioContext while the tab/window is hidden and resumes
+ * it when it becomes visible again, so music and effects never keep sounding
+ * in the background. Resuming only happens when sound is still enabled.
+ *
+ * @author Claude
+ */
+const handleVisibilityChange = (): void =>
+{
+    if ( !context ) return;
+
+    if ( globalThis.document.hidden )
+    {
+        void context.suspend();
+        return;
+    }
+
+    if ( enabled ) void context.resume();
+};
+
 /**
  * Whether the Web Audio API is usable in the current runtime. Guards against
  * SSR (no `window`) and older browsers lacking `AudioContext`.
@@ -56,6 +80,12 @@ export const ensureContext = (): AudioContext | null =>
     masterGain = context.createGain();
     masterGain.gain.value = enabled ? volume : 0;
     masterGain.connect( compressor );
+
+    if ( !visibilityListenerAttached )
+    {
+        globalThis.document.addEventListener( "visibilitychange", handleVisibilityChange );
+        visibilityListenerAttached = true;
+    }
 
     return context;
 };
