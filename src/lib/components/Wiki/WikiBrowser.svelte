@@ -33,12 +33,23 @@
         : availableUniverses );
 
     let searchInputEl: HTMLInputElement | undefined = $state();
+    let scrollContainerEl: HTMLDivElement | undefined = $state();
 
     $effect( () =>
     {
         if ( searchActive )
         {
             searchInputEl?.focus();
+        }
+    } );
+
+    // Reading an entry lands the scroll position wherever the list had scrolled to;
+    // jump back to the top so the entry always opens at its beginning.
+    $effect( () =>
+    {
+        if ( currentEntry )
+        {
+            scrollContainerEl?.scrollTo( { top: 0 } );
         }
     } );
 
@@ -87,7 +98,7 @@
 
 </script>
 
-<div class="flex-1 overflow-y-auto px-4 py-2 scrollbar-terminal">
+<div bind:this={scrollContainerEl} class="flex-1 overflow-y-auto px-4 py-2 scrollbar-terminal">
     <TerminalLogo subtitle={m.wiki_subtitle()} />
 
     {#if !currentEntry}
