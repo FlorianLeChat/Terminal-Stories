@@ -744,11 +744,12 @@
 
     /**
      * Plays a click sound when the user activates any interactive control with
-     * a pointer (mouse/touch): menu entries, filters, story choices, footer
-     * actions, dialogs... Delegated on the window so every current and future
-     * button is covered without wiring each handler by hand. Pointer events
-     * never fire for keyboard activation, so this never doubles up with the
-     * per-key sound in handleKeydown.
+     * a mouse pointer: menu entries, filters, story choices, footer actions,
+     * dialogs... Delegated on the window so every current and future button is
+     * covered without wiring each handler by hand. Pointer events never fire
+     * for keyboard activation, so this never doubles up with the per-key sound
+     * in handleKeydown. Touch/pen activation is left silent, as it is the
+     * dominant input on mobile where a beep on every tap feels noisy.
      *
      * @param e - The pointer event.
      * @author Claude
@@ -756,6 +757,7 @@
     const handlePointerDown = ( e: PointerEvent ) =>
     {
         if ( !$sound.enabled ) return;
+        if ( e.pointerType !== "mouse" ) return;
 
         const target = e.target as HTMLElement | null;
 
