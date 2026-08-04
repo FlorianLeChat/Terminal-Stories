@@ -82,10 +82,30 @@
     const TYPED_TYPES = new Set( [ "narrator", "speaker", "ending", "action", "consequence" ] );
     /** Milliseconds between each revealed character. */
     const TYPING_SPEED = 18;
-    /** Minimum milliseconds between two typing ticks — chars reveal every 18 ms, a sound per char would be a machine-gun. */
-    const TICK_INTERVAL = 50;
+    /**
+     * Bounds (ms) for the random gap enforced between two typing ticks — chars
+     * reveal every 18 ms, a sound per char would be a machine-gun, and a fixed
+     * gap would sound robotic; randomizing it within this range mimics the
+     * uneven rhythm of a real typist.
+     */
+    const TICK_INTERVAL_MIN = 60;
+    const TICK_INTERVAL_MAX = 140;
     /** Timestamp of the last typing tick played, for throttling. */
     let lastTickAt = 0;
+    /** Randomized minimum gap (ms) before the next tick may play; redrawn after each tick. */
+    let nextTickInterval = TICK_INTERVAL_MIN;
+
+    /**
+     * Picks a random delay within the typing-tick bounds, so consecutive
+     * ticks don't fall at a perfectly regular cadence.
+     *
+     * @returns A random interval in milliseconds between the configured bounds.
+     * @author Claude
+     */
+    const randomTickInterval = (): number =>
+    {
+        return TICK_INTERVAL_MIN + Math.random() * ( TICK_INTERVAL_MAX - TICK_INTERVAL_MIN );
+    };
     /** True when the OS requests reduced motion — disables the typewriter effect. */
     const prefersReducedMotion = typeof window !== "undefined"
         ? window.matchMedia( "(prefers-reduced-motion: reduce)" ).matches
@@ -253,8 +273,9 @@
 
     /**
      * Plays the soft typewriter tick for a revealed character, skipping
-     * whitespace and enforcing a minimum interval between two ticks so the
-     * rapid character reveal doesn't turn into a continuous buzz.
+     * whitespace and enforcing a randomized minimum interval between two
+     * ticks so the rapid character reveal doesn't turn into a continuous
+     * buzz, and instead sounds like an actual person typing.
      *
      * @param char - The character just revealed.
      * @author Claude
@@ -265,10 +286,11 @@
         if ( isWhitespace ) return;
 
         const now = performance.now();
-        const isTooSoon = now - lastTickAt < TICK_INTERVAL;
+        const isTooSoon = now - lastTickAt < nextTickInterval;
         if ( isTooSoon ) return;
 
         lastTickAt = now;
+        nextTickInterval = randomTickInterval();
         playTypingTick();
     };
 
