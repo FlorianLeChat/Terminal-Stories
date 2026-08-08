@@ -3,6 +3,7 @@
     import { terminal } from "$lib/stores/terminal";
     import type { TerminalView } from "$lib/stores/terminal";
     import { isCustomStoryId } from "$lib";
+    import { env } from "$env/dynamic/public";
 
     interface Props {
         view: TerminalView;
@@ -280,7 +281,7 @@
         </a>
 
         <code class="ml-auto gap-3">
-            1.0.0
+            {env.PUBLIC_VERSION ?? "0.0.1"}
         </code>
     {/if}
 </footer>
