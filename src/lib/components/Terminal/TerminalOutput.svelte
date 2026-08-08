@@ -81,7 +81,7 @@
     /** Line types that receive a character-by-character typing effect. */
     const TYPED_TYPES = new Set( [ "narrator", "speaker", "ending", "action", "consequence" ] );
     /** Milliseconds between each revealed character. */
-    const TYPING_SPEED = 18;
+    const TYPING_SPEED = 35;
     /**
      * Bounds (ms) for the random gap enforced between two typing ticks — chars
      * reveal every 18 ms, a sound per char would be a machine-gun, and a fixed
