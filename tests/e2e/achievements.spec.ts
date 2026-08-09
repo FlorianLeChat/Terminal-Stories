@@ -1,58 +1,11 @@
 import { test, expect } from "@playwright/test";
-import type { Page } from "@playwright/test";
+import type { Locator, Page } from "@playwright/test";
 import { gotoMenu, openAchievements, openAiGenerator, leaveToMenu } from "./utilities/fixtures";
 import { findPathToEnding, findAllEndingPaths } from "./utilities/storyPath";
+import { choiceButton, playPath, skipTypewriter } from "./utilities/story";
+import { mockGenerationSuccess, mockModelsSuccess, unlockGenerator } from "./utilities/aiMocks";
 
 const STORY_ID = "cursed-forest";
-
-const MODELS_URL = "https://api.anthropic.com/v1/models*";
-const MESSAGES_URL = "https://api.anthropic.com/v1/messages";
-const MOCK_MODEL = { id: "claude-mock-1", display_name: "Claude Mock 1", created_at: "2026-01-01T00:00:00Z" };
-const MOCK_STORY = {
-    title: "The Mocked Path",
-    genre: "mystery",
-    language: "English",
-    universe: "Test Universe",
-    description: "A story generated for testing.",
-    characters: [],
-    startScene: "start",
-    scenes: [
-        {
-            id: "start",
-            text: [ "You wake up in a mocked room." ],
-            choices: [ { id: "c1", text: "Open the door", action: "You open it.", consequence: "Light floods in.", nextScene: "end" } ]
-        },
-        { id: "end", text: [ "The story ends here." ], isEnding: true, choices: [] }
-    ]
-};
-
-/**
- * Locates the currently-active button for a numbered choice (`[1] ...`). The
- * terminal keeps its whole scrollback, so `.last()` targets the live scene.
- *
- * @param page - The page currently on the story view.
- * @param choiceIndex - The 1-based choice index as displayed.
- * @returns A locator for the matching choice button.
- * @author Claude
- */
-const choiceButton = ( page: Page, choiceIndex: number ) =>
-    page.getByRole( "button", { name: new RegExp( `^\\s*\\[${ choiceIndex }\\]` ) } ).last();
-
-/**
- * Flushes the typewriter animation via the app's own space-to-skip shortcut,
- * without letting the keypress land on whatever choice button is still
- * focused from the previous click. A focused `<button>` natively activates on
- * Space, so pressing it blindly would silently re-click the last choice
- * instead of just skipping the animation.
- *
- * @param page - The page currently on the story view.
- * @author Claude
- */
-const skipTypewriter = async ( page: Page ): Promise<void> =>
-{
-    await page.evaluate( () => ( document.activeElement as HTMLElement | null )?.blur() );
-    await page.keyboard.press( " " );
-};
 
 /**
  * Locates the achievement card carrying the given heading, so its status badge
@@ -63,27 +16,8 @@ const skipTypewriter = async ( page: Page ): Promise<void> =>
  * @returns A locator for the matching card article.
  * @author Claude
  */
-const achievementCard = ( page: Page, name: string ) =>
+const achievementCard = ( page: Page, name: string ): Locator =>
     page.locator( "article" ).filter( { has: page.getByRole( "heading", { name } ) } );
-
-/**
- * Plays a full choice path to its ending, flushing the typewriter before each
- * click so the test never races the animation.
- *
- * @param page - The page currently on the story view.
- * @param path - The ordered 1-based choice indices to take.
- * @author Claude
- */
-const playPath = async ( page: Page, path: number[] ): Promise<void> =>
-{
-    for ( const choiceIndex of path )
-    {
-        await skipTypewriter( page );
-        await choiceButton( page, choiceIndex ).click();
-    }
-
-    await skipTypewriter( page );
-};
 
 test.describe( "Achievements", () =>
 {
@@ -103,22 +37,7 @@ test.describe( "Achievements", () =>
         await expect( page.getByRole( "heading", { name: "Great Explorer" } ) ).toHaveCount( 0 );
     } );
 
-    test( "completing a story for the first time unlocks First Steps", async ( { page } ) =>
-    {
-        const path = findPathToEnding( STORY_ID );
-
-        await gotoMenu( page, `/?story=${ STORY_ID }` );
-        await page.getByRole( "button", { name: "Start", exact: true } ).click();
-        await playPath( page, path );
-
-        // Leave to the menu, then open the achievements screen.
-        await leaveToMenu( page );
-        await openAchievements( page );
-
-        await expect( achievementCard( page, "First Steps" ).getByText( "Unlocked", { exact: true } ) ).toBeVisible();
-    } );
-
-    test( "shows an unlock notification when reaching an ending", async ( { page } ) =>
+    test( "completing a story for the first time notifies and unlocks First Steps", async ( { page } ) =>
     {
         const path = findPathToEnding( STORY_ID );
 
@@ -132,8 +51,13 @@ test.describe( "Achievements", () =>
         // status role.
         const toast = page.getByRole( "status" ).filter( { hasText: /Achievements? unlocked/ } );
         await expect( toast ).toBeVisible();
-        await expect( toast.getByText( /Achievements? unlocked/ ) ).toBeVisible();
         await expect( toast.getByText( "First Steps" ) ).toBeVisible();
+
+        // The unlock is also persisted, and shown on the achievements screen.
+        await leaveToMenu( page );
+        await openAchievements( page );
+
+        await expect( achievementCard( page, "First Steps" ).getByText( "Unlocked", { exact: true } ) ).toBeVisible();
     } );
 
     test( "discovering every ending of a story unlocks No Stone Unturned", async ( { page } ) =>
@@ -186,20 +110,13 @@ test.describe( "Achievements", () =>
 
     test( "AI-generated stories never award achievements", async ( { page } ) =>
     {
-        await page.route( MODELS_URL, ( route ) =>
-            route.fulfill( { status: 200, contentType: "application/json", body: JSON.stringify( { data: [ MOCK_MODEL ] } ) } ) );
-        await page.route( MESSAGES_URL, ( route ) =>
-            route.fulfill( {
-                status: 200,
-                contentType: "application/json",
-                body: JSON.stringify( { content: [ { type: "text", text: JSON.stringify( MOCK_STORY ) } ] } )
-            } ) );
+        await mockModelsSuccess( page );
+        await mockGenerationSuccess( page );
 
         await gotoMenu( page );
         await openAiGenerator( page );
 
-        await page.getByLabel( "ANTHROPIC API KEY" ).fill( "sk-ant-valid" );
-        await page.getByRole( "button", { name: "Validate" } ).click();
+        await unlockGenerator( page );
         await expect( page.getByRole( "button", { name: "Generate story" } ) ).toBeEnabled();
 
         await page.getByRole( "button", { name: "Generate story" } ).click();

@@ -49,7 +49,7 @@ test.describe( "sound controls", () =>
         }
     } );
 
-    test( "clicking the toggle enables sound and persists the choice", async ( { page } ) =>
+    test( "clicking the toggle enables sound, persists it, and survives a reload", async ( { page } ) =>
     {
         await gotoMenu( page );
 
@@ -66,16 +66,9 @@ test.describe( "sound controls", () =>
 
         const settings = await readSoundSettings( page );
         expect( settings?.enabled ).toBe( true );
-    } );
 
-    test( "the enabled state survives a reload", async ( { page } ) =>
-    {
-        await gotoMenu( page );
-        await page.getByRole( "button", { name: "Enable sound" } ).click();
-
+        // After a reload the store rehydrates from localStorage, so sound stays on.
         await page.reload();
-
-        // After reload the store rehydrates from localStorage, so sound stays on.
         await expect( page.getByRole( "button", { name: "Mute sound" } ) ).toBeVisible();
     } );
 

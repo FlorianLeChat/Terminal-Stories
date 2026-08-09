@@ -41,15 +41,6 @@ test.describe( "Encyclopedia", () =>
         await expect( firstCategory ).toHaveAttribute( "aria-pressed", "false" );
     } );
 
-    test( "opens an entry by clicking it in the list", async ( { page } ) =>
-    {
-        await entryTitle( page ).click();
-
-        // Opening an entry swaps the list (and its category filters) for the
-        // detail view, on every viewport.
-        await expect( page.locator( "#wiki-filter-category-label" ) ).toBeHidden();
-    } );
-
     test( "filters by language then by universe", async ( { page } ) =>
     {
         const languageButtons = page.locator( "[aria-labelledby=\"wiki-filter-language-label\"] button[aria-pressed]" );
@@ -82,25 +73,16 @@ test.describe( "Encyclopedia", () =>
         await expect( searchInput ).not.toBeVisible();
     } );
 
-    test( "truncates a long search query in the count and empty-state messages", async ( { page } ) =>
-    {
-        await page.getByRole( "button", { name: "Search an encyclopedia entry" } ).click();
-
-        const searchInput = page.getByRole( "textbox", { name: "Search an encyclopedia entry" } );
-        const longQuery = "z".repeat( 60 );
-        const truncatedQuery = `${ "z".repeat( 40 ) }...`;
-
-        await searchInput.fill( longQuery );
-
-        await expect( page.getByText( `No entry matches "${ truncatedQuery }".` ) ).toBeVisible();
-        await expect( page.getByText( longQuery, { exact: false } ) ).not.toBeVisible();
-    } );
+    // Long queries are truncated by the shared `truncateQueryForDisplay`
+    // utility, already covered end to end through the catalog search in
+    // menu.spec — no need to exercise the same helper twice.
 
     test( "opens an entry detail and returns to the list", async ( { page } ) =>
     {
         await entryTitle( page ).click();
 
-        // In the detail view the category filters are gone.
+        // Opening an entry swaps the list (and its category filters) for the
+        // detail view, on every viewport.
         await expect( page.locator( "#wiki-filter-category-label" ) ).toBeHidden();
 
         await backToWikiList( page );

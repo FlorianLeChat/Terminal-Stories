@@ -1,5 +1,5 @@
 import { test, expect } from "@playwright/test";
-import { gotoMenu, openEncyclopedia, openAiGenerator } from "./utilities/fixtures";
+import { gotoMenu } from "./utilities/fixtures";
 
 test.describe( "Main menu", () =>
 {
@@ -29,24 +29,17 @@ test.describe( "Main menu", () =>
         await expect( firstGenre ).toHaveAttribute( "aria-pressed", "false" );
     } );
 
-    test( "opens the catalog pre-filtered to the reader's language", async ( { page } ) =>
-    {
-        // The app renders the base locale (English) in tests, so the catalog
-        // opens pre-filtered to English and the Reset control is available.
-        const englishButton = page.locator( "[aria-labelledby=\"filter-language-label\"] button", { hasText: "English" } );
-        await expect( englishButton ).toHaveAttribute( "aria-pressed", "true" );
-        await expect( page.getByRole( "button", { name: "✕ Reset" } ) ).toBeVisible();
-
-        // The footer reflects the active filter rather than the full catalog.
-        await expect( page.getByText( /\/ \d+ stories filtered/ ) ).toBeVisible();
-    } );
-
-    test( "cycles the language filter with the [L] shortcut", async ( { page } ) =>
+    test( "opens pre-filtered to the reader's language and cycles it with [L]", async ( { page } ) =>
     {
         const languageButtons = page.locator( "[aria-labelledby=\"filter-language-label\"] button[aria-pressed]" );
 
-        // The first language (English) starts selected as the locale default.
+        // The app renders the base locale (English) in tests, so the catalog
+        // opens pre-filtered to English: the first language starts selected,
+        // the Reset control is available, and the count reflects the filter
+        // rather than the full catalog.
         await expect( languageButtons.nth( 0 ) ).toHaveAttribute( "aria-pressed", "true" );
+        await expect( page.getByRole( "button", { name: "✕ Reset" } ) ).toBeVisible();
+        await expect( page.getByText( /\/ \d+ stories filtered/ ) ).toBeVisible();
 
         // [L] advances to the next language in the cycle.
         await page.keyboard.press( "l" );
@@ -71,6 +64,13 @@ test.describe( "Main menu", () =>
         await expect( page.getByText( "The Cursed Forest" ) ).toBeVisible();
         await expect( page.getByText( /result for "forest"/ ) ).toBeVisible();
 
+        // The ✕ beside the box cancels the search outright. Matched exactly, as
+        // the desktop footer legend carries a "[ESC] Cancel search" entry too.
+        await page.getByRole( "button", { name: "Cancel search", exact: true } ).click();
+        await expect( searchInput ).not.toBeVisible();
+
+        // Reopening the search starts from an empty query again.
+        await page.getByRole( "button", { name: "Search for a story" } ).click();
         await searchInput.fill( "zzznonexistentquery" );
         await expect( page.getByText( "No story matches \"zzznonexistentquery\"." ) ).toBeVisible();
 
@@ -124,19 +124,5 @@ test.describe( "Main menu", () =>
         await page.getByRole( "button", { name: "[ENTER] Select" } ).click();
 
         await expect( page.getByText( "STORY INFO" ) ).toBeVisible();
-    } );
-
-    test( "opens the encyclopedia from the navigation", async ( { page } ) =>
-    {
-        await openEncyclopedia( page );
-
-        await expect( page.getByText( "KNOWLEDGE BASE" ) ).toBeVisible();
-    } );
-
-    test( "opens the AI story generator from the navigation", async ( { page } ) =>
-    {
-        await openAiGenerator( page );
-
-        await expect( page.getByText( "AI GENERATOR" ) ).toBeVisible();
     } );
 } );

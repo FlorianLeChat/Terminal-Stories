@@ -12,13 +12,8 @@ test.describe( "Shareable deep links", () =>
         await expect( page ).toHaveURL( /\?story=[^&]+$/ );
     } );
 
-    test( "loading a story link directly restores the story-info screen", async ( { page } ) =>
-    {
-        await gotoMenu( page, "/?story=cursed-forest" );
-
-        await expect( page.getByText( "STORY INFO" ) ).toBeVisible();
-        await expect( page.getByText( "The Cursed Forest" ) ).toBeVisible();
-    } );
+    // Loading `/?story=<id>` straight into the story-info screen is asserted by
+    // story.spec, which starts every one of its scenarios from that URL.
 
     test( "an unknown story id falls back to the main menu", async ( { page } ) =>
     {
