@@ -318,7 +318,6 @@
         // (ESC closes it); don't fire story/menu shortcuts underneath it.
         if ( $terminal.shareOpen ) return;
 
-        // Interface feedback: one subtle sound per key press (no-op when muted).
         playKeySound( e );
 
         // The AI setup screen is a plain form: let typing flow to the focused
@@ -373,7 +372,6 @@
             return;
         }
 
-        // Global search trigger: / activates search on any searchable view.
         if ( e.key === "/" && !isInputFocused )
         {
             if ( view === "menu" || view === "wiki" )
@@ -700,7 +698,7 @@
             return;
         }
 
-        // [S] opens the share overlay (ignored for generated stories by the store).
+        // The store ignores this for generated stories, which have no shareable URL.
         if ( e.key.toLowerCase() === "s" )
         {
             e.preventDefault();
@@ -729,8 +727,6 @@
             // so ENTER can't skip past it the way SPACE deliberately can.
             if ( isAnimating ) return;
 
-            // ENTER replays the story from the start on any ending, whether
-            // AI-generated or catalog. ESC returns to the menu instead.
             if ( $terminal.currentStoryIsGenerated )
             {
                 terminal.restartGeneratedStory();

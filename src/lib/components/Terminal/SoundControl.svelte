@@ -5,13 +5,11 @@
     let enabled = $derived( $sound.enabled );
     let volume = $derived( $sound.volume );
 
-    // Whole-percent value for the range input (kept in [0, 100]).
     let volumePercent = $derived( Math.round( volume * 100 ) );
 
     // Action-oriented label: describes what the button will do, not its state.
     let toggleLabel = $derived( enabled ? m.sound_toggle_off() : m.sound_toggle_on() );
 
-    // Muted control reads as inactive (dim); active control is terminal-green.
     let toggleColor = $derived( enabled ? "text-terminal-green" : "text-terminal-dim" );
 
     /**
@@ -80,9 +78,7 @@
         transition: color 0.15s ease;
     }
 
-    /* Keep the slider on-brand: thin terminal-green track and thumb. Shown
-       from `sm` up only (see markup), where a mouse/trackpad gives it the
-       precision a touch drag would not. */
+    /* Keep the slider on-brand: thin terminal-green track and thumb. */
     .sound-volume {
         accent-color: var( --color-terminal-green, #00ff46 );
         cursor: pointer;

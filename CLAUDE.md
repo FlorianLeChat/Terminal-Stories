@@ -105,7 +105,7 @@ if ( scene?.isEnding === true ) terminal.goBack();
 - Before wrapping up, run both checks in order and fix any error before committing:
   1. `npm run check` — TypeScript + Svelte type checking
   2. `npm run lint` — ESLint rules
- run- Whenever a story or a wiki entry (files under `src/lib/data/`) is modified, run `npm run check-spell` at the end of the changes and fix any reported issue before committing.
+- Whenever a story or a wiki entry (files under `src/lib/data/`) is modified, run `npm run check-spell` at the end of the changes and fix any reported issue before committing.
 
 ## Planning before implementation
 
@@ -119,7 +119,21 @@ Trivial changes (typo fixes, small isolated edits, one-line corrections) don't n
 
 ## Preview / dev server
 
-**Never start a preview or dev server.** Do not call `preview_start`, `npm run dev`, or any equivalent. The user runs the server manually. Verification is limited to `npm run check` and `npm run lint`. Do not run `npm run test` (Playwright) either — it also boots a preview server; the user runs it manually.
+**Never start a preview or dev server.** Do not call `preview_start`, `npm run dev`, or any equivalent. The user runs the server manually. Verification is limited to `npm run check` and `npm run lint`.
+
+**Exception for e2e verification:** after a change touching e2e-covered behavior, running the Playwright suite headless (e.g. `npm run test`, `npx playwright test`) is allowed as an automatic verification step. Never use `--ui`, `--headed`, `--debug`, or any mode that opens a browser window; headless only.
+
+## Pre-commit quality checklist
+
+Before considering any development finished, check for and fix all of the following (in addition to `npm run check` and `npm run lint`):
+
+- **Useless or superfluous comments.** Remove comments that only restate what the code already says, commented-out code, and leftover TODO/debug comments that are no longer relevant. Keep only the logic comments described in [Comments and JSDoc](#comments-and-jsdoc).
+- **Dead code.** Remove unused functions, variables, imports, exports, components, and files that are no longer referenced anywhere, as well as Paraglide message keys no longer used by any component (delete them from `locales/en.json` **and** `locales/fr.json`, then recompile).
+- **Performance.** Watch for avoidable re-renders, unnecessary reactive recomputation, unbounded loops over large data, and repeated work that could be memoized or hoisted.
+- **Accessibility.** Check semantic HTML (see [Semantic HTML](#semantic-html)), labels/`aria-*` attributes, keyboard navigability, and focus handling for anything touched.
+- **Useless e2e tests.** Check for tests made redundant by the change (superseded assertions, duplicated coverage) per the conventions in [End-to-end tests](#end-to-end-tests-playwright).
+- **No suppression comments.** Never add `svelte-ignore` or ESLint disable comments (`eslint-disable`, `eslint-disable-next-line`, etc.). Fix the underlying issue that triggers the warning instead of silencing it.
+- **E2E run.** When the change touches behavior covered by a spec, run the Playwright suite headless (see [Preview / dev server](#preview--dev-server)) and fix any failure before committing.
 
 ## End-to-end tests (Playwright)
 

@@ -186,7 +186,7 @@ export const setVolume = ( next: number ): void =>
 };
 
 /** Options tuning a single synthesized tone. */
-export interface ToneOptions {
+interface ToneOptions {
     /** Oscillator waveform (defaults to a square). */
     wave?: OscillatorType;
     /** Peak gain of the tone (defaults to 0.12). */

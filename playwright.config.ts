@@ -9,7 +9,6 @@ export default defineConfig( {
         video: "on-first-retry",
         locale: "en-GB",
         baseURL,
-        headless: !!process.env.CI,
         screenshot: "only-on-failure"
     },
     expect: { timeout: 10000 },

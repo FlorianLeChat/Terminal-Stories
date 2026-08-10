@@ -88,7 +88,6 @@
         models = [];
     };
 
-    // On open, focus the key field when empty; otherwise validate the stored key.
     onMount( () =>
     {
         if ( stored.apiKey === "" ) keyInputEl?.focus();
@@ -107,7 +106,6 @@
         event.preventDefault();
         if ( isGenerating ) return;
 
-        // Enter while the form is still locked acts as "validate the key".
         if ( !keyValid )
         {
             validateKey();

@@ -45,7 +45,6 @@
         }
     } );
 
-    // Regenerate the QR code whenever the overlay opens or the target URL changes.
     $effect( () =>
     {
         const isOpen = $terminal.shareOpen;
@@ -95,7 +94,6 @@
             await navigator.clipboard.writeText( shareUrl );
             copied = true;
 
-            // Revert the confirmation label after a short delay.
             const resetCopiedFlag = () =>
             {
                 copied = false;

@@ -32,7 +32,6 @@
     // already editable copies).
     let isCustomStory = $derived( currentStory !== null && isCustomStoryId( currentStory.id ) );
 
-    // Share and fork only make sense for bundled catalog stories.
     let isCatalogStory = $derived( currentStory !== null && !isGenerated && !isCustomStory );
 
     // At an ending the restart action replaces the skip action; both are

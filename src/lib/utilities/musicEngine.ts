@@ -728,18 +728,6 @@ export const startMusic = ( theme: MusicTheme = "default" ): void =>
 };
 
 /**
- * Stops any background music and forgets the remembered theme. Called when the
- * player leaves a story for the menu.
- *
- * @author Claude
- */
-export const stopMusic = (): void =>
-{
-    currentTheme = null;
-    stopMusicVoice();
-};
-
-/**
  * Reacts to the master enabled flag changing: disabling stops the live voice
  * (without forgetting the requested theme), enabling resumes that theme.
  *

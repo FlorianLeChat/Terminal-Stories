@@ -12,7 +12,7 @@ import { handleEnabledChange } from "$lib/utilities/musicEngine";
 // those on top) and of any user-facing string (it speaks only in codes/enums).
 
 export { resumeAudio, setVolume } from "$lib/utilities/audioCore";
-export { startMusic, stopMusic } from "$lib/utilities/musicEngine";
+export { startMusic } from "$lib/utilities/musicEngine";
 
 /**
  * Enables or disables all audio. Enabling resumes any remembered music theme;

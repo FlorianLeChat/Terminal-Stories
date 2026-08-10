@@ -24,7 +24,6 @@
         { text: m.boot_press_enter(), delay: 1600, blink: true }
     ];
 
-    // Reveal flag per boot line, and whether the whole sequence has finished.
     let visible = $state( bootLines.map( () => false ) );
     let done = $state( false );
 
@@ -60,8 +59,6 @@
             {
                 visible[ i ] = true;
 
-                // Each printed line lands with a soft typing tick; blank
-                // spacer lines stay silent.
                 const hasText = bootLines[ i ].text !== "";
                 if ( hasText ) playTypingTick();
 

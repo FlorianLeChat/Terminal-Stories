@@ -46,8 +46,9 @@
         onFork
     }: Props = $props();
 
-    // Read here so the story-info actions can target the current story directly,
-    // letting every control work by touch as well as by keyboard.
+    // The store is read here rather than passed in as props so every footer
+    // button can act on the current story / highlighted entry directly, making
+    // each control work by touch exactly as its keyboard shortcut does.
     let currentStory = $derived( $terminal.currentStory );
 
     // Generated stories are ephemeral and have no shareable URL, so the share
@@ -58,12 +59,8 @@
     // are already editable copies).
     let isCustomStory = $derived( currentStory !== null && isCustomStoryId( currentStory.id ) );
 
-    // Read here so the "my stories" footer buttons can target the currently
-    // highlighted custom story directly, the same as the ENTER key.
     let customSelectedIndex = $derived( $terminal.customSelectedIndex );
 
-    // Read here so the wiki open/navigate footer buttons can target the
-    // currently highlighted entry directly, the same as the ENTER key.
     let wikiSelectedIndex = $derived( $terminal.wiki.selectedIndex );
 
     /**

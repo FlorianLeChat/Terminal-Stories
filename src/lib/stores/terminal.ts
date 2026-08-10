@@ -603,8 +603,7 @@ const createTerminalStore = () =>
         // menu loop; arriving from boot keeps the same theme playing seamlessly.
         startMusic( "menu" );
 
-        // Single update: reset the whole menu state, drop any loaded story, and
-        // clear the output (bumping storyKey to force the story view to remount).
+        // Bumping storyKey forces the story view to remount.
         update( ( s ) => ( { ...s, view: "menu", selectedStoryIndex: 0, awaitingInput: true, searchQuery: "", searchActive: false, currentStory: null, gameState: null, currentStoryIsGenerated: false, generatedEndings: [], aiStatus: "idle", aiError: null, shareOpen: false, achievementToast: [], endingToast: null, pendingEndingReveal: null, customSelectedIndex: 0, editingStoryId: null, lines: [], storyKey: s.storyKey + 1 } ) );
     };
 
@@ -699,8 +698,7 @@ const createTerminalStore = () =>
         const save = saveExists ? loadSave( id ) : null;
         const infoLines = buildStoryInfoLines( story, stats, saveExists, save );
 
-        // Single update: switch view, load the story, reset search/share, clear
-        // the output (bumping storyKey to remount), and render the info lines.
+        // Bumping storyKey forces the story view to remount.
         update( ( s ) => ( {
             ...s,
             view: "story-info",
@@ -824,7 +822,6 @@ const createTerminalStore = () =>
         const sceneTheme = scene.music ?? story.music ?? "default";
         startMusic( sceneTheme );
 
-        // Optional one-shot effect layered over the music to punctuate a moment.
         if ( scene.sound ) playSceneEffect( scene.sound );
 
         const { currentStoryIsGenerated, generatedEndings, storyStartedAt } = snapshot();
@@ -840,7 +837,6 @@ const createTerminalStore = () =>
         // Stays null unless reaching a catalog ending unlocks new achievements,
         // in which case it carries the refreshed list to fold into the state.
         let nextUnlockedAchievements: AchievementId[] | null = null;
-        // The just-unlocked ids to surface in the notification (toast), if any.
         let nextAchievementToast: AchievementId[] = [];
         // The ending discovery toast to surface, if this ending is new. Only
         // read inside the `scene.isEnding` branch below, which always assigns
@@ -852,13 +848,10 @@ const createTerminalStore = () =>
 
         if ( scene.isEnding )
         {
-            // Ending sting, tuned to the outcome (good/bad/neutral).
             playEnding( scene.endingType ?? "neutral" );
 
             if ( currentStoryIsGenerated )
             {
-                // The restart/menu key hints live in the footer (TerminalControls);
-                // the discovery congratulation is surfaced as a toast instead.
                 const data = resolveGeneratedEndingData( sceneId, story, generatedEndings );
                 nextEndings = data.nextEndings;
                 endingsFound = data.endingsFound;
@@ -867,7 +860,6 @@ const createTerminalStore = () =>
             }
             else
             {
-                // The menu key hint lives in the footer (TerminalControls).
                 const data = resolveCatalogEndingData( sceneId, story, state );
                 endingsFound = data.endingsFound;
                 endingsTotal = data.endingsTotal;
@@ -1568,7 +1560,6 @@ const createTerminalStore = () =>
             const stillGenerating = snapshot().aiStatus === "generating";
             if ( !stillGenerating ) return;
 
-            // Audible cue that the generation failed.
             playError();
 
             update( ( s ) => ( { ...s, aiStatus: "error", aiError: aiErrorMessage( error ) } ) );
