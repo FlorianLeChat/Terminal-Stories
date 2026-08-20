@@ -7,6 +7,7 @@
 ![Svelte](.gitlab/badges/svelte.svg)
 ![SvelteKit](.gitlab/badges/sveltekit.svg)
 ![TailwindCSS](.gitlab/badges/tailwindcss.svg)
+![Playwright](.gitlab/badges/playwright.svg)
 ![Inlang](.gitlab/badges/inlang.svg)
 ![Vite](.gitlab/badges/vite.svg)
 ![Prettier](.gitlab/badges/prettier.svg)
