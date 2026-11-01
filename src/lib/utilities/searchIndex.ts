@@ -1,8 +1,8 @@
-import { stories, storiesMeta } from "$lib/data";
-import { knowledgeEntries } from "$lib/data/knowledge";
-import { genreLabel } from "$lib/utilities/genre";
-import type { StoryMeta } from "$lib/types/story";
-import type { KnowledgeEntry } from "$lib/types/knowledge";
+import { genreLabel } from "#lib/utilities/genre.ts";
+import type { StoryMeta } from "#lib/types/story.ts";
+import { stories, storiesMeta } from "#lib/data/index.ts";
+import { knowledgeEntries } from "#lib/data/knowledge.ts";
+import type { KnowledgeEntry } from "#lib/types/knowledge.ts";
 
 /**
  * Normalizes text for indexing: lowercase and strip diacritics so

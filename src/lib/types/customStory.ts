@@ -1,4 +1,4 @@
-import type { StoryFile } from "$lib/types/story";
+import type { StoryFile } from "#lib/types/story.ts";
 
 /**
  * Machine-readable failure codes for custom-story operations (import, save,

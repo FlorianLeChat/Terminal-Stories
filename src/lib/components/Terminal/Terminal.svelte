@@ -1,26 +1,26 @@
 <script lang="ts">
-    import * as m from "$lib/locales/messages";
-    import { page } from "$app/state";
     import { onMount } from "svelte";
+    import { page } from "$app/state";
     import { resolve } from "$app/paths";
-    import { replaceState } from "$app/navigation";
-    import { terminal } from "$lib/stores/terminal";
+    import { goto } from "$app/navigation";
+    import { sound } from "#lib/stores/sound.ts";
+    import * as m from "#lib/locales/messages.js";
+    import ShareDialog from "./ShareDialog.svelte";
     import BootSequence from "../BootSequence.svelte";
     import StoryMenu from "../Story/StoryMenu.svelte";
-    import StoryActionBar from "../Story/StoryActionBar.svelte";
+    import AiStorySetup from "../AiStorySetup.svelte";
+    import { terminal } from "#lib/stores/terminal.ts";
     import TerminalOutput from "./TerminalOutput.svelte";
     import WikiBrowser from "../Wiki/WikiBrowser.svelte";
-    import AchievementsBrowser from "../Achievements/AchievementsBrowser.svelte";
-    import AchievementToast from "../Achievements/AchievementToast.svelte";
+    import TerminalHeader from "./TerminalHeader.svelte";
     import EndingToast from "../Story/EndingToast.svelte";
-    import AiStorySetup from "../AiStorySetup.svelte";
-    import CustomStoriesMenu from "../CustomStories/CustomStoriesMenu.svelte";
     import StoryEditor from "../Editor/StoryEditor.svelte";
     import TerminalControls from "./TerminalControls.svelte";
-    import TerminalHeader from "./TerminalHeader.svelte";
-    import ShareDialog from "./ShareDialog.svelte";
-    import { storiesMeta, filterStories, searchStories, hasSave, parseDeepLink, deepLinkSearch, playKeyPress, playNavigate, playSelect, playBack, resumeAudio, startMusic, createBlankStory, forkStory, isCustomStoryId, customStoryErrorMessage, type DeepLinkTarget } from "$lib";
-    import { sound } from "$lib/stores/sound";
+    import StoryActionBar from "../Story/StoryActionBar.svelte";
+    import AchievementToast from "../Achievements/AchievementToast.svelte";
+    import CustomStoriesMenu from "../CustomStories/CustomStoriesMenu.svelte";
+    import AchievementsBrowser from "../Achievements/AchievementsBrowser.svelte";
+    import { storiesMeta, filterStories, searchStories, hasSave, parseDeepLink, deepLinkSearch, playKeyPress, playNavigate, playSelect, playBack, resumeAudio, startMusic, createBlankStory, forkStory, isCustomStoryId, customStoryErrorMessage, type DeepLinkTarget } from "#lib";
 
     let view = $derived( $terminal.view );
     let lines = $derived( $terminal.lines );
@@ -103,8 +103,9 @@
     } );
 
     // Keep the address bar in sync with the current target so stories and wiki
-    // entries stay shareable/bookmarkable. `replaceState` avoids growing the
-    // history stack — the app drives its own back navigation via ESC.
+    // entries stay shareable/bookmarkable. A shallow, replacing `goto` avoids
+    // growing the history stack — the app drives its own back navigation via
+    // ESC.
     $effect( () =>
     {
         // The URL must survive the boot screen so a deep link can be read once
@@ -117,7 +118,7 @@
 
         // resolve() keeps the configured base path and swaps only the query
         // string on the single app route, satisfying typed-route navigation.
-        replaceState( resolve( `/${ search }` ), {} );
+        goto( resolve( `/${ search }` ), { shallow: true, replace: true, state: {} } );
     } );
 
     /**

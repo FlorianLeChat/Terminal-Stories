@@ -1,7 +1,7 @@
 <script lang="ts">
-    import * as m from "$lib/locales/messages";
+    import type { StoryFile } from "#lib";
+    import * as m from "#lib/locales/messages.js";
     import { SvelteSet } from "svelte/reactivity";
-    import type { StoryFile } from "$lib";
 
     interface Props {
         /** The story draft being edited (read-only here). */

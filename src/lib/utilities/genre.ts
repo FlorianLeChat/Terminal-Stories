@@ -1,4 +1,4 @@
-import * as m from "$lib/locales/messages";
+import * as m from "#lib/locales/messages.js";
 
 /**
  * Tailwind text-color class for each known genre code. Genres are stored in

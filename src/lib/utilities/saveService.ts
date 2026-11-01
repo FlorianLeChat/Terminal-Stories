@@ -1,4 +1,4 @@
-import type { GameState } from "$lib/types/story";
+import type { GameState } from "#lib/types/story.ts";
 
 export interface SaveData
 {

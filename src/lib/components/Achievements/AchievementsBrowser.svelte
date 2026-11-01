@@ -1,9 +1,9 @@
 <script lang="ts">
-    import * as m from "$lib/locales/messages";
     import { asset } from "$app/paths";
-    import { terminal } from "$lib/stores/terminal";
+    import * as m from "#lib/locales/messages.js";
+    import { terminal } from "#lib/stores/terminal.ts";
     import TerminalLogo from "../Terminal/TerminalLogo.svelte";
-    import { achievements, hideOnError, type AchievementId } from "$lib";
+    import { achievements, hideOnError, type AchievementId } from "#lib";
 
     let unlockedIds = $derived( new Set( $terminal.unlockedAchievements ) );
     let unlockedCount = $derived( unlockedIds.size );

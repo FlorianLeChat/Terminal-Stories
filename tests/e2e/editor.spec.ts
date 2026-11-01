@@ -1,7 +1,7 @@
-import { test, expect } from "@playwright/test";
-import type { Page } from "@playwright/test";
 import { readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
+import type { Page } from "@playwright/test";
+import { test, expect } from "@playwright/test";
 import { gotoMenu, openMyStories, backToMyStories } from "./utilities/fixtures";
 
 const CATALOG_STORY_ID = "cursed-forest";

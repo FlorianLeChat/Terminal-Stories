@@ -1,8 +1,8 @@
 <script lang="ts">
-    import * as m from "$lib/locales/messages";
-    import { terminal } from "$lib/stores/terminal";
-    import TerminalLogo from "../Terminal/TerminalLogo.svelte";
+    import * as m from "#lib/locales/messages.js";
+    import { terminal } from "#lib/stores/terminal.ts";
     import WikiEntryDetail from "./WikiEntryDetail.svelte";
+    import TerminalLogo from "../Terminal/TerminalLogo.svelte";
     import { availableUniverses,
         availableWikiLanguages,
         categories,
@@ -12,7 +12,7 @@
         getEntry,
         getLanguageForUniverse,
         searchWikiEntries,
-        truncateQueryForDisplay } from "$lib";
+        truncateQueryForDisplay } from "#lib";
 
     let wiki = $derived( $terminal.wiki );
     let searchActive = $derived( $terminal.searchActive );

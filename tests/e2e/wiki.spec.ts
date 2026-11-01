@@ -1,5 +1,5 @@
-import { test, expect } from "@playwright/test";
 import type { Page } from "@playwright/test";
+import { test, expect } from "@playwright/test";
 import { gotoMenu, openEncyclopedia, backToWikiList } from "./utilities/fixtures";
 
 const ENTRY_NAME = "Kingdom of Elarion";

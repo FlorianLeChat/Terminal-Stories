@@ -1,6 +1,6 @@
 import { test, expect } from "@playwright/test";
-import { gotoMenu, skipBoot, leaveToMenu } from "./utilities/fixtures";
 import { findPathToEnding } from "./utilities/storyPath";
+import { gotoMenu, skipBoot, leaveToMenu } from "./utilities/fixtures";
 import { choiceButton, playPath, skipTypewriter } from "./utilities/story";
 
 const STORY_ID = "cursed-forest";

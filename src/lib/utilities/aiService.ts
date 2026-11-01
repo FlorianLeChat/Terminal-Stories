@@ -1,7 +1,7 @@
-import type { AiErrorCode, AiGenerationParams, AiModelOption, AiSettings } from "$lib/types/ai";
-import type { Story } from "$lib/types/story";
-import { AiError } from "$lib/utilities/aiError";
-import { normalizeGeneratedStory } from "$lib/utilities/storyValidation";
+import type { Story } from "#lib/types/story.ts";
+import { AiError } from "#lib/utilities/aiError.ts";
+import { normalizeGeneratedStory } from "#lib/utilities/storyValidation.ts";
+import type { AiErrorCode, AiGenerationParams, AiModelOption, AiSettings } from "#lib/types/ai.ts";
 
 const API_URL = "https://api.anthropic.com/v1/messages";
 const MODELS_URL = "https://api.anthropic.com/v1/models?limit=1000";

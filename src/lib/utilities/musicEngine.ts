@@ -1,5 +1,5 @@
-import type { MusicTheme } from "$lib/types/audio";
-import { ensureContext, getAudioContext, getMasterBus, isAudioEnabled, jitter, midiToFrequency } from "$lib/utilities/audioCore";
+import type { MusicTheme } from "#lib/types/audio.ts";
+import { ensureContext, getAudioContext, getMasterBus, isAudioEnabled, jitter, midiToFrequency } from "#lib/utilities/audioCore.ts";
 
 // Procedural background-music engine. Every theme is a small parameter set
 // rather than a track: a lookahead scheduler turns it into an endless piece

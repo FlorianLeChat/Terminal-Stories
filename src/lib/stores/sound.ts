@@ -1,7 +1,7 @@
 import { writable } from "svelte/store";
-import type { SoundSettings } from "$lib/types/audio";
-import { loadSoundSettings, saveSoundSettings } from "$lib/utilities/soundSettings";
-import { resumeAudio, setEnabled, setVolume } from "$lib/utilities/audioEngine";
+import type { SoundSettings } from "#lib/types/audio.ts";
+import { resumeAudio, setEnabled, setVolume } from "#lib/utilities/audioEngine.ts";
+import { loadSoundSettings, saveSoundSettings } from "#lib/utilities/soundSettings.ts";
 
 // Reactive settings layer sitting on top of the stateless audio engine. It
 // owns the persisted on/off + volume preferences, mirrors them into the engine,

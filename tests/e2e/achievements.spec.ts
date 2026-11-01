@@ -1,8 +1,8 @@
 import { test, expect } from "@playwright/test";
 import type { Locator, Page } from "@playwright/test";
-import { gotoMenu, openAchievements, openAiGenerator, leaveToMenu } from "./utilities/fixtures";
-import { findPathToEnding, findAllEndingPaths } from "./utilities/storyPath";
 import { choiceButton, playPath, skipTypewriter } from "./utilities/story";
+import { findPathToEnding, findAllEndingPaths } from "./utilities/storyPath";
+import { gotoMenu, openAchievements, openAiGenerator, leaveToMenu } from "./utilities/fixtures";
 import { mockGenerationSuccess, mockModelsSuccess, unlockGenerator } from "./utilities/aiMocks";
 
 const STORY_ID = "cursed-forest";

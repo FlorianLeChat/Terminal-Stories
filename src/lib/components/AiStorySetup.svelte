@@ -1,10 +1,10 @@
 <script lang="ts">
-    import * as m from "$lib/locales/messages";
     import { onMount } from "svelte";
-    import { terminal } from "$lib/stores/terminal";
+    import * as m from "#lib/locales/messages.js";
+    import { terminal } from "#lib/stores/terminal.ts";
     import TerminalLogo from "./Terminal/TerminalLogo.svelte";
-    import type { AiGenerationParams, AiModelOption } from "$lib";
-    import { loadAiSettings, saveAiKey, saveAiModel, listModels, aiErrorMessage } from "$lib";
+    import type { AiGenerationParams, AiModelOption } from "#lib";
+    import { loadAiSettings, saveAiKey, saveAiModel, listModels, aiErrorMessage } from "#lib";
 
     // Seed the form from any previously stored settings (the key is remembered
     // across sessions; the generation parameters always start fresh).

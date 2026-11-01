@@ -1,4 +1,4 @@
-import { DEFAULT_SOUND_SETTINGS, type SoundSettings } from "$lib/types/audio";
+import { DEFAULT_SOUND_SETTINGS, type SoundSettings } from "#lib/types/audio.ts";
 
 // Single localStorage slot holding the user's sound preferences (on/off and
 // master volume). Mirrors the aiSettings persistence pattern.

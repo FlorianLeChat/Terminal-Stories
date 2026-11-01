@@ -1,7 +1,7 @@
 <script lang="ts">
-    import * as m from "$lib/locales/messages";
-    import { terminal } from "$lib/stores/terminal";
+    import * as m from "#lib/locales/messages.js";
     import SoundControl from "./SoundControl.svelte";
+    import { terminal } from "#lib/stores/terminal.ts";
 
     interface Props {
         view: string;

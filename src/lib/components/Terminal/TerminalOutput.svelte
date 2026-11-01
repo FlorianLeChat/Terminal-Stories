@@ -1,10 +1,11 @@
 <script lang="ts">
-    import * as m from "$lib/locales/messages";
-    import { onDestroy, untrack } from "svelte";
-    import { SvelteSet } from "svelte/reactivity";
     import { asset } from "$app/paths";
-    import { buildProgressBar, playTypingTick } from "$lib";
-    import type { TerminalLine } from "$lib/stores/terminal";
+    import { onDestroy, untrack } from "svelte";
+    import type { AssetPath } from "$app/types";
+    import * as m from "#lib/locales/messages.js";
+    import { SvelteSet } from "svelte/reactivity";
+    import { buildProgressBar, playTypingTick } from "#lib";
+    import type { TerminalLine } from "#lib/stores/terminal.ts";
 
     /**
      * Maps a terminal line type to its Tailwind styling classes.
@@ -37,6 +38,24 @@
     const lineClass = ( type: TerminalLine[ "type" ] ): string =>
     {
         return LINE_CLASS_MAP[ type ] ?? "text-terminal-green";
+    };
+
+    /**
+     * Turns a validated scene image path into an `asset()` argument. Scene
+     * images come from runtime story data (catalog, custom or AI stories), so
+     * they cannot be checked against the static file list at compile time, and
+     * stories saved earlier may still carry a leading slash that `asset()` no
+     * longer accepts.
+     *
+     * @param source - The scene image path, already restricted to `assets/`.
+     * @returns The path relative to the static directory.
+     * @author Claude
+     */
+    const toAssetPath = ( source: string ): AssetPath =>
+    {
+        const relativePath = source.replace( /^\//, "" );
+
+        return relativePath as AssetPath;
     };
 
     interface Props {
@@ -335,7 +354,7 @@
     {#each displayed as line ( line.id )}
         {#if line.type === "image" && line.imageSrc}
             <figure class="my-3 border border-terminal-dim/30 rounded overflow-hidden max-w-xl animate-fadein">
-                <img src={asset( line.imageSrc )} alt={line.imageAlt ?? ""} class="w-full max-h-44 object-cover grayscale opacity-75" />
+                <img src={asset( toAssetPath( line.imageSrc ) )} alt={line.imageAlt ?? ""} class="w-full max-h-44 object-cover grayscale opacity-75" />
             </figure>
         {:else if line.type === "save"}
             {@const bar = buildProgressBar( line.savePercent ?? 0 )}

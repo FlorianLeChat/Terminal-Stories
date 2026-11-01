@@ -1,5 +1,5 @@
-import * as m from "$lib/locales/messages";
-import type { CustomStoryErrorCode } from "$lib/types/customStory";
+import * as m from "#lib/locales/messages.js";
+import type { CustomStoryErrorCode } from "#lib/types/customStory.ts";
 
 /**
  * A custom-story failure carrying a machine-readable

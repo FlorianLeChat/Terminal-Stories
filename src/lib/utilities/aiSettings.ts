@@ -1,4 +1,4 @@
-import { DEFAULT_AI_MODEL, type AiSettings } from "$lib/types/ai";
+import { DEFAULT_AI_MODEL, type AiSettings } from "#lib/types/ai.ts";
 
 // Single localStorage slot holding the user's own Anthropic API key and model
 // choice. Only these settings are persisted — generated stories are ephemeral

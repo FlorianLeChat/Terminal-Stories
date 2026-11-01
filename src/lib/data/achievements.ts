@@ -1,5 +1,5 @@
-import * as m from "$lib/locales/messages";
-import type { Achievement, AchievementContext } from "$lib/types/achievement";
+import * as m from "#lib/locales/messages.js";
+import type { Achievement, AchievementContext } from "#lib/types/achievement.ts";
 
 /** Below this playthrough duration, reaching an ending counts as a speedrun. */
 const SPEEDRUN_MAX_MS = 60_000;
@@ -21,7 +21,7 @@ const EXPLORER_STORIES = 3;
 export const achievements: Achievement[] = [
     {
         id: "first-ending",
-        icon: "/assets/achievements/first-ending.svg",
+        icon: "assets/achievements/first-ending.svg",
         name: () => m.achievement_first_ending_name(),
         description: () => m.achievement_first_ending_desc(),
         // Reached only when sitting on an ending, so completing any story unlocks it.
@@ -29,7 +29,7 @@ export const achievements: Achievement[] = [
     },
     {
         id: "all-endings-single",
-        icon: "/assets/achievements/all-endings-single.svg",
+        icon: "assets/achievements/all-endings-single.svg",
         name: () => m.achievement_all_endings_single_name(),
         description: () => m.achievement_all_endings_single_desc(),
         check: ( context: AchievementContext ): boolean =>
@@ -42,7 +42,7 @@ export const achievements: Achievement[] = [
     },
     {
         id: "speedrun",
-        icon: "/assets/achievements/speedrun.svg",
+        icon: "assets/achievements/speedrun.svg",
         name: () => m.achievement_speedrun_name(),
         description: () => m.achievement_speedrun_desc(),
         check: ( context: AchievementContext ): boolean =>
@@ -55,7 +55,7 @@ export const achievements: Achievement[] = [
     },
     {
         id: "dedication",
-        icon: "/assets/achievements/dedication.svg",
+        icon: "assets/achievements/dedication.svg",
         name: () => m.achievement_dedication_name(),
         description: () => m.achievement_dedication_desc(),
         check: ( context: AchievementContext ): boolean =>
@@ -65,7 +65,7 @@ export const achievements: Achievement[] = [
     },
     {
         id: "balanced",
-        icon: "/assets/achievements/balanced.svg",
+        icon: "assets/achievements/balanced.svg",
         name: () => m.achievement_balanced_name(),
         description: () => m.achievement_balanced_desc(),
         check: ( context: AchievementContext ): boolean =>
@@ -78,7 +78,7 @@ export const achievements: Achievement[] = [
     },
     {
         id: "explorer",
-        icon: "/assets/achievements/explorer.svg",
+        icon: "assets/achievements/explorer.svg",
         name: () => m.achievement_explorer_name(),
         description: () => m.achievement_explorer_desc(),
         hidden: true,
@@ -89,7 +89,7 @@ export const achievements: Achievement[] = [
     },
     {
         id: "completionist",
-        icon: "/assets/achievements/completionist.svg",
+        icon: "assets/achievements/completionist.svg",
         name: () => m.achievement_completionist_name(),
         description: () => m.achievement_completionist_desc(),
         hidden: true,

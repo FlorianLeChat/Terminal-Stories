@@ -1,4 +1,5 @@
-import { getEntry, getStory } from "$lib";
+import { getEntry, getStory } from "#lib";
+import type { ReadonlyURLSearchParams } from "$app/state";
 
 /**
  * A shareable location within the app that maps to a URL: either a story
@@ -19,7 +20,7 @@ const WIKI_PARAM = "wiki";
  * @returns The referenced story or wiki target, or `null` when none is valid.
  * @author Claude
  */
-export const parseDeepLink = ( params: URLSearchParams ): DeepLinkTarget | null =>
+export const parseDeepLink = ( params: ReadonlyURLSearchParams ): DeepLinkTarget | null =>
 {
     const storyId = params.get( STORY_PARAM );
 
