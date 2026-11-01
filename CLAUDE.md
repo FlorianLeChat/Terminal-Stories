@@ -5,7 +5,7 @@ A terminal-style interactive fiction system, built with SvelteKit + TypeScript +
 ## Language
 
 - **Comments and JSDoc: in English.**
-- **All user-facing text must be translatable.** Never hardcode a sentence shown to the user (in components, stores, services, or utilities). Define it as a Paraglide message in `locales/en.json` **and** `locales/fr.json`, then use it via `import * as m from "$lib/locales/messages"` (e.g. `m.my_key()`). Add the key to **both** locales and recompile (`npx @inlang/paraglide-js compile --project ./locales/.inlang --outdir ./src/lib/locales`).
+- **All user-facing text must be translatable.** Never hardcode a sentence shown to the user (in components, stores, services, or utilities). Define it as a Paraglide message in `locales/en.json` **and** `locales/fr.json`, then use it via `import * as m from "#lib/locales/messages.js"` (e.g. `m.my_key()`). Add the key to **both** locales and recompile (`npx @inlang/paraglide-js compile --project ./locales/.inlang --outdir ./src/lib/locales`).
 - **Error and status messages follow the same rule.** Non-UI layers (services, utilities) must throw or return **machine-readable codes** (not localized strings); the UI maps those codes to Paraglide messages. Never throw, return, or store a hardcoded user-facing sentence.
 - Commit messages are in English.
 
@@ -102,6 +102,14 @@ if ( scene?.isEnding === true ) terminal.goBack();
 ## Code style
 
 - Follow the existing formatting (Prettier + ESLint): inner spacing inside parentheses `( x )`, 4-space indentation.
+- **Order imports as a staircase by length**, shortest statement first, longest last. A multi-line import counts as its whole statement, so it naturally sinks to the bottom. Equal lengths keep their current order. Side-effect imports (`import "./app.css";`), blank lines, and comments split the imports into separate groups, each sorted on its own.
+
+```ts
+import { asset } from "$app/paths";
+import * as m from "#lib/locales/messages.js";
+import { terminal } from "#lib/stores/terminal.ts";
+import TerminalLogo from "../Terminal/TerminalLogo.svelte";
+```
 - Before wrapping up, run both checks in order and fix any error before committing:
   1. `npm run check` — TypeScript + Svelte type checking
   2. `npm run lint` — ESLint rules

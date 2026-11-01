@@ -1,7 +1,7 @@
-import { storiesMeta } from "$lib/data";
-import { achievements } from "$lib/data/achievements";
-import { loadDiscoveredEndings } from "$lib/utilities/saveService";
-import type { AchievementContext, AchievementId, UnlockedAchievement } from "$lib/types/achievement";
+import { storiesMeta } from "#lib/data/index.ts";
+import { achievements } from "#lib/data/achievements.ts";
+import { loadDiscoveredEndings } from "#lib/utilities/saveService.ts";
+import type { AchievementContext, AchievementId, UnlockedAchievement } from "#lib/types/achievement.ts";
 
 /** localStorage key holding the set of unlocked achievements (all stories). */
 const ACHIEVEMENTS_KEY = "terminal-stories:achievements";

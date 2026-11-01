@@ -1,9 +1,9 @@
 <script lang="ts">
-    import * as m from "$lib/locales/messages";
     import { page } from "$app/state";
     import { resolve } from "$app/paths";
-    import { terminal } from "$lib/stores/terminal";
-    import { deepLinkSearch } from "$lib";
+    import { deepLinkSearch } from "#lib";
+    import * as m from "#lib/locales/messages.js";
+    import { terminal } from "#lib/stores/terminal.ts";
 
     let dialog: HTMLDialogElement;
 

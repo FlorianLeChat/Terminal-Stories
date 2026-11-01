@@ -1,8 +1,8 @@
-import type { Scene, Story, StoryFile } from "$lib/types/story";
-import type { CustomStoryRecord } from "$lib/types/customStory";
-import { CustomStoryError } from "$lib/utilities/customStoryError";
-import { normalizeCustomStory, toStoryFile } from "$lib/utilities/storyValidation";
-import { deleteDiscoveredEndings, deleteSave } from "$lib/utilities/saveService";
+import type { Scene, Story, StoryFile } from "#lib/types/story.ts";
+import type { CustomStoryRecord } from "#lib/types/customStory.ts";
+import { CustomStoryError } from "#lib/utilities/customStoryError.ts";
+import { deleteDiscoveredEndings, deleteSave } from "#lib/utilities/saveService.ts";
+import { normalizeCustomStory, toStoryFile } from "#lib/utilities/storyValidation.ts";
 
 /** localStorage key holding every custom story record. */
 const STORAGE_KEY = "terminal-stories:custom-stories";

@@ -1,5 +1,5 @@
-import * as m from "$lib/locales/messages";
-import type { AiErrorCode } from "$lib/types/ai";
+import * as m from "#lib/locales/messages.js";
+import type { AiErrorCode } from "#lib/types/ai.ts";
 
 /**
  * An AI failure carrying a machine-readable {@link AiErrorCode} instead of

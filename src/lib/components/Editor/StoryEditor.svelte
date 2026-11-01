@@ -1,13 +1,13 @@
 <script lang="ts">
-    import * as m from "$lib/locales/messages";
-    import { terminal } from "$lib/stores/terminal";
+    import type { Scene, StoryFile } from "#lib";
+    import * as m from "#lib/locales/messages.js";
+    import { terminal } from "#lib/stores/terminal.ts";
+    import EditorSceneList from "./EditorSceneList.svelte";
+    import EditorSceneForm from "./EditorSceneForm.svelte";
     import TerminalLogo from "../Terminal/TerminalLogo.svelte";
     import EditorMetadataForm from "./EditorMetadataForm.svelte";
     import EditorCharactersForm from "./EditorCharactersForm.svelte";
-    import EditorSceneList from "./EditorSceneList.svelte";
-    import EditorSceneForm from "./EditorSceneForm.svelte";
-    import type { Scene, StoryFile } from "$lib";
-    import { customStoryErrorMessage, getCustomStory, hasReachableEnding, saveCustomStory } from "$lib";
+    import { customStoryErrorMessage, getCustomStory, hasReachableEnding, saveCustomStory } from "#lib";
 
     // The edited id is set before this view mounts and never changes while it
     // is displayed, so the record can be loaded once at init.

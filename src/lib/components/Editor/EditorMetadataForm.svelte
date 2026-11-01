@@ -1,7 +1,7 @@
 <script lang="ts">
-    import * as m from "$lib/locales/messages";
-    import type { MusicTheme, StoryFile } from "$lib";
-    import { KNOWN_GENRES, MUSIC_THEMES, genreLabel } from "$lib";
+    import * as m from "#lib/locales/messages.js";
+    import type { MusicTheme, StoryFile } from "#lib";
+    import { KNOWN_GENRES, MUSIC_THEMES, genreLabel } from "#lib";
 
     interface Props {
         /** The story draft being edited (mutated in place). */

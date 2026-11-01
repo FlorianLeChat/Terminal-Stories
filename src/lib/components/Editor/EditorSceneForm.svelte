@@ -1,8 +1,8 @@
 <script lang="ts">
-    import * as m from "$lib/locales/messages";
+    import * as m from "#lib/locales/messages.js";
     import EditorChoiceForm from "./EditorChoiceForm.svelte";
-    import type { MusicTheme, SceneSoundEffect, SceneTextEntry, StoryFile } from "$lib";
-    import { MUSIC_THEMES, SCENE_SOUND_EFFECTS } from "$lib";
+    import { MUSIC_THEMES, SCENE_SOUND_EFFECTS } from "#lib";
+    import type { MusicTheme, SceneSoundEffect, SceneTextEntry, StoryFile } from "#lib";
 
     interface Props {
         /** The story draft being edited (mutated in place). */

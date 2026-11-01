@@ -1,6 +1,6 @@
 <script lang="ts">
-    import * as m from "$lib/locales/messages";
-    import type { StoryFile } from "$lib";
+    import type { StoryFile } from "#lib";
+    import * as m from "#lib/locales/messages.js";
 
     interface Props {
         /** The story draft being edited (mutated in place). */

@@ -1,5 +1,5 @@
-import * as m from "$lib/locales/messages";
 import { writable, get } from "svelte/store";
+import * as m from "#lib/locales/messages.js";
 import type { AchievementContext,
     AchievementId,
     AiGenerationParams,
@@ -13,7 +13,7 @@ import type { AchievementContext,
     Story,
     StoryFilters,
     StoryStats,
-    WikiState } from "$lib";
+    WikiState } from "#lib";
 import { aiErrorMessage,
     availableGenres,
     playAchievement,
@@ -48,7 +48,7 @@ import { aiErrorMessage,
     saveProgress,
     searchWikiEntries,
     storiesMeta,
-    totalStoriesCount } from "$lib";
+    totalStoriesCount } from "#lib";
 
 export type TerminalView
     = | "boot"

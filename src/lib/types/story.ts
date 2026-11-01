@@ -1,4 +1,4 @@
-import type { MusicTheme, SceneSoundEffect } from "$lib/types/audio";
+import type { MusicTheme, SceneSoundEffect } from "#lib/types/audio.ts";
 
 export type CharacterRole = "protagonist" | "antagonist" | "ally" | "npc" | "narrator";
 

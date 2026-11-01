@@ -1,5 +1,5 @@
-import type { KnowledgeBase, KnowledgeCategory, KnowledgeEntry, CategoryMeta } from "$lib/types/knowledge";
-import { storiesMeta } from "$lib/data";
+import { storiesMeta } from "#lib/data/index.ts";
+import type { KnowledgeBase, KnowledgeCategory, KnowledgeEntry, CategoryMeta } from "#lib/types/knowledge.ts";
 
 // Eagerly scans every JSON file in ./knowledge so new knowledge bases are
 // picked up automatically, without an import to add by hand for each one.

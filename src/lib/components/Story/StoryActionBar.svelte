@@ -1,7 +1,7 @@
 <script lang="ts">
-    import * as m from "$lib/locales/messages";
-    import { terminal } from "$lib/stores/terminal";
-    import { isCustomStoryId } from "$lib";
+    import { isCustomStoryId } from "#lib";
+    import * as m from "#lib/locales/messages.js";
+    import { terminal } from "#lib/stores/terminal.ts";
 
     interface Props {
         /** Either the story-info preview screen or active playback. */

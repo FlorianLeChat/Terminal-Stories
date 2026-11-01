@@ -1,5 +1,5 @@
-import type { Scene, Story, StoryFile, StoryMeta, StoryFilters } from "$lib/types/story";
-import { computeStoryStats } from "$lib/utilities/readingTime";
+import { computeStoryStats } from "#lib/utilities/readingTime.ts";
+import type { Scene, Story, StoryFile, StoryMeta, StoryFilters } from "#lib/types/story.ts";
 
 // Eagerly scans every JSON file in ./stories so new stories are picked up
 // automatically, without an import to add by hand for each one.

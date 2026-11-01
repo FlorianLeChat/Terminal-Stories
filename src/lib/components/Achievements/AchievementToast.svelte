@@ -1,8 +1,8 @@
 <script lang="ts">
-    import * as m from "$lib/locales/messages";
     import { asset } from "$app/paths";
-    import { terminal } from "$lib/stores/terminal";
-    import { getAchievement, hideOnError, type Achievement } from "$lib";
+    import * as m from "#lib/locales/messages.js";
+    import { terminal } from "#lib/stores/terminal.ts";
+    import { getAchievement, hideOnError, type Achievement } from "#lib";
 
     // Resolve the just-unlocked ids into their full definitions, skipping any
     // unknown id defensively (e.g. a renamed achievement in an old save).

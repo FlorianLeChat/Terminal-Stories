@@ -1,6 +1,6 @@
 <script lang="ts">
-    import * as m from "$lib/locales/messages";
-    import { sound } from "$lib/stores/sound";
+    import { sound } from "#lib/stores/sound.ts";
+    import * as m from "#lib/locales/messages.js";
 
     let enabled = $derived( $sound.enabled );
     let volume = $derived( $sound.volume );

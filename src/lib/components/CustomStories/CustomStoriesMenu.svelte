@@ -1,8 +1,8 @@
 <script lang="ts">
-    import * as m from "$lib/locales/messages";
-    import { terminal } from "$lib/stores/terminal";
+    import * as m from "#lib/locales/messages.js";
+    import type { CustomStoryRecord } from "#lib";
+    import { terminal } from "#lib/stores/terminal.ts";
     import TerminalLogo from "../Terminal/TerminalLogo.svelte";
-    import type { CustomStoryRecord } from "$lib";
     import { customStoryErrorMessage,
         deleteCustomStory,
         exportCustomStory,
@@ -10,7 +10,7 @@
         genreLabel,
         getStory,
         importCustomStory,
-        listCustomStories } from "$lib";
+        listCustomStories } from "#lib";
 
     interface Props {
         /** Creates a blank custom story and opens it in the editor. */

@@ -1,7 +1,7 @@
 <script lang="ts">
-    import * as m from "$lib/locales/messages";
     import { onMount } from "svelte";
-    import { storiesMeta, playBoot, playTypingTick, resumeAudio } from "$lib";
+    import * as m from "#lib/locales/messages.js";
+    import { storiesMeta, playBoot, playTypingTick, resumeAudio } from "#lib";
 
     interface Props {
         ondone: () => void;

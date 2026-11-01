@@ -1,9 +1,9 @@
 <script lang="ts">
-    import * as m from "$lib/locales/messages";
-    import { terminal } from "$lib/stores/terminal";
-    import type { TerminalView } from "$lib/stores/terminal";
-    import { isCustomStoryId } from "$lib";
-    import { env } from "$env/dynamic/public";
+    import { isCustomStoryId } from "#lib";
+    import * as m from "#lib/locales/messages.js";
+    import { PUBLIC_VERSION } from "$app/env/public";
+    import { terminal } from "#lib/stores/terminal.ts";
+    import type { TerminalView } from "#lib/stores/terminal.ts";
 
     interface Props {
         view: TerminalView;
@@ -278,7 +278,7 @@
         </a>
 
         <code class="ml-auto gap-3">
-            {env.PUBLIC_VERSION ?? "0.0.1"}
+            {PUBLIC_VERSION}
         </code>
     {/if}
 </footer>

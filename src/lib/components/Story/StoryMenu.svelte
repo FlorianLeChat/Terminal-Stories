@@ -1,9 +1,9 @@
 <script lang="ts">
-    import * as m from "$lib/locales/messages";
-    import { terminal } from "$lib/stores/terminal";
-    import TerminalLogo from "../Terminal/TerminalLogo.svelte";
+    import * as m from "#lib/locales/messages.js";
+    import { terminal } from "#lib/stores/terminal.ts";
     import StoryListItem from "./StoryListItem.svelte";
-    import { storiesMeta, filterStories, availableGenres, availableLanguages, searchStories, genreColor, genreLabel, truncateQueryForDisplay } from "$lib";
+    import TerminalLogo from "../Terminal/TerminalLogo.svelte";
+    import { storiesMeta, filterStories, availableGenres, availableLanguages, searchStories, genreColor, genreLabel, truncateQueryForDisplay } from "#lib";
 
     interface Props {
         selectedIndex?: number;

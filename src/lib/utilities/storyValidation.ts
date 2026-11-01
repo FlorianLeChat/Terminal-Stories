@@ -1,8 +1,8 @@
-import type { Character, CharacterRole, Choice, Scene, SceneTextEntry, Story, StoryFile } from "$lib/types/story";
-import type { MusicTheme, SceneSoundEffect } from "$lib/types/audio";
-import { MUSIC_THEMES, SCENE_SOUND_EFFECTS } from "$lib/types/audio";
-import { AiError } from "$lib/utilities/aiError";
-import { CustomStoryError } from "$lib/utilities/customStoryError";
+import { AiError } from "#lib/utilities/aiError.ts";
+import { CustomStoryError } from "#lib/utilities/customStoryError.ts";
+import type { MusicTheme, SceneSoundEffect } from "#lib/types/audio.ts";
+import { MUSIC_THEMES, SCENE_SOUND_EFFECTS } from "#lib/types/audio.ts";
+import type { Character, CharacterRole, Choice, Scene, SceneTextEntry, Story, StoryFile } from "#lib/types/story.ts";
 
 // The payload is expected to carry scenes as an array (easier to produce
 // reliably than a keyed map), which we normalize into the Record the engine

@@ -1,4 +1,4 @@
-import type { Story, Scene, Choice, SceneTextEntry, StoryStats } from "$lib/types/story";
+import type { Story, Scene, Choice, SceneTextEntry, StoryStats } from "#lib/types/story.ts";
 
 /** Average reading speed in words per minute (prose). */
 const WORDS_PER_MINUTE = 200;

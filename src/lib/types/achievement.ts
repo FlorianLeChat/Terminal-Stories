@@ -1,3 +1,5 @@
+import type { AssetPath } from "$app/types";
+
 /** Every achievement the game can award, identified by a stable slug. */
 export type AchievementId = "first-ending" | "all-endings-single" | "speedrun" | "dedication" | "balanced" | "explorer" | "completionist";
 
@@ -10,7 +12,7 @@ export interface Achievement {
     /** Stable slug identifying this achievement. */
     id: AchievementId;
     /** Static-asset path of the pixel-art icon (resolved through `asset()`). */
-    icon: string;
+    icon: AssetPath;
     /** Translatable display name (a Paraglide message getter). */
     name: () => string;
     /** Translatable description (a Paraglide message getter). */
