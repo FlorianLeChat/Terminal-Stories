@@ -310,7 +310,6 @@ const stopMusicVoice = (): void =>
     gainToFade.gain.cancelScheduledValues( ctx.currentTime );
     gainToFade.gain.setTargetAtTime( 0, ctx.currentTime, MUSIC_FADE / 3 );
 
-    // Disconnect the whole chain after the fade so the nodes can be freed.
     globalThis.window.setTimeout( () =>
     {
         nodesToDrop.forEach( ( node ) => node.disconnect() );
@@ -323,6 +322,15 @@ const stopMusicVoice = (): void =>
  * then schedules the piece beat by beat: chord-following bass and pads, a
  * melodic random walk resolving onto chord tones, intensity-gated percussion.
  * Assumes any previous voice has already been stopped.
+ *
+ * Every music node feeds a single fade gain, so starting, stopping, and
+ * cross-fading only ever touch that gain (echo tails included). The melodic
+ * bus runs through a gentle warmth lowpass that keeps every ambiance behind
+ * the story; the intensity arc opens it up to the theme's brightness at the
+ * peak and closes it again after. Percussion bypasses that filter, which
+ * would smother the hats. The shared echo feeds the fade gain too, so its
+ * tail dies with the voice, and a damped feedback loop gives a few soft
+ * repeats.
  *
  * @param theme - The ambiance to synthesize.
  * @author Claude
@@ -337,16 +345,11 @@ const startMusicVoice = ( theme: MusicTheme ): void =>
     const maxBrightness = spec.brightness ?? 2200;
     const layered = spec.layered !== false;
 
-    // Fade node: every music node feeds it, so starting, stopping, and
-    // cross-fading only ever touch this single gain (echo tails included).
     const voice = ctx.createGain();
     voice.gain.setValueAtTime( 0.0001, ctx.currentTime );
     voice.gain.exponentialRampToValueAtTime( 1, ctx.currentTime + MUSIC_FADE );
     voice.connect( master );
 
-    // Melodic bus → warmth lowpass → voice. The gentle lowpass keeps every
-    // ambiance warm and behind the story; the intensity arc opens it up to
-    // the theme's brightness at the peak and closes it again after.
     const warmth = ctx.createBiquadFilter();
     warmth.type = "lowpass";
     warmth.frequency.value = maxBrightness * 0.7;
@@ -355,15 +358,12 @@ const startMusicVoice = ( theme: MusicTheme ): void =>
     const melodicBus = ctx.createGain();
     melodicBus.connect( warmth );
 
-    // Percussion bypasses the warmth filter, which would smother the hats.
     const percussionBus = ctx.createGain();
     percussionBus.connect( voice );
 
-    // Shared echo: melodic bus → send → delay → voice (pre-fade, so the tail
-    // dies with the voice), with a damped feedback loop for a few soft
-    // repeats. Created with 2 s of headroom (the default DelayNode max is 1 s).
     const delaySend = ctx.createGain();
     delaySend.gain.value = spec.echo ?? 0.2;
+    // 2 s of headroom: the default DelayNode maximum is only 1 s.
     const delay = ctx.createDelay( 2 );
     delay.delayTime.value = spec.step * 0.75;
     const damp = ctx.createBiquadFilter();
@@ -423,8 +423,9 @@ const startMusicVoice = ( theme: MusicTheme ): void =>
 
     /**
      * Plays the current chord as a soft, sustained pad an octave down, on a
-     * slow attack, with a per-note vibrato LFO started and stopped alongside
-     * the pad so no oscillator outlives its note.
+     * slow attack, with a per-note vibrato LFO (a few cents at about 4.5 Hz,
+     * keeping the long pad alive) started and stopped alongside the pad so no
+     * oscillator outlives its note.
      *
      * @param when - Context time to start the pad at.
      * @param chord - The chord to voice, as semitone offsets from the root.
@@ -443,7 +444,6 @@ const startMusicVoice = ( theme: MusicTheme ): void =>
             pad.type = "sine";
             pad.frequency.value = midiToFrequency( spec.root - 12 + tone );
 
-            // Slow vibrato (a few cents at ~4.5 Hz) keeps the long pad alive.
             const lfo = ctx.createOscillator();
             const lfoDepth = ctx.createGain();
             lfo.type = "sine";
@@ -515,8 +515,6 @@ const startMusicVoice = ( theme: MusicTheme ): void =>
         source.stop( when + 0.05 );
     };
 
-    // Scheduling state: the beat counter drives bars, chords, and intensity;
-    // the pool index is the melodic random walk's position.
     let beat = 0;
     let nextNoteTime = ctx.currentTime + 0.1;
     let pool = buildPool( spec, spec.progression[ 0 ] );
@@ -524,9 +522,10 @@ const startMusicVoice = ( theme: MusicTheme ): void =>
 
     /**
      * Lays down the harmonic foundation of a beat: on a bar start it rebuilds
-     * the melodic pool around the new chord, drops the anchoring bass note, and
-     * sweeps the warmth filter to the current intensity; on the mid-bar beat of
-     * energetic bars it adds a passing fifth.
+     * the melodic pool around the new chord, drops the bass note anchoring the
+     * chord root an octave down, and sweeps the warmth filter to the current
+     * intensity (open in loud bars, closed in quiet ones); on the mid-bar beat
+     * of energetic bars it adds a passing fifth in the bass.
      *
      * @param when - Context time of the beat.
      * @param beatInBar - Beat position within the current bar (0..3).
@@ -539,19 +538,14 @@ const startMusicVoice = ( theme: MusicTheme ): void =>
         const isBarStart = beatInBar === 0;
         if ( isBarStart )
         {
-            // The chord changes on the bar: rebuild the walk's pool around it.
             pool = buildPool( spec, chord );
             poolIndex = Math.min( poolIndex, pool.length - 1 );
 
-            // Bass anchors the bar on the chord root, an octave down.
             voiceNote( spec.root + chord[ 0 ] - 12, when, spec.noteGain * 0.9, spec.step * 3.5, 0.15, "sine" );
 
-            // Open the warmth filter with the intensity, closing it back down
-            // in the quiet bars — the arc is audible even with eyes closed.
             warmth.frequency.setTargetAtTime( maxBrightness * ( 0.6 + intensity * 0.5 ), when, 0.5 );
         }
 
-        // A passing fifth in the bass halfway through energetic bars.
         const hasBassFifth = beatInBar === 2 && intensity > 0.6;
         if ( hasBassFifth )
         {
@@ -561,8 +555,9 @@ const startMusicVoice = ( theme: MusicTheme ): void =>
 
     /**
      * Schedules the percussion layer for a beat, gated by the intensity arc so
-     * the drums enter with the build and leave in the breakdown. A no-op for
-     * themes without percussion.
+     * the drums enter with the build and leave in the breakdown: kicks on
+     * beats 1 and 3 once the arc warms up, offbeat hats only near the peak.
+     * A no-op for themes without percussion.
      *
      * @param when - Context time of the beat.
      * @param beatInBar - Beat position within the current bar (0..3).
@@ -573,8 +568,6 @@ const startMusicVoice = ( theme: MusicTheme ): void =>
     {
         if ( !spec.percussion ) return;
 
-        // Kick on beats 1 and 3 once the arc warms up; offbeat hats only near
-        // the peak, so percussion enters and leaves with the build.
         const hasKick = ( beatInBar === 0 || beatInBar === 2 ) && intensity >= 0.45;
         if ( hasKick ) playKick( when );
 
@@ -585,7 +578,8 @@ const startMusicVoice = ( theme: MusicTheme ): void =>
     /**
      * Advances the melodic random walk by one step: mostly stepwise motion,
      * the occasional leap, and sometimes holding the same degree, clamped to
-     * the pool. Structural beats resolve onto the nearest chord tone.
+     * the pool. Structural beats (downbeats and bar-final beats) resolve onto
+     * the nearest chord tone, so every bar breathes out on its harmony.
      *
      * @param beatInBar - Beat position within the current bar (0..3).
      * @param chordClasses - The chord tones folded into pitch classes (mod 12).
@@ -605,16 +599,18 @@ const startMusicVoice = ( theme: MusicTheme ): void =>
         }
         poolIndex = Math.max( 0, Math.min( pool.length - 1, poolIndex ) );
 
-        // Downbeats and bar-final beats resolve onto the nearest chord tone,
-        // so every bar breathes out on its harmony.
         const isResolutionBeat = beatInBar === 0 || beatInBar === BEATS_PER_BAR - 1;
         if ( isResolutionBeat ) poolIndex = snapToChordTone( pool, poolIndex, chordClasses );
     };
 
     /**
      * Schedules the melodic line for a beat: an intensity-weighted rest chance,
-     * then the walk note (humanized and panned) with an occasional octave lift
-     * and a softer companion harmony voice on layered themes.
+     * then the walk note with an occasional octave lift and, on layered
+     * themes, a softer companion harmony voice panned to the other side that
+     * thickens the line as the intensity rises. Rests thin the melody out in
+     * quiet bars without stretching the beat grid, so chords and percussion
+     * never drift off-bar. Only the melody is humanized and spread across the
+     * stereo field; bass and percussion stay on the grid.
      *
      * @param when - Context time of the beat.
      * @param beatInBar - Beat position within the current bar (0..3).
@@ -624,8 +620,6 @@ const startMusicVoice = ( theme: MusicTheme ): void =>
      */
     const scheduleMelody = ( when: number, beatInBar: number, chordClasses: Set<number>, intensity: number ): void =>
     {
-        // Rests thin the melody out in quiet bars but never stretch the beat
-        // grid, otherwise chords and percussion would drift off-bar.
         const restProbability = 0.32 - intensity * 0.25;
         const isRest = Math.random() < restProbability;
         if ( isRest ) return;
@@ -637,14 +631,10 @@ const startMusicVoice = ( theme: MusicTheme ): void =>
         const melodyMidi = spec.root + pool[ poolIndex ] + octaveLift;
         const velocity = spec.noteGain * ( 0.75 + intensity * 0.4 );
 
-        // Humanize the melody only (bass and percussion stay on the grid) and
-        // spread it gently across the stereo field.
         const humanizedWhen = when + jitter( 0, 0.012 );
         const pan = jitter( 0, 0.3 );
         voiceNote( melodyMidi, humanizedWhen, velocity, spec.step, 0.3, spec.wave, pan );
 
-        // A softer companion voice above the melody, panned to the other side,
-        // thickening the line as the intensity rises (layered themes only).
         const harmonyProbability = layered ? 0.15 + intensity * 0.35 : 0;
         const hasHarmony = Math.random() < harmonyProbability;
         if ( hasHarmony )
@@ -720,7 +710,6 @@ export const startMusic = ( theme: MusicTheme = "default" ): void =>
 
     currentTheme = theme;
 
-    // Only touch the audio graph when sound is on; otherwise just remember it.
     if ( !isAudioEnabled() ) return;
 
     stopMusicVoice();
@@ -730,6 +719,10 @@ export const startMusic = ( theme: MusicTheme = "default" ): void =>
 /**
  * Reacts to the master enabled flag changing: disabling stops the live voice
  * (without forgetting the requested theme), enabling resumes that theme.
+ * Idempotent on purpose: the sound store re-runs setEnabled on every volume
+ * change, so enabling only spins up a voice when a theme is requested and
+ * none is playing yet, otherwise repeated calls would stack voices (audible
+ * as duplication, clipping, and stray restarts).
  *
  * @param nextEnabled - The new enabled state, as already recorded in the core.
  * @author Claude
@@ -742,11 +735,6 @@ export const handleEnabledChange = ( nextEnabled: boolean ): void =>
         return;
     }
 
-    // Idempotent on purpose: the sound store re-runs setEnabled on every
-    // volume change, so this can fire many times in a row while sound is
-    // already on. Only spin up a voice when a theme is requested and none is
-    // already playing — otherwise repeated calls would stack voices on top of
-    // each other (audible as duplication, clipping, and stray restarts).
     const hasLiveVoice = musicGain !== null;
     if ( currentTheme !== null && !hasLiveVoice ) startMusicVoice( currentTheme );
 };

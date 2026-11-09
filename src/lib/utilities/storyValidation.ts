@@ -1,13 +1,10 @@
 import { AiError } from "#lib/utilities/aiError.ts";
+import { PHOSPHOR_THEMES } from "#lib/types/story.ts";
 import { CustomStoryError } from "#lib/utilities/customStoryError.ts";
 import type { MusicTheme, SceneSoundEffect } from "#lib/types/audio.ts";
 import { MUSIC_THEMES, SCENE_SOUND_EFFECTS } from "#lib/types/audio.ts";
-import type { Character, CharacterRole, Choice, Scene, SceneTextEntry, Story, StoryFile } from "#lib/types/story.ts";
+import type { Character, CharacterRole, Choice, PhosphorTheme, Scene, SceneTextEntry, Story, StoryFile } from "#lib/types/story.ts";
 
-// The payload is expected to carry scenes as an array (easier to produce
-// reliably than a keyed map), which we normalize into the Record the engine
-// expects. The same raw shapes cover AI-generated payloads and user-imported
-// or user-edited stories, so every entry point shares one sanitization path.
 interface RawChoice {
     id?: string;
     text?: string;
@@ -35,6 +32,14 @@ interface RawScene {
     sound?: string;
 }
 
+/**
+ * Unvalidated story payload, shared by AI-generated, imported, and edited
+ * stories so every entry point goes through one sanitization path. Scenes are
+ * expected as an array (easier to produce reliably than a keyed map) and are
+ * normalized into the `Record` the engine expects.
+ *
+ * @author Claude
+ */
 interface RawStory {
     title?: string;
     genre?: string;
@@ -43,6 +48,7 @@ interface RawStory {
     description?: string;
     author?: string;
     music?: string;
+    phosphor?: string;
     characters?: Partial<Character>[];
     startScene?: string;
     scenes?: RawScene[] | Record<string, RawScene>;
@@ -84,17 +90,25 @@ const MAX_SHORT_TEXT_LENGTH = 300;
 const MAX_ID_LENGTH = 64;
 const MAX_CHARACTERS = 40;
 
-// Own-property names that would collide with Object.prototype internals when
-// used as scene-map keys; refused outright as scene ids.
+/**
+ * Property names that would collide with Object.prototype internals when used
+ * as scene-map keys; refused outright as scene ids.
+ *
+ * @author Claude
+ */
 const UNSAFE_KEYS = [ "__proto__", "constructor", "prototype" ];
 
 /** Roles the engine recognizes; anything else is coerced to "npc". */
 const KNOWN_ROLES: CharacterRole[] = [ "protagonist", "antagonist", "ally", "npc", "narrator" ];
 
-// Scene images must point to an asset bundled with the app: a relative path
-// under assets/, no scheme, no host, no traversal. External URLs (http, data,
-// javascript...) are dropped so imported stories can never load remote or
-// script-bearing content on the reader's device.
+/**
+ * Allowed scene image paths: an asset bundled with the app, under assets/,
+ * with no scheme, host, or traversal. External URLs (http, data,
+ * javascript...) are dropped so imported stories can never load remote or
+ * script-bearing content on the reader's device.
+ *
+ * @author Claude
+ */
 const LOCAL_ASSET_PATTERN = /^\/?assets\/[a-z0-9_/-]+\.(?:svg|png|jpe?g|webp|gif)$/i;
 
 /**
@@ -139,6 +153,18 @@ const coerceMusicTheme = ( value: unknown ): MusicTheme | undefined =>
     const isKnown = typeof value === "string" && ( MUSIC_THEMES as readonly string[] ).includes( value );
 
     return isKnown ? ( value as MusicTheme ) : undefined;
+};
+
+/**
+ * Tells whether a value is one of the known phosphor themes.
+ *
+ * @param value - The value to check.
+ * @returns `true` for a known theme.
+ * @author Claude
+ */
+export const isPhosphorTheme = ( value: unknown ): value is PhosphorTheme =>
+{
+    return typeof value === "string" && ( PHOSPHOR_THEMES as readonly string[] ).includes( value );
 };
 
 /**
@@ -296,6 +322,28 @@ const normalizeScene = ( raw: RawScene ): Scene =>
 };
 
 /**
+ * Machine-readable problems the editor flags on a single choice; the UI maps
+ * them to translated messages.
+ */
+export type ChoiceIssueCode = "missing_target";
+
+/**
+ * Checks a choice's target against the scenes of a draft, so the editor can
+ * warn inline when it points to a scene that does not exist (anymore).
+ *
+ * @param sceneIds - Ids of every scene in the draft.
+ * @param nextScene - The id the choice points to.
+ * @returns The issue code, or `null` when the target exists.
+ * @author Claude
+ */
+export const choiceTargetIssue = ( sceneIds: ReadonlySet<string>, nextScene: string ): ChoiceIssueCode | null =>
+{
+    const targetExists = sceneIds.has( nextScene );
+
+    return targetExists ? null : "missing_target";
+};
+
+/**
  * Walks the scene graph from `startScene` and returns whether at least one
  * ending (a scene flagged as such or with no remaining choices) is reachable.
  *
@@ -341,7 +389,6 @@ export const hasReachableEnding = ( scenes: Record<string, Scene>, startScene: s
  */
 const buildSceneMap = ( rawScenes: RawScene[] ): Record<string, Scene> =>
 {
-    // Null prototype: scene ids are attacker-controlled property names.
     const scenes: Record<string, Scene> = Object.create( null );
 
     for ( const rawScene of rawScenes.slice( 0, MAX_SCENES ) )
@@ -453,7 +500,8 @@ const normalizeStoryMetadata = (
  * edited) into a playable story without an id. Every string is clamped, ids
  * and asset references are sanitized, dangling choices are pruned, choice-less
  * non-ending scenes become endings, and the graph is guaranteed to reach at
- * least one ending — throwing a {@link StoryGraphError} otherwise.
+ * least one ending — throwing a {@link StoryGraphError} otherwise. An unknown
+ * phosphor is dropped, so the story follows its genre's theme.
  *
  * @param raw - The parsed JSON payload to normalize.
  * @returns A fully-formed story, minus its id (assigned by the caller).
@@ -494,6 +542,8 @@ const normalizeStoryPayload = ( raw: unknown ): Omit<Story, "id"> =>
 
     if ( author !== "" ) story.author = author;
     if ( music !== undefined ) story.music = music;
+
+    if ( isPhosphorTheme( data.phosphor ) ) story.phosphor = data.phosphor;
 
     return story;
 };

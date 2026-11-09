@@ -7,16 +7,14 @@
 </script>
 
 <div class="mt-2 text-center select-none">
-    <!-- ASCII banner for wide screens; it overflows on narrow phones, so it is
-         hidden there in favour of the plain title below. -->
-    <pre class="hidden sm:block text-terminal-green text-xs leading-tight opacity-80" aria-hidden="true">
+    <pre class="ascii-banner text-terminal-green text-xs leading-tight" aria-hidden="true">
  _____ _____ ____  __  __ ___ _   _    _    _
 |_   _| ____|  _ \|  \/  |_ _| \ | |  / \  | |
   | | |  _| | |_) | |\/| || ||  \| | / _ \ | |
      | | | |___|  _ &lt;| |  | || || |\  |/ ___ \| |___
       |_| |_____|_| \_\_|  |_|___|_| \_/_/   \_\_____|
        </pre>
-    <pre class="hidden sm:block text-terminal-green text-xs leading-tight opacity-80" aria-hidden="true">
+    <pre class="ascii-banner text-terminal-green text-xs leading-tight" aria-hidden="true">
      ____ _____ ___  ____  ___ _____ ____
     / ___|_   _/ _ \|  _ \|_ _| ____/ ___|
     \___ \ | || | | | |_) || ||  _| \___ \
@@ -24,10 +22,38 @@
     |____/ |_| \___/|_| \_\___|_____|____/
         </pre>
 
-    <!-- Plain, responsive title shown on small screens in place of the ASCII art. -->
-    <p class="sm:hidden text-terminal-green font-bold text-2xl tracking-[0.3em] leading-tight">
-        TERMINAL<br />STORIES
+    <p class="compact-title text-terminal-green font-bold text-2xl tracking-[0.3em] leading-tight">
+        TERMINAL<br class="title-break" /> STORIES
     </p>
 
     <p class="text-terminal-dim text-xs mt-2 tracking-widest">{subtitle}</p>
 </div>
+
+<style>
+    .ascii-banner {
+        display: none;
+    }
+
+    /* The banner overflows narrow phones and crowds the catalog under 1000px tall. */
+    @media (min-width: 640px) and (min-height: 1001px) {
+        .ascii-banner {
+            display: block;
+        }
+
+        .compact-title {
+            display: none;
+        }
+    }
+
+    @media (min-width: 640px), (max-height: 700px) {
+        .title-break {
+            display: none;
+        }
+    }
+
+    @media (max-height: 700px) {
+        .compact-title {
+            font-size: 1.25rem;
+        }
+    }
+</style>

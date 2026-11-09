@@ -1,5 +1,14 @@
 import type { MusicTheme, SceneSoundEffect } from "#lib/types/audio.ts";
 
+/**
+ * Every phosphor color a story can be displayed in, as a runtime list so
+ * user-provided data (imported or edited stories) can be validated against it.
+ */
+export const PHOSPHOR_THEMES = [ "green", "amber", "cyan" ] as const;
+
+/** The phosphor (color theme) of the monitor while a story is shown. */
+export type PhosphorTheme = ( typeof PHOSPHOR_THEMES )[ number ];
+
 export type CharacterRole = "protagonist" | "antagonist" | "ally" | "npc" | "narrator";
 
 export interface Character {
@@ -69,6 +78,11 @@ export interface Story {
      * when playback begins. Falls back to the `"default"` theme when absent.
      */
     music?: MusicTheme;
+    /**
+     * Optional phosphor the monitor switches to while this story is shown.
+     * Falls back to a theme picked from the genre when absent.
+     */
+    phosphor?: PhosphorTheme;
     characters: Character[];
     startScene: string;
     scenes: Record<string, Scene>;
@@ -100,6 +114,8 @@ export interface StoryMeta {
     description: string;
     stats: StoryStats;
     endingIds: string[];
+    /** The phosphor the story is shown in (its own, or its genre's). */
+    phosphor: PhosphorTheme;
 }
 
 export interface StoryFilters {

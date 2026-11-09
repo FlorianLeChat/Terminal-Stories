@@ -2,23 +2,34 @@
     import { onMount } from "svelte";
     import * as m from "#lib/locales/messages.js";
     import { terminal } from "#lib/stores/terminal.ts";
-    import TerminalLogo from "./Terminal/TerminalLogo.svelte";
+    import ViewTitle from "./Terminal/ViewTitle.svelte";
     import type { AiGenerationParams, AiModelOption } from "#lib";
-    import { loadAiSettings, saveAiKey, saveAiModel, listModels, aiErrorMessage } from "#lib";
+    import { loadAiSettings, saveAiKey, saveAiModel, listModels, aiErrorMessage, availableGenres, availableLanguages, genreLabel } from "#lib";
 
-    // Seed the form from any previously stored settings (the key is remembered
-    // across sessions; the generation parameters always start fresh).
+    /**
+     * Settings stored by a previous visit. The key and model are remembered
+     * across sessions; the generation parameters always start fresh.
+     *
+     * @author Claude
+     */
     const stored = loadAiSettings();
 
     let apiKey = $state( stored.apiKey );
     let model = $state( stored.model );
     let premise = $state( "" );
     let genre = $state( "" );
-    let language = $state( "English" );
+
+    const localeLanguage = m.language_self_name();
+    const isLocaleOffered = availableLanguages.includes( localeLanguage );
+    let language = $state( isLocaleOffered ? localeLanguage : availableLanguages[ 0 ] );
     let sceneCount = $state( 10 );
 
-    // The whole form stays locked until the key is validated against the Models
-    // API. The model list is populated exclusively from that call — no fallback.
+    /**
+     * True once the key passed the Models API check. The whole form stays locked
+     * until then, and the model list only ever comes from that call.
+     *
+     * @author Claude
+     */
     let keyValid = $state( false );
     let validating = $state( false );
     let keyError = $state<string | null>( null );
@@ -31,10 +42,36 @@
 
     let keyInputEl: HTMLInputElement | undefined = $state();
 
+    /** Shape of an Anthropic API key, checked before any network call. */
+    const KEY_FORMAT = /^sk-ant-[\w-]+$/;
+
     /**
-     * Validates the entered key by listing the models it can access. On success
-     * the form unlocks and the model picker is populated; on failure an error is
-     * shown and the form stays locked.
+     * Status line saying where the key stands: empty, typed but unchecked,
+     * checking, valid or refused.
+     *
+     * @author Claude
+     */
+    let keyStatus = $derived.by( (): { text: string; tone: "dim" | "ok" | "error" } =>
+    {
+        if ( keyError ) return { text: keyError, tone: "error" };
+        if ( validating ) return { text: m.ai_key_status_checking(), tone: "dim" };
+        if ( keyValid ) return { text: m.ai_key_valid(), tone: "ok" };
+
+        const isEmpty = apiKey.trim() === "";
+
+        return { text: isEmpty ? m.ai_key_status_empty() : m.ai_key_status_unchecked(), tone: "dim" };
+    } );
+
+    /** Text color of each key status tone. */
+    const KEY_STATUS_CLASS = { dim: "text-terminal-dim", ok: "text-terminal-green", error: "text-terminal-error" };
+
+    /**
+     * Validates the entered key, on explicit request only (the button, ENTER,
+     * or a key stored by a previous visit). The key's format is checked first
+     * so an obvious typo never reaches the network; then the models it can
+     * access are listed. On success the form unlocks and the model picker is
+     * populated, keeping the stored model when still offered, otherwise the
+     * newest. On failure the reason is shown and the form stays locked.
      *
      * @author Claude
      */
@@ -42,6 +79,14 @@
     {
         const trimmedKey = apiKey.trim();
         if ( trimmedKey === "" || validating ) return;
+
+        const hasKeyFormat = KEY_FORMAT.test( trimmedKey );
+
+        if ( !hasKeyFormat )
+        {
+            keyError = m.ai_key_format_invalid();
+            return;
+        }
 
         validating = true;
         keyError = null;
@@ -57,7 +102,6 @@
 
             models = fetched;
 
-            // Keep the stored model when still offered, otherwise pick the newest.
             const hasStored = fetched.some( ( option ) => option.id === model );
             if ( !hasStored ) model = fetched[ 0 ].id;
 
@@ -121,7 +165,7 @@
 </script>
 
 <div class="flex-1 overflow-y-auto px-4 py-2">
-    <TerminalLogo subtitle={m.ai_subtitle()} />
+    <ViewTitle title={m.ai_subtitle()} />
 
     <p class="text-terminal-dim text-xs text-center my-4">{m.ai_intro()}</p>
 
@@ -135,25 +179,28 @@
                     bind:value={apiKey}
                     id="ai-key"
                     type="password"
-                    class="flex-1 bg-transparent border border-terminal-dim/40 rounded px-2 py-1 text-terminal-green text-xs outline-none focus:border-terminal-green placeholder-terminal-dim/50 caret-terminal-green"
+                    class="flex-1 min-w-0 min-h-11 bg-transparent border border-terminal-dim rounded px-2 py-1 text-terminal-green text-sm focus:border-terminal-green placeholder-terminal-dim caret-terminal-green"
                     placeholder="sk-ant-..."
                     autocomplete="off"
                     spellcheck={false}
+                    aria-describedby="ai-key-status ai-key-help"
+                    aria-invalid={keyError ? "true" : undefined}
                     oninput={handleKeyInput}
-                    onblur={validateKey}
                 />
 
                 <button
                     type="button"
-                    class="px-2 py-1 rounded border border-terminal-cyan/50 text-terminal-cyan text-xs hover:bg-terminal-cyan/10 disabled:opacity-60 disabled:cursor-not-allowed"
+                    class="min-h-11 px-3 py-1 rounded border border-terminal-cyan/50 text-terminal-cyan text-xs hover:bg-terminal-cyan/10 disabled:text-terminal-dim disabled:border-terminal-dim/50 disabled:hover:bg-transparent disabled:cursor-not-allowed"
                     onclick={validateKey}
                     disabled={apiKey.trim() === "" || validating || keyValid}
                 >
-                    {validating ? "..." : m.ai_key_validate()}
+                    {m.ai_key_validate()}
                 </button>
             </div>
 
-            <p class="text-terminal-dim/70 text-[0.7rem]">
+            <p id="ai-key-status" class="text-xs {KEY_STATUS_CLASS[ keyStatus.tone ]}" aria-live="polite">{keyStatus.text}</p>
+
+            <p id="ai-key-help" class="text-terminal-dim text-xs">
                 {m.ai_key_help()}
                 <br />
                 <a
@@ -170,16 +217,10 @@
                     class="underline underline-offset-2 hover:text-terminal-cyan"
                 >{m.ai_key_docs_link()}</a>
             </p>
-
-            {#if keyError}
-                <p class="text-terminal-amber text-[0.7rem]" role="alert">{keyError}</p>
-            {:else if keyValid}
-                <p class="text-terminal-green text-[0.7rem]">{m.ai_key_valid()}</p>
-            {/if}
         </div>
 
         {#if !keyValid}
-            <p class="text-terminal-dim/60 text-[0.7rem]">{m.ai_locked_hint()}</p>
+            <p class="text-terminal-dim text-xs">{m.ai_locked_hint()}</p>
         {/if}
 
         <fieldset class="space-y-3" disabled={fieldsLocked}>
@@ -190,10 +231,12 @@
                 <select
                     bind:value={model}
                     id="ai-model"
-                    class="w-full bg-terminal-bg border border-terminal-dim/40 rounded px-2 py-1 text-terminal-green text-xs outline-none focus:border-terminal-green disabled:opacity-60"
+                    class="w-full bg-terminal-bg border border-terminal-dim rounded px-2 py-1 text-terminal-green text-sm focus:border-terminal-green disabled:text-terminal-dim"
                 >
                     {#each models as option ( option.id )}
                         <option value={option.id}>{option.label}</option>
+                    {:else}
+                        <option value={model}>{m.ai_model_placeholder()}</option>
                     {/each}
                 </select>
             </div>
@@ -204,7 +247,7 @@
                     bind:value={premise}
                     id="ai-premise"
                     rows="3"
-                    class="w-full bg-transparent border border-terminal-dim/40 rounded px-2 py-1 text-terminal-green text-xs outline-none focus:border-terminal-green placeholder-terminal-dim/50 caret-terminal-green resize-none"
+                    class="w-full bg-transparent border border-terminal-dim rounded px-2 py-1 text-terminal-green text-sm focus:border-terminal-green placeholder-terminal-dim caret-terminal-green resize-none"
                     placeholder={m.ai_premise_placeholder()}
                 ></textarea>
             </div>
@@ -212,24 +255,30 @@
             <div class="flex gap-3 flex-wrap">
                 <div class="space-y-1 flex-1 min-w-32">
                     <label for="ai-genre" class="block text-terminal-dim text-xs select-none">{m.ai_genre_label()}</label>
-                    <input
+                    <select
                         bind:value={genre}
                         id="ai-genre"
-                        type="text"
-                        class="w-full bg-transparent border border-terminal-dim/40 rounded px-2 py-1 text-terminal-green text-xs outline-none focus:border-terminal-green caret-terminal-green"
-                        autocomplete="off"
-                    />
+                        class="w-full bg-terminal-bg border border-terminal-dim rounded px-2 py-1 text-terminal-green text-sm focus:border-terminal-green disabled:text-terminal-dim"
+                    >
+                        <option value="">{m.ai_genre_any()}</option>
+
+                        {#each availableGenres as option ( option )}
+                            <option value={option}>{genreLabel( option )}</option>
+                        {/each}
+                    </select>
                 </div>
 
                 <div class="space-y-1 flex-1 min-w-32">
                     <label for="ai-language" class="block text-terminal-dim text-xs select-none">{m.ai_language_label()}</label>
-                    <input
+                    <select
                         bind:value={language}
                         id="ai-language"
-                        type="text"
-                        class="w-full bg-transparent border border-terminal-dim/40 rounded px-2 py-1 text-terminal-green text-xs outline-none focus:border-terminal-green caret-terminal-green"
-                        autocomplete="off"
-                    />
+                        class="w-full bg-terminal-bg border border-terminal-dim rounded px-2 py-1 text-terminal-green text-sm focus:border-terminal-green disabled:text-terminal-dim"
+                    >
+                        {#each availableLanguages as option ( option )}
+                            <option value={option}>{option}</option>
+                        {/each}
+                    </select>
                 </div>
 
                 <div class="space-y-1 w-24">
@@ -240,14 +289,14 @@
                         type="number"
                         min="4"
                         max="20"
-                        class="w-full bg-transparent border border-terminal-dim/40 rounded px-2 py-1 text-terminal-green text-xs outline-none focus:border-terminal-green caret-terminal-green"
+                        class="w-full bg-transparent border border-terminal-dim rounded px-2 py-1 text-terminal-green text-sm focus:border-terminal-green caret-terminal-green"
                     />
                 </div>
             </div>
         </fieldset>
 
         {#if displayError}
-            <p class="border border-terminal-amber/60 text-terminal-amber text-xs rounded px-3 py-2" role="alert">
+            <p class="border border-terminal-error/60 text-terminal-error text-xs rounded px-3 py-2" role="alert">
                 {m.ai_error_label()} : {displayError}
             </p>
         {/if}
@@ -255,17 +304,25 @@
         <div class="flex items-center gap-3">
             <button
                 type="submit"
-                class="px-3 py-1 rounded border border-terminal-green text-terminal-green text-xs hover:bg-terminal-green/15 disabled:opacity-60 disabled:cursor-not-allowed motion-safe:transition-colors motion-safe:duration-100"
+                class="min-h-11 px-4 py-1 rounded border border-terminal-green text-terminal-green text-sm hover:bg-terminal-green/15 disabled:text-terminal-dim disabled:border-terminal-dim/50 disabled:hover:bg-transparent disabled:cursor-not-allowed motion-safe:transition-colors motion-safe:duration-100"
                 disabled={fieldsLocked}
             >
                 {m.ai_generate()}
             </button>
 
             {#if isGenerating}
-                <output class="text-terminal-amber text-xs animate-pulse">{m.ai_generating()}</output>
+                <button
+                    type="button"
+                    class="min-h-11 px-4 py-1 rounded border border-terminal-dim/60 text-terminal-dim text-sm hover:text-terminal-white hover:border-terminal-white/60 motion-safe:transition-colors motion-safe:duration-100"
+                    onclick={terminal.cancelGeneration}
+                >
+                    {m.ai_cancel()}
+                </button>
+
+                <output class="text-terminal-amber text-xs motion-safe:animate-pulse">{m.ai_generating()}</output>
             {/if}
         </div>
 
-        <p class="text-terminal-dim/60 text-[0.7rem] text-center">{m.ai_ephemeral_note()}</p>
+        <p class="text-terminal-dim text-xs text-center">{m.ai_ephemeral_note()}</p>
     </form>
 </div>

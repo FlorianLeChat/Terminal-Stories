@@ -9,9 +9,19 @@
 
     let { ondone }: Props = $props();
 
+    const isTouchScreen = typeof window !== "undefined" && window.matchMedia( "(pointer: coarse)" ).matches;
+
+    /**
+     * Final boot line: invites a tap on touch screens, which have no ENTER key.
+     * Lines are only revealed after mount, so the server-side value is never shown.
+     *
+     * @author Claude
+     */
+    const startPrompt = isTouchScreen ? m.boot_press_tap() : m.boot_press_enter();
+
     const bootLines: { text: string; delay: number; blink?: boolean }[] = [
         { text: "Raven Green 2026.07.1 LTS (GNU/Linux 7.0.2-7-generic x86_64)", delay: 0 },
-        { text: "An Open Source Operating System made with love by Raven Industries © 2026", delay: 120 },
+        { text: m.boot_os_tagline(), delay: 120 },
         { text: "", delay: 200 },
         { text: m.boot_init(), delay: 350 },
         { text: m.boot_engine(), delay: 600 },
@@ -21,24 +31,18 @@
         { text: "", delay: 1200 },
         { text: m.boot_loaded( { count: storiesMeta.length } ), delay: 1350 },
         { text: "", delay: 1450 },
-        { text: m.boot_press_enter(), delay: 1600, blink: true }
+        { text: startPrompt, delay: 1600, blink: true }
     ];
 
     let visible = $state( bootLines.map( () => false ) );
     let done = $state( false );
 
-    // Reveal each boot line on its own delay to fake a system booting up; the
-    // last line flips `done`, after which input is accepted.
-    // When the OS requests reduced motion, all lines are shown immediately.
+    // Reveal each line on its own delay (all at once under reduced motion); the last one sets `done`.
     onMount( () =>
     {
         const prefersReducedMotion = window.matchMedia( "(prefers-reduced-motion: reduce)" ).matches;
 
-        // Startup fanfare, synced with the "initialize" boot line (index 3), so
-        // it accompanies the loading screen rather than the transition out of
-        // it. resumeAudio covers the case where the browser grants autoplay;
-        // otherwise it simply stays silent until sound is enabled (off by
-        // default, and both calls no-op when muted).
+        // Fanfare synced with the "initialize" line (index 3); both calls no-op while muted.
         const fanfareDelay = prefersReducedMotion ? 0 : bootLines[ 3 ].delay;
         setTimeout( () =>
         {
@@ -72,51 +76,69 @@
 
     /**
      * Advances past the boot screen when ENTER is pressed, once the sequence
-     * has finished.
+     * has finished. Ignored while a button or link has focus: it handles ENTER
+     * itself, and starting here too would run the transition twice.
      *
      * @param e - The keyboard event.
      * @author Claude
      */
     const handleKey = ( e: KeyboardEvent ) =>
     {
+        const isControlFocused = document.activeElement instanceof HTMLButtonElement || document.activeElement instanceof HTMLAnchorElement;
+        if ( isControlFocused ) return;
+
         if ( done && e.key === "Enter" ) ondone();
     };
 
     /**
-     * Advances past the boot screen on click, once the sequence has finished.
+     * Advances past the boot screen, once the sequence has finished.
      *
      * @author Claude
      */
-    const handleClick = () =>
+    const handleStart = () =>
     {
         if ( done ) ondone();
     };
+
+    /**
+     * Advances past the boot screen on a tap/click anywhere on the screen.
+     * Other controls (sound toggle, source-code link, skip link) keep their
+     * own job, and the start prompt handles its own click.
+     *
+     * @param e - The click event.
+     * @author Claude
+     */
+    const handleScreenClick = ( e: MouseEvent ) =>
+    {
+        const target = e.target as HTMLElement | null;
+        const isOnControl = Boolean( target?.closest( "a, button, input" ) );
+        if ( isOnControl ) return;
+
+        handleStart();
+    };
 </script>
 
-<svelte:window onkeydown={handleKey} />
+<svelte:window onkeydown={handleKey} onclick={handleScreenClick} />
 
-<button
-    class="flex-1 text-left flex flex-col justify-center px-4 sm:px-8 select-none"
-    aria-label={m.boot_aria()}
-    onclick={handleClick}
->
+<section class="flex-1 flex flex-col justify-center px-4 sm:px-8 select-none">
     {#each bootLines as line, i ( i )}
         {#if visible[ i ]}
-            <div
-                class="leading-relaxed animate-fadein text-xs sm:text-sm wrap-break-word"
-                class:text-terminal-green={!line.blink}
-                class:text-terminal-amber={line.blink}
-                class:blink-text={line.blink}
-            >
-                {#if line.text === ""}
-                    &nbsp;
-                {:else}
+            {#if line.blink}
+                <button type="button" class="self-start text-left leading-relaxed animate-fadein text-xs sm:text-sm wrap-break-word text-terminal-amber blink-text" onclick={handleStart}>
                     {line.text}
-                {/if}
-            </div>
+                </button>
+            {:else}
+                <p class="leading-relaxed animate-fadein text-xs sm:text-sm wrap-break-word text-terminal-green">
+                    {#if line.text === ""}
+                        &nbsp;
+                    {:else}
+                        {line.text}
+                    {/if}
+                </p>
+            {/if}
         {/if}
     {/each}
-</button>
+</section>
 
 <style>
     .animate-fadein {
@@ -132,17 +154,18 @@
         }
     }
 
+    /* 70% opacity keeps the amber prompt above 4.5:1 contrast on the tube black. */
     .blink-text {
-        animation: fadein 0.2s ease-in, blink 1.2s step-end infinite;
+        animation: fadein 0.2s ease-in, pulse 1.6s ease-in-out infinite;
     }
 
-    @keyframes blink {
+    @keyframes pulse {
         0%,
         100% {
             opacity: 1;
         }
         50% {
-            opacity: 0.2;
+            opacity: 0.7;
         }
     }
 

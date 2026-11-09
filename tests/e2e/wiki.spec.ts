@@ -46,8 +46,7 @@ test.describe( "Encyclopedia", () =>
         const languageButtons = page.locator( "[aria-labelledby=\"wiki-filter-language-label\"] button[aria-pressed]" );
         const englishButton = languageButtons.filter( { hasText: "English" } );
 
-        // The encyclopedia opens pre-filtered to the reader's locale (English
-        // in tests), so the English language filter starts selected.
+        // Opens pre-filtered to the reader's locale, English in tests.
         await expect( englishButton ).toHaveAttribute( "aria-pressed", "true" );
 
         const universeButton = page.locator( "[aria-labelledby=\"wiki-filter-universe-label\"] button", { hasText: "Kingdom of Elarion" } );
@@ -73,17 +72,21 @@ test.describe( "Encyclopedia", () =>
         await expect( searchInput ).not.toBeVisible();
     } );
 
-    // Long queries are truncated by the shared `truncateQueryForDisplay`
-    // utility, already covered end to end through the catalog search in
-    // menu.spec — no need to exercise the same helper twice.
+    // Long-query truncation (`truncateQueryForDisplay`) is covered by menu.spec.
 
     test( "opens an entry detail and returns to the list", async ( { page } ) =>
     {
         await entryTitle( page ).click();
 
-        // Opening an entry swaps the list (and its category filters) for the
-        // detail view, on every viewport.
+        // The detail view replaces the list and its category filters on every viewport.
         await expect( page.locator( "#wiki-filter-category-label" ) ).toBeHidden();
+
+        // The focus lands on the entry's title, ready to read it.
+        await expect( page.getByRole( "heading", { level: 2 } ).last() ).toBeFocused();
+
+        // "See also" entries are real shareable links, like the story info screen's.
+        const related = page.locator( "aside" ).getByRole( "link" ).first();
+        await expect( related ).toHaveAttribute( "href", /\?wiki=/ );
 
         await backToWikiList( page );
 
@@ -94,10 +97,9 @@ test.describe( "Encyclopedia", () =>
     {
         await gotoMenu( page, `/?wiki=${ ENTRY_ID }` );
 
-        await expect( page.getByText( "KNOWLEDGE BASE" ) ).toBeVisible();
+        await expect( page.getByText( "ENCYCLOPEDIA", { exact: true } ) ).toBeVisible();
 
-        // A deep-linked entry opens straight into its detail view, so the list
-        // category filters are not rendered.
+        // A deep-linked entry opens straight into its detail, without the list filters.
         await expect( page.locator( "#wiki-filter-category-label" ) ).toBeHidden();
     } );
 } );

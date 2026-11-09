@@ -1,3 +1,4 @@
+import { clearEditorDraft } from "#lib/utilities/editorDraft.ts";
 import type { Scene, Story, StoryFile } from "#lib/types/story.ts";
 import type { CustomStoryRecord } from "#lib/types/customStory.ts";
 import { CustomStoryError } from "#lib/utilities/customStoryError.ts";
@@ -10,8 +11,12 @@ const STORAGE_KEY = "terminal-stories:custom-stories";
 /** Id prefix marking a story as custom (private, browser-local). */
 const CUSTOM_ID_PREFIX = "custom-";
 
-// Imported files above this size are refused before parsing, so a huge file
-// can neither freeze the tab nor blow up the localStorage quota.
+/**
+ * Size (in characters) above which an imported file is refused before parsing,
+ * so a huge file can neither freeze the tab nor blow up the localStorage quota.
+ *
+ * @author Claude
+ */
 const MAX_IMPORT_SIZE = 1_000_000;
 
 /**
@@ -91,8 +96,6 @@ const writeRecords = ( records: CustomStoryRecord[] ): void =>
     }
     catch
     {
-        // Browsers throw slightly different DOMExceptions here; a write failure
-        // on a healthy key means the quota was hit either way.
         throw new CustomStoryError( "quota_exceeded" );
     }
 };
@@ -152,8 +155,6 @@ export const getCustomStoryAsStory = ( id: string ): Story | undefined =>
  */
 export const saveCustomStory = ( draft: StoryFile, forkedFrom?: string ): CustomStoryRecord =>
 {
-    // Full sanitization pass: the editor UI constrains inputs already, but the
-    // stored payload must never depend on the UI being well-behaved.
     const normalized = normalizeCustomStory( draft );
     const id = isCustomStoryId( draft.id ) ? draft.id : generateCustomStoryId();
     const story = toStoryFile( normalized, id );
@@ -230,8 +231,6 @@ export const createBlankStory = ( seed: { title: string; language: string; unive
  */
 export const forkStory = ( source: Story ): CustomStoryRecord =>
 {
-    // structuredClone guarantees the fork shares no reference with the catalog
-    // story, so editing the copy can never mutate the original.
     const copy = structuredClone( source );
     const draft = toStoryFile( copy, generateCustomStoryId() );
 
@@ -252,6 +251,7 @@ export const deleteCustomStory = ( id: string ): void =>
     writeRecords( records );
     deleteSave( id );
     deleteDiscoveredEndings( id );
+    clearEditorDraft( id );
 };
 
 /**

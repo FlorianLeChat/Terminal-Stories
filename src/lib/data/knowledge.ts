@@ -1,14 +1,16 @@
 import { storiesMeta } from "#lib/data/index.ts";
 import type { KnowledgeBase, KnowledgeCategory, KnowledgeEntry, CategoryMeta } from "#lib/types/knowledge.ts";
 
-// Eagerly scans every JSON file in ./knowledge so new knowledge bases are
-// picked up automatically, without an import to add by hand for each one.
 const knowledgeModules = import.meta.glob<KnowledgeBase>( "./knowledge/*.json", { eager: true, import: "default" } );
 
 export const knowledgeBases: KnowledgeBase[] = Object.values( knowledgeModules );
 
-// Flatten every base into a single list, defaulting each entry's universe and
-// storyId to its base so individual entries don't have to repeat them.
+/**
+ * Every wiki entry across all knowledge bases (each JSON file in ./knowledge),
+ * with `universe` and `storyId` defaulting to the base's own values.
+ *
+ * @author Claude
+ */
 export const knowledgeEntries: KnowledgeEntry[] = knowledgeBases.flatMap( ( base ) =>
     base.entries.map( ( entry ) => ( { ...entry, universe: entry.universe ?? base.universe, storyId: entry.storyId ?? base.storyId } ) )
 );
@@ -31,8 +33,12 @@ export const categoryIconMap: Record<KnowledgeCategory, string> = Object.fromEnt
 
 export const availableUniverses: string[] = [ ...new Set( knowledgeEntries.map( ( e ) => e.universe ) ) ];
 
-// Maps each universe to the language of its story, so wiki entries can be
-// filtered by language even though they only carry a universe.
+/**
+ * Maps each universe to the language of its story, so wiki entries can be
+ * filtered by language even though they only carry a universe.
+ *
+ * @author Claude
+ */
 const universeLanguageMap = new Map<string, string>(
     knowledgeBases.map( ( base ) => [
         base.universe,

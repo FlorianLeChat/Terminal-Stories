@@ -1,14 +1,16 @@
 <script lang="ts">
     import { onMount } from "svelte";
-    import { page } from "$app/state";
     import { resolve } from "$app/paths";
     import { goto } from "$app/navigation";
     import { sound } from "#lib/stores/sound.ts";
+    import HelpDialog from "./HelpDialog.svelte";
     import * as m from "#lib/locales/messages.js";
     import ShareDialog from "./ShareDialog.svelte";
+    import { display } from "#lib/stores/display.ts";
     import BootSequence from "../BootSequence.svelte";
     import StoryMenu from "../Story/StoryMenu.svelte";
     import AiStorySetup from "../AiStorySetup.svelte";
+    import ConfirmDialog from "./ConfirmDialog.svelte";
     import { terminal } from "#lib/stores/terminal.ts";
     import TerminalOutput from "./TerminalOutput.svelte";
     import WikiBrowser from "../Wiki/WikiBrowser.svelte";
@@ -20,7 +22,7 @@
     import AchievementToast from "../Achievements/AchievementToast.svelte";
     import CustomStoriesMenu from "../CustomStories/CustomStoriesMenu.svelte";
     import AchievementsBrowser from "../Achievements/AchievementsBrowser.svelte";
-    import { storiesMeta, filterStories, searchStories, hasSave, parseDeepLink, deepLinkSearch, playKeyPress, playNavigate, playSelect, playBack, resumeAudio, startMusic, createBlankStory, forkStory, isCustomStoryId, customStoryErrorMessage, type DeepLinkTarget } from "#lib";
+    import { storiesMeta, filterStories, searchStories, hasSave, parseDeepLink, deepLinkError, deepLinkSearch, playKeyPress, playNavigate, playSelect, playBack, resumeAudio, startMusic, createBlankStory, forkStory, isCustomStoryId, customStoryErrorMessage, resolvePhosphor, storyLocale, DEFAULT_PHOSPHOR, type DeepLinkTarget, type PhosphorTheme } from "#lib";
 
     let view = $derived( $terminal.view );
     let lines = $derived( $terminal.lines );
@@ -41,47 +43,104 @@
         skipState.key === $terminal.storyKey ? skipState.count : 0
     );
 
-    /** Bound to TerminalOutput — true while lines are being typed out. */
+    /**
+     * Phosphor (color theme) of the monitor: the story's own on the story
+     * views, the default green everywhere else.
+     *
+     * @author Claude
+     */
+    let phosphor = $derived.by( (): PhosphorTheme =>
+    {
+        const isStoryView = view === "story-info" || view === "story";
+        const story = $terminal.currentStory;
+
+        return isStoryView && story ? resolvePhosphor( story ) : DEFAULT_PHOSPHOR;
+    } );
+
+    /**
+     * Locale of the current story, used to print in-story strings in its own
+     * language.
+     *
+     * @author Claude
+     */
+    let currentStoryLocale = $derived( storyLocale( $terminal.currentStory?.language ?? "" ) );
+
+    /** Wrapper of the current view, target of the skip link. */
+    let contentEl: HTMLElement | undefined = $state();
+
+    /**
+     * Moves focus past the status bar to the current view without touching
+     * the address bar (which only ever carries the deep-link query).
+     *
+     * @param e - The click event of the skip link.
+     * @author Claude
+     */
+    const handleSkipToContent = ( e: MouseEvent ) =>
+    {
+        e.preventDefault();
+        contentEl?.focus();
+    };
+
+    /**
+     * Bound to TerminalOutput: true while lines are being typed out. The
+     * ending and achievement toasts wait for it to fall, so they surface once
+     * the ending's dialogue has finished typing (or right away when skipped).
+     *
+     * @author Claude
+     */
     let isAnimating = $state( false );
 
-    // Surfaces the achievement/ending toast for the ending just reached only
-    // once its dialogue has fully finished typing (or immediately when the
-    // typewriter is skipped/disabled), rather than the instant the ending
-    // scene is rendered.
     $effect( () =>
     {
         if ( isAnimating ) return;
         if ( $terminal.pendingEndingReveal ) terminal.revealEndingToasts();
     } );
 
-    // True when playing a generated story and sitting on an ending scene, so the
-    // footer can offer restart/menu the same way classic stories surface hints.
+    /**
+     * True when playing a generated story and sitting on an ending scene.
+     *
+     * @author Claude
+     */
     let atGeneratedEnding = $derived(
         $terminal.view === "story"
         && $terminal.currentStoryIsGenerated
         && $terminal.currentStory?.scenes[ $terminal.gameState?.currentScene ?? "" ]?.isEnding === true
     );
 
-    // True when playing a catalog story and sitting on an ending scene, so the
-    // footer switches from choice hints to the menu hint.
+    /**
+     * True when playing a non-generated story and sitting on an ending scene.
+     *
+     * @author Claude
+     */
     let atStandardEnding = $derived(
         $terminal.view === "story"
         && !$terminal.currentStoryIsGenerated
         && $terminal.currentStory?.scenes[ $terminal.gameState?.currentScene ?? "" ]?.isEnding === true
     );
 
-    // Re-evaluated each time the story-info screen opens (view or story changes),
-    // reading from localStorage to know whether to offer the resume option.
+    /**
+     * Whether the previewed story has a save to resume, read from localStorage
+     * each time the story-info screen opens.
+     *
+     * @author Claude
+     */
     let currentStoryHasSave = $derived(
         $terminal.view === "story-info" && $terminal.currentStory
             ? hasSave( $terminal.currentStory.id )
             : false
     );
 
-    // The shareable location matching the current view: a story (info/playback)
-    // or an open wiki entry. Any other view (menu, boot, wiki list, AI setup)
-    // has no dedicated URL and maps to `null`. Custom stories are private and
-    // never written to the address bar.
+    /**
+     * Shareable location of the current view: a story (info or playback) or
+     * an open wiki entry, `null` for every other view. Custom stories are
+     * private and never written to the address bar.
+     *
+     * Mirrored into the address bar with a shallow, replacing `goto` (ESC
+     * drives the back navigation, so the history never grows), but only once
+     * boot is over: the URL must survive until handleBoot reads the deep link.
+     *
+     * @author Claude
+     */
     let deepLinkTarget = $derived.by( (): DeepLinkTarget | null =>
     {
         const isStoryView = $terminal.view === "story-info" || $terminal.view === "story";
@@ -102,28 +161,22 @@
         return null;
     } );
 
-    // Keep the address bar in sync with the current target so stories and wiki
-    // entries stay shareable/bookmarkable. A shallow, replacing `goto` avoids
-    // growing the history stack — the app drives its own back navigation via
-    // ESC.
     $effect( () =>
     {
-        // The URL must survive the boot screen so a deep link can be read once
-        // booting finishes (see handleBoot); never rewrite it before then.
         if ( $terminal.view === "boot" ) return;
 
         const search = deepLinkSearch( deepLinkTarget );
 
-        if ( search === page.url.search ) return;
+        // Live address bar, not page.url: shallow routing never updates page.url.
+        if ( search === window.location.search ) return;
 
-        // resolve() keeps the configured base path and swaps only the query
-        // string on the single app route, satisfying typed-route navigation.
         goto( resolve( `/${ search }` ), { shallow: true, replace: true, state: {} } );
     } );
 
     /**
      * Opens the story or wiki entry referenced by a deep link, restoring the
-     * matching view directly instead of the default menu.
+     * matching view directly instead of the default menu. A wiki entry is
+     * opened within its own category, so a later ESC lands on a populated list.
      *
      * @param target - The validated target parsed from the URL.
      * @author Claude
@@ -136,8 +189,6 @@
         }
         else
         {
-            // openRelatedEntry selects the entry within its own category so a
-            // later "back" (ESC) lands on a coherent, populated list.
             terminal.openWiki();
             terminal.openRelatedEntry( target.id );
         }
@@ -145,19 +196,22 @@
 
     /**
      * Leaves the boot screen: honours a deep link when the URL points to a
-     * story or wiki entry, otherwise falls back to the main menu. The URL is
-     * now the sole source of truth for restoring a story after a refresh.
+     * story or wiki entry, otherwise falls back to the main menu (with a
+     * notice when the link points to something that no longer exists). The
+     * URL is the only source for restoring a story after a refresh, read from
+     * the live address bar since shallow routing never updates page.url.
+     *
+     * Leaving boot is a user gesture, so it also resumes an audio context
+     * suspended by the autoplay policy (no-op when sound is off).
      *
      * @author Claude
      */
     const handleBoot = () =>
     {
-        // Pressing ENTER/clicking to leave boot is a user gesture: resume a
-        // context suspended by the autoplay policy so the menu ambiance that
-        // follows can play. No-op when sound is off.
         resumeAudio();
 
-        const target = parseDeepLink( page.url.searchParams );
+        const params = new URLSearchParams( window.location.search );
+        const target = parseDeepLink( params );
 
         if ( target )
         {
@@ -166,6 +220,9 @@
         }
 
         terminal.startMenu();
+
+        const linkError = deepLinkError( params );
+        if ( linkError ) terminal.showMenuNotice( linkError );
     };
 
     /**
@@ -203,7 +260,15 @@
         const count = visibleStories.length;
         if ( count === 0 ) return;
 
-        terminal.update( ( s ) => ( { ...s, selectedStoryIndex: ( s.selectedStoryIndex + delta + count ) % count } ) );
+        terminal.update( ( s ) =>
+        {
+            // From "no highlight" (-1, touch screens), step onto the first or last story.
+            const hasNoHighlight = s.selectedStoryIndex < 0;
+            const fromIndex = hasNoHighlight && delta === -1 ? 0 : s.selectedStoryIndex;
+            const nextIndex = ( fromIndex + delta + count ) % count;
+
+            return { ...s, selectedStoryIndex: nextIndex };
+        } );
     };
 
     /**
@@ -215,10 +280,10 @@
      */
     const handleMenuSelectCurrent = () =>
     {
-        const count = visibleStories.length;
-        if ( count === 0 ) return;
+        const story = visibleStories[ $terminal.selectedStoryIndex ];
+        if ( !story ) return;
 
-        terminal.selectStory( visibleStories[ $terminal.selectedStoryIndex ].id );
+        terminal.selectStory( story.id );
     };
 
     /**
@@ -239,7 +304,7 @@
             } );
 
             terminal.bumpCustomStories();
-            terminal.openEditor( record.story.id );
+            terminal.openEditor( record.story.id, true );
         }
         catch ( error )
         {
@@ -280,6 +345,9 @@
      * subtle click for everything else. Held keys (auto-repeat) and bare
      * modifier presses are ignored so the feedback never machine-guns.
      *
+     * When sound is on, the keydown also resumes an audio context suspended by
+     * the autoplay policy (skipped while muted so no context is created).
+     *
      * @param e - The keyboard event.
      * @author Claude
      */
@@ -287,9 +355,6 @@
     {
         if ( e.repeat ) return;
 
-        // This keydown is a user gesture: when sound is on, resume a context
-        // suspended by the autoplay policy so sound persisted as enabled comes
-        // back to life. Skipped while muted so no context is created needlessly.
         if ( $sound.enabled ) resumeAudio();
 
         const key = e.key;
@@ -306,7 +371,19 @@
 
     /**
      * Global key handler: dispatches the event to the handler for the current
-     * view. Boot input is handled by the boot component itself.
+     * view. Boot input is handled by the boot component itself, and an open
+     * modal (share, confirmation, help) owns its input through the native
+     * <dialog>.
+     *
+     * - [?] opens the help on every view, unless typing in a field.
+     * - The AI setup and editor screens are forms, so typing flows to the
+     *   focused field. ESC leaves the AI setup. In the editor, ESC inside a
+     *   field only parks focus on the editor root (a reflexive press never
+     *   quits), and a second ESC asks to leave.
+     * - In the search input, ESC closes the search, arrows and ENTER fall
+     *   through, and every other key stays in the field.
+     * - [M] toggles the sound on any view and [/] opens the search on the
+     *   lists (menu, wiki) only, both unless an input is focused.
      *
      * @param e - The keyboard event.
      * @author Claude
@@ -315,14 +392,21 @@
     {
         if ( view === "boot" ) return;
 
-        // While the share overlay is open, let the native <dialog> own the input
-        // (ESC closes it); don't fire story/menu shortcuts underneath it.
-        if ( $terminal.shareOpen ) return;
+        const isModalOpen = $terminal.shareOpen || document.querySelector( "dialog[open]" ) !== null;
+        if ( isModalOpen ) return;
 
         playKeySound( e );
 
-        // The AI setup screen is a plain form: let typing flow to the focused
-        // field, and only intercept ESC to return to the menu.
+        const focusedElement = document.activeElement;
+        const isTypingInField = focusedElement instanceof HTMLInputElement || focusedElement instanceof HTMLTextAreaElement || focusedElement instanceof HTMLSelectElement;
+
+        if ( e.key === "?" && !isTypingInField )
+        {
+            e.preventDefault();
+            helpOpen = true;
+            return;
+        }
+
         if ( view === "ai-setup" )
         {
             if ( e.key === "Escape" )
@@ -334,23 +418,32 @@
             return;
         }
 
-        // The editor is form-heavy too: let typing flow to the focused field,
-        // and only intercept ESC to return to the "my stories" screen.
         if ( view === "editor" )
         {
-            if ( e.key === "Escape" )
+            if ( e.key !== "Escape" ) return;
+
+            e.preventDefault();
+
+            const focused = document.activeElement;
+            const isTextField = focused instanceof HTMLInputElement || focused instanceof HTMLTextAreaElement;
+            const isEditingField = isTextField || focused instanceof HTMLSelectElement;
+
+            if ( isEditingField )
             {
-                e.preventDefault();
-                terminal.closeEditor();
+                const editorRoot = focused.closest<HTMLElement>( "[data-editor-root]" );
+
+                if ( editorRoot ) editorRoot.focus();
+                else focused.blur();
+
+                return;
             }
 
+            terminal.requestCloseEditor();
             return;
         }
 
         const isInputFocused = document.activeElement instanceof HTMLInputElement;
 
-        // When the search input is focused, intercept ESC to close search;
-        // let navigation keys fall through; swallow everything else.
         if ( isInputFocused )
         {
             if ( e.key === "Escape" )
@@ -364,8 +457,6 @@
             }
         }
 
-        // Global mute toggle: M works on any view, except while typing in an
-        // input (where it must stay a literal character).
         if ( ( e.key === "m" || e.key === "M" ) && !isInputFocused )
         {
             e.preventDefault();
@@ -373,22 +464,13 @@
             return;
         }
 
-        if ( e.key === "/" && !isInputFocused )
-        {
-            if ( view === "menu" || view === "wiki" )
-            {
-                e.preventDefault();
-                terminal.activateSearch();
-                return;
-            }
+        const isSearchableView = view === "menu" || view === "wiki";
 
-            if ( view === "story" || view === "story-info" )
-            {
-                e.preventDefault();
-                terminal.startMenu();
-                terminal.activateSearch();
-                return;
-            }
+        if ( e.key === "/" && !isInputFocused && isSearchableView )
+        {
+            e.preventDefault();
+            terminal.activateSearch();
+            return;
         }
 
         if ( view === "menu" )
@@ -426,6 +508,8 @@
     /**
      * Handles keys on the main menu: filter shortcuts (G/L/C/W), arrow
      * navigation, ENTER to open a story, and number keys for direct access.
+     * Letter shortcuts are ignored while the search input is open, so typing a
+     * query never triggers them.
      *
      * @param e - The keyboard event.
      * @author Claude
@@ -434,8 +518,6 @@
     {
         const key = e.key.toLowerCase();
 
-        // Single-letter shortcuts are blocked while the search input is open
-        // so they don't trigger filters when the user is typing a query.
         if ( !$terminal.searchActive )
         {
             if ( key === "g" )
@@ -503,6 +585,10 @@
         }
         else if ( e.key === "Enter" )
         {
+            const focused = document.activeElement;
+            const isControlFocused = focused instanceof HTMLButtonElement || focused instanceof HTMLAnchorElement;
+            if ( isControlFocused ) return;
+
             handleMenuSelectCurrent();
         }
         else
@@ -514,6 +600,46 @@
                 terminal.selectStory( visibleStories[ num - 1 ].id );
             }
         }
+    };
+
+    /** True while the keyboard-shortcut help dialog is shown. */
+    let helpOpen = $state( false );
+
+    /** True while the "erase the save and start over?" confirmation is shown. */
+    let newGameConfirmOpen = $state( false );
+
+    /**
+     * Starts the previewed story from scratch. When a save exists this would
+     * erase it, so a confirmation is shown first. Shared by the [N] key, the
+     * action bar and the footer.
+     *
+     * @author Claude
+     */
+    const handleNewGame = () =>
+    {
+        const storyId = $terminal.currentStory?.id;
+        if ( !storyId ) return;
+
+        if ( currentStoryHasSave )
+        {
+            newGameConfirmOpen = true;
+            return;
+        }
+
+        terminal.startStory( storyId );
+    };
+
+    /**
+     * Erases the save and starts the previewed story over, once confirmed.
+     *
+     * @author Claude
+     */
+    const confirmNewGame = () =>
+    {
+        newGameConfirmOpen = false;
+
+        const storyId = $terminal.currentStory?.id;
+        if ( storyId ) terminal.startStory( storyId );
     };
 
     /**
@@ -556,7 +682,7 @@
         }
         else if ( e.key.toLowerCase() === "n" && currentStoryHasSave )
         {
-            terminal.startStory( storyId );
+            handleNewGame();
         }
         else if ( e.key === "Escape" )
         {
@@ -684,8 +810,10 @@
     };
 
     /**
-     * Handles keys during story playback: number keys pick a choice, ESC
-     * returns to the menu, and ENTER on an ending returns to the menu.
+     * Handles keys during story playback: SPACE skips the typewriter, number
+     * keys pick a choice, [S] opens sharing (ignored by the store for
+     * generated stories), ESC returns to the menu, and ENTER on an ending
+     * restarts the story once its dialogue has finished typing.
      *
      * @param e - The keyboard event.
      * @author Claude
@@ -699,7 +827,6 @@
             return;
         }
 
-        // The store ignores this for generated stories, which have no shareable URL.
         if ( e.key.toLowerCase() === "s" )
         {
             e.preventDefault();
@@ -724,8 +851,6 @@
             const scene = $terminal.currentStory?.scenes[ $terminal.gameState?.currentScene ?? "" ];
             if ( !scene?.isEnding ) return;
 
-            // Block the restart while the ending's dialogue is still typing out,
-            // so ENTER can't skip past it the way SPACE deliberately can.
             if ( isAnimating ) return;
 
             if ( $terminal.currentStoryIsGenerated )
@@ -746,7 +871,9 @@
      * covered without wiring each handler by hand. Pointer events never fire
      * for keyboard activation, so this never doubles up with the per-key sound
      * in handleKeydown. Touch/pen activation is left silent, as it is the
-     * dominant input on mobile where a beep on every tap feels noisy.
+     * dominant input on mobile where a beep on every tap feels noisy, and
+     * range inputs (the volume slider) stay silent while dragged. The click
+     * also resumes an audio context suspended by autoplay.
      *
      * @param e - The pointer event.
      * @author Claude
@@ -758,81 +885,104 @@
 
         const target = e.target as HTMLElement | null;
 
-        // Only genuine controls click; the volume slider (a range input) is left
-        // out so dragging it stays silent.
         const control = target?.closest( "button, a, [role=button]" );
         if ( !control ) return;
 
-        // This pointer gesture can resume a context suspended by autoplay.
         resumeAudio();
         playSelect();
     };
 
-    // Grab focus on mount so keyboard input is captured without a click first.
     onMount( () =>
     {
         window.focus();
 
-        // Request the shell ambiance from the very first (boot) screen. It plays
-        // right away for returning users with sound on, and is simply remembered
-        // (until the first gesture) for everyone else, so startup has music too.
+        // A shared link skips the system boot and goes straight to its target.
+        const params = new URLSearchParams( window.location.search );
+        const isSharedLink = parseDeepLink( params ) !== null || deepLinkError( params ) !== null;
+
+        if ( isSharedLink ) handleBoot();
+
+        // Remembered until the first gesture when autoplay is blocked.
         startMusic( "menu" );
     } );
 </script>
 
 <svelte:window onkeydown={handleKeydown} onpointerdown={handlePointerDown} />
 
-<main class="bg-terminal-bg monitor relative w-full h-full max-w-4xl flex flex-col">
-    <div class="scanlines inset-0 absolute z-10 pointer-events-none"></div>
+<main class="bg-terminal-bg monitor relative w-full h-full max-w-4xl flex flex-col" data-phosphor={phosphor}>
+    <a
+        href="#terminal-content"
+        class="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-30 focus:px-3 focus:py-2 focus:rounded focus:border focus:border-terminal-green focus:bg-terminal-bg focus:text-terminal-white text-sm"
+        onclick={handleSkipToContent}
+    >
+        {m.skip_to_content()}
+    </a>
+
+    {#if $display.scanlines}
+        <div class="scanlines inset-0 absolute z-10 pointer-events-none"></div>
+    {/if}
 
     <TerminalHeader {view} />
 
-    {#if view === "boot"}
-        <BootSequence ondone={handleBoot} />
-    {:else if view === "menu"}
-        <StoryMenu {selectedIndex} onselect={handleMenuSelect} onnavigate={handleMenuNavigate} />
-    {:else if view === "story-info" || view === "story"}
-        {#key $terminal.storyKey}
-            <TerminalOutput {lines} animated={view === "story"} skipSignal={effectiveSkipSignal} bind:isAnimating onchoice={terminal.makeChoice} />
-        {/key}
+    <div id="terminal-content" class="flex-1 min-h-0 flex flex-col" tabindex="-1" bind:this={contentEl}>
+        {#if view === "boot"}
+            <BootSequence ondone={handleBoot} />
+        {:else if view === "menu"}
+            <StoryMenu {selectedIndex} onselect={handleMenuSelect} onnavigate={handleMenuNavigate} />
+        {:else if view === "story-info" || view === "story"}
+            {#key $terminal.storyKey}
+                <TerminalOutput {lines} animated={view === "story"} skipSignal={effectiveSkipSignal} bind:isAnimating onchoice={terminal.makeChoice} locale={currentStoryLocale} />
+            {/key}
 
-        <StoryActionBar
-            {view}
-            hasSave={currentStoryHasSave}
-            {isAnimating}
-            {atGeneratedEnding}
-            {atStandardEnding}
-            onSkip={handleSkip}
-            onFork={handleFork}
-        />
-    {:else if view === "wiki"}
-        <WikiBrowser />
-    {:else if view === "achievements"}
-        <AchievementsBrowser />
-    {:else if view === "ai-setup"}
-        <AiStorySetup />
-    {:else if view === "custom-stories"}
-        <CustomStoriesMenu oncreate={handleCustomNew} />
-    {:else if view === "editor"}
-        {#key $terminal.editingStoryId}
-            <StoryEditor />
-        {/key}
-    {/if}
+            <StoryActionBar
+                {view}
+                hasSave={currentStoryHasSave}
+                {isAnimating}
+                {atGeneratedEnding}
+                {atStandardEnding}
+                onSkip={handleSkip}
+                onFork={handleFork}
+                onNewGame={handleNewGame}
+                onHelp={() => { helpOpen = true; }}
+            />
+
+            <ConfirmDialog
+                open={newGameConfirmOpen}
+                id="new-game"
+                title={m.confirm_new_game_title()}
+                description={m.confirm_new_game_desc()}
+                confirmLabel={m.confirm_new_game_confirm()}
+                cancelLabel={m.confirm_new_game_cancel()}
+                onconfirm={confirmNewGame}
+                oncancel={() => { newGameConfirmOpen = false; }}
+            />
+        {:else if view === "wiki"}
+            <WikiBrowser />
+        {:else if view === "achievements"}
+            <AchievementsBrowser />
+        {:else if view === "ai-setup"}
+            <AiStorySetup />
+        {:else if view === "custom-stories"}
+            <CustomStoriesMenu oncreate={handleCustomNew} />
+        {:else if view === "editor"}
+            {#key $terminal.editingStoryId}
+                <StoryEditor />
+            {/key}
+        {/if}
+    </div>
 
     <TerminalControls
         {view}
-        hasSave={currentStoryHasSave}
         {isAnimating}
         wikiEntryOpen={!!$terminal.wiki.selectedEntryId}
         searchActive={$terminal.searchActive}
-        {atGeneratedEnding}
-        {atStandardEnding}
-        onSkip={handleSkip}
+        atEnding={atGeneratedEnding || atStandardEnding}
         onMenuNavigate={handleMenuStep}
         onMenuSelect={handleMenuSelectCurrent}
-        onCustomNew={handleCustomNew}
-        onFork={handleFork}
+        onHelp={() => { helpOpen = true; }}
     />
+
+    <HelpDialog open={helpOpen} {view} onclose={() => { helpOpen = false; }} />
 
     {#if view === "story" || view === "story-info"}
         <ShareDialog />
@@ -846,7 +996,7 @@
 
 <style>
     .monitor {
-        box-shadow: 0 0 60px rgba(0, 255, 70, 0.08), inset 0 0 60px rgba(0, 0, 0, 0.8);
+        box-shadow: var( --shadow-monitor );
     }
 
     .scanlines {
@@ -857,5 +1007,11 @@
             rgba(0, 0, 0, 0.20) 2px,
             rgba(0, 0, 0, 0.20) 4px
         );
+    }
+
+    @media (prefers-contrast: more) {
+        .scanlines {
+            display: none;
+        }
     }
 </style>

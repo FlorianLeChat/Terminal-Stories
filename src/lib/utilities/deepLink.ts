@@ -7,14 +7,13 @@ import type { ReadonlyURLSearchParams } from "$app/state";
  */
 export type DeepLinkTarget = { type: "story"; id: string } | { type: "wiki"; id: string };
 
-// Query-string keys carrying the current target. Only one is ever present.
 const STORY_PARAM = "story";
 const WIKI_PARAM = "wiki";
 
 /**
  * Reads a deep-link target from a URL's query string, validating the id against
- * the available catalog. Returns `null` when no valid target is present, so an
- * unknown or stale id silently falls back to the default view.
+ * the available catalog. Returns `null` when no valid target is present; see
+ * {@link deepLinkError} to tell an absent link from an unknown id.
  *
  * @param params - The URL search params to inspect.
  * @returns The referenced story or wiki target, or `null` when none is valid.
@@ -35,6 +34,31 @@ export const parseDeepLink = ( params: ReadonlyURLSearchParams ): DeepLinkTarget
     {
         return { type: "wiki", id: wikiId };
     }
+
+    return null;
+};
+
+/**
+ * Machine-readable reasons a deep link could not be honoured. The UI maps
+ * them to translated messages.
+ */
+export type DeepLinkErrorCode = "unknown_story" | "unknown_wiki";
+
+/**
+ * Tells why a URL carrying a deep-link parameter could not be resolved, so
+ * the UI can explain the fallback instead of silently showing the menu.
+ *
+ * @param params - The URL search params to inspect.
+ * @returns The failure code, or `null` when the link is valid or absent.
+ * @author Claude
+ */
+export const deepLinkError = ( params: ReadonlyURLSearchParams ): DeepLinkErrorCode | null =>
+{
+    const hasValidTarget = parseDeepLink( params ) !== null;
+    if ( hasValidTarget ) return null;
+
+    if ( params.has( STORY_PARAM ) ) return "unknown_story";
+    if ( params.has( WIKI_PARAM ) ) return "unknown_wiki";
 
     return null;
 };

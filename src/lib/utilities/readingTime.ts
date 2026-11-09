@@ -42,7 +42,6 @@ const sceneNarrationWords = ( scene: Scene ): number =>
 {
     let words = textWords( scene.text );
 
-    // The player reads every choice label, not only the one they pick.
     for ( const choice of scene.choices )
     {
         words += countWords( choice.text );
@@ -89,7 +88,6 @@ const expectedWords = ( story: Story, sceneId: string, memo: Map<string, number>
 
     const narration = sceneNarrationWords( scene );
 
-    // Endings (or dead ends) contribute only their narration.
     const isTerminal = scene.isEnding || scene.choices.length === 0;
 
     if ( isTerminal )
@@ -101,7 +99,6 @@ const expectedWords = ( story: Story, sceneId: string, memo: Map<string, number>
 
     stack.add( sceneId );
 
-    // Sum each branch, then average: a single playthrough follows one choice.
     let branches = 0;
 
     for ( const choice of scene.choices )

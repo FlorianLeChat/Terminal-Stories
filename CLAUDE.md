@@ -12,6 +12,7 @@ A terminal-style interactive fiction system, built with SvelteKit + TypeScript +
 ## Content typography (stories & wikis)
 
 - **Never use the em dash `—` (or the en dash `–`) in story or wiki content.** This applies to all narrative text and to every `summary`/`description` field in stories (`src/lib/data/stories/`) and knowledge bases (`src/lib/data/knowledge/`). Use commas, parentheses, a colon, or separate sentences instead.
+- **Never use the ellipsis character `…` or curly apostrophes/quotes `’` `‘`** anywhere (locales, stories, wikis, docs, code, comments): write three dots `...` and the straight apostrophe `'`.
 - **Only exception:** the ending-name markers in stories, e.g. `"— FIN : « Le prix du silence » —"`, which keep their em dashes.
 
 ## Comments and JSDoc
@@ -20,6 +21,11 @@ A terminal-style interactive fiction system, built with SvelteKit + TypeScript +
 - Every JSDoc block that **I** (the assistant) write must end with `@author Claude`.
 - Document parameters with `@param` and the return value with `@returns` when the function takes arguments or returns a value.
 - Add logic comments (`// ...`) where behavior is not obvious (loop guards, side effects, non-trivial shortcuts). Do not paraphrase trivial code.
+- **Keep comments inside function bodies, components and markup to a minimum.** Doc blocks on declarations (functions, methods, classes, types, props, constants) stay; anything else is either merged into the nearest doc block or deleted. Never add:
+  - comments that restate the code or label an obvious section;
+  - comments that narrate a fix or a change ("now", "no longer", "instead of", "so X never happens again", a removed feature): that history belongs in the commit message;
+  - design rationale (why this color, why this layout): it belongs in `docs/DESIGN.md` or `docs/PRODUCT.md`.
+  An inline comment is only kept for non-obvious logic at that exact line that cannot live in a doc block (a browser quirk, a loop guard, a subtle side effect), in one short line.
 
 Example:
 
@@ -202,10 +208,16 @@ New components go in `src/lib/components/`.
 
 ## Architecture diagram
 
-The `README.md` contains a Mermaid diagram (under the **Architecture** section) that summarizes how the project works — input flow, central store, views, data, services, and i18n. **Whenever the project's behavior or architecture changes** (new view, new service, altered data flow, removed component…), check that diagram and update it so it stays accurate.
+The `README.md` contains a Mermaid diagram (under the **Architecture** section) that summarizes how the project works — input flow, central store, views, data, services, and i18n. **Whenever the project's behavior or architecture changes** (new view, new service, altered data flow, removed component...), check that diagram and update it so it stays accurate.
+
+## Product & design docs
+
+- `docs/PRODUCT.md` records the product truth (users, purpose, positioning, principles, accessibility targets) and `docs/DESIGN.md` records the design system (tokens, typography, layout, components, motion, themes).
+- **Update them in the same commit as any change that touches the product** (views, user journeys, audience, tone) **or the design** (tokens, colors, typography, components, motion, themes).
 
 ## Structure
 
+- `docs/` — product and design documentation (`PRODUCT.md`, `DESIGN.md`).
 - `src/lib/components/` — Svelte components (Terminal, StoryMenu, WikiBrowser, etc.).
 - `src/lib/stores/terminal.ts` — central store driving the whole UI (boot, menu, playback, wiki).
 - `src/lib/data/` — stories and knowledge bases (JSON) + aggregations.

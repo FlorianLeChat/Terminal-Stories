@@ -1,12 +1,99 @@
 @import "tailwindcss";
 
+/*
+    Color roles of the monitor. Names are roles, not hues: "green" is the
+    primary phosphor (focus, accents, borders), "amber" the signal color,
+    "cyan" the pickable choices, "white" the strongest text, "error" failure messages, "panel"
+    the tint of the status bar and footer, "glow" the halo color. Each phosphor theme
+    below redefines the roles; every pair stays at 4.5:1 or more on both the
+    background and the panel.
+*/
 @theme {
     --color-terminal-green: #00ff46;
     --color-terminal-amber: #ffb000;
     --color-terminal-cyan:  #00e5ff;
     --color-terminal-white: #e8ffe8;
-    --color-terminal-dim:   #4d8f4d;
+    --color-terminal-dim:   #62a862;
+    --color-terminal-text:  #9be8ab;
     --color-terminal-bg:    #050e05;
+    --color-terminal-panel: #001400;
+    --color-terminal-glow:  #00ff46;
+    --color-terminal-error: #ff6b6b;
+    --color-qr-paper: #ffffff;
+    --color-qr-ink:   #1a140c;
+    --color-qr-error: #a11d1d;
+}
+
+/* Registered so the [data-phosphor] transition below can interpolate a theme change. */
+@property --color-terminal-green { syntax: "<color>"; inherits: true; initial-value: #00ff46; }
+@property --color-terminal-amber { syntax: "<color>"; inherits: true; initial-value: #ffb000; }
+@property --color-terminal-cyan { syntax: "<color>"; inherits: true; initial-value: #00e5ff; }
+@property --color-terminal-white { syntax: "<color>"; inherits: true; initial-value: #e8ffe8; }
+@property --color-terminal-dim { syntax: "<color>"; inherits: true; initial-value: #62a862; }
+@property --color-terminal-text { syntax: "<color>"; inherits: true; initial-value: #9be8ab; }
+@property --color-terminal-bg { syntax: "<color>"; inherits: true; initial-value: #050e05; }
+@property --color-terminal-panel { syntax: "<color>"; inherits: true; initial-value: #001400; }
+@property --color-terminal-glow { syntax: "<color>"; inherits: true; initial-value: #00ff46; }
+@property --color-terminal-error { syntax: "<color>"; inherits: true; initial-value: #ff6b6b; }
+
+/* Investigations: warm amber phosphor. */
+[data-phosphor="amber"] {
+    --color-terminal-green: #ffb000;
+    --color-terminal-amber: #ff7f50;
+    --color-terminal-cyan:  #5fd8ff;
+    --color-terminal-white: #fff4de;
+    --color-terminal-dim:   #b48c4a;
+    --color-terminal-text:  #f0c987;
+    --color-terminal-bg:    #0d0903;
+    --color-terminal-panel: #1a1004;
+    --color-terminal-glow:  #ffb000;
+    --color-terminal-error: #ff5c7a;
+}
+
+/* Space: cold cyan phosphor. */
+[data-phosphor="cyan"] {
+    --color-terminal-green: #00e5ff;
+    --color-terminal-amber: #ffb000;
+    --color-terminal-cyan:  #6dffb3;
+    --color-terminal-white: #e6fbff;
+    --color-terminal-dim:   #5f9fb0;
+    --color-terminal-text:  #9fdcec;
+    --color-terminal-bg:    #020b10;
+    --color-terminal-panel: #00141c;
+    --color-terminal-glow:  #00e5ff;
+    --color-terminal-error: #ff6b6b;
+}
+
+/*
+    Composite effects built from the roles. Declared on every themed element
+    (not only :root) so they are recomputed from that element's own colors.
+*/
+:root,
+[data-phosphor] {
+    --radius-terminal: 4px;
+    --shadow-toast: 0 0 20px color-mix( in srgb, var( --color-terminal-glow ) 25%, transparent );
+    --shadow-dialog: 0 0 40px color-mix( in srgb, var( --color-terminal-glow ) 12%, transparent );
+    --shadow-monitor: 0 0 60px color-mix( in srgb, var( --color-terminal-glow ) 8%, transparent ), inset 0 0 60px color-mix( in srgb, var( --color-terminal-bg ) 20%, #000 80% );
+}
+
+[data-phosphor] {
+    transition:
+        --color-terminal-green 0.6s ease,
+        --color-terminal-amber 0.6s ease,
+        --color-terminal-cyan 0.6s ease,
+        --color-terminal-white 0.6s ease,
+        --color-terminal-dim 0.6s ease,
+        --color-terminal-text 0.6s ease,
+        --color-terminal-bg 0.6s ease,
+        --color-terminal-panel 0.6s ease,
+        --color-terminal-glow 0.6s ease,
+        --color-terminal-error 0.6s ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    [data-phosphor] {
+        transition: none;
+    }
 }
 
 @layer base {
@@ -34,14 +121,13 @@ html {
 
 ::selection {
     background: var(--color-terminal-green);
-    color: #000;
+    color: var(--color-terminal-bg);
 }
 
 ::-webkit-scrollbar { width: 4px; }
 ::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: var(--color-terminal-dim); border-radius: 2px; }
+::-webkit-scrollbar-thumb { background: var(--color-terminal-dim); border-radius: var(--radius-terminal); }
 
-/* latin-ext */
 @font-face {
     font-family: "JetBrains Mono";
     font-style: normal;
@@ -60,7 +146,6 @@ html {
     unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
 }
 
-/* latin */
 @font-face {
     font-family: "JetBrains Mono";
     font-style: normal;

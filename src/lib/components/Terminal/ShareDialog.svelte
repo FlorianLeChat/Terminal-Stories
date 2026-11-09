@@ -5,6 +5,12 @@
     import * as m from "#lib/locales/messages.js";
     import { terminal } from "#lib/stores/terminal.ts";
 
+    /**
+     * Native dialog mirroring the store's `shareOpen`: showModal traps focus
+     * and closes on ESC.
+     *
+     * @author Claude
+     */
     let dialog: HTMLDialogElement;
 
     /** Data-URL of the generated QR code image, empty until the first render. */
@@ -16,8 +22,12 @@
     /** True when the browser exposes the native Web Share API (navigator.share). */
     const nativeShareAvailable = typeof navigator !== "undefined" && "share" in navigator;
 
-    // The absolute, shareable URL of the story currently being read. Built from
-    // the page origin so a phone scanning the code reaches the same deployment.
+    /**
+     * Absolute, shareable URL of the story being read, built from the page
+     * origin so a phone scanning the code reaches the same deployment.
+     *
+     * @author Claude
+     */
     let shareUrl = $derived.by( (): string =>
     {
         const story = $terminal.currentStory;
@@ -28,9 +38,6 @@
         return page.url.origin + resolve( `/${ search }` );
     } );
 
-    // Keep the native <dialog> in sync with the store: open it modally when the
-    // store requests sharing, close it otherwise. showModal traps focus and
-    // enables native ESC-to-close.
     $effect( () =>
     {
         if ( !dialog ) return;
@@ -56,8 +63,7 @@
         let cancelled = false;
         status = "loading";
 
-        // Loaded lazily so the QR library (which pulls a Node build server-side)
-        // never enters the SSR/prerender bundle — it is only needed in the browser.
+        // Lazy import keeps the QR library (a Node build server-side) out of the SSR bundle.
         import( "qrcode" )
             .then( ( { default: QRCode } ) => QRCode.toDataURL( url, {
                 margin: 2,
@@ -140,10 +146,10 @@
 </script>
 
 <!--
-    Share overlay — a native <dialog> shown modally over the terminal. It offers
-    a scannable QR code plus the raw link, and warns that progress is local to
-    the device. Closing is possible via ESC (native), the backdrop, or the
-    close button; each path funnels through the store's closeShare.
+    Share overlay: a modal native <dialog> offering a scannable QR code (on a
+    white card for scanner contrast), the raw link, and a note that progress is
+    local to the device. ESC, the backdrop and the close button all funnel
+    through the store's closeShare.
 -->
 <dialog
     bind:this={dialog}
@@ -152,7 +158,7 @@
     aria-labelledby="share-title"
     class="bg-transparent backdrop:bg-black/70 m-auto max-w-[90vw] text-terminal-green"
 >
-    <article class="w-80 max-w-full border border-terminal-dim/60 rounded bg-terminal-bg p-5 flex flex-col gap-4 shadow-[0_0_40px_rgba(0,255,70,0.12)]">
+    <article class="w-80 max-w-full border border-terminal-dim/60 rounded bg-terminal-bg p-5 flex flex-col gap-4 shadow-(--shadow-dialog)">
         <header class="flex items-center justify-between gap-3">
             <h2 id="share-title" class="text-terminal-white font-bold tracking-widest text-sm">
                 {m.share_title()}
@@ -160,7 +166,7 @@
 
             <button
                 type="button"
-                class="text-terminal-dim hover:text-terminal-white text-lg leading-none px-1 motion-safe:transition-colors"
+                class="inline-flex items-center justify-center min-w-11 min-h-11 sm:min-w-8 sm:min-h-8 text-terminal-dim hover:text-terminal-white text-lg leading-none motion-safe:transition-colors"
                 aria-label={m.share_close()}
                 onclick={() => terminal.closeShare()}
             >
@@ -172,19 +178,18 @@
             {m.share_scan_hint()}
         </p>
 
-        <!-- White card guarantees the high contrast QR scanners rely on. -->
-        <figure class="self-center bg-white rounded p-3 w-52 h-52 flex items-center justify-center">
+        <figure class="self-center bg-qr-paper rounded p-3 w-52 h-52 flex items-center justify-center">
             {#if status === "ready"}
                 <img src={qrDataUrl} alt={m.share_qr_aria()} class="w-full h-full" />
             {:else if status === "error"}
-                <p class="text-red-600 text-xs text-center px-2">{m.share_error()}</p>
+                <p class="text-qr-error text-xs text-center px-2" role="alert">{m.share_error()}</p>
             {:else}
-                <p class="text-terminal-bg/70 text-xs text-center px-2">{m.share_generating()}</p>
+                <p class="text-qr-ink text-xs text-center px-2">{m.share_generating()}</p>
             {/if}
         </figure>
 
         <div class="flex flex-col gap-1">
-            <span class="text-terminal-dim text-[0.65rem] tracking-widest">{m.share_link_label()}</span>
+            <span class="text-terminal-dim text-xs tracking-widest">{m.share_link_label()}</span>
 
             <div class="flex items-stretch gap-2">
                 <output class="flex-1 min-w-0 truncate text-terminal-cyan text-xs border border-terminal-dim/40 rounded px-2 py-1.5 bg-black/30">
@@ -211,7 +216,7 @@
             {/if}
         </div>
 
-        <p class="text-terminal-amber/90 text-xs leading-relaxed border-t border-terminal-dim/30 pt-3">
+        <p class="text-terminal-amber text-xs leading-relaxed border-t border-terminal-dim/30 pt-3">
             {m.share_progress_note()}
         </p>
     </article>

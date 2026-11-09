@@ -55,6 +55,9 @@ sequenceDiagram
     Histoire->>Succès: J'atteins une fin
     Succès-->>Joueur: Déblocage éventuel d'un succès
 
+    Joueur->>Terminal: J'appuie sur [?]
+    Terminal-->>Joueur: Aide filtrable : comment jouer, raccourcis de l'écran courant
+
     Joueur->>Succès: Je consulte mes succès
     Succès-->>Joueur: Débloqués, verrouillés et succès secrets
 

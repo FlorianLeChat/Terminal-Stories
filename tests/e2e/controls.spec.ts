@@ -1,12 +1,8 @@
 import { test, expect } from "@playwright/test";
 import { gotoMenu } from "./utilities/fixtures";
 
-// Which footer the app renders is the only viewport-dependent behavior worth a
-// dedicated spec: everything reachable through it (filters, search, story
-// start, encyclopedia...) is already exercised by the feature specs, which the
-// `Mobile Chrome` project replays at a phone-sized viewport. So each test here
-// runs on the single project it describes, rather than forcing a viewport size
-// and running twice with identical results.
+// Only the footer itself is viewport-specific: what it reaches is covered by the
+// feature specs, replayed by `Mobile Chrome`. Each test runs on its own project.
 test.describe( "Responsive footer controls", () =>
 {
     test.beforeEach( async ( { page } ) =>
@@ -18,9 +14,9 @@ test.describe( "Responsive footer controls", () =>
     {
         test.skip( isMobile, "desktop footer only" );
 
-        // The legend keeps the [KEY] reminders (still clickable for the mouse).
-        await expect( page.getByRole( "button", { name: "[G] Genre" } ) ).toBeVisible();
-        await expect( page.getByRole( "button", { name: "[W] Encyclopedia" } ) ).toBeVisible();
+        // The legend keeps clickable [KEY] reminders; the other views sit in the menu's nav.
+        await expect( page.getByRole( "button", { name: "[/] Search" } ) ).toBeVisible();
+        await expect( page.getByRole( "navigation", { name: "Other views" } ).getByRole( "button", { name: "[W] Encyclopedia" } ) ).toBeVisible();
 
         // The plain-label mobile navigation buttons are hidden on desktop.
         await expect( page.getByRole( "button", { name: "Encyclopedia", exact: true } ) ).toBeHidden();
@@ -37,7 +33,7 @@ test.describe( "Responsive footer controls", () =>
         await expect( page.getByRole( "button", { name: "My stories", exact: true } ) ).toBeVisible();
 
         // The keyboard legend and its filter/navigation duplicates are hidden.
-        await expect( page.getByRole( "button", { name: "[G] Genre" } ) ).toBeHidden();
+        await expect( page.getByRole( "button", { name: "[/] Search" } ) ).toBeHidden();
         await expect( page.getByRole( "button", { name: "[↓] Down" } ) ).toBeHidden();
     } );
 } );

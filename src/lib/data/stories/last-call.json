@@ -7,6 +7,7 @@
     "description": "11:47 PM. An anonymous call. A voice that claims to know something you'd hoped to bury. You have until midnight.",
     "author": "Terminal Stories",
     "music": "tense",
+    "phosphor": "amber",
     "characters": [
         {
             "id": "player",

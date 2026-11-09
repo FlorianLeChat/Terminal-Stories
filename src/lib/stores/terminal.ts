@@ -4,7 +4,9 @@ import type { AchievementContext,
     AchievementId,
     AiGenerationParams,
     AiStatus,
+    DeepLinkErrorCode,
     Choice,
+    EndingPathStep,
     GameState,
     KnowledgeCategory,
     SaveData,
@@ -12,6 +14,7 @@ import type { AchievementContext,
     SceneTextEntry,
     Story,
     StoryFilters,
+    StoryInfoDetails,
     StoryStats,
     WikiState } from "#lib";
 import { aiErrorMessage,
@@ -24,6 +27,10 @@ import { aiErrorMessage,
     availableLanguages,
     availableWikiLanguages,
     categoryIds,
+    buildEndingPath,
+    buildStoryInfoDetails,
+    storyBootLog,
+    storyLocale,
     computeStoryStats,
     countCompletedStories,
     countFullyCompletedStories,
@@ -45,6 +52,7 @@ import { aiErrorMessage,
     loadUnlockedAchievements,
     resetAchievements as resetAchievementsStorage,
     saveDiscoveredEnding,
+    saveCompletion,
     saveProgress,
     searchWikiEntries,
     storiesMeta,
@@ -116,11 +124,27 @@ interface TerminalStore {
     customSelectedIndex: number;
     /** Id of the custom story open in the editor, or null when none is. */
     editingStoryId: string | null;
+    /** True while the editor's draft differs from the stored story. */
+    editorDirty: boolean;
+    /** True while the "leave without saving?" confirmation is shown. */
+    editorLeavePending: boolean;
+    /** True when the story open in the editor was just created (focus its title). */
+    editorIsNew: boolean;
     /**
      * Counter bumped whenever the custom-story storage changes (save, import,
      * delete), so views listing custom stories recompute their data.
      */
     customStoriesVersion: number;
+    /**
+     * Why the menu was shown instead of a deep-linked target (unknown story or
+     * entry id), or null. Cleared whenever the menu is (re)opened.
+     */
+    menuNotice: DeepLinkErrorCode | null;
+    /**
+     * Epoch ms of the last automatic save of the current playthrough, or null
+     * when nothing was saved yet. Drives the "saved" status in the header.
+     */
+    lastSavedAt: number | null;
 }
 
 export interface PendingEndingReveal {
@@ -137,6 +161,8 @@ export interface EndingDiscoveryToast {
     found: number;
     /** Total endings the story has. */
     total: number;
+    /** Tone of the ending just reached, so the message matches the story. */
+    endingType: "good" | "bad" | "neutral";
 }
 
 export interface TerminalLine {
@@ -157,10 +183,15 @@ export interface TerminalLine {
       | "title"
       | "separator"
       | "image"
-      | "save";
+      | "save"
+      | "path"
+      | "info";
     /** Name of the speaker, for lines of type "speaker". */
     speaker?: string;
-    /** Index of the choice this line represents, for lines of type "choice". */
+    /**
+     * Index of the choice this line represents, for lines of type "choice",
+     * or of the choice picked, for the "action" line echoing that pick.
+     */
     choiceIndex?: number;
     /**
      * Id of the scene this choice line belongs to, for lines of type
@@ -174,9 +205,20 @@ export interface TerminalLine {
     imageAlt?: string;
     /** Completion percentage (0–100) carried by lines of type "save". */
     savePercent?: number;
+    /** Branching points leading to the ending, for lines of type "path". */
+    path?: EndingPathStep[];
+    /**
+     * True for the dimmed recap of the last scene played, printed instantly
+     * (never typed) when a save is resumed.
+     */
+    isRecap?: boolean;
+    /** Endings found, main characters and universe, for lines of type "info". */
+    info?: StoryInfoDetails;
 }
 
-// Monotonic counter giving every rendered terminal line a stable, unique key.
+/** Delay (ms) between the ending toast and the achievement toast that follows it. */
+const ACHIEVEMENT_TOAST_DELAY = 1500;
+
 let lineId = 0;
 
 /**
@@ -320,7 +362,7 @@ const resolveGeneratedEndingData = (
 
 /**
  * Computes ending counts for a catalog story, loading persisted discoveries
- * and anticipating the save that will happen in {@link goBack}.
+ * and anticipating the save done at the end of `renderScene`.
  *
  * @param sceneId - The id of the ending scene just reached.
  * @param story - The catalog story.
@@ -337,7 +379,6 @@ const resolveCatalogEndingData = (
     const existingEndings = loadDiscoveredEndings( state.storyId );
     const isNewEnding = !existingEndings.has( sceneId );
     const endingsTotal = Object.values( story.scenes ).filter( ( s ) => s.isEnding === true ).length;
-    // +1 anticipates the save that will happen in goBack(); not yet persisted.
     const endingsFound = existingEndings.size + ( isNewEnding ? 1 : 0 );
 
     return { endingsFound, endingsTotal, isNewEnding };
@@ -350,13 +391,15 @@ const resolveCatalogEndingData = (
  * @param isNewEnding - Whether this ending has not been seen before.
  * @param endingsFound - Total endings discovered including this one.
  * @param endingsTotal - Total endings in the story.
+ * @param endingType - Tone of the ending scene (neutral when unset).
  * @returns The toast payload, or null when nothing new was discovered.
  * @author Claude
  */
 const buildEndingDiscoveryToast = (
     isNewEnding: boolean,
     endingsFound: number,
-    endingsTotal: number
+    endingsTotal: number,
+    endingType: Scene[ "endingType" ]
 ): EndingDiscoveryToast | null =>
 {
     if ( !isNewEnding ) return null;
@@ -364,15 +407,97 @@ const buildEndingDiscoveryToast = (
     return {
         allDiscovered: endingsFound >= endingsTotal,
         found: endingsFound,
-        total: endingsTotal
+        total: endingsTotal,
+        endingType: endingType ?? "neutral"
     };
+};
+
+/**
+ * Builds the short boot log printed at the top of a playthrough (the story's
+ * archive being mounted), closed by a separator before the first scene.
+ *
+ * @param story - The story starting.
+ * @returns The boot log lines.
+ * @author Claude
+ */
+const buildStoryBootLines = ( story: Story ): Omit<TerminalLine, "id">[] =>
+{
+    const logLines = storyBootLog( story ).map( ( text ): Omit<TerminalLine, "id"> => ( { text, type: "system" } ) );
+
+    return [ ...logLines, { text: "─".repeat( 60 ), type: "separator" } ];
+};
+
+/**
+ * Builds the recap printed when a save is resumed: the last scene played
+ * before leaving, and the choice that led to the current scene, so the reader
+ * picks the thread back up. Empty when the save is still on the opening scene.
+ *
+ * @param story - The story being resumed.
+ * @param save - The save being resumed.
+ * @returns The recap lines, all flagged `isRecap`.
+ * @author Claude
+ */
+const buildResumeRecapLines = ( story: Story, save: SaveData ): Omit<TerminalLine, "id">[] =>
+{
+    const previousSceneId = save.history[ save.history.length - 1 ];
+    const previousScene = previousSceneId ? story.scenes[ previousSceneId ] : undefined;
+    if ( !previousScene ) return [];
+
+    const lines: Omit<TerminalLine, "id">[] = [
+        { text: m.resume_recap_title( {}, { locale: storyLocale( story.language ) } ), type: "system" },
+        { text: "", type: "narrator" },
+        ...buildBaseSceneLines( previousScene, story, true )
+    ];
+
+    const choiceTaken = previousScene.choices.find( ( c ) => c.nextScene === save.currentScene );
+    if ( choiceTaken ) lines.push( { text: "", type: "narrator" }, { text: `> ${ choiceTaken.text }`, type: "action" } );
+
+    return lines.map( ( line ) => ( { ...line, isRecap: true } ) );
+};
+
+/**
+ * Builds the "path taken" recap shown under an ending: every branching point
+ * the reader went through, with the choices left behind. Returns null when
+ * the ending was reached without a single choice. On a first ending every
+ * other branch leads somewhere unfound, so the unfound-ending marker is
+ * cleared to keep that recap plain.
+ *
+ * @param story - The story being played.
+ * @param sceneId - The id of the ending scene just reached.
+ * @param state - The current game state (its history lists the visited scenes).
+ * @param generatedEndings - Endings found in this AI playthrough (including
+ * this one), or null for a catalog or custom story, whose endings persist.
+ * @returns The recap line, or null when there is no choice to recap.
+ * @author Claude
+ */
+const buildEndingPathLine = (
+    story: Story,
+    sceneId: string,
+    state: GameState,
+    generatedEndings: string[] | null
+): Omit<TerminalLine, "id"> | null =>
+{
+    const hasNoChoice = state.history.length === 0;
+    if ( hasNoChoice ) return null;
+
+    const discovered = generatedEndings ? new Set( generatedEndings ) : loadDiscoveredEndings( state.storyId );
+    discovered.add( sceneId );
+
+    const builtPath = buildEndingPath( story, state.history, sceneId, discovered );
+
+    const hasFoundAnotherEnding = [ ...discovered ].some( ( id ) => id !== sceneId );
+    const path = hasFoundAnotherEnding
+        ? builtPath
+        : builtPath.map( ( step ) => ( { ...step, choices: step.choices.map( ( choice ) => ( { ...choice, leadsToUnfoundEnding: false } ) ) } ) );
+
+    return { text: m.ending_path_title( {}, { locale: storyLocale( story.language ) } ), type: "path", path };
 };
 
 /**
  * Evaluates and persists the achievements unlocked by reaching a catalog
  * ending. Builds the evaluation context from the just reached ending (folded
  * into the discovered sets and ending types so counts are current before the
- * ending is persisted later in {@link goBack}/{@link restartStory}).
+ * ending is persisted at the end of `renderScene`).
  *
  * @param story - The catalog story being played.
  * @param sceneId - The id of the ending scene just reached.
@@ -391,7 +516,6 @@ const evaluateEndingAchievements = (
     storyStartedAt: number | null
 ): { all: AchievementId[]; newly: AchievementId[] } | null =>
 {
-    // Fold the just reached ending into the persisted set so its type counts.
     const discoveredIds = loadDiscoveredEndings( storyId );
     discoveredIds.add( sceneId );
 
@@ -420,32 +544,32 @@ const evaluateEndingAchievements = (
     const newlyUnlocked = evaluateAchievements( context );
     if ( newlyUnlocked.length === 0 ) return null;
 
-    // Re-read the persisted list so the store holds the full, current set.
     return { all: loadUnlockedAchievements().map( ( a ) => a.id ), newly: newlyUnlocked };
 };
 
 /**
- * Builds the choice prompt block: the "que faites-vous" header, the indexed
- * available choices, and the escape hint.
+ * Builds the choice prompt block: the "what will you do?" header, in the
+ * story's own language, then the indexed available choices.
  *
  * @param scene - The scene whose choices are rendered.
  * @param state - The current game state (used to filter locked choices).
+ * @param story - The story being played (its language sets the prompt's).
  * @returns Lines for the interactive choice prompt.
  * @author Claude
  */
-const buildChoiceLines = ( scene: Scene, state: GameState ): Omit<TerminalLine, "id">[] =>
+const buildChoiceLines = ( scene: Scene, state: GameState, story: Story ): Omit<TerminalLine, "id">[] =>
 {
     const available = getAvailableChoices( scene, state );
     const lines: Omit<TerminalLine, "id">[] = [
         { text: "", type: "narrator" },
-        { text: m.controls_story_choice_prompt(), type: "system" },
+        { text: m.controls_story_choice_prompt( {}, { locale: storyLocale( story.language ) } ), type: "system" },
         { text: "", type: "narrator" }
     ];
 
     available.forEach( ( choice, i ) =>
     {
         lines.push( {
-            text: `  [${ i + 1 }] ${ choice.text }`,
+            text: choice.text,
             type: "choice",
             choiceIndex: i + 1,
             choiceSceneId: scene.id
@@ -479,14 +603,13 @@ const buildStoryInfoLines = (
         { text: story.title, type: "title" },
         { text: `${ genreLabel( story.genre ) } — ${ story.universe }`, type: "system" },
         { text: "─".repeat( 60 ), type: "separator" },
-        { text: story.description, type: "narrator" }
+        { text: story.description, type: "narrator" },
+        { text: "", type: "info", info: buildStoryInfoDetails( story, stats ) }
     ];
 
     if ( saveExists )
     {
-        const savePercent = save
-            ? Math.min( 100, Math.round( ( save.history.length + 1 ) / stats.scenes * 100 ) )
-            : 0;
+        const savePercent = save ? saveCompletion( save, stats.scenes ) : 0;
 
         lines.push( { text: m.terminal_save_label(), type: "save", savePercent } );
     }
@@ -515,6 +638,21 @@ const defaultLanguageFilter = ( available: string[] ): string | null =>
 };
 
 /**
+ * Index the menu highlight starts from. Touch screens use a two-tap pattern
+ * where the highlighted card is expanded, so nothing is highlighted until the
+ * first tap; pointer devices start on the first story.
+ *
+ * @returns 0, or -1 (no highlight) on devices without hover.
+ * @author Claude
+ */
+const menuStartIndex = (): number =>
+{
+    const hasNoHover = globalThis.window !== undefined && window.matchMedia( "(hover: none)" ).matches;
+
+    return hasNoHover ? -1 : 0;
+};
+
+/**
  * Resolves a playable story by id from every source: the bundled catalog
  * first, then the user's private custom stories.
  *
@@ -530,6 +668,7 @@ const findStoryById = ( id: string ): Story | undefined =>
 /**
  * Creates the terminal store: a single Svelte store driving the whole UI
  * (boot, menu, story playback, and wiki) along with its action methods.
+ * The catalog starts unfiltered, the wiki starts on the reader's locale.
  *
  * @returns The store's `subscribe` plus its action API.
  * @author Claude
@@ -538,10 +677,8 @@ const createTerminalStore = () =>
 {
     const initial: TerminalStore = {
         view: "boot",
-        selectedStoryIndex: 0,
-        // Default to the reader's locale so the catalog and wiki open on the
-        // language they can actually read; they stay free to switch or clear it.
-        filters: { genre: null, language: defaultLanguageFilter( availableLanguages ) },
+        selectedStoryIndex: menuStartIndex(),
+        filters: { genre: null, language: null },
         gameState: null,
         currentStory: null,
         lines: [],
@@ -564,10 +701,17 @@ const createTerminalStore = () =>
         pendingEndingReveal: null,
         customSelectedIndex: 0,
         editingStoryId: null,
-        customStoriesVersion: 0
+        editorDirty: false,
+        editorLeavePending: false,
+        editorIsNew: false,
+        customStoriesVersion: 0,
+        menuNotice: null,
+        lastSavedAt: null
     };
 
     const { subscribe, update } = writable<TerminalStore>( initial );
+
+    let generationAbort: AbortController | null = null;
 
     /**
      * Reads the current store state synchronously. Wraps the `get`/`subscribe`
@@ -594,17 +738,29 @@ const createTerminalStore = () =>
 
     /**
      * Switches to the main menu, resetting the selection and clearing output.
+     * Also switches to the menu ambiance (seamless when coming from boot) and
+     * aborts any AI generation still in flight.
      *
      * @author Claude
      */
     const startMenu = () =>
     {
-        // Switch to the shell ambiance: leaving a story swaps its theme for the
-        // menu loop; arriving from boot keeps the same theme playing seamlessly.
         startMusic( "menu" );
 
-        // Bumping storyKey forces the story view to remount.
-        update( ( s ) => ( { ...s, view: "menu", selectedStoryIndex: 0, awaitingInput: true, searchQuery: "", searchActive: false, currentStory: null, gameState: null, currentStoryIsGenerated: false, generatedEndings: [], aiStatus: "idle", aiError: null, shareOpen: false, achievementToast: [], endingToast: null, pendingEndingReveal: null, customSelectedIndex: 0, editingStoryId: null, lines: [], storyKey: s.storyKey + 1 } ) );
+        generationAbort?.abort();
+
+        update( ( s ) => ( { ...s, view: "menu", selectedStoryIndex: menuStartIndex(), awaitingInput: true, searchQuery: "", searchActive: false, currentStory: null, gameState: null, currentStoryIsGenerated: false, generatedEndings: [], aiStatus: "idle", aiError: null, shareOpen: false, achievementToast: [], endingToast: null, pendingEndingReveal: null, customSelectedIndex: 0, editingStoryId: null, menuNotice: null, lastSavedAt: null, lines: [], storyKey: s.storyKey + 1 } ) );
+    };
+
+    /**
+     * Explains on the menu why a deep link fell back to it.
+     *
+     * @param code - The reason the link could not be opened.
+     * @author Claude
+     */
+    const showMenuNotice = ( code: DeepLinkErrorCode ) =>
+    {
+        update( ( s ) => ( { ...s, menuNotice: code } ) );
     };
 
     /**
@@ -621,7 +777,7 @@ const createTerminalStore = () =>
         {
             const next = s.filters[ key ] === value ? null : value;
 
-            return { ...s, filters: { ...s.filters, [ key ]: next }, selectedStoryIndex: 0 };
+            return { ...s, filters: { ...s.filters, [ key ]: next }, selectedStoryIndex: menuStartIndex() };
         } );
     };
 
@@ -641,7 +797,7 @@ const createTerminalStore = () =>
             const idx = cycle.indexOf( s.filters[ key ] );
             const next = cycle[ ( idx + 1 ) % cycle.length ];
 
-            return { ...s, filters: { ...s.filters, [ key ]: next }, selectedStoryIndex: 0 };
+            return { ...s, filters: { ...s.filters, [ key ]: next }, selectedStoryIndex: menuStartIndex() };
         } );
     };
 
@@ -672,14 +828,16 @@ const createTerminalStore = () =>
      */
     const clearFilters = () =>
     {
-        update( ( s ) => ( { ...s, filters: { genre: null, language: null }, selectedStoryIndex: 0 } ) );
+        update( ( s ) => ( { ...s, filters: { genre: null, language: null }, selectedStoryIndex: menuStartIndex() } ) );
     };
 
     /**
      * Opens the info screen for a story, rendering its summary, characters,
      * and reading statistics before the player commits to playing it.
      * When a save exists for the story, shows resume and new-game options
-     * instead of the default start prompt.
+     * instead of the default start prompt. Reuses the reading stats
+     * precomputed in the catalog metadata, computing them live only for a
+     * story missing from it.
      *
      * @param id - The id of the story to present.
      * @author Claude
@@ -689,16 +847,12 @@ const createTerminalStore = () =>
         const story = findStoryById( id );
         if ( !story ) return;
 
-        // Reuse the reading stats precomputed at module load rather than walking
-        // the whole scene graph again; fall back to a live compute only if the
-        // story somehow isn't in the catalog metadata.
         const meta = storiesMeta.find( ( m ) => m.id === id );
         const stats = meta ? meta.stats : computeStoryStats( story );
         const saveExists = hasSave( id );
         const save = saveExists ? loadSave( id ) : null;
         const infoLines = buildStoryInfoLines( story, stats, saveExists, save );
 
-        // Bumping storyKey forces the story view to remount.
         update( ( s ) => ( {
             ...s,
             view: "story-info",
@@ -724,7 +878,6 @@ const createTerminalStore = () =>
         const story = findStoryById( storyId );
         if ( !story ) return;
 
-        // Erase any prior save so a fresh run doesn't trigger the resume prompt.
         deleteSave( storyId );
 
         const gameState: GameState = {
@@ -747,9 +900,11 @@ const createTerminalStore = () =>
             storyStartedAt: Date.now(),
             achievementToast: [],
             endingToast: null,
-            pendingEndingReveal: null
+            pendingEndingReveal: null,
+            lastSavedAt: null
         } ) );
 
+        printStoryBoot( story );
         renderScene( story, story.startScene, gameState, true );
     };
 
@@ -773,6 +928,8 @@ const createTerminalStore = () =>
             return;
         }
 
+        const recapLines = buildResumeRecapLines( story, save );
+
         const gameState: GameState = {
             storyId,
             currentScene: save.currentScene,
@@ -793,16 +950,42 @@ const createTerminalStore = () =>
             storyStartedAt: Date.now(),
             achievementToast: [],
             endingToast: null,
-            pendingEndingReveal: null
+            pendingEndingReveal: null,
+            lastSavedAt: null,
+            lines: [ ...buildStoryBootLines( story ), ...recapLines ].map( ( l ) => ( { ...l, id: nextId() } ) )
         } ) );
 
-        renderScene( story, save.currentScene, gameState, true );
+        const hasRecap = recapLines.length > 0;
+        renderScene( story, save.currentScene, gameState, !hasRecap );
+    };
+
+    /**
+     * Appends the story's boot log to the terminal, before its opening scene.
+     *
+     * @param story - The story starting.
+     * @author Claude
+     */
+    const printStoryBoot = ( story: Story ) =>
+    {
+        const bootLines = buildStoryBootLines( story ).map( ( l ) => ( { ...l, id: nextId() } ) );
+
+        update( ( s ) => ( { ...s, lines: [ ...s.lines, ...bootLines ] } ) );
     };
 
     /**
      * Renders a scene into terminal lines: optional image and speaker, the
      * narration, then either the ending prompt or the list of available
      * choices.
+     *
+     * The scene's own `music` overrides the story theme for that moment
+     * (`startMusic` is a no-op when the theme is unchanged). Ending counts stay
+     * at 0 mid-story so the footer hides the counter. On an ending, only
+     * catalog stories award achievements (generated stories are ephemeral,
+     * custom ones could be tailored to farm unlocks), the toasts are held back
+     * until the typewriter has finished the dialogue (see
+     * `revealEndingToasts`), and a catalog or custom ending is recorded at
+     * once while its save is closed, so a reload never loses it nor resumes on
+     * an ending.
      *
      * @param story - The story being played.
      * @param sceneId - The id of the scene to render.
@@ -815,10 +998,6 @@ const createTerminalStore = () =>
         const scene = story.scenes[ sceneId ];
         if ( !scene ) return;
 
-        // Drive the background ambiance from the scene being entered: a scene's
-        // own `music` is a localized "moment" override, otherwise the story's
-        // default theme plays. startMusic is a no-op when the theme is unchanged,
-        // so calling it on every scene is cheap and reverts cleanly after a moment.
         const sceneTheme = scene.music ?? story.music ?? "default";
         startMusic( sceneTheme );
 
@@ -828,22 +1007,13 @@ const createTerminalStore = () =>
 
         const lines: Omit<TerminalLine, "id">[] = buildBaseSceneLines( scene, story, isFirst );
 
-        // Ending counts written here; kept as 0 for non-ending scenes so the
-        // footer hides the counter when the player is mid-story.
         let nextEndings = generatedEndings;
         let endingsFound = 0;
         let endingsTotal = 0;
 
-        // Stays null unless reaching a catalog ending unlocks new achievements,
-        // in which case it carries the refreshed list to fold into the state.
         let nextUnlockedAchievements: AchievementId[] | null = null;
         let nextAchievementToast: AchievementId[] = [];
-        // The ending discovery toast to surface, if this ending is new. Only
-        // read inside the `scene.isEnding` branch below, which always assigns
-        // it first.
         let nextEndingToast: EndingDiscoveryToast | null;
-        // Holds the toast data above until the typewriter finishes displaying
-        // this scene's dialogue; stays null for non-ending scenes.
         let nextPendingEndingReveal: PendingEndingReveal | null = null;
 
         if ( scene.isEnding )
@@ -856,17 +1026,15 @@ const createTerminalStore = () =>
                 nextEndings = data.nextEndings;
                 endingsFound = data.endingsFound;
                 endingsTotal = data.endingsTotal;
-                nextEndingToast = buildEndingDiscoveryToast( data.isNewEnding, endingsFound, endingsTotal );
+                nextEndingToast = buildEndingDiscoveryToast( data.isNewEnding, endingsFound, endingsTotal, scene.endingType );
             }
             else
             {
                 const data = resolveCatalogEndingData( sceneId, story, state );
                 endingsFound = data.endingsFound;
                 endingsTotal = data.endingsTotal;
-                nextEndingToast = buildEndingDiscoveryToast( data.isNewEnding, endingsFound, endingsTotal );
+                nextEndingToast = buildEndingDiscoveryToast( data.isNewEnding, endingsFound, endingsTotal, scene.endingType );
 
-                // Only catalog stories award achievements: generated stories are
-                // ephemeral, and custom stories could be tailored to farm unlocks.
                 const isCustomStory = isCustomStoryId( state.storyId );
                 const unlocked = isCustomStory
                     ? null
@@ -879,13 +1047,21 @@ const createTerminalStore = () =>
                 }
             }
 
-            // The toast (and its jingle) are held back until the typewriter has
-            // finished displaying the ending's dialogue; see revealEndingToasts.
             nextPendingEndingReveal = { achievementToast: nextAchievementToast, endingToast: nextEndingToast };
+
+            const pathLine = buildEndingPathLine( story, sceneId, state, currentStoryIsGenerated ? nextEndings : null );
+            if ( pathLine ) lines.push( pathLine );
+
+            // Must stay last: the tallies above read the endings found before this one.
+            if ( !currentStoryIsGenerated )
+            {
+                saveDiscoveredEnding( state.storyId, sceneId );
+                deleteSave( state.storyId );
+            }
         }
         else if ( scene.choices.length > 0 )
         {
-            lines.push( ...buildChoiceLines( scene, state ) );
+            lines.push( ...buildChoiceLines( scene, state, story ) );
         }
 
         update( ( s ) => ( {
@@ -900,34 +1076,58 @@ const createTerminalStore = () =>
     };
 
     /**
-     * Reveals the achievement/ending toast held back by {@link renderScene} for
-     * the ending just reached, once the typewriter has finished displaying its
-     * dialogue. Plays the achievement jingle in sync with the toast. No-op when
-     * nothing is pending (non-ending scenes, or an already-revealed ending).
+     * Shows the achievement toast and plays its jingle, unless the player has
+     * left the playthrough it belongs to in the meantime.
+     *
+     * @param achievementIds - The ids just unlocked.
+     * @param storyKey - The story key at reveal time; a later key means the
+     * view was reset (menu, restart) and the toast is dropped.
+     * @author Claude
+     */
+    const showAchievementToast = ( achievementIds: AchievementId[], storyKey: number ) =>
+    {
+        const hasLeftPlaythrough = snapshot().storyKey !== storyKey;
+        if ( hasLeftPlaythrough ) return;
+
+        update( ( s ) => ( { ...s, achievementToast: achievementIds } ) );
+        playAchievement();
+    };
+
+    /**
+     * Reveals the ending/achievement toasts held back by {@link renderScene}
+     * for the ending just reached, once the typewriter has finished displaying
+     * its dialogue. The ending toast comes first; an achievement toast follows
+     * after {@link ACHIEVEMENT_TOAST_DELAY} so the two read one after the
+     * other instead of landing together. No-op when nothing is pending.
      *
      * @author Claude
      */
     const revealEndingToasts = () =>
     {
-        const pending = snapshot().pendingEndingReveal;
+        const { pendingEndingReveal: pending, storyKey } = snapshot();
         if ( !pending ) return;
 
         update( ( s ) => ( {
             ...s,
-            achievementToast: pending.achievementToast,
+            achievementToast: [],
             endingToast: pending.endingToast,
             pendingEndingReveal: null
         } ) );
 
-        // Celebrate a freshly unlocked achievement with its own jingle, timed to
-        // the toast's appearance rather than to the ending being reached.
         const hasNewAchievement = pending.achievementToast.length > 0;
-        if ( hasNewAchievement ) playAchievement();
+        if ( !hasNewAchievement ) return;
+
+        const hasEndingToast = pending.endingToast !== null;
+        const delay = hasEndingToast ? ACHIEVEMENT_TOAST_DELAY : 0;
+
+        setTimeout( () => showAchievementToast( pending.achievementToast, storyKey ), delay );
     };
 
     /**
      * Applies the player's choice: echoes the action and consequence, sets any
      * resulting flag, advances the game state, and renders the next scene.
+     * Progress is auto-saved after every transition, except for AI-generated
+     * stories, which stay ephemeral.
      *
      * @param choiceIndex - The 1-based index of the chosen option as displayed.
      * @param choiceSceneId - Id of the scene the clicked choice line belongs
@@ -952,7 +1152,7 @@ const createTerminalStore = () =>
         if ( !choice ) return;
 
         const actionLines: Omit<TerminalLine, "id">[] = [
-            { text: `> ${ choice.text }`, type: "action" },
+            { text: `> ${ choice.text }`, type: "action", choiceIndex },
             { text: choice.action, type: "action" },
             { text: choice.consequence, type: "consequence" }
         ];
@@ -983,11 +1183,10 @@ const createTerminalStore = () =>
 
         if ( freshState.currentStory && freshState.gameState )
         {
-            // Auto-save after every transition so progress survives a page close —
-            // but never for AI-generated stories, which are intentionally ephemeral.
             if ( !freshState.currentStoryIsGenerated )
             {
                 saveProgress( freshState.gameState );
+                update( ( s ) => ( { ...s, lastSavedAt: Date.now() } ) );
             }
 
             renderScene( freshState.currentStory, choice.nextScene, freshState.gameState );
@@ -995,27 +1194,14 @@ const createTerminalStore = () =>
     };
 
     /**
-     * Abandons the current story and returns to the main menu. When leaving
-     * from an ending scene the save is erased — the story is complete and the
-     * next visit should offer a fresh start.
+     * Leaves the current story and returns to the main menu. Progress is saved
+     * after every choice and an ending is recorded as soon as it is reached,
+     * so nothing is lost.
      *
      * @author Claude
      */
     const goBack = () =>
     {
-        const state = snapshot();
-        const currentSceneId = state.gameState?.currentScene ?? "";
-        const currentScene = state.currentStory?.scenes[ currentSceneId ];
-        const isLeavingFromEnding = currentScene?.isEnding === true;
-
-        // Generated stories are ephemeral: skip ending tracking and save deletion.
-        if ( isLeavingFromEnding && state.gameState && !state.currentStoryIsGenerated )
-        {
-            saveDiscoveredEnding( state.gameState.storyId, currentSceneId );
-            deleteSave( state.gameState.storyId );
-        }
-
-        // startMenu already clears the loaded story and game state.
         startMenu();
     };
 
@@ -1048,9 +1234,8 @@ const createTerminalStore = () =>
     };
 
     /**
-     * Restarts a catalog story from its opening scene. When called from an
-     * ending scene the ending is persisted first so the discovery tally is
-     * updated before the fresh playthrough begins.
+     * Restarts a catalog story from its opening scene. An ending reached just
+     * before is already recorded (see `renderScene`).
      *
      * @author Claude
      */
@@ -1058,19 +1243,8 @@ const createTerminalStore = () =>
     {
         const state = snapshot();
 
-        const canRestart = state.currentStory !== null && state.gameState !== null && !state.currentStoryIsGenerated;
-        if ( !canRestart || !state.currentStory || !state.gameState ) return;
-
-        const currentSceneId = state.gameState.currentScene;
-        const currentScene = state.currentStory.scenes[ currentSceneId ];
-        const isAtEnding = currentScene?.isEnding === true;
-
-        // Persist the ending now so renderScene reads the updated tally on restart.
-        // startStory will erase the mid-playthrough save; the endings record is separate.
-        if ( isAtEnding )
-        {
-            saveDiscoveredEnding( state.gameState.storyId, currentSceneId );
-        }
+        const canRestart = state.currentStory !== null && !state.currentStoryIsGenerated;
+        if ( !canRestart || !state.currentStory ) return;
 
         startStory( state.currentStory.id );
     };
@@ -1337,7 +1511,7 @@ const createTerminalStore = () =>
             ...s,
             searchActive: true,
             searchQuery: "",
-            selectedStoryIndex: 0,
+            selectedStoryIndex: menuStartIndex(),
             wiki: { ...s.wiki, selectedIndex: 0, selectedEntryId: null }
         } ) );
     };
@@ -1354,7 +1528,7 @@ const createTerminalStore = () =>
         update( ( s ) => ( {
             ...s,
             searchQuery: query,
-            selectedStoryIndex: 0,
+            selectedStoryIndex: menuStartIndex(),
             wiki: { ...s.wiki, selectedIndex: 0 }
         } ) );
     };
@@ -1371,7 +1545,7 @@ const createTerminalStore = () =>
             ...s,
             searchActive: false,
             searchQuery: "",
-            selectedStoryIndex: 0,
+            selectedStoryIndex: menuStartIndex(),
             wiki: { ...s.wiki, selectedIndex: 0 }
         } ) );
     };
@@ -1418,7 +1592,9 @@ const createTerminalStore = () =>
             searchQuery: "",
             searchActive: false,
             customSelectedIndex: 0,
-            editingStoryId: null
+            editingStoryId: null,
+            editorDirty: false,
+            editorLeavePending: false
         } ) );
     };
 
@@ -1470,15 +1646,19 @@ const createTerminalStore = () =>
      * Opens the story editor on the given custom story.
      *
      * @param id - The id of the custom story to edit.
+     * @param isNew - True for a story just created, whose title gets the focus.
      * @author Claude
      */
-    const openEditor = ( id: string ) =>
+    const openEditor = ( id: string, isNew = false ) =>
     {
         clearLines();
         update( ( s ) => ( {
             ...s,
             view: "editor",
             editingStoryId: id,
+            editorIsNew: isNew,
+            editorDirty: false,
+            editorLeavePending: false,
             currentStory: null,
             gameState: null,
             currentStoryIsGenerated: false,
@@ -1499,6 +1679,47 @@ const createTerminalStore = () =>
     };
 
     /**
+     * Leaves the editor, or asks for confirmation first when the draft holds
+     * unsaved changes (shared by ESC and the footer's back buttons).
+     *
+     * @author Claude
+     */
+    const requestCloseEditor = () =>
+    {
+        const hasUnsavedChanges = snapshot().editorDirty;
+
+        if ( hasUnsavedChanges )
+        {
+            update( ( s ) => ( { ...s, editorLeavePending: true } ) );
+            return;
+        }
+
+        closeEditor();
+    };
+
+    /**
+     * Dismisses the "leave without saving?" confirmation and stays in the editor.
+     *
+     * @author Claude
+     */
+    const cancelEditorLeave = () =>
+    {
+        update( ( s ) => ( { ...s, editorLeavePending: false } ) );
+    };
+
+    /**
+     * Records whether the editor's draft differs from the stored story, so a
+     * request to leave can warn before discarding the changes.
+     *
+     * @param dirty - True when the draft has unsaved changes.
+     * @author Claude
+     */
+    const setEditorDirty = ( dirty: boolean ) =>
+    {
+        update( ( s ) => ( s.editorDirty === dirty ? s : { ...s, editorDirty: dirty } ) );
+    };
+
+    /**
      * Signals that the custom-story storage changed (save, import, delete) so
      * views listing custom stories recompute their data.
      *
@@ -1512,7 +1733,8 @@ const createTerminalStore = () =>
     /**
      * Generates an ephemeral story from the given parameters and plays it through
      * the standard engine. Nothing is persisted: generated stories never touch
-     * the save slots or the active-session record.
+     * the save slots or the active-session record. A result or error arriving
+     * after the player left the generation screen is dropped.
      *
      * @param params - The player's generation parameters.
      * @author Claude
@@ -1521,13 +1743,14 @@ const createTerminalStore = () =>
     {
         update( ( s ) => ( { ...s, aiStatus: "generating", aiError: null } ) );
 
+        const abort = new AbortController();
+        generationAbort = abort;
+
         try
         {
             const settings = loadAiSettings();
-            const story = await generateStory( params, settings );
+            const story = await generateStory( params, settings, abort.signal );
 
-            // If the user navigated away (e.g. ESC) while generating, don't hijack
-            // the current view with the now-stale result.
             const wasCancelled = snapshot().aiStatus !== "generating";
             if ( wasCancelled ) return;
 
@@ -1552,11 +1775,11 @@ const createTerminalStore = () =>
                 shareOpen: false
             } ) );
 
+            printStoryBoot( story );
             renderScene( story, story.startScene, gameState, true );
         }
         catch ( error )
         {
-            // Only surface the error if the user is still waiting on this request.
             const stillGenerating = snapshot().aiStatus === "generating";
             if ( !stillGenerating ) return;
 
@@ -1564,6 +1787,22 @@ const createTerminalStore = () =>
 
             update( ( s ) => ( { ...s, aiStatus: "error", aiError: aiErrorMessage( error ) } ) );
         }
+        finally
+        {
+            if ( generationAbort === abort ) generationAbort = null;
+        }
+    };
+
+    /**
+     * Cancels the AI generation in flight: the request is aborted and the
+     * setup form comes back as it was, ready to try again.
+     *
+     * @author Claude
+     */
+    const cancelGeneration = () =>
+    {
+        generationAbort?.abort();
+        update( ( s ) => ( { ...s, aiStatus: "idle", aiError: null } ) );
     };
 
     /**
@@ -1592,13 +1831,14 @@ const createTerminalStore = () =>
         clearLines();
         update( ( s ) => ( { ...s, gameState, awaitingInput: true } ) );
 
+        printStoryBoot( story );
         renderScene( story, story.startScene, gameState, true );
     };
 
     /**
      * Opens the share overlay for the currently selected catalog story, whether
      * it is being previewed (story-info) or read (story). Generated stories are
-     * ephemeral and have no shareable URL, so there is nothing to link to.
+     * ephemeral and custom stories private: neither has a shareable URL.
      *
      * @author Claude
      */
@@ -1607,8 +1847,6 @@ const createTerminalStore = () =>
         const state = snapshot();
 
         const isShareableView = state.view === "story" || state.view === "story-info";
-        // Custom stories are private and have no shareable URL, just like
-        // generated ones; only bundled catalog stories can be linked to.
         const isPrivateStory = state.currentStoryIsGenerated
           || ( state.currentStory !== null && isCustomStoryId( state.currentStory.id ) );
         const canShare = isShareableView && state.currentStory !== null && !isPrivateStory;
@@ -1631,6 +1869,7 @@ const createTerminalStore = () =>
         subscribe,
         update,
         startMenu,
+        showMenuNotice,
         openAiSetup,
         openCustomStories,
         moveCustomSelection,
@@ -1638,8 +1877,12 @@ const createTerminalStore = () =>
         selectCustomStoryAt,
         openEditor,
         closeEditor,
+        requestCloseEditor,
+        cancelEditorLeave,
+        setEditorDirty,
         bumpCustomStories,
         generateAndPlay,
+        cancelGeneration,
         restartGeneratedStory,
         restartStory,
         setFilter,
