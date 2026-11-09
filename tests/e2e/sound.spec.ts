@@ -21,8 +21,14 @@ const readSoundSettings = async ( page: Page ): Promise<{ enabled: boolean; volu
 
 test.describe( "sound controls", () =>
 {
-    // The volume slider is hidden below the `sm` breakpoint (640px): on
-    // mobile the toggle button is the only sound control.
+    /**
+     * Reports whether the volume slider is shown: below the `sm` breakpoint
+     * (640px) the toggle button is the only sound control.
+     *
+     * @param page - The Playwright page to inspect.
+     * @returns True when the viewport is at least 640px wide.
+     * @author Claude
+     */
     const sliderIsVisibleAtThisViewport = ( page: Page ): boolean =>
     {
         return ( page.viewportSize()?.width ?? 0 ) >= 640;
@@ -32,8 +38,8 @@ test.describe( "sound controls", () =>
     {
         await gotoMenu( page );
 
-        // The action label reads "Enable sound" while muted.
-        const toggle = page.getByRole( "button", { name: "Enable sound" } );
+        // A fixed label; the state is carried by aria-pressed alone.
+        const toggle = page.getByRole( "button", { name: "Sound", exact: true } );
         await expect( toggle ).toBeVisible();
         await expect( toggle ).toHaveAttribute( "aria-pressed", "false" );
 
@@ -53,10 +59,10 @@ test.describe( "sound controls", () =>
     {
         await gotoMenu( page );
 
-        await page.getByRole( "button", { name: "Enable sound" } ).click();
+        const toggle = page.getByRole( "button", { name: "Sound", exact: true } );
+        await toggle.click();
 
-        // Once enabled, the button offers the opposite action and the slider unlocks.
-        const toggle = page.getByRole( "button", { name: "Mute sound" } );
+        // Once enabled, the button reads as pressed and the slider unlocks.
         await expect( toggle ).toHaveAttribute( "aria-pressed", "true" );
 
         if ( sliderIsVisibleAtThisViewport( page ) )
@@ -69,17 +75,32 @@ test.describe( "sound controls", () =>
 
         // After a reload the store rehydrates from localStorage, so sound stays on.
         await page.reload();
-        await expect( page.getByRole( "button", { name: "Mute sound" } ) ).toBeVisible();
+        await expect( page.getByRole( "button", { name: "Sound", exact: true } ) ).toHaveAttribute( "aria-pressed", "true" );
     } );
 
     test( "the M shortcut toggles sound on and off", async ( { page } ) =>
     {
         await gotoMenu( page );
 
-        await page.keyboard.press( "m" );
-        await expect( page.getByRole( "button", { name: "Mute sound" } ) ).toBeVisible();
+        const toggle = page.getByRole( "button", { name: "Sound", exact: true } );
 
         await page.keyboard.press( "m" );
-        await expect( page.getByRole( "button", { name: "Enable sound" } ) ).toBeVisible();
+        await expect( toggle ).toHaveAttribute( "aria-pressed", "true" );
+
+        await page.keyboard.press( "m" );
+        await expect( toggle ).toHaveAttribute( "aria-pressed", "false" );
+    } );
+
+    test( "the scanlines toggle hides the overlay and remembers the choice", async ( { page } ) =>
+    {
+        await gotoMenu( page );
+
+        const toggle = page.getByRole( "button", { name: "Scanlines", exact: true } );
+        await expect( toggle ).toHaveAttribute( "aria-pressed", "true" );
+        await toggle.click();
+        await expect( toggle ).toHaveAttribute( "aria-pressed", "false" );
+
+        await page.reload();
+        await expect( page.getByRole( "button", { name: "Scanlines", exact: true } ) ).toHaveAttribute( "aria-pressed", "false" );
     } );
 } );

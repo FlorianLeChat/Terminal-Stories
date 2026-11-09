@@ -1,6 +1,6 @@
 import { handleEnabledChange } from "#lib/utilities/musicEngine.ts";
 import type { EndingSoundType, SceneSoundEffect } from "#lib/types/audio.ts";
-import { isAudioEnabled, jitter, midiToFrequency, playNoise, playTone, setEnabledState } from "#lib/utilities/audioCore.ts";
+import { ensureContext, isAudioEnabled, jitter, midiToFrequency, playNoise, playTone, resumeAudio as resumeCore, setEnabledState } from "#lib/utilities/audioCore.ts";
 
 // Public audio facade. Every sound (interface SFX and background music) is
 // synthesized on the fly with the Web Audio API — the project ships no audio
@@ -11,8 +11,12 @@ import { isAudioEnabled, jitter, midiToFrequency, playNoise, playTone, setEnable
 // intentionally free of any reactivity or persistence (the sound store layers
 // those on top) and of any user-facing string (it speaks only in codes/enums).
 
-export { resumeAudio, setVolume } from "#lib/utilities/audioCore.ts";
+export { setVolume } from "#lib/utilities/audioCore.ts";
 export { startMusic } from "#lib/utilities/musicEngine.ts";
+
+// Set when the boot fanfare is requested before the first user gesture (no
+// audio context can exist yet), so it plays as soon as that gesture arrives.
+let isBootFanfarePending = false;
 
 /**
  * Enables or disables all audio. Enabling resumes any remembered music theme;
@@ -96,12 +100,13 @@ export const playBack = (): void =>
 };
 
 /**
- * Plays the ending sting when the player reaches a final scene: a short
- * arpeggio whose chord shape encodes the outcome — major (good), minor+low
- * (bad), or open (neutral) — resolving into a sustained final chord so the
- * moment lands instead of cutting off. Good endings sparkle on top, bad ones
- * sink into a sub-bass glide and a dark rumble, neutral ones fade out on a
- * bare open fifth.
+ * Plays the ending sting when the player reaches a final scene: a warm,
+ * bell-like arpeggio whose chord shape encodes the outcome (major for good,
+ * low minor for bad, open for neutral), resolving into a sustained final
+ * chord doubled by a quiet sine an octave down, so the moment lands instead
+ * of cutting off. Good endings sparkle with an octave-and-fifth ping and a
+ * swelling add9 colour tone, bad ones sink into a sub-bass glide and a dark
+ * noise rumble, neutral ones fade out on a bare open fifth.
  *
  * @param type - The kind of ending reached.
  * @author Claude
@@ -110,7 +115,6 @@ export const playEnding = ( type: EndingSoundType ): void =>
 {
     if ( !isAudioEnabled() ) return;
 
-    // Root note and chord intervals chosen to read as uplifting/dark/plain.
     const chords: Record<EndingSoundType, { root: number; intervals: number[] }> = {
         good: { root: 60, intervals: [ 0, 4, 7, 12 ] },
         bad: { root: 48, intervals: [ 0, 3, 6, 10 ] },
@@ -123,7 +127,6 @@ export const playEnding = ( type: EndingSoundType ): void =>
     {
         const frequency = midiToFrequency( chord.root + interval );
 
-        // Stagger the notes into a warm, bell-like arpeggio (soft attack, lowpass).
         playTone( frequency, 0.7, {
             wave: "triangle",
             gain: 0.1,
@@ -133,8 +136,6 @@ export const playEnding = ( type: EndingSoundType ): void =>
         } );
     } );
 
-    // The arpeggio resolves into a sustained closing chord, doubled by a
-    // quiet sine an octave down for body.
     const resolutionDelay = chord.intervals.length * 0.14 + 0.1;
     const resolutions: Record<EndingSoundType, number[]> = {
         good: [ 0, 4, 7, 12 ],
@@ -152,8 +153,6 @@ export const playEnding = ( type: EndingSoundType ): void =>
 
     if ( type === "good" )
     {
-        // A good ending sparkles: an octave-and-fifth ping over the arpeggio,
-        // then a swelling add9 colour tone blooming over the final chord.
         playTone( midiToFrequency( chord.root + 19 ), 0.9, {
             wave: "sine",
             gain: 0.08,
@@ -172,18 +171,19 @@ export const playEnding = ( type: EndingSoundType ): void =>
 
     if ( type === "bad" )
     {
-        // A bad ending sinks: a sub-bass glide and a dark noise rumble
-        // dragging the final chord downward.
         playTone( 60, 2, { wave: "sine", gain: 0.12, delay: resolutionDelay, glideTo: 38, attack: 0.1, filterFreq: 300 } );
         playNoise( 1.2, { gain: 0.08, delay: resolutionDelay, filterFreq: 300, filterTo: 80 } );
     }
 };
 
 /**
- * Plays a warm, bell-like startup fanfare when the app boots — an original
+ * Plays a warm, bell-like startup fanfare when the app boots, an original
  * homage to the cosy chime of early-2000s desktop operating systems: a soft
- * rising major arpeggio answered an octave higher, a high shimmer swelling
- * over it, all carried by a sustained pad and rounded off by a lowpass.
+ * rising F major arpeggio of mellow bells, answered more softly an octave
+ * higher, a high sine shimmer swelling in slowly over the whole fanfare, all
+ * carried by a sustained low pad and rounded off by a lowpass. Before the
+ * first user gesture no context can start, so the fanfare is deferred to
+ * {@link resumeAudio} instead of being dropped.
  *
  * @author Claude
  */
@@ -191,7 +191,13 @@ export const playBoot = (): void =>
 {
     if ( !isAudioEnabled() ) return;
 
-    // Rising major arpeggio (F major-ish), played as mellow bells.
+    const isContextReady = ensureContext() !== null;
+    if ( !isContextReady )
+    {
+        isBootFanfarePending = true;
+        return;
+    }
+
     const melody = [ 65, 69, 72, 77 ];
     melody.forEach( ( midi, index ) =>
     {
@@ -205,7 +211,6 @@ export const playBoot = (): void =>
         } );
     } );
 
-    // Answering phrase an octave up, echoing the motif more softly.
     const answer = [ 77, 81, 84 ];
     answer.forEach( ( midi, index ) =>
     {
@@ -219,7 +224,6 @@ export const playBoot = (): void =>
         } );
     } );
 
-    // High sine shimmer swelling in slowly over the whole fanfare.
     const shimmer = [ 84, 88, 91 ];
     shimmer.forEach( ( midi ) =>
     {
@@ -232,7 +236,6 @@ export const playBoot = (): void =>
         } );
     } );
 
-    // Sustained low pad chord swelling underneath for warmth and body.
     const pad = [ 41, 48, 53 ];
     pad.forEach( ( midi ) =>
     {
@@ -246,9 +249,32 @@ export const playBoot = (): void =>
 };
 
 /**
- * Plays a bright, triumphant three-note flourish when an achievement unlocks,
- * layered over whatever ambiance is playing, with a soft trailing echo of the
- * two highest notes.
+ * Resumes (or, on the first user gesture, creates) the audio context, then
+ * catches up on sound requested before that gesture: the boot fanfare if it
+ * was deferred, and the remembered music theme if none is playing yet.
+ *
+ * @author Claude
+ */
+export const resumeAudio = (): void =>
+{
+    resumeCore();
+
+    const enabled = isAudioEnabled();
+    if ( !enabled ) return;
+
+    if ( isBootFanfarePending )
+    {
+        isBootFanfarePending = false;
+        playBoot();
+    }
+
+    handleEnabledChange( true );
+};
+
+/**
+ * Plays a bright, triumphant flourish when an achievement unlocks (a quick
+ * ascending major triad topped by its octave), layered over whatever ambiance
+ * is playing, with a soft trailing echo of the two highest notes.
  *
  * @author Claude
  */
@@ -256,7 +282,6 @@ export const playAchievement = (): void =>
 {
     if ( !isAudioEnabled() ) return;
 
-    // Ascending major triad plus an octave, quick and celebratory.
     const notes = [ 72, 76, 79, 84 ];
     notes.forEach( ( midi, index ) =>
     {
@@ -269,7 +294,6 @@ export const playAchievement = (): void =>
         } );
     } );
 
-    // Soft echo of the two highest notes trailing off after the flourish.
     const echoDelay = notes.length * 0.08 + 0.4;
     [ 79, 84 ].forEach( ( midi, index ) =>
     {
@@ -285,7 +309,7 @@ export const playAchievement = (): void =>
 
 /**
  * Plays a low, dissonant descending "denied" buzz to signal an error or a
- * failed action.
+ * failed action: two close, clashing low tones sliding down together.
  *
  * @author Claude
  */
@@ -293,7 +317,6 @@ export const playError = (): void =>
 {
     if ( !isAudioEnabled() ) return;
 
-    // Two close, clashing low tones sliding down together read as "wrong".
     playTone( 200, 0.35, { wave: "sawtooth", gain: 0.08, glideTo: 120, filterFreq: 900 } );
     playTone( 190, 0.35, { wave: "square", gain: 0.06, glideTo: 114, filterFreq: 900 } );
 };
@@ -301,6 +324,19 @@ export const playError = (): void =>
 /**
  * Fires a one-shot scene sound effect, layered over the background music to
  * punctuate a moment. No-op when audio is disabled/unsupported.
+ *
+ * - `heartbeat`: three decaying "lub-dub" cycles, like a heart slowly calming.
+ * - `alarm`: three urgent two-tone klaxon cycles.
+ * - `chime`: a bright ascending bell arpeggio, for a discovery or a good turn.
+ * - `impact`: a sharp, bright crack right before a dull thud (low noise burst plus a sub-bass drop).
+ * - `suspense`: two slightly detuned low drones swelling and rising together; their beating deepens the dread.
+ * - `glitch`: a rapid scatter of random-pitched digital blips.
+ * - `whoosh`: noise sweeping open then shut, for a transition or a passing rush.
+ * - `thunder`: a sharp crack over a long low rumble, answered by a second, more distant rumble.
+ * - `bell`: a single toll whose inharmonic partials decay at different rates, like a real bell.
+ * - `static`: a burst of harsh, bright interference (a high cutoff gives the hiss).
+ * - `reveal`: a quick rising shimmer of bright sines, for an unveiling.
+ * - `wind`: two long overlapping gusts with opposing filter sweeps, rising, crossing over, and dying down.
  *
  * @param effect - The effect to synthesize.
  * @author Claude
@@ -312,7 +348,6 @@ export const playSceneEffect = ( effect: SceneSoundEffect ): void =>
     switch ( effect )
     {
         case "heartbeat":
-            // Three decaying "lub-dub" cycles, like a heart slowly calming.
             for ( let cycle = 0; cycle < 3; cycle++ )
             {
                 const base = cycle * 0.8;
@@ -323,7 +358,6 @@ export const playSceneEffect = ( effect: SceneSoundEffect ): void =>
             break;
 
         case "alarm":
-            // Three urgent two-tone klaxon cycles.
             for ( let cycle = 0; cycle < 3; cycle++ )
             {
                 const base = cycle * 0.34;
@@ -333,7 +367,6 @@ export const playSceneEffect = ( effect: SceneSoundEffect ): void =>
             break;
 
         case "chime":
-            // Bright ascending bell arpeggio for a discovery or a good turn.
             [ 76, 81, 84, 88 ].forEach( ( midi, index ) =>
             {
                 playTone( midiToFrequency( midi ), 0.6, {
@@ -347,22 +380,17 @@ export const playSceneEffect = ( effect: SceneSoundEffect ): void =>
             break;
 
         case "impact":
-            // A sharp, bright crack right before the dull thud: low noise
-            // burst plus a sub-bass drop.
             playNoise( 0.05, { gain: 0.18, filterFreq: 4000, filterTo: 1500 } );
             playNoise( 0.25, { gain: 0.22, delay: 0.02, filterFreq: 900, filterTo: 120 } );
             playTone( 90, 0.28, { wave: "sine", gain: 0.18, delay: 0.02, glideTo: 40, attack: 0.002, filterFreq: 400 } );
             break;
 
         case "suspense":
-            // Two slowly swelling, slightly detuned low drones rising together
-            // — the beating between them deepens the creeping dread.
             playTone( 110, 2.4, { wave: "sawtooth", gain: 0.07, glideTo: 175, attack: 0.8, filterFreq: 600 } );
             playTone( 112, 2.4, { wave: "sawtooth", gain: 0.05, glideTo: 172, attack: 0.9, filterFreq: 500 } );
             break;
 
         case "glitch":
-            // A rapid scatter of random-pitched digital blips.
             for ( let i = 0; i < 7; i++ )
             {
                 playTone( jitter( 900, 600 ), 0.05, {
@@ -375,14 +403,11 @@ export const playSceneEffect = ( effect: SceneSoundEffect ): void =>
             break;
 
         case "whoosh":
-            // Noise sweeping open then shut, for a transition or passing rush.
             playNoise( 0.35, { gain: 0.14, filterFreq: 300, filterTo: 3500 } );
             playNoise( 0.35, { gain: 0.12, delay: 0.3, filterFreq: 3500, filterTo: 300 } );
             break;
 
         case "thunder":
-            // A long low rumble under an initial sharp crack, answered by a
-            // second, more distant rumble rolling in behind it.
             playNoise( 0.12, { gain: 0.24, filterFreq: 5000, filterTo: 800 } );
             playNoise( 1.6, { gain: 0.2, delay: 0.05, filterFreq: 400, filterTo: 90 } );
             playTone( 55, 1.6, { wave: "sine", gain: 0.12, delay: 0.05, glideTo: 32, attack: 0.05, filterFreq: 200 } );
@@ -390,8 +415,6 @@ export const playSceneEffect = ( effect: SceneSoundEffect ): void =>
             break;
 
         case "bell":
-            // A single resonant toll: fundamental plus inharmonic partials that
-            // decay at different rates, the hallmark of a real bell.
             [ { ratio: 1, gain: 0.12, len: 1.6 }, { ratio: 2.76, gain: 0.06, len: 1.1 }, { ratio: 5.4, gain: 0.03, len: 0.7 } ]
                 .forEach( ( partial ) =>
                 {
@@ -405,12 +428,10 @@ export const playSceneEffect = ( effect: SceneSoundEffect ): void =>
             break;
 
         case "static":
-            // A burst of harsh, bright interference (high cutoff = hiss).
             playNoise( 0.6, { gain: 0.1, filterFreq: 6000 } );
             break;
 
         case "reveal":
-            // A quick rising shimmer of bright sines, for an unveiling.
             for ( let i = 0; i < 6; i++ )
             {
                 playTone( midiToFrequency( 72 + i * 3 ), 0.7, {
@@ -424,8 +445,6 @@ export const playSceneEffect = ( effect: SceneSoundEffect ): void =>
             break;
 
         case "wind":
-            // Two long overlapping gusts with opposing filter sweeps, so the
-            // wind rises, crosses over, and dies down again.
             playNoise( 3, { gain: 0.09, filterFreq: 250, filterTo: 700 } );
             playNoise( 2.6, { gain: 0.07, delay: 1.4, filterFreq: 600, filterTo: 200 } );
             break;

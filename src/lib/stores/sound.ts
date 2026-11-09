@@ -3,15 +3,11 @@ import type { SoundSettings } from "#lib/types/audio.ts";
 import { resumeAudio, setEnabled, setVolume } from "#lib/utilities/audioEngine.ts";
 import { loadSoundSettings, saveSoundSettings } from "#lib/utilities/soundSettings.ts";
 
-// Reactive settings layer sitting on top of the stateless audio engine. It
-// owns the persisted on/off + volume preferences, mirrors them into the engine,
-// and exposes the actions the UI binds to. Playback triggers (SFX, music) live
-// in the engine and are called directly by their owners (the terminal store for
-// music/endings, the Terminal component for interface sounds).
-
 /**
  * Builds the sound store, seeding it from persisted preferences and pushing
  * those values into the audio engine so the two stay in sync from the start.
+ * The store only owns the on/off and volume preferences: playback triggers
+ * (SFX, music) live in the engine and are called directly by their owners.
  *
  * @returns The sound store: a readable of {@link SoundSettings} plus actions.
  * @author Claude
@@ -21,7 +17,6 @@ const createSoundStore = () =>
     const initial = loadSoundSettings();
     const { subscribe, update } = writable<SoundSettings>( initial );
 
-    // Prime the engine with the stored preferences (no-op during SSR).
     setEnabled( initial.enabled );
     setVolume( initial.volume );
 
@@ -46,7 +41,6 @@ const createSoundStore = () =>
      */
     const toggle = (): void =>
     {
-        // Resume up front so the very first enable is not blocked by autoplay.
         resumeAudio();
 
         update( ( s ) =>

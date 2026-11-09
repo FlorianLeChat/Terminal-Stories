@@ -7,9 +7,6 @@
 
     let volumePercent = $derived( Math.round( volume * 100 ) );
 
-    // Action-oriented label: describes what the button will do, not its state.
-    let toggleLabel = $derived( enabled ? m.sound_toggle_off() : m.sound_toggle_on() );
-
     let toggleColor = $derived( enabled ? "text-terminal-green" : "text-terminal-dim" );
 
     /**
@@ -24,7 +21,9 @@
     };
 
     /**
-     * Relays the volume slider's value (0–100) to the store as a [0, 1] gain.
+     * Relays the volume slider's value (0 to 100) to the store as a [0, 1]
+     * gain. The slider is hidden on mobile, where the toggle is the only
+     * sound control.
      *
      * @param event - The range input event.
      * @author Claude
@@ -43,11 +42,10 @@
         type="button"
         onclick={handleToggle}
         aria-pressed={enabled}
-        aria-label={toggleLabel}
-        title={toggleLabel}
-        class="sound-toggle flex items-center justify-center shrink-0 min-w-11 min-h-11 -m-2.5 {toggleColor}"
+        aria-label={m.sound_toggle()}
+        title={m.sound_toggle()}
+        class="sound-toggle flex items-center justify-center shrink-0 min-w-11 min-h-11 {toggleColor}"
     >
-        <!-- Speaker glyph; sound waves when enabled, a cross when muted. -->
         <svg viewBox="0 0 24 24" class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
             <path d="M4 9v6h4l5 4V5L8 9H4z" fill="currentColor" stroke="none" />
             {#if enabled}
@@ -59,8 +57,6 @@
         </svg>
     </button>
 
-    <!-- Fine volume control only makes sense with a mouse/trackpad's precision;
-         on mobile the toggle button above is the only sound control. -->
     <input
         type="range"
         min="0"
@@ -78,7 +74,6 @@
         transition: color 0.15s ease;
     }
 
-    /* Keep the slider on-brand: thin terminal-green track and thumb. */
     .sound-volume {
         accent-color: var( --color-terminal-green, #00ff46 );
         cursor: pointer;

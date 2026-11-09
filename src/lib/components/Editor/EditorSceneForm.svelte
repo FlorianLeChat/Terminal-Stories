@@ -1,8 +1,9 @@
 <script lang="ts">
     import * as m from "#lib/locales/messages.js";
     import EditorChoiceForm from "./EditorChoiceForm.svelte";
-    import { MUSIC_THEMES, SCENE_SOUND_EFFECTS } from "#lib";
+    import ConfirmDialog from "../Terminal/ConfirmDialog.svelte";
     import type { MusicTheme, SceneSoundEffect, SceneTextEntry, StoryFile } from "#lib";
+    import { MUSIC_THEMES, SCENE_SOUND_EFFECTS, musicThemeLabel, soundEffectLabel } from "#lib";
 
     interface Props {
         /** The story draft being edited (mutated in place). */
@@ -14,6 +15,51 @@
     let { draft = $bindable(), selectedSceneId = $bindable() }: Props = $props();
 
     let scene = $derived( draft.scenes.find( ( s ) => s.id === selectedSceneId ) );
+
+    /** Allowed shape of a scene id: letters, digits, dashes and underscores. */
+    const SCENE_ID_FORMAT = /^[\w-]+$/;
+
+    /** Why a typed scene id cannot be used, checked as the author types. */
+    type SceneIdIssue = "empty" | "format" | "taken";
+
+    /** Translated message for each scene id issue. */
+    const SCENE_ID_MESSAGES: Record<SceneIdIssue, () => string> = {
+        empty: m.editor_scene_id_err_empty,
+        format: m.editor_scene_id_err_format,
+        taken: m.editor_scene_id_err_taken
+    };
+
+    /**
+     * Issue found in the typed scene id, cleared when another scene is selected.
+     *
+     * @author Claude
+     */
+    let sceneIdIssue = $state<SceneIdIssue | null>( null );
+
+    $effect( () =>
+    {
+        void selectedSceneId;
+        sceneIdIssue = null;
+    } );
+
+    /**
+     * Checks a typed scene id: not blank, slug-shaped, and not used by
+     * another scene.
+     *
+     * @param value - The id as typed.
+     * @returns The issue found, or null when the id can be used.
+     * @author Claude
+     */
+    const checkSceneId = ( value: string ): SceneIdIssue | null =>
+    {
+        const id = value.trim();
+        if ( id === "" ) return "empty";
+        if ( !SCENE_ID_FORMAT.test( id ) ) return "format";
+
+        const isTakenByAnother = id !== scene?.id && draft.scenes.some( ( s ) => s.id === id );
+
+        return isTakenByAnother ? "taken" : null;
+    };
 
     /** Sentinel meaning "no explicit speaker" (i.e. the narrator). */
     const NO_SPEAKER = "";
@@ -121,7 +167,9 @@
     /**
      * Renames the scene (committed on change), propagating the new id to every
      * choice targeting it, to the start scene, and to the current selection.
-     * Blank or already-used ids are refused and the input is reset.
+     * Blank, malformed or already-used ids are refused: they stay in the field
+     * with an inline message so the author can fix them, and the scene keeps
+     * its previous id meanwhile.
      *
      * @param event - The input change event.
      * @author Claude
@@ -134,13 +182,10 @@
         const newId = input.value.trim();
         const oldId = scene.id;
 
-        const isUsable = newId !== "" && newId !== oldId && !draft.scenes.some( ( s ) => s.id === newId );
+        sceneIdIssue = checkSceneId( newId );
 
-        if ( !isUsable )
-        {
-            input.value = oldId;
-            return;
-        }
+        const isUsable = sceneIdIssue === null && newId !== oldId;
+        if ( !isUsable ) return;
 
         scene.id = newId;
 
@@ -280,10 +325,12 @@
         } );
     };
 
+    /** True while the scene delete confirmation is shown. */
+    let sceneDeletePending = $state( false );
+
     /**
-     * Deletes this scene after confirmation, pruning every choice that pointed
-     * to it and moving the selection (and start scene if needed) elsewhere.
-     * The last remaining scene cannot be deleted.
+     * Asks to confirm the deletion of this scene. The last remaining scene
+     * cannot be deleted.
      *
      * @author Claude
      */
@@ -291,8 +338,20 @@
     {
         if ( !scene || draft.scenes.length <= 1 ) return;
 
-        const confirmed = confirm( m.editor_scene_delete_confirm( { id: scene.id } ) );
-        if ( !confirmed ) return;
+        sceneDeletePending = true;
+    };
+
+    /**
+     * Deletes this scene once confirmed, pruning every choice that pointed to
+     * it and moving the selection (and start scene if needed) elsewhere.
+     *
+     * @author Claude
+     */
+    const confirmDeleteScene = () =>
+    {
+        sceneDeletePending = false;
+
+        if ( !scene || draft.scenes.length <= 1 ) return;
 
         const deletedId = scene.id;
 
@@ -310,7 +369,7 @@
 </script>
 
 {#if scene}
-    <section class="border border-terminal-dim/40 rounded px-4 py-3 space-y-3 flex-1 min-w-0" aria-label={m.editor_scene_form_aria()}>
+    <section class="space-y-4 flex-1 min-w-0" aria-label={m.editor_scene_form_aria()}>
         <div class="flex flex-col sm:flex-row gap-2 sm:items-end">
             <div class="space-y-1 flex-1 min-w-0">
                 <label for="editor-scene-id" class="block text-terminal-dim text-xs select-none">{m.editor_scene_id_label()}</label>
@@ -318,14 +377,20 @@
                     id="editor-scene-id"
                     type="text"
                     value={scene.id}
-                    class="w-full bg-transparent border border-terminal-dim/40 rounded px-2 py-1 text-terminal-green text-xs outline-none focus:border-terminal-green caret-terminal-green"
+                    class="w-full bg-transparent border border-terminal-dim rounded px-2 py-1 text-terminal-green text-sm focus:border-terminal-green caret-terminal-green"
                     autocomplete="off"
                     spellcheck={false}
+                    aria-describedby="editor-scene-id-help editor-scene-id-error"
+                    aria-invalid={sceneIdIssue ? "true" : undefined}
+                    oninput={( e ) => { sceneIdIssue = checkSceneId( e.currentTarget.value ); }}
                     onchange={handleRename}
                 />
+                <p id="editor-scene-id-help" class="text-terminal-dim text-xs">{m.editor_scene_id_help()}</p>
+                <p id="editor-scene-id-error" class="text-terminal-error text-xs" aria-live="polite">
+                    {#if sceneIdIssue}{SCENE_ID_MESSAGES[ sceneIdIssue ]()}{/if}
+                </p>
             </div>
 
-            <!-- Start marker and delete keep together on their own row on mobile. -->
             <div class="flex gap-2 items-center flex-wrap">
                 {#if draft.startScene === scene.id}
                     <p class="text-terminal-cyan text-xs px-2 py-1 border border-terminal-cyan/40 rounded select-none">
@@ -343,7 +408,7 @@
 
                 <button
                     type="button"
-                    class="text-xs px-2 py-1 rounded border border-terminal-amber/50 text-terminal-amber hover:bg-terminal-amber/10 disabled:opacity-50 disabled:cursor-not-allowed motion-safe:transition-colors motion-safe:duration-100"
+                    class="text-xs px-2 py-1 rounded border border-terminal-amber/50 text-terminal-amber hover:bg-terminal-amber/10 disabled:text-terminal-dim disabled:border-terminal-dim/50 disabled:hover:bg-transparent disabled:cursor-not-allowed motion-safe:transition-colors motion-safe:duration-100"
                     disabled={draft.scenes.length <= 1}
                     onclick={handleDeleteScene}
                 >
@@ -358,7 +423,7 @@
                 <select
                     id="editor-scene-speaker"
                     value={scene.speaker ?? NO_SPEAKER}
-                    class="w-full bg-terminal-bg border border-terminal-dim/40 rounded px-2 py-1 text-terminal-green text-xs outline-none focus:border-terminal-green"
+                    class="w-full bg-terminal-bg border border-terminal-dim rounded px-2 py-1 text-terminal-green text-sm focus:border-terminal-green"
                     onchange={handleSpeakerChange}
                 >
                     <option value={NO_SPEAKER}>{m.editor_speaker_narrator()}</option>
@@ -374,13 +439,13 @@
                 <select
                     id="editor-scene-music"
                     value={scene.music ?? ""}
-                    class="w-full bg-terminal-bg border border-terminal-dim/40 rounded px-2 py-1 text-terminal-green text-xs outline-none focus:border-terminal-green"
+                    class="w-full bg-terminal-bg border border-terminal-dim rounded px-2 py-1 text-terminal-green text-sm focus:border-terminal-green"
                     onchange={handleMusicChange}
                 >
                     <option value="">{m.editor_music_none()}</option>
 
                     {#each MUSIC_THEMES as theme ( theme )}
-                        <option value={theme}>{theme}</option>
+                        <option value={theme}>{musicThemeLabel( theme )}</option>
                     {/each}
                 </select>
             </div>
@@ -390,27 +455,27 @@
                 <select
                     id="editor-scene-sound"
                     value={scene.sound ?? ""}
-                    class="w-full bg-terminal-bg border border-terminal-dim/40 rounded px-2 py-1 text-terminal-green text-xs outline-none focus:border-terminal-green"
+                    class="w-full bg-terminal-bg border border-terminal-dim rounded px-2 py-1 text-terminal-green text-sm focus:border-terminal-green"
                     onchange={handleSoundChange}
                 >
                     <option value="">{m.editor_sound_none()}</option>
 
                     {#each SCENE_SOUND_EFFECTS as effect ( effect )}
-                        <option value={effect}>{effect}</option>
+                        <option value={effect}>{soundEffectLabel( effect )}</option>
                     {/each}
                 </select>
             </div>
         </div>
 
         <fieldset class="space-y-2">
-            <legend class="text-terminal-dim text-xs select-none pb-1">{m.editor_scene_text_legend()}</legend>
+            <legend class="mb-2 select-none"><h4 class="text-terminal-white text-sm font-bold tracking-widest">{m.editor_scene_text_legend()}</h4></legend>
 
             <ul class="space-y-2">
                 {#each scene.text as entry, i ( i )}
                     <li class="flex flex-col sm:flex-row gap-2 sm:items-start">
                         <select
                             value={entrySpeaker( entry )}
-                            class="w-full sm:w-36 shrink-0 truncate bg-terminal-bg border border-terminal-dim/40 rounded px-2 py-1 text-terminal-green text-xs outline-none focus:border-terminal-green"
+                            class="w-full sm:w-36 shrink-0 truncate bg-terminal-bg border border-terminal-dim rounded px-2 py-1 text-terminal-green text-sm focus:border-terminal-green"
                             aria-label={m.editor_entry_speaker_aria()}
                             title={speakerLabel( entrySpeaker( entry ) )}
                             onchange={( e ) => handleEntrySpeakerChange( i, e )}
@@ -423,12 +488,11 @@
                             {/each}
                         </select>
 
-                        <!-- Textarea and its remove button stay paired on one row across all sizes. -->
                         <div class="flex gap-2 items-start flex-1 min-w-0">
                             <textarea
                                 value={entryText( entry )}
                                 rows="2"
-                                class="flex-1 min-w-0 bg-transparent border border-terminal-dim/40 rounded px-2 py-1 text-terminal-green text-xs outline-none focus:border-terminal-green caret-terminal-green resize-y"
+                                class="flex-1 min-w-0 bg-transparent border border-terminal-dim rounded px-2 py-1 text-terminal-green text-sm focus:border-terminal-green caret-terminal-green resize-y"
                                 aria-label={m.editor_entry_text_aria()}
                                 oninput={( e ) => handleEntryTextInput( i, e )}
                             ></textarea>
@@ -460,7 +524,7 @@
                 <input
                     type="checkbox"
                     checked={scene.isEnding === true}
-                    class="accent-terminal-green"
+                    class="w-6 h-6 accent-terminal-green"
                     onchange={handleEndingToggle}
                 />
                 {m.editor_scene_ending_label()}
@@ -473,7 +537,7 @@
                 <select
                     bind:value={scene.endingType}
                     id="editor-ending-type"
-                    class="bg-terminal-bg border border-terminal-dim/40 rounded px-2 py-1 text-terminal-green text-xs outline-none focus:border-terminal-green"
+                    class="bg-terminal-bg border border-terminal-dim rounded px-2 py-1 text-terminal-green text-sm focus:border-terminal-green"
                 >
                     <option value="good">{m.editor_ending_good()}</option>
                     <option value="bad">{m.editor_ending_bad()}</option>
@@ -483,7 +547,7 @@
         </div>
 
         <fieldset class="space-y-2">
-            <legend class="text-terminal-dim text-xs select-none pb-1">{m.editor_choices_legend()}</legend>
+            <legend class="mb-2 select-none"><h4 class="text-terminal-white text-sm font-bold tracking-widest">{m.editor_choices_legend()}</h4></legend>
 
             {#if scene.choices.length > 0}
                 <ul class="space-y-2">
@@ -502,4 +566,15 @@
             </button>
         </fieldset>
     </section>
+
+    <ConfirmDialog
+        open={sceneDeletePending}
+        id="scene-delete"
+        title={m.editor_scene_delete_confirm_title( { id: scene.id } )}
+        description={m.editor_scene_delete_confirm_desc()}
+        confirmLabel={m.confirm_delete()}
+        cancelLabel={m.confirm_cancel()}
+        onconfirm={confirmDeleteScene}
+        oncancel={() => { sceneDeletePending = false; }}
+    />
 {/if}

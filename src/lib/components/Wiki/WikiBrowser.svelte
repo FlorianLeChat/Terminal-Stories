@@ -1,8 +1,8 @@
 <script lang="ts">
     import * as m from "#lib/locales/messages.js";
     import { terminal } from "#lib/stores/terminal.ts";
+    import ViewTitle from "../Terminal/ViewTitle.svelte";
     import WikiEntryDetail from "./WikiEntryDetail.svelte";
-    import TerminalLogo from "../Terminal/TerminalLogo.svelte";
     import { availableUniverses,
         availableWikiLanguages,
         categories,
@@ -43,8 +43,7 @@
         }
     } );
 
-    // Reading an entry lands the scroll position wherever the list had scrolled to;
-    // jump back to the top so the entry always opens at its beginning.
+    // Open each entry at its top, not at the list's scroll position.
     $effect( () =>
     {
         if ( currentEntry )
@@ -53,31 +52,11 @@
         }
     } );
 
-    const categoryColors: Record<string, string> = {
-        universe: "text-terminal-cyan",
-        character: "text-terminal-amber",
-        location: "text-emerald-400",
-        era: "text-purple-400",
-        event: "text-red-400"
-    };
-
     /**
-     * Returns the Tailwind text-color class for a knowledge category.
-     *
-     * @param category - The category identifier.
-     * @returns The CSS class used to color that category.
-     * @author Claude
-     */
-    const color = ( category: string ): string =>
-    {
-        return categoryColors[ category ] ?? "text-terminal-green";
-    };
-
-    /**
-     * Returns a click handler for a wiki entry. On mobile there is no hover,
-     * so the first tap selects the entry (matching the keyboard/hover state)
-     * and the second tap opens it. On desktop the hover already set
-     * selectedIndex, so the click always reaches the open branch directly.
+     * Returns a click handler for a wiki entry: the first click selects it, the
+     * second opens it. Mouse hover already selects the entry, so on desktop a
+     * click opens directly; on touch devices the selected entry shows an open
+     * hint for the second tap.
      *
      * @param i - Index of the entry in the current list.
      * @param entryId - Identifier of the entry to open on the second tap.
@@ -99,75 +78,81 @@
 </script>
 
 <div bind:this={scrollContainerEl} class="flex-1 overflow-y-auto px-4 py-2 scrollbar-terminal">
-    <TerminalLogo subtitle={m.wiki_subtitle()} />
+    <ViewTitle title={m.wiki_subtitle()} />
 
     {#if !currentEntry}
-        <ul aria-labelledby="wiki-filter-category-label" class="border border-terminal-dim/40 rounded px-3 py-2 my-4 space-y-3 sm:space-y-2">
-            <li class="flex flex-col gap-1.5 sm:flex-row sm:items-center sm:gap-2 sm:flex-wrap" role="group" aria-labelledby="wiki-filter-category-label">
+        <ul class="border border-terminal-dim/40 rounded px-3 py-2 my-4 space-y-3 sm:space-y-2">
+            <li class="flex flex-col gap-1.5 sm:flex-row sm:items-center sm:gap-2">
                 <span id="wiki-filter-category-label" class="text-terminal-dim text-xs sm:w-20 shrink-0 select-none">
                     {m.wiki_filter_category()}
                 </span>
 
-                {#each categories as cat ( cat.id )}
-                    <button
-                        class="text-xs px-2 py-1.5 sm:py-0.5 rounded border w-full sm:w-auto text-center sm:text-left motion-safe:transition-colors motion-safe:duration-100 {wiki.category === cat.id
-                            ? `border-terminal-green bg-terminal-green/15 ${ color( cat.id ) }`
-                            : "border-terminal-dim/40 text-terminal-dim hover:border-terminal-dim hover:text-terminal-white"}"
-                        aria-pressed={wiki.category === cat.id}
-                        onclick={() => terminal.setWikiCategory( cat.id )}
-                    >
-                        {cat.icon} {cat.label}
-                        <span class="opacity-80">({categoryCounts[ cat.id ]})</span>
-                    </button>
-                {/each}
+                <div class="flex flex-col gap-1.5 sm:flex-row sm:items-center sm:gap-2 sm:flex-wrap flex-1" role="group" aria-labelledby="wiki-filter-category-label">
+                    {#each categories as cat ( cat.id )}
+                        <button
+                            class="text-xs min-h-11 sm:min-h-0 px-2 py-1.5 sm:py-0.5 rounded border w-full sm:w-auto text-center sm:text-left motion-safe:transition-colors motion-safe:duration-100 {wiki.category === cat.id
+                                ? "border-terminal-green bg-terminal-green/15 text-terminal-white"
+                                : "border-terminal-dim/40 text-terminal-dim hover:border-terminal-dim hover:text-terminal-white"}"
+                            aria-pressed={wiki.category === cat.id}
+                            onclick={() => terminal.setWikiCategory( cat.id )}
+                        >
+                            {cat.icon} {cat.label}
+                            <span>({categoryCounts[ cat.id ]})</span>
+                        </button>
+                    {/each}
+                </div>
             </li>
 
-            <li class="flex flex-col gap-1.5 sm:flex-row sm:items-center sm:gap-2 sm:flex-wrap" role="group" aria-labelledby="wiki-filter-language-label">
+            <li class="flex flex-col gap-1.5 sm:flex-row sm:items-center sm:gap-2">
                 <span id="wiki-filter-language-label" class="text-terminal-dim text-xs sm:w-20 shrink-0 select-none">
                     {m.wiki_filter_language()}
                 </span>
 
-                {#each availableWikiLanguages as language ( language )}
-                    <button
-                        class="text-xs px-2 py-1.5 sm:py-0.5 rounded border w-full sm:w-auto text-center sm:text-left motion-safe:transition-colors motion-safe:duration-100 {wiki.language === language
-                            ? "border-terminal-green bg-terminal-green/15 text-terminal-white"
-                            : "border-terminal-dim/40 text-terminal-dim hover:border-terminal-dim hover:text-terminal-white"}"
-                        aria-pressed={wiki.language === language}
-                        onclick={() => terminal.setWikiLanguage( language )}
-                    >
-                        {language}
-                    </button>
-                {/each}
+                <div class="flex flex-col gap-1.5 sm:flex-row sm:items-center sm:gap-2 sm:flex-wrap flex-1" role="group" aria-labelledby="wiki-filter-language-label">
+                    {#each availableWikiLanguages as language ( language )}
+                        <button
+                            class="text-xs min-h-11 sm:min-h-0 px-2 py-1.5 sm:py-0.5 rounded border w-full sm:w-auto text-center sm:text-left motion-safe:transition-colors motion-safe:duration-100 {wiki.language === language
+                                ? "border-terminal-green bg-terminal-green/15 text-terminal-white"
+                                : "border-terminal-dim/40 text-terminal-dim hover:border-terminal-dim hover:text-terminal-white"}"
+                            aria-pressed={wiki.language === language}
+                            onclick={() => terminal.setWikiLanguage( language )}
+                        >
+                            {language}
+                        </button>
+                    {/each}
+                </div>
             </li>
 
-            <li class="flex flex-col gap-1.5 sm:flex-row sm:items-center sm:gap-2 sm:flex-wrap" role="group" aria-labelledby="wiki-filter-universe-label">
+            <li class="flex flex-col gap-1.5 sm:flex-row sm:items-center sm:gap-2">
                 <span id="wiki-filter-universe-label" class="text-terminal-dim text-xs sm:w-20 shrink-0 select-none">
                     {m.wiki_filter_universe()}
                 </span>
 
-                {#each filteredUniverses as universe ( universe )}
-                    <button
-                        class="text-xs px-2 py-1.5 sm:py-0.5 rounded border w-full sm:w-auto text-center sm:text-left motion-safe:transition-colors motion-safe:duration-100 {wiki.universe === universe
-                            ? "border-terminal-green bg-terminal-green/15 text-terminal-white"
-                            : "border-terminal-dim/40 text-terminal-dim hover:border-terminal-dim hover:text-terminal-white"}"
-                        aria-pressed={wiki.universe === universe}
-                        onclick={() => terminal.setWikiUniverse( universe )}
-                    >
-                        {universe}
-                    </button>
-                {/each}
+                <div class="flex flex-col gap-1.5 sm:flex-row sm:items-center sm:gap-2 sm:flex-wrap flex-1" role="group" aria-labelledby="wiki-filter-universe-label">
+                    {#each filteredUniverses as universe ( universe )}
+                        <button
+                            class="text-xs min-h-11 sm:min-h-0 px-2 py-1.5 sm:py-0.5 rounded border w-full sm:w-auto text-center sm:text-left motion-safe:transition-colors motion-safe:duration-100 {wiki.universe === universe
+                                ? "border-terminal-green bg-terminal-green/15 text-terminal-white"
+                                : "border-terminal-dim/40 text-terminal-dim hover:border-terminal-dim hover:text-terminal-white"}"
+                            aria-pressed={wiki.universe === universe}
+                            onclick={() => terminal.setWikiUniverse( universe )}
+                        >
+                            {universe}
+                        </button>
+                    {/each}
+                </div>
             </li>
         </ul>
 
         {#if searchActive}
-            <div class="border border-terminal-green/40 bg-terminal-green/5 rounded px-3 py-2 mb-3 flex items-center gap-2">
+            <div class="border border-terminal-green/40 focus-within:border-terminal-green bg-terminal-green/5 rounded px-3 py-2 mb-3 flex items-center gap-2">
                 <span class="text-terminal-dim text-xs select-none shrink-0">{m.wiki_search_label()}</span>
                 <span class="text-terminal-green text-xs shrink-0">›</span>
 
                 <input
                     bind:this={searchInputEl}
                     type="text"
-                    class="flex-1 min-w-0 bg-transparent text-terminal-green text-xs outline-none placeholder-terminal-dim/50 caret-terminal-green"
+                    class="flex-1 min-w-0 bg-transparent text-terminal-green text-xs placeholder-terminal-dim caret-terminal-green"
                     placeholder={m.wiki_search_placeholder()}
                     value={searchQuery}
                     oninput={( e ) => terminal.setSearchQuery( e.currentTarget.value )}
@@ -177,7 +162,7 @@
                 />
 
                 <button
-                    class="shrink-0 text-terminal-amber text-sm leading-none px-1 hover:text-terminal-white motion-safe:transition-colors motion-safe:duration-100"
+                    class="shrink-0 inline-flex items-center justify-center min-w-11 min-h-11 -my-2 -mr-2 text-terminal-amber text-sm leading-none hover:text-terminal-white motion-safe:transition-colors motion-safe:duration-100"
                     aria-label={m.action_cancel_search()}
                     onclick={() => terminal.deactivateSearch()}
                 >
@@ -185,30 +170,25 @@
                 </button>
             </div>
         {:else}
-            <!--
-                Inactive search field: a button dressed as the search box above,
-                so tapping it visibly "opens" the same field. Clearer than a lone
-                pill and consistent on both touch and desktop.
-            -->
             <button
-                class="w-full flex items-center gap-2 border border-terminal-dim/40 rounded px-3 py-2 mb-3 hover:border-terminal-dim motion-safe:transition-colors motion-safe:duration-100"
+                class="w-full min-h-11 flex items-center gap-2 border border-terminal-dim/40 rounded px-3 py-2 mb-3 hover:border-terminal-dim motion-safe:transition-colors motion-safe:duration-100"
                 aria-label={m.wiki_search_aria()}
                 onclick={() => terminal.activateSearch()}
             >
                 <span class="text-terminal-dim text-xs select-none shrink-0">{m.wiki_search_label()}</span>
                 <span class="text-terminal-green text-xs shrink-0">›</span>
-                <span class="flex-1 min-w-0 text-left text-terminal-dim/50 text-xs truncate">{m.wiki_search_placeholder()}</span>
+                <span class="flex-1 min-w-0 text-left text-terminal-dim text-xs truncate">{m.wiki_search_placeholder()}</span>
             </button>
         {/if}
 
-        <div class="text-terminal-dim text-xs text-center opacity-80 mb-4 break-words">
+        <output class="block text-terminal-dim text-xs text-center mb-4 break-words" aria-live="polite">
             {#if searchActive && searchQuery !== ""}
                 {m.wiki_count_results( { count: entries.length, query: displayQuery } )}
             {:else}
                 {m.wiki_count_entries( { count: entries.length } )}
                 {wiki.universe ? `· ${ wiki.universe }` : ""}
             {/if}
-        </div>
+        </output>
 
         {#if entries.length === 0}
             <div class="border border-terminal-dim/40 rounded px-3 py-8 mb-4 text-center text-terminal-dim text-sm">
@@ -235,17 +215,19 @@
                             onpointerenter={( e ) => { if ( e.pointerType === "mouse" ) terminal.navigateWiki( i ); }}
                         >
                             <span class="flex items-baseline gap-3">
-                                <span class="text-xs shrink-0 {color( entry.category )}">
+                                <span class="text-xs shrink-0 text-terminal-dim" aria-hidden="true">
                                     {categoryIconMap[ entry.category ]}
                                 </span>
 
                                 <span class="block flex-1 min-w-0">
                                     <span class="flex items-baseline gap-2 flex-wrap mb-2">
                                         <span class="text-terminal-white font-bold text-sm">{entry.name}</span>
-                                        <span class="text-terminal-dim text-xs shrink-0">· {entry.universe}</span>
+                                        {#if entry.name !== entry.universe}
+                                            <span class="text-terminal-dim text-xs shrink-0">· {entry.universe}</span>
+                                        {/if}
                                     </span>
 
-                                    <span class="block text-terminal-green text-xs mt-0.5 opacity-80 leading-relaxed">
+                                    <span class="block text-terminal-text text-xs mt-0.5 leading-relaxed">
                                         {entry.summary}
                                     </span>
 
@@ -272,12 +254,6 @@
 </div>
 
 <style>
-    /*
-        Touch-only affordance. On devices without hover the entry list uses a
-        two-tap pattern (first tap selects, second tap opens), which is not
-        obvious; the selected entry then shows a hint that a second tap opens it.
-        Hidden on hover-capable devices, where a click opens directly.
-    */
     .open-hint {
         display: none;
     }
@@ -297,7 +273,7 @@
     }
 
     .scrollbar-terminal::-webkit-scrollbar-thumb {
-        background: #1a4a1a;
-        border-radius: 2px;
+        background: color-mix( in srgb, var( --color-terminal-dim ) 40%, transparent );
+        border-radius: var( --radius-terminal );
     }
 </style>

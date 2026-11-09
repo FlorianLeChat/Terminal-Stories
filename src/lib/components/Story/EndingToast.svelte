@@ -1,32 +1,51 @@
 <script lang="ts">
     import * as m from "#lib/locales/messages.js";
     import { terminal } from "#lib/stores/terminal.ts";
+    import type { EndingDiscoveryToast } from "#lib/stores/terminal.ts";
+
+    /** Border color matching the tone of the ending just reached. */
+    const BORDER_BY_TYPE: Record<EndingDiscoveryToast[ "endingType" ], string> = {
+        good: "border-terminal-green/60",
+        bad: "border-terminal-amber/60",
+        neutral: "border-terminal-dim/60"
+    };
 
     let toast = $derived( $terminal.endingToast );
 
-    let message = $derived(
-        toast === null
-            ? ""
-            : toast.allDiscovered
-                ? m.ending_all_discovered( { total: toast.total } )
-                : m.ending_new_discovered( { found: toast.found, total: toast.total } )
-    );
+    /**
+     * Words the discovery after the story's own tone: a tragic ending is
+     * never greeted with a celebration.
+     *
+     * @param discovery - The ending discovery to describe.
+     * @returns The localized message.
+     * @author Claude
+     */
+    const discoveryMessage = ( discovery: EndingDiscoveryToast ): string =>
+    {
+        const counts = { found: discovery.found, total: discovery.total };
+
+        if ( discovery.allDiscovered ) return m.ending_all_discovered( counts );
+        if ( discovery.endingType === "good" ) return m.ending_new_discovered_good( counts );
+        if ( discovery.endingType === "bad" ) return m.ending_new_discovered_bad( counts );
+
+        return m.ending_new_discovered_neutral( counts );
+    };
 </script>
 
 {#if toast !== null}
     <div
-        class="toast w-full border border-terminal-green/60 rounded bg-[rgba(0,20,0,0.95)] px-3 py-2 shadow-[0_0_20px_rgba(0,255,70,0.25)]"
+        class="toast w-full border {BORDER_BY_TYPE[ toast.endingType ]} rounded bg-terminal-panel pl-3 pr-1 py-1 shadow-(--shadow-toast)"
         role="status"
         aria-live="polite"
     >
         <div class="flex items-center justify-between gap-2">
             <p class="text-terminal-white text-sm min-w-0">
-                🏁 {message}
+                {discoveryMessage( toast )}
             </p>
 
             <button
                 type="button"
-                class="shrink-0 text-terminal-dim hover:text-terminal-white text-xs leading-none px-1"
+                class="shrink-0 inline-flex items-center justify-center min-w-11 min-h-11 text-terminal-dim hover:text-terminal-white text-sm leading-none"
                 aria-label={m.toast_dismiss()}
                 onclick={() => terminal.dismissEndingToast()}
             >

@@ -7,8 +7,12 @@ const API_URL = "https://api.anthropic.com/v1/messages";
 const MODELS_URL = "https://api.anthropic.com/v1/models?limit=1000";
 const API_VERSION = "2023-06-01";
 
-// Generous ceiling: a branching story with ~10-15 scenes fits well under this,
-// and a non-streaming request stays within the SDK/HTTP timeout at this size.
+/**
+ * Output token ceiling: a branching story of ~10-15 scenes fits well under it,
+ * and a non-streaming request of this size stays within the HTTP timeout.
+ *
+ * @author Claude
+ */
 const MAX_TOKENS = 16000;
 
 /**
@@ -167,7 +171,6 @@ export const listModels = async ( settings: AiSettings ): Promise<AiModelOption[
     const payload = ( await response.json() ) as { data?: ModelEntry[] };
     const entries = Array.isArray( payload.data ) ? payload.data : [];
 
-    // Newest models first, so the most capable recent ones sit at the top.
     const sorted = [ ...entries ].sort( ( a, b ) => ( b.created_at ?? "" ).localeCompare( a.created_at ?? "" ) );
 
     return sorted.map( ( entry ) => ( { id: entry.id, label: entry.display_name ?? entry.id } ) );
@@ -185,23 +188,24 @@ interface MessagesResponse {
  *
  * @param params - The player's generation parameters.
  * @param settings - The user's API key and chosen model.
+ * @param signal - Optional abort signal, to cancel the request in flight.
  * @returns The generated, validated story.
  * @throws {AiError} With an {@link AiErrorCode} on network, API, or invalid-output failures.
  * @author Claude
  */
-export const generateStory = async ( params: AiGenerationParams, settings: AiSettings ): Promise<Story> =>
+export const generateStory = async ( params: AiGenerationParams, settings: AiSettings, signal?: AbortSignal ): Promise<Story> =>
 {
     let response: Response;
 
     try
     {
         response = await fetch( API_URL, {
+            signal,
             method: "POST",
             headers: {
                 "content-type": "application/json",
                 "x-api-key": settings.apiKey,
                 "anthropic-version": API_VERSION,
-                // Required to allow calling the API directly from a browser.
                 "anthropic-dangerous-direct-browser-access": "true"
             },
             body: JSON.stringify( {

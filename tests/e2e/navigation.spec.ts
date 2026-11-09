@@ -28,7 +28,7 @@ const accessPoints: AccessPoint[] = [
             await gotoMenu( page );
             await page.keyboard.press( "w" );
         },
-        openedText: "KNOWLEDGE BASE"
+        openedText: "ENCYCLOPEDIA"
     },
     {
         name: "the achievements screen with [A]",
@@ -81,4 +81,30 @@ test.describe( "Returning to the main menu with ESC", () =>
             await expect( page.getByText( "— INTERACTIVE STORIES SYSTEM —" ) ).toBeVisible();
         } );
     }
+} );
+
+test.describe( "Keyboard help", () =>
+{
+    test( "[?] lists the current view's shortcuts and ESC hands focus back", async ( { page } ) =>
+    {
+        await gotoMenu( page );
+
+        await page.keyboard.press( "?" );
+
+        const dialog = page.getByRole( "dialog", { name: "HELP" } );
+        await expect( dialog ).toBeVisible();
+        await expect( dialog.getByText( "[G] Next genre filter" ) ).toBeVisible();
+        await expect( dialog.getByRole( "heading", { name: "HOW TO PLAY" } ) ).toBeVisible();
+
+        // The help filters itself as you type.
+        await expect( dialog.getByLabel( "Filter the help" ) ).toBeFocused();
+        await page.keyboard.type( "genre" );
+        await expect( dialog.getByText( "[G] Next genre filter" ) ).toBeVisible();
+        await expect( dialog.getByText( "[L] Next language filter" ) ).toHaveCount( 0 );
+
+        // ESC closes the dialog only: the menu is still there.
+        await page.keyboard.press( "Escape" );
+        await expect( dialog ).not.toBeVisible();
+        await expect( page.getByText( "— INTERACTIVE STORIES SYSTEM —" ) ).toBeVisible();
+    } );
 } );

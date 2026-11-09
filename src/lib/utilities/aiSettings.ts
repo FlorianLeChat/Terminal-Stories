@@ -1,8 +1,11 @@
 import { DEFAULT_AI_MODEL, type AiSettings } from "#lib/types/ai.ts";
 
-// Single localStorage slot holding the user's own Anthropic API key and model
-// choice. Only these settings are persisted — generated stories are ephemeral
-// and never written to storage.
+/**
+ * localStorage key holding the user's own Anthropic API key and model choice.
+ * Generated stories are ephemeral and never written to storage.
+ *
+ * @author Claude
+ */
 const settingsKey = "terminal-stories:ai-settings";
 
 /**

@@ -45,10 +45,7 @@ test.describe( "Achievements", () =>
         await page.getByRole( "button", { name: "Start", exact: true } ).click();
         await playPath( page, path );
 
-        // The toast is a status region naming the achievement just unlocked; it
-        // sits on the story view before the player leaves to the menu. Filter out
-        // the unrelated "Endings discovered" <output>, which also has an implicit
-        // status role.
+        // Filtered by text: the "Endings discovered" <output> is a status region too.
         const toast = page.getByRole( "status" ).filter( { hasText: /Achievements? unlocked/ } );
         await expect( toast ).toBeVisible();
         await expect( toast.getByText( "First Steps" ) ).toBeVisible();
@@ -73,9 +70,7 @@ test.describe( "Achievements", () =>
 
             const isLastPath = i === paths.length - 1;
 
-            // Restart from the ending to hunt the next one; the last ending stays
-            // on screen so we can leave to the menu afterwards. The action bar's
-            // restart button is shown on every viewport.
+            // Restart between endings; the last one stays on screen to leave from.
             if ( !isLastPath )
             {
                 await page.getByRole( "button", { name: "Restart", exact: true } ).click();
@@ -101,11 +96,16 @@ test.describe( "Achievements", () =>
 
         await expect( achievementCard( page, "First Steps" ).getByText( "Unlocked", { exact: true } ) ).toBeVisible();
 
-        await page.getByRole( "button", { name: "Reset achievements" } ).click();
-        await page.getByRole( "button", { name: "Reset everything" } ).click();
+        const resetButton = page.getByRole( "button", { name: "Reset achievements" } );
+
+        await resetButton.click();
+        await page.getByRole( "dialog", { name: "Reset achievements?" } ).getByRole( "button", { name: "Reset everything" } ).click();
 
         await expect( page.getByText( "0 / 7 unlocked" ) ).toBeVisible();
         await expect( achievementCard( page, "First Steps" ).getByText( "Locked", { exact: true } ) ).toBeVisible();
+
+        // With nothing left to reset, the action is no longer offered.
+        await expect( resetButton ).toBeHidden();
     } );
 
     test( "AI-generated stories never award achievements", async ( { page } ) =>

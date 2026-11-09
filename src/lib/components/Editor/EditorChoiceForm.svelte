@@ -1,6 +1,6 @@
 <script lang="ts">
-    import type { StoryFile } from "#lib";
     import * as m from "#lib/locales/messages.js";
+    import { choiceTargetIssue, type ChoiceIssueCode, type StoryFile } from "#lib";
 
     interface Props {
         /** The story draft being edited (mutated in place). */
@@ -15,6 +15,23 @@
 
     let scene = $derived( draft.scenes.find( ( s ) => s.id === sceneId ) );
     let choice = $derived( scene?.choices[ index ] );
+
+    let sceneIds = $derived( new Set( draft.scenes.map( ( s ) => s.id ) ) );
+
+    /**
+     * Every flag already used in the story, suggested in both flag inputs so a
+     * flag set in one place and required in another is not mistyped.
+     *
+     * @author Claude
+     */
+    let knownFlags = $derived( [ ...new Set( draft.scenes.flatMap( ( s ) => s.choices.flatMap( ( c ) => [ c.setsFlag, c.requiresFlag ] ) ) ) ].filter( ( flag ) => flag !== undefined && flag !== "" ) );
+    const flagListId = $props.id();
+    let targetIssue = $derived( choice ? choiceTargetIssue( sceneIds, choice.nextScene ) : null );
+
+    /** Translated message for each choice issue code. */
+    const ISSUE_MESSAGES: Record<ChoiceIssueCode, ( target: string ) => string> = {
+        missing_target: ( target ) => m.editor_choice_missing_target( { target } )
+    };
 
     /**
      * Applies an optional flag field ("requiresFlag"/"setsFlag"), removing the
@@ -66,12 +83,11 @@
                     bind:value={choice.text}
                     id={`editor-choice-text-${ index }`}
                     type="text"
-                    class="w-full bg-transparent border border-terminal-dim/40 rounded px-2 py-1 text-terminal-green text-xs outline-none focus:border-terminal-green caret-terminal-green"
+                    class="w-full bg-transparent border border-terminal-dim rounded px-2 py-1 text-terminal-green text-sm focus:border-terminal-green caret-terminal-green"
                     autocomplete="off"
                 />
             </div>
 
-            <!-- Target select and remove stay paired below the text on mobile. -->
             <div class="flex gap-2 items-end">
                 <div class="space-y-1 flex-1 min-w-0 sm:flex-none sm:w-40">
                     <label for={`editor-choice-target-${ index }`} class="block text-terminal-dim text-xs select-none">
@@ -80,8 +96,13 @@
                     <select
                         bind:value={choice.nextScene}
                         id={`editor-choice-target-${ index }`}
-                        class="w-full bg-terminal-bg border border-terminal-dim/40 rounded px-2 py-1 text-terminal-green text-xs outline-none focus:border-terminal-green"
+                        class="w-full bg-terminal-bg border border-terminal-dim rounded px-2 py-1 text-terminal-green text-sm focus:border-terminal-green"
                     >
+                        {#if targetIssue}
+                            <!-- Keeps the broken id visible instead of silently showing another scene. -->
+                            <option value={choice.nextScene}>{choice.nextScene}</option>
+                        {/if}
+
                         {#each draft.scenes as target ( target.id )}
                             <option value={target.id}>{target.id}</option>
                         {/each}
@@ -107,7 +128,7 @@
                     bind:value={choice.action}
                     id={`editor-choice-action-${ index }`}
                     type="text"
-                    class="w-full bg-transparent border border-terminal-dim/40 rounded px-2 py-1 text-terminal-green text-xs outline-none focus:border-terminal-green caret-terminal-green"
+                    class="w-full bg-transparent border border-terminal-dim rounded px-2 py-1 text-terminal-green text-sm focus:border-terminal-green caret-terminal-green"
                     autocomplete="off"
                 />
             </div>
@@ -120,11 +141,15 @@
                     bind:value={choice.consequence}
                     id={`editor-choice-consequence-${ index }`}
                     type="text"
-                    class="w-full bg-transparent border border-terminal-dim/40 rounded px-2 py-1 text-terminal-green text-xs outline-none focus:border-terminal-green caret-terminal-green"
+                    class="w-full bg-transparent border border-terminal-dim rounded px-2 py-1 text-terminal-green text-sm focus:border-terminal-green caret-terminal-green"
                     autocomplete="off"
                 />
             </div>
         </div>
+
+        {#if targetIssue}
+            <p class="text-terminal-error text-xs" role="alert">⚠ {ISSUE_MESSAGES[ targetIssue ]( choice.nextScene )}</p>
+        {/if}
 
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
             <div class="space-y-1 min-w-0">
@@ -135,8 +160,10 @@
                     id={`editor-choice-requires-${ index }`}
                     type="text"
                     value={choice.requiresFlag ?? ""}
-                    class="w-full bg-transparent border border-terminal-dim/40 rounded px-2 py-1 text-terminal-green text-xs outline-none focus:border-terminal-green caret-terminal-green"
+                    class="w-full bg-transparent border border-terminal-dim rounded px-2 py-1 text-terminal-green text-sm focus:border-terminal-green caret-terminal-green"
                     autocomplete="off"
+                    list={flagListId}
+                    aria-describedby={`editor-choice-flags-help-${ index }`}
                     onchange={( e ) => handleFlagChange( "requiresFlag", e )}
                 />
             </div>
@@ -149,11 +176,21 @@
                     id={`editor-choice-sets-${ index }`}
                     type="text"
                     value={choice.setsFlag ?? ""}
-                    class="w-full bg-transparent border border-terminal-dim/40 rounded px-2 py-1 text-terminal-green text-xs outline-none focus:border-terminal-green caret-terminal-green"
+                    class="w-full bg-transparent border border-terminal-dim rounded px-2 py-1 text-terminal-green text-sm focus:border-terminal-green caret-terminal-green"
                     autocomplete="off"
+                    list={flagListId}
+                    aria-describedby={`editor-choice-flags-help-${ index }`}
                     onchange={( e ) => handleFlagChange( "setsFlag", e )}
                 />
             </div>
+
+            <datalist id={flagListId}>
+                {#each knownFlags as flag ( flag )}
+                    <option value={flag}></option>
+                {/each}
+            </datalist>
+
+            <p id={`editor-choice-flags-help-${ index }`} class="sm:col-span-2 text-terminal-dim text-xs">{m.editor_choice_flags_help()}</p>
         </div>
     </li>
 {/if}

@@ -7,10 +7,9 @@ import type { Page } from "@playwright/test";
  * Reduced motion is emulated before the first navigation: the app reads
  * `prefers-reduced-motion` to skip the boot sequence delays and the
  * character-by-character typewriter effect, which keeps test runs fast.
- * This is done here (not via `use.reducedMotion` in `playwright.config.ts`)
- * because that config option is not honored by the current runner version —
- * only `page.emulateMedia` reliably applies the emulation. The setting
- * persists for the page's lifetime, so later in-test navigations inherit it.
+ * `use.reducedMotion` in `playwright.config.ts` is not honored by the runner,
+ * so `page.emulateMedia` applies it instead. The setting persists for the
+ * page's lifetime, so later in-test navigations inherit it.
  *
  * @param page - The Playwright page to prepare.
  * @param path - Optional path/query string to load instead of the root.
@@ -26,20 +25,37 @@ export const gotoFresh = async ( page: Page, path = "/" ): Promise<void> =>
 
 /**
  * Waits for the boot sequence to finish, then advances to the main menu (or
- * to whatever deep-linked view the current URL resolves to).
+ * to whatever deep-linked view the current URL resolves to). The prompt reads
+ * "Press ENTER" or "Tap the screen" by viewport; ENTER works on both.
  *
  * @param page - The Playwright page currently on the boot screen.
  * @author Claude
  */
 export const skipBoot = async ( page: Page ): Promise<void> =>
 {
-    await page.getByText( "Press ENTER to begin." ).waitFor();
+    await page.getByText( /^(Press ENTER|Tap the screen) to begin\.$/ ).waitFor();
     await page.keyboard.press( "Enter" );
 };
 
 /**
- * Loads the app, clears persisted state, and skips straight past the boot
- * screen — the common starting point for most feature tests.
+ * Reports whether a path is a shared link (`?story=` or `?wiki=`), which the
+ * app opens directly, without the boot screen.
+ *
+ * @param path - The path/query string loaded.
+ * @returns True when the app skips its boot for this path.
+ * @author Claude
+ */
+export const isSharedLink = ( path: string ): boolean =>
+{
+    return /[?&](story|wiki)=/.test( path );
+};
+
+/**
+ * Loads the app, clears persisted state, and gets past the boot screen: the
+ * common starting point for most feature tests. A shared link skips the boot
+ * on its own, so the helper waits instead for its target view (or the menu
+ * explaining a dead link); the regex allows the whitespace the status bar
+ * renders around its view name.
  *
  * @param page - The Playwright page to prepare.
  * @param path - Optional path/query string to load instead of the root.
@@ -48,7 +64,14 @@ export const skipBoot = async ( page: Page ): Promise<void> =>
 export const gotoMenu = async ( page: Page, path = "/" ): Promise<void> =>
 {
     await gotoFresh( page, path );
-    await skipBoot( page );
+
+    if ( !isSharedLink( path ) )
+    {
+        await skipBoot( page );
+        return;
+    }
+
+    await page.getByText( /^\s*(STORY INFO|ENCYCLOPEDIA|— INTERACTIVE STORIES SYSTEM —)\s*$/ ).first().waitFor();
 };
 
 /**
@@ -134,7 +157,24 @@ export const openMyStories = ( page: Page ): Promise<void> =>
  * @author Claude
  */
 export const leaveToMenu = ( page: Page ): Promise<void> =>
-    clickNavControl( page, "[ESC] Main menu", "Back to stories" );
+    clickNavControl( page, "[ESC] Main menu", "Main menu" );
+
+/**
+ * Opens the share dialog of the story being read by its button. On wide
+ * screens it sits on the action bar while a scene types or at an ending, and
+ * in the footer legend ("[S] Share") while choices wait; on phones it is
+ * behind the "More actions" menu.
+ *
+ * @param page - The Playwright page, currently reading a catalog story.
+ * @returns A promise that resolves once the share button has been clicked.
+ * @author Claude
+ */
+export const openStoryShare = async ( page: Page ): Promise<void> =>
+{
+    if ( isNarrowViewport( page ) ) await page.getByRole( "button", { name: "More actions", exact: true } ).click();
+
+    await page.getByRole( "button", { name: /^(\[S\] )?Share$/ } ).click();
+};
 
 /**
  * Returns from an open wiki entry to the entry list by its back button.

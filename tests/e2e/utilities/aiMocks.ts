@@ -83,6 +83,18 @@ export const mockGenerationError = async ( page: Page ): Promise<void> =>
 };
 
 /**
+ * Stubs the Anthropic Messages API with a request that never answers, so a
+ * generation stays in flight until the player cancels it.
+ *
+ * @param page - The page whose requests should be intercepted.
+ * @author Claude
+ */
+export const mockGenerationPending = async ( page: Page ): Promise<void> =>
+{
+    await page.route( MESSAGES_URL, () => undefined );
+};
+
+/**
  * Fills in a valid key and validates it, unlocking the generation options.
  * Assumes the AI generator screen is already open and the Models API stubbed.
  *

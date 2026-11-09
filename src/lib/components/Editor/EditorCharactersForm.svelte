@@ -38,7 +38,6 @@
      */
     const handleAddCharacter = () =>
     {
-        // Walk the counter past any existing "character-N" id to stay unique.
         let counter = draft.characters.length + 1;
         let id = `character-${ counter }`;
 
@@ -63,8 +62,8 @@
     };
 </script>
 
-<fieldset class="border border-terminal-dim/40 rounded px-4 py-3 space-y-3 mb-3">
-    <legend class="text-terminal-dim text-xs px-1 select-none">{m.editor_characters_legend()}</legend>
+<fieldset class="border-t border-terminal-dim/30 pt-2 space-y-3 mb-4">
+    <legend class="pr-2 select-none"><h3 class="text-terminal-white text-base font-bold tracking-widest">{m.editor_characters_legend()}</h3></legend>
 
     {#if draft.characters.length > 0}
         <ul class="space-y-2">
@@ -78,12 +77,11 @@
                             bind:value={character.name}
                             id={`editor-character-name-${ i }`}
                             type="text"
-                            class="w-full bg-transparent border border-terminal-dim/40 rounded px-2 py-1 text-terminal-green text-xs outline-none focus:border-terminal-green caret-terminal-green"
+                            class="w-full bg-transparent border border-terminal-dim rounded px-2 py-1 text-terminal-green text-sm focus:border-terminal-green caret-terminal-green"
                             autocomplete="off"
                         />
                     </div>
 
-                    <!-- Role select and remove keep together below the name on mobile. -->
                     <div class="flex gap-2 items-end">
                         <div class="space-y-1 flex-1 min-w-0 sm:flex-none sm:w-36">
                             <label for={`editor-character-role-${ i }`} class="block text-terminal-dim text-xs select-none">
@@ -92,7 +90,7 @@
                             <select
                                 bind:value={character.role}
                                 id={`editor-character-role-${ i }`}
-                                class="w-full bg-terminal-bg border border-terminal-dim/40 rounded px-2 py-1 text-terminal-green text-xs outline-none focus:border-terminal-green"
+                                class="w-full bg-terminal-bg border border-terminal-dim rounded px-2 py-1 text-terminal-green text-sm focus:border-terminal-green"
                             >
                                 {#each ROLES as role ( role )}
                                     <option value={role}>{roleLabel( role )}</option>

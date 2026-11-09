@@ -3,7 +3,7 @@ import type { Locator, Page } from "@playwright/test";
 /**
  * Locates the currently-active button for a numbered choice (`[1] ...`). The
  * terminal keeps its whole scrollback on screen, so earlier scenes may still
- * show a button with the same index — `.last()` always targets the live scene.
+ * show a button with the same index: `.last()` always targets the live scene.
  *
  * @param page - The page currently on the story view.
  * @param choiceIndex - The 1-based choice index as displayed.

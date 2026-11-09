@@ -1,5 +1,22 @@
+import type { Page } from "@playwright/test";
 import { test, expect } from "@playwright/test";
-import { gotoMenu } from "./utilities/fixtures";
+import { gotoMenu, skipBoot } from "./utilities/fixtures";
+
+/**
+ * Unfolds the filter panel, which starts collapsed on phone-sized viewports
+ * so the catalog shows on the first screen.
+ *
+ * @param page - The Playwright page, on the main menu.
+ * @author Claude
+ */
+const openMobileFilters = async ( page: Page ): Promise<void> =>
+{
+    const toggle = page.getByRole( "button", { name: /^Filters \(\d\)/ } );
+
+    await expect( toggle ).toHaveAttribute( "aria-expanded", "false" );
+    await toggle.click();
+    await expect( toggle ).toHaveAttribute( "aria-expanded", "true" );
+};
 
 test.describe( "Main menu", () =>
 {
@@ -14,8 +31,24 @@ test.describe( "Main menu", () =>
         await expect( page.getByText( /\/ \d+ stor(y|ies)/ ) ).toBeVisible();
     } );
 
-    test( "cycles and resets the genre filter", async ( { page } ) =>
+    test( "shows a first-launch tip until it is closed, for good", async ( { page } ) =>
     {
+        const tip = page.getByRole( "complementary", { name: "Getting started" } );
+        await expect( tip ).toBeVisible();
+
+        await tip.getByRole( "button", { name: "Hide this tip" } ).click();
+        await expect( tip ).toHaveCount( 0 );
+
+        await page.reload();
+        await skipBoot( page );
+        await expect( page.getByText( "— INTERACTIVE STORIES SYSTEM —" ) ).toBeVisible();
+        await expect( tip ).toHaveCount( 0 );
+    } );
+
+    test( "cycles and resets the genre filter", async ( { page, isMobile } ) =>
+    {
+        if ( isMobile ) await openMobileFilters( page );
+
         const genreButtons = page.locator( "[aria-labelledby=\"filter-genre-label\"] button[aria-pressed]" );
         const firstGenre = genreButtons.first();
 
@@ -29,19 +62,21 @@ test.describe( "Main menu", () =>
         await expect( firstGenre ).toHaveAttribute( "aria-pressed", "false" );
     } );
 
-    test( "opens pre-filtered to the reader's language and cycles it with [L]", async ( { page } ) =>
+    test( "opens on the full catalog and cycles the language with [L]", async ( { page, isMobile } ) =>
     {
+        if ( isMobile ) await openMobileFilters( page );
+
         const languageButtons = page.locator( "[aria-labelledby=\"filter-language-label\"] button[aria-pressed]" );
 
-        // The app renders the base locale (English) in tests, so the catalog
-        // opens pre-filtered to English: the first language starts selected,
-        // the Reset control is available, and the count reflects the filter
-        // rather than the full catalog.
+        // No language is preselected on first launch: the whole catalog shows.
+        await expect( languageButtons.nth( 0 ) ).toHaveAttribute( "aria-pressed", "false" );
+        await expect( page.getByText( /\/ \d+ stories available/ ) ).toBeVisible();
+
+        // [L] steps through the languages.
+        await page.keyboard.press( "l" );
         await expect( languageButtons.nth( 0 ) ).toHaveAttribute( "aria-pressed", "true" );
         await expect( page.getByRole( "button", { name: "✕ Reset" } ) ).toBeVisible();
-        await expect( page.getByText( /\/ \d+ stories filtered/ ) ).toBeVisible();
 
-        // [L] advances to the next language in the cycle.
         await page.keyboard.press( "l" );
         await expect( languageButtons.nth( 0 ) ).toHaveAttribute( "aria-pressed", "false" );
         await expect( languageButtons.nth( 1 ) ).toHaveAttribute( "aria-pressed", "true" );
@@ -64,8 +99,7 @@ test.describe( "Main menu", () =>
         await expect( page.getByText( "The Cursed Forest" ) ).toBeVisible();
         await expect( page.getByText( /result for "forest"/ ) ).toBeVisible();
 
-        // The ✕ beside the box cancels the search outright. Matched exactly, as
-        // the desktop footer legend carries a "[ESC] Cancel search" entry too.
+        // Matched exactly: the desktop legend also has a "[ESC] Cancel search" entry.
         await page.getByRole( "button", { name: "Cancel search", exact: true } ).click();
         await expect( searchInput ).not.toBeVisible();
 
@@ -113,8 +147,6 @@ test.describe( "Main menu", () =>
 
     test( "navigates the list and opens a story with the footer buttons", async ( { page, isMobile } ) =>
     {
-        // The footer is the keyboard-shortcut legend on desktop only; on mobile
-        // list navigation is done by tapping the list directly (see controls.spec).
         test.skip( isMobile, "footer legend is desktop-only" );
 
         await page.getByRole( "button", { name: "[↓] Down" } ).click();
@@ -124,5 +156,16 @@ test.describe( "Main menu", () =>
         await page.getByRole( "button", { name: "[ENTER] Select" } ).click();
 
         await expect( page.getByText( "STORY INFO" ) ).toBeVisible();
+    } );
+
+    test( "starts with no story expanded on touch screens", async ( { page, isMobile } ) =>
+    {
+        test.skip( !isMobile, "two-tap expansion is touch-only" );
+
+        await expect( page.locator( "ol > li button[aria-current='true']" ) ).toHaveCount( 0 );
+
+        // The first tap expands a card, the second opens it.
+        await page.locator( "ol > li button" ).first().tap();
+        await expect( page.locator( "ol > li button[aria-current='true']" ) ).toHaveCount( 1 );
     } );
 } );

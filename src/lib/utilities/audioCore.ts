@@ -53,22 +53,40 @@ const isSupported = (): boolean =>
 };
 
 /**
+ * Whether the page has received a user gesture yet. Creating or driving an
+ * AudioContext before that makes the browser log an autoplay warning and keep
+ * it suspended, so the core waits for activation instead. Browsers without the
+ * User Activation API are assumed activated (the old, warning-prone behavior).
+ *
+ * @returns True once the user has interacted with the page.
+ * @author Claude
+ */
+const hasUserActivation = (): boolean =>
+{
+    const isApiAvailable = "userActivation" in globalThis.navigator;
+    if ( !isApiAvailable ) return true;
+
+    return globalThis.navigator.userActivation.hasBeenActive;
+};
+
+/**
  * Lazily creates the shared AudioContext and its output chain (master gain
  * into a gentle compressor), wiring the gain to the current enabled/volume
  * state. The compressor acts as a transparent safety limiter so stacked
- * music layers and effects can never clip the output.
+ * music layers and effects can never clip the output: its gentle settings
+ * barely touch the normal mix and only tame peaks.
  *
- * @returns The live AudioContext, or null when unavailable.
+ * @returns The live AudioContext, or null when unavailable or before the first user gesture.
  * @author Claude
  */
 export const ensureContext = (): AudioContext | null =>
 {
     if ( !isSupported() ) return null;
     if ( context ) return context;
+    if ( !hasUserActivation() ) return null;
 
     context = new AudioContext();
 
-    // Gentle settings: barely touches the normal mix, only tames peaks.
     const compressor = context.createDynamicsCompressor();
     compressor.threshold.value = -20;
     compressor.knee.value = 12;
@@ -141,6 +159,7 @@ export const resumeAudio = (): void =>
 
 /**
  * Applies the master volume to the live graph, respecting the enabled flag.
+ * The gain follows a short ramp rather than a hard set, which would click.
  *
  * @author Claude
  */
@@ -150,7 +169,6 @@ const applyMasterGain = (): void =>
 
     const target = enabled ? volume : 0;
 
-    // Short ramp instead of a hard set to avoid an audible click on change.
     masterGain.gain.cancelScheduledValues( context.currentTime );
     masterGain.gain.setTargetAtTime( target, context.currentTime, 0.05 );
 };
@@ -206,8 +224,9 @@ interface ToneOptions {
 /**
  * Plays a single synthesized tone through the master gain. The building block
  * for every interface sound effect. Supports an optional pitch glide, start
- * delay, shaped attack, and a lowpass filter so effects from sharp clicks to
- * warm bells can all be composed from it. No-op when disabled/unsupported.
+ * delay, shaped attack (followed by an exponential decay to silence), and a
+ * lowpass filter so effects from sharp clicks to warm bells can all be
+ * composed from it. No-op when disabled/unsupported.
  *
  * @param frequency - Starting pitch in hertz.
  * @param duration - Length of the tone in seconds.
@@ -239,18 +258,15 @@ export const playTone = (
     const start = ctx.currentTime + delay;
     oscillator.frequency.setValueAtTime( frequency, start );
 
-    // Optional pitch glide gives the effect movement instead of a flat blip.
     if ( options.glideTo !== undefined )
     {
         oscillator.frequency.linearRampToValueAtTime( options.glideTo, start + duration );
     }
 
-    // Shaped envelope: configurable attack, then exponential decay to silence.
     envelope.gain.setValueAtTime( 0.0001, start );
     envelope.gain.exponentialRampToValueAtTime( peak, start + attack );
     envelope.gain.exponentialRampToValueAtTime( 0.0001, start + duration );
 
-    // Optional lowpass rounds off harsh edges for a warmer, softer timbre.
     let tail: AudioNode = envelope;
     oscillator.connect( envelope );
 
@@ -270,8 +286,9 @@ export const playTone = (
 };
 
 /**
- * Plays a burst of filtered white noise — the basis for non-pitched effects
- * such as impacts and whooshes. No-op when audio is disabled/unsupported.
+ * Plays a burst of filtered white noise, the basis for non-pitched effects
+ * such as impacts and whooshes. The optional cutoff glide turns a flat hiss
+ * into a whoosh or an impact. No-op when audio is disabled/unsupported.
  *
  * @param duration - Length of the burst in seconds.
  * @param options - Peak gain, delay, lowpass cutoff, and optional cutoff glide.
@@ -291,7 +308,6 @@ export const playNoise = (
     const delay = options.delay ?? 0;
     const start = ctx.currentTime + delay;
 
-    // Fill a short buffer with white noise, played once.
     const frameCount = Math.ceil( ctx.sampleRate * duration );
     const buffer = ctx.createBuffer( 1, frameCount, ctx.sampleRate );
     const channel = buffer.getChannelData( 0 );
@@ -304,7 +320,6 @@ export const playNoise = (
     filter.type = "lowpass";
     filter.frequency.setValueAtTime( options.filterFreq ?? 1200, start );
 
-    // Optional cutoff sweep turns a flat hiss into a whoosh/impact.
     if ( options.filterTo !== undefined )
     {
         filter.frequency.exponentialRampToValueAtTime( options.filterTo, start + duration );

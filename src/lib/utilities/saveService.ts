@@ -40,6 +40,26 @@ export const saveProgress = ( gameState: GameState ): void =>
 };
 
 /**
+ * Computes how much of a story a save has explored: the distinct scenes
+ * visited (the current one included) over the story's total scene count.
+ * Revisiting a scene through a loop does not inflate the figure.
+ *
+ * @param save - The saved playthrough.
+ * @param totalScenes - Total number of scenes in the story.
+ * @returns The rounded percentage, between 0 and 100.
+ * @author Claude
+ */
+export const saveCompletion = ( save: SaveData, totalScenes: number ): number =>
+{
+    if ( totalScenes <= 0 ) return 0;
+
+    const visitedScenes = new Set( [ ...save.history, save.currentScene ] );
+    const ratio = visitedScenes.size / totalScenes;
+
+    return Math.min( 100, Math.round( ratio * 100 ) );
+};
+
+/**
  * Reads a saved game state from localStorage for the given story.
  *
  * @param storyId - The story whose save slot to read.

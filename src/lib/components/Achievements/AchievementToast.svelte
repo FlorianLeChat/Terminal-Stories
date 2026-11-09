@@ -2,10 +2,14 @@
     import { asset } from "$app/paths";
     import * as m from "#lib/locales/messages.js";
     import { terminal } from "#lib/stores/terminal.ts";
-    import { getAchievement, hideOnError, type Achievement } from "#lib";
+    import { getAchievement, type Achievement } from "#lib";
 
-    // Resolve the just-unlocked ids into their full definitions, skipping any
-    // unknown id defensively (e.g. a renamed achievement in an old save).
+    /**
+     * Definitions of the just-unlocked achievements. Unknown ids (e.g. a renamed
+     * achievement in an old save) are skipped.
+     *
+     * @author Claude
+     */
     let unlocked = $derived(
         $terminal.achievementToast
             .map( ( id ) => getAchievement( id ) )
@@ -15,18 +19,18 @@
 
 {#if unlocked.length > 0}
     <div
-        class="toast w-full border border-terminal-green/60 rounded bg-[rgba(0,20,0,0.95)] px-3 py-2 shadow-[0_0_20px_rgba(0,255,70,0.25)]"
+        class="toast w-full border border-terminal-green/60 rounded bg-terminal-panel pl-3 pr-1 pt-1 pb-2 shadow-(--shadow-toast)"
         role="status"
         aria-live="polite"
     >
-        <div class="flex items-center justify-between gap-2 mb-2">
+        <div class="flex items-center justify-between gap-2">
             <h2 class="text-terminal-green text-xs font-bold uppercase tracking-wide">
                 ✦ {m.achievements_toast_title( { count: unlocked.length } )}
             </h2>
 
             <button
                 type="button"
-                class="shrink-0 text-terminal-dim hover:text-terminal-white text-xs leading-none px-1"
+                class="shrink-0 inline-flex items-center justify-center min-w-11 min-h-11 text-terminal-dim hover:text-terminal-white text-sm leading-none"
                 aria-label={m.toast_dismiss()}
                 onclick={() => terminal.dismissAchievementToast()}
             >
@@ -34,18 +38,15 @@
             </button>
         </div>
 
-        <ul class="space-y-2">
+        <ul class="space-y-2 pr-2">
             {#each unlocked as achievement ( achievement.id )}
                 <li class="flex items-center gap-3">
-                    <img
-                        src={asset( achievement.icon )}
-                        alt=""
-                        width="24"
-                        height="24"
-                        class="w-6 h-6 shrink-0"
-                        style="image-rendering: pixelated"
-                        use:hideOnError
-                    />
+                    <!-- Masked so the icon takes the theme's primary instead of its fixed green. -->
+                    <span
+                        class="w-6 h-6 shrink-0 bg-terminal-green mask-contain mask-center mask-no-repeat"
+                        style:mask-image="url({asset( achievement.icon )})"
+                        aria-hidden="true"
+                    ></span>
 
                     <span class="text-terminal-white text-sm font-bold min-w-0 truncate">
                         {achievement.name()}

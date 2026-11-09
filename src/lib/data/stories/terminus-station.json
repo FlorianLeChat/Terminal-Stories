@@ -7,6 +7,7 @@
     "description": "An isolated space station. A distress signal. A crew of three, and something that survived the void.",
     "author": "Terminal Stories",
     "music": "mystery",
+    "phosphor": "cyan",
     "characters": [
         {
             "id": "commander",

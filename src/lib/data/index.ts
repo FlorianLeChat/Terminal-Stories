@@ -1,8 +1,7 @@
+import { resolvePhosphor } from "#lib/utilities/phosphor.ts";
 import { computeStoryStats } from "#lib/utilities/readingTime.ts";
 import type { Scene, Story, StoryFile, StoryMeta, StoryFilters } from "#lib/types/story.ts";
 
-// Eagerly scans every JSON file in ./stories so new stories are picked up
-// automatically, without an import to add by hand for each one.
 const storyModules = import.meta.glob<StoryFile>( "./stories/*.json", { eager: true, import: "default" } );
 
 /**
@@ -21,11 +20,20 @@ const toStory = ( file: StoryFile ): Story =>
     return { ...file, scenes };
 };
 
-/** All stories bundled with the application. */
+/**
+ * All stories bundled with the application: every JSON file in ./stories is
+ * picked up automatically, with no import to add by hand.
+ *
+ * @author Claude
+ */
 export const stories: Story[] = Object.values( storyModules ).map( toStory );
 
-// Lightweight metadata used by the menu and filters, with precomputed reading
-// stats so the full scene graph never has to be walked during rendering.
+/**
+ * Lightweight metadata used by the menu and filters, with precomputed reading
+ * stats so the full scene graph never has to be walked during rendering.
+ *
+ * @author Claude
+ */
 export const storiesMeta: StoryMeta[] = stories.map( ( story ) =>
 {
     const { id, title, genre, language, universe, description } = story;
@@ -42,7 +50,8 @@ export const storiesMeta: StoryMeta[] = stories.map( ( story ) =>
         universe,
         description,
         stats: computeStoryStats( story ),
-        endingIds
+        endingIds,
+        phosphor: resolvePhosphor( story )
     };
 } );
 

@@ -16,10 +16,10 @@
 
     let { draft, selectedSceneId, onselect, onadd }: Props = $props();
 
-    // Ids present in the draft, used to flag choices whose target is missing.
+    /** Ids present in the draft, used to flag choices whose target is missing. */
     let sceneIds = $derived( new SvelteSet( draft.scenes.map( ( scene ) => scene.id ) ) );
 
-    // Scenes reachable from the start scene, used to flag orphaned scenes.
+    /** Scenes reachable from the start scene, used to flag orphaned scenes. */
     let reachableIds = $derived.by( () =>
     {
         const visited = new SvelteSet<string>();
@@ -57,8 +57,8 @@
     };
 </script>
 
-<aside class="border border-terminal-dim/40 rounded px-2 py-2 sm:w-56 shrink-0" aria-label={m.editor_scenes_legend()}>
-    <h3 class="text-terminal-dim text-xs px-1 pb-2 select-none">{m.editor_scenes_legend()}</h3>
+<aside class="border border-terminal-dim/40 rounded px-2 py-2 sm:w-56 shrink-0" aria-labelledby="editor-scenes-title">
+    <h3 id="editor-scenes-title" class="text-terminal-white text-base font-bold tracking-widest px-1 pb-2 select-none">{m.editor_scenes_legend()}</h3>
 
     <ul class="space-y-0.5 max-h-64 overflow-y-auto">
         {#each draft.scenes as scene ( scene.id )}
@@ -70,33 +70,33 @@
             <li>
                 <button
                     type="button"
-                    class="w-full text-left px-2 py-1 rounded text-xs motion-safe:transition-colors motion-safe:duration-100 {isSelected
+                    class="w-full text-left px-2 py-1.5 rounded text-sm motion-safe:transition-colors motion-safe:duration-100 {isSelected
                         ? "bg-terminal-green/15 text-terminal-white"
                         : "text-terminal-dim hover:bg-white/5 hover:text-terminal-white"}"
                     aria-current={isSelected ? "true" : undefined}
                     onclick={() => onselect( scene.id )}
                 >
                     <span class="flex items-center gap-1.5 flex-wrap">
-                        <span class="min-w-0 truncate {isOrphan ? "opacity-50" : ""}">{scene.id}</span>
+                        <span class="min-w-0 truncate {isOrphan ? "text-terminal-dim italic" : ""}">{scene.id}</span>
 
                         {#if isStart}
-                            <span class="text-terminal-cyan text-[0.65rem] border border-terminal-cyan/40 rounded px-1 shrink-0">
+                            <span class="text-terminal-cyan text-xs border border-terminal-cyan/40 rounded px-1 shrink-0">
                                 {m.editor_scene_start_badge()}
                             </span>
                         {/if}
 
                         {#if isEnding}
-                            <span class="text-terminal-green text-[0.65rem] border border-terminal-green/40 rounded px-1 shrink-0">
+                            <span class="text-terminal-green text-xs border border-terminal-green/40 rounded px-1 shrink-0">
                                 {m.editor_scene_ending_badge()}
                             </span>
                         {/if}
 
                         {#if hasBrokenChoice( scene.id )}
-                            <span class="text-terminal-amber text-[0.65rem] shrink-0" title={m.editor_scene_broken_title()}>⚠</span>
+                            <span class="text-terminal-amber text-xs shrink-0" title={m.editor_scene_broken_title()}>⚠</span>
                         {/if}
 
                         {#if isOrphan && !isStart}
-                            <span class="text-terminal-amber text-[0.65rem] shrink-0" title={m.editor_scene_orphan_title()}>⊘</span>
+                            <span class="text-terminal-amber text-xs shrink-0" title={m.editor_scene_orphan_title()}>⊘</span>
                         {/if}
                     </span>
                 </button>

@@ -1,7 +1,8 @@
 <script lang="ts">
     import type { StoryMeta } from "#lib";
+    import GenreTag from "./GenreTag.svelte";
     import * as m from "#lib/locales/messages.js";
-    import { formatReadingTime, buildProgressBar, loadSave, loadDiscoveredEndings, genreColor, genreLabel } from "#lib";
+    import { formatReadingTime, buildProgressBar, loadSave, loadDiscoveredEndings, saveCompletion } from "#lib";
 
     interface Props {
         story: StoryMeta;
@@ -15,7 +16,7 @@
     let { story, index, selectedIndex, isLast, onselect, onnavigate }: Props = $props();
 
     /**
-     * Returns the completion percentage (0–100) for a story based on its save,
+     * Returns the completion percentage (0-100) for a story based on its save,
      * or `null` when no save slot exists.
      *
      * @param storyId - The story to look up.
@@ -28,21 +29,7 @@
         const save = loadSave( storyId );
         if ( !save ) return null;
 
-        return Math.min( 100, Math.round( ( save.history.length + 1 ) / totalScenes * 100 ) );
-    };
-
-    /**
-     * Returns the Unicode circled number glyph for a 1-based ending index.
-     * Supports indices 1–20 (the Unicode range for circled digits).
-     *
-     * @param i - 1-based position of the ending (e.g. 1 → ①).
-     * @returns The matching circled-number character.
-     * @author Claude
-     */
-    const endingGlyph = ( i: number ): string =>
-    {
-        // U+2460 is ①; adding (i - 1) walks through ②③... up to ⑳ (U+2473).
-        return String.fromCodePoint( 0x245f + i );
+        return saveCompletion( save, totalScenes );
     };
 
     let found = $derived( loadDiscoveredEndings( story.id ) );
@@ -50,12 +37,13 @@
     let isSelected = $derived( index === selectedIndex );
     let completion = $derived( storyCompletion( story.id, story.stats.scenes ) );
 
+    const cardId = $props.id();
+
     /**
-     * Handles a tap/click on a story item. On mobile there is no hover, so a
-     * direct click would skip the inline detail view. This two-step pattern
-     * makes the first interaction expand the item and the second open the story.
-     * On desktop the behavior is unchanged: hovering already sets isSelected,
-     * so a click always reaches the `onselect` branch immediately.
+     * Handles a tap/click on a story item: the first click selects and expands
+     * it, the second opens the story. Mouse hover already selects the item, so
+     * on desktop a click opens directly; on touch devices the expanded item
+     * shows an open hint for the second tap.
      *
      * @author Claude
      */
@@ -78,6 +66,8 @@
             ? "bg-terminal-green/15 border-l-2 border-terminal-green"
             : "border-l-2 border-transparent hover:bg-white/5"}"
         aria-current={isSelected ? "true" : undefined}
+        aria-labelledby="{cardId}-title"
+        aria-describedby="{cardId}-meta {cardId}-universe{isSelected ? ` ${ cardId }-desc` : ""}"
         onclick={handleClick}
         onpointerenter={( e ) => { if ( e.pointerType === "mouse" ) onnavigate( index ); }}
     >
@@ -86,37 +76,36 @@
 
             <span class="block flex-1 min-w-0">
                 <span class="flex items-baseline justify-between max-sm:flex-col gap-2 mb-2">
-                    <span class="text-terminal-white font-bold text-sm">{story.title}</span>
+                    <span id="{cardId}-title" class="text-terminal-white font-bold text-sm">{story.title}</span>
 
                     <span class="text-terminal-cyan text-xs shrink-0" title={m.story_item_reading_time_title()}>
                         ⏱ {m.story_item_reading_time_value( { duration: formatReadingTime( story.stats.minutes ) } )}
                     </span>
                 </span>
 
-                <span class="flex items-center gap-2 flex-wrap mb-2">
-                    <span class="text-xs {genreColor( story.genre )} shrink-0">[{genreLabel( story.genre )}]</span>
+                <span id="{cardId}-meta" class="flex items-center gap-2 flex-wrap mb-2">
+                    <GenreTag genre={story.genre} phosphor={story.phosphor} />
                     <span class="text-terminal-dim text-xs shrink-0">· {story.language}</span>
 
                     {#if completion !== null}
-                        <span
-                            class="text-terminal-amber text-xs shrink-0"
-                            aria-label={m.story_item_save_aria( { completion: completion / 100 } )}
-                        >
-                            ◉
+                        <span class="text-terminal-amber text-xs shrink-0">
+                            <span aria-hidden="true">◉</span>
+                            <span class="sr-only">{m.story_item_save_aria( { completion: completion / 100 } )}</span>
                         </span>
                     {/if}
 
                     {#if allFound}
-                        <span class="text-terminal-amber text-xs shrink-0" aria-label={m.story_item_all_endings_aria()}>
-                            ★
+                        <span class="text-terminal-amber text-xs shrink-0">
+                            <span aria-hidden="true">★</span>
+                            <span class="sr-only">{m.story_item_all_endings_aria()}</span>
                         </span>
                     {/if}
                 </span>
 
-                <span class="block text-terminal-dim text-xs">{story.universe}</span>
+                <span id="{cardId}-universe" class="block text-terminal-dim text-xs">{story.universe}</span>
 
                 {#if isSelected}
-                    <span class="block text-terminal-green text-xs my-2 opacity-80 leading-relaxed">
+                    <span id="{cardId}-desc" class="block text-terminal-text text-xs my-2 leading-relaxed">
                         {story.description}
                     </span>
 
@@ -125,7 +114,7 @@
                         {m.list_open_hint()}
                     </span>
 
-                    <span class="flex items-center gap-2 flex-wrap text-terminal-dim text-xs opacity-80">
+                    <span class="flex items-center gap-2 flex-wrap text-terminal-dim text-xs">
                         <span title={m.story_item_scenes_title()}>⌬ {story.stats.scenes} {m.story_item_scenes_entries()}</span>
                         <span title={m.story_item_explore_time_title()}>⧉ {m.story_item_explore_time_value( { duration: formatReadingTime( story.stats.fullMinutes ) } )}</span>
                     </span>
@@ -134,24 +123,23 @@
                         {@const bar = buildProgressBar( completion, 6 )}
 
                         <span class="flex items-center mb-1 mt-3 text-xs" title={m.story_item_progress_title()}>
-                            <span class="text-terminal-amber">◉ {bar.filled}</span><span class="text-terminal-dim/50">{bar.empty}</span>
+                            <span class="text-terminal-amber">◉ {bar.filled}</span><span class="text-terminal-dim">{bar.empty}</span>
                             <span class="ml-2 text-terminal-amber">{m.story_item_progress_value( { value: completion / 100 } )}</span>
                         </span>
                     {/if}
 
-                    <span
-                        class="flex items-baseline gap-x-1 flex-wrap"
-                        title={m.story_item_endings_title( { found: found.size, total: story.endingIds.length } )}
-                    >
-                        <span class="text-terminal-dim text-xs opacity-80 mr-1">
+                    <span class="flex items-baseline gap-x-1 flex-wrap">
+                        <span class="text-terminal-dim text-xs mr-1">
                             {m.story_item_endings_count( { count: story.endingIds.length } )}
                         </span>
 
-                        {#each story.endingIds as endingId, idx ( endingId )}
-                            <span class="text-xl {found.has( endingId ) ? "text-terminal-green" : "text-terminal-dim"}">
-                                {endingGlyph( idx + 1 )}
-                            </span>
-                        {/each}
+                        <span class="text-base tracking-widest" aria-hidden="true">
+                            {#each story.endingIds as endingId ( endingId )}
+                                <span class={found.has( endingId ) ? "text-terminal-green" : "text-terminal-dim"}>{found.has( endingId ) ? "●" : "○"}</span>
+                            {/each}
+                        </span>
+
+                        <span class="text-terminal-dim text-xs ml-1">{m.story_item_endings_title( { found: found.size, total: story.endingIds.length } )}</span>
                     </span>
                 {/if}
             </span>
@@ -164,12 +152,6 @@
 </li>
 
 <style>
-    /*
-        Touch-only affordance. On devices without hover the list uses a two-tap
-        pattern (first tap expands the item, second tap opens it), which is not
-        obvious; the selected item then shows a hint that a second tap starts
-        reading. Hidden on hover-capable devices, where a click opens directly.
-    */
     .open-hint {
         display: none;
     }

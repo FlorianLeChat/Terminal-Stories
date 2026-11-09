@@ -82,8 +82,6 @@ const scoreFields = (
     return score;
 };
 
-// ── Story docs ────────────────────────────────────────────────────────────────
-
 interface StorySearchDoc {
     meta: StoryMeta;
     fields: ScoredField[];
@@ -125,8 +123,6 @@ const getStorySearchDocs = (): StorySearchDoc[] =>
     return _storyDocs;
 };
 
-// ── Wiki docs ─────────────────────────────────────────────────────────────────
-
 interface WikiSearchDoc {
     entry: KnowledgeEntry;
     fields: ScoredField[];
@@ -165,8 +161,6 @@ const getWikiSearchDocs = (): WikiSearchDoc[] =>
 
     return _wikiDocs;
 };
-
-// ── Public API ────────────────────────────────────────────────────────────────
 
 /**
  * Searches stories by relevance. Returns an empty array when the query is blank

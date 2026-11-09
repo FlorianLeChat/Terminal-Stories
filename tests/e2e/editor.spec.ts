@@ -2,7 +2,7 @@ import { readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import type { Page } from "@playwright/test";
 import { test, expect } from "@playwright/test";
-import { gotoMenu, openMyStories, backToMyStories } from "./utilities/fixtures";
+import { gotoMenu, skipBoot, openMyStories, backToMyStories } from "./utilities/fixtures";
 
 const CATALOG_STORY_ID = "cursed-forest";
 
@@ -97,11 +97,10 @@ test.describe( "My stories", () =>
         await gotoMyStories( page );
         await expect( page.getByText( "No custom story yet", { exact: false } ) ).toBeVisible();
 
-        // The "New story" button creates a blank story and opens the editor.
-        // The footer shortcut ("[N] New story") shares the "New story" phrasing,
-        // so match the on-page action exactly to stay unambiguous.
+        // A new blank story opens in the editor with its title field focused.
         await page.getByRole( "button", { name: "+ New story", exact: true } ).click();
         await expect( page.getByText( "STORY EDITOR", { exact: true } ) ).toBeVisible();
+        await expect( page.getByLabel( "TITLE" ) ).toBeFocused();
 
         await page.getByLabel( "TITLE" ).fill( "My Test Story" );
         await page.getByLabel( "Text of this line" ).fill( "The adventure starts and ends here." );
@@ -109,21 +108,19 @@ test.describe( "My stories", () =>
         await page.getByRole( "button", { name: "Save", exact: true } ).click();
         await expect( page.getByText( "✓ Saved." ) ).toBeVisible();
 
-        // Leaving the editor returns to the list, now showing the saved story.
+        // Leaving the editor returns to the list, which shows the saved story.
         await backToMyStories( page );
         await expect( page.getByText( "MY STORIES", { exact: true } ) ).toBeVisible();
         await expect( page.getByText( "My Test Story" ) ).toBeVisible();
 
-        // Play opens the story's info screen, then Start plays it.
-        await page.getByRole( "button", { name: "Play" } ).click();
+        await page.getByRole( "button", { name: "Play", exact: true } ).click();
         await expect( page.getByText( "STORY INFO", { exact: true } ) ).toBeVisible();
 
         await page.getByRole( "button", { name: "Start", exact: true } ).click();
         await expect( page.getByText( "NOW READING", { exact: true } ) ).toBeVisible();
         await expect( page.getByText( "The adventure starts and ends here." ) ).toBeVisible();
 
-        // The single scene is an ending, so the on-page restart control is
-        // offered (shown on every viewport, unlike the desktop footer legend).
+        // The single scene is an ending: the on-page Restart shows on every viewport.
         await expect( page.getByRole( "button", { name: "Restart", exact: true } ) ).toBeVisible();
 
         // Custom stories never award achievements, even on a first ending.
@@ -131,19 +128,85 @@ test.describe( "My stories", () =>
         expect( achievements ).toBeNull();
     } );
 
+    test( "guards the draft: undo/redo, inline id check, issues that lead to the fix, and a kept draft", async ( { page } ) =>
+    {
+        await gotoMyStories( page );
+        await page.getByRole( "button", { name: "+ New story", exact: true } ).click();
+
+        const title = page.getByLabel( "TITLE" );
+        const originalTitle = await title.inputValue();
+
+        // Ctrl+Z / Ctrl+Y walk the whole draft's history, with visible buttons too.
+        await title.fill( "Draft Title" );
+        await page.keyboard.press( "Control+z" );
+        await expect( title ).toHaveValue( originalTitle );
+        await page.getByRole( "button", { name: "Redo", exact: true } ).click();
+        await expect( title ).toHaveValue( "Draft Title" );
+
+        // A scene id is checked as it is typed.
+        const sceneId = page.getByLabel( "SCENE ID" );
+        await sceneId.fill( "bad id!" );
+        await expect( page.getByText( "Use only letters, digits, - and _ (no spaces)." ) ).toBeVisible();
+        await expect( sceneId ).toHaveAttribute( "aria-invalid", "true" );
+
+        // A choice looping to the start leaves no ending; its issue focuses the scene to fix.
+        await sceneId.fill( "start" );
+        await sceneId.blur();
+        await page.getByLabel( "This scene is an ending" ).uncheck();
+        await page.getByRole( "button", { name: "+ Add choice", exact: true } ).click();
+        await page.getByRole( "region", { name: "ISSUES" } ).getByRole( "button" ).first().click();
+        await expect( sceneId ).toBeFocused();
+
+        // Unsaved work survives a reload, offered back on reopening.
+        await page.reload();
+        await skipBoot( page );
+        await openMyStories( page );
+        await page.getByRole( "button", { name: "Edit", exact: true } ).first().click();
+        await expect( page.getByText( /^Unsaved changes from .+ were kept on this device\.$/ ) ).toBeVisible();
+        await page.getByRole( "button", { name: "Restore", exact: true } ).click();
+        await expect( page.getByLabel( "TITLE" ) ).toHaveValue( "Draft Title" );
+    } );
+
     test( "forks a catalog story into an editable private copy", async ( { page } ) =>
     {
         await gotoMenu( page, `/?story=${ CATALOG_STORY_ID }` );
         await expect( page.getByText( "STORY INFO", { exact: true } ) ).toBeVisible();
 
-        // The "Fork & edit" action copies the previewed story into the editor.
-        await page.getByRole( "button", { name: "Fork & edit", exact: true } ).click();
+        await page.getByRole( "button", { name: "Copy & edit", exact: true } ).click();
         await expect( page.getByText( "STORY EDITOR", { exact: true } ) ).toBeVisible();
         await expect( page.getByLabel( "TITLE" ) ).toHaveValue( catalogStoryTitle );
 
         await backToMyStories( page );
         await expect( page.getByText( "MY STORIES", { exact: true } ) ).toBeVisible();
-        await expect( page.getByText( `forked from "${ catalogStoryTitle }"` ) ).toBeVisible();
+        await expect( page.getByText( `copied from "${ catalogStoryTitle }"` ) ).toBeVisible();
+    } );
+
+    test( "asks before leaving the editor with unsaved changes", async ( { page } ) =>
+    {
+        await gotoMyStories( page );
+        await page.getByRole( "button", { name: "+ New story", exact: true } ).click();
+
+        const titleField = page.getByLabel( "TITLE" );
+        await titleField.fill( "Unsaved Draft" );
+
+        // ESC inside a field only leaves the field: the editor stays open.
+        await titleField.press( "Escape" );
+        await expect( titleField ).not.toBeFocused();
+        await expect( page.locator( "[data-editor-root]" ) ).toBeFocused();
+        await expect( page.getByText( "STORY EDITOR", { exact: true } ) ).toBeVisible();
+
+        const dialog = page.getByRole( "dialog", { name: "Leave without saving?" } );
+
+        await backToMyStories( page );
+        await expect( dialog ).toBeVisible();
+        await dialog.getByRole( "button", { name: "Keep editing" } ).click();
+        await expect( dialog ).not.toBeVisible();
+        await expect( titleField ).toHaveValue( "Unsaved Draft" );
+
+        await backToMyStories( page );
+        await dialog.getByRole( "button", { name: "Leave without saving" } ).click();
+        await expect( page.getByText( "MY STORIES", { exact: true } ) ).toBeVisible();
+        await expect( page.getByText( "Unsaved Draft" ) ).toBeHidden();
     } );
 
     test( "exports a custom story as a JSON file", async ( { page } ) =>
@@ -152,7 +215,9 @@ test.describe( "My stories", () =>
 
         await page.getByRole( "button", { name: "+ New story", exact: true } ).click();
         await page.getByLabel( "TITLE" ).fill( "Export Me" );
-        await page.getByRole( "button", { name: "Save", exact: true } ).click();
+
+        // Ctrl+S (Cmd+S on macOS) saves without leaving the field.
+        await page.keyboard.press( "ControlOrMeta+s" );
         await expect( page.getByText( "✓ Saved." ) ).toBeVisible();
         await backToMyStories( page );
 
@@ -185,7 +250,8 @@ test.describe( "My stories", () =>
 
         await importFile( page, "this is { not json" );
 
-        await expect( page.getByText( "This file is not valid JSON." ) ).toBeVisible();
+        // The error names the cause and how to fix it.
+        await expect( page.getByText( /^This file is not valid JSON: .+ Fix it in a text editor/ ) ).toBeVisible();
         await expect( page.getByText( "No custom story yet", { exact: false } ) ).toBeVisible();
     } );
 
@@ -205,7 +271,8 @@ test.describe( "My stories", () =>
 
         await importFile( page, JSON.stringify( endless ) );
 
-        await expect( page.getByText( "The story has no reachable ending." ) ).toBeVisible();
+        // The error names the cause and how to fix it.
+        await expect( page.getByText( /^The story has no reachable ending: link a scene/ ) ).toBeVisible();
         await expect( page.getByText( "No custom story yet", { exact: false } ) ).toBeVisible();
     } );
 
@@ -218,8 +285,8 @@ test.describe( "My stories", () =>
         // The script-looking title is rendered as inert text, not executed.
         await expect( page.getByText( MALICIOUS_IMPORT.title ) ).toBeVisible();
 
-        // Play the story: the HTML-looking line must appear as literal text.
-        await page.getByRole( "button", { name: "Play" } ).click();
+        // The HTML-looking scene line plays as literal text.
+        await page.getByRole( "button", { name: "Play", exact: true } ).click();
         await expect( page.getByText( "STORY INFO", { exact: true } ) ).toBeVisible();
         await page.getByRole( "button", { name: "Start", exact: true } ).click();
         await expect( page.getByText( "NOW READING", { exact: true } ) ).toBeVisible();
@@ -259,8 +326,11 @@ test.describe( "My stories", () =>
         await importFile( page, JSON.stringify( VALID_IMPORT ) );
         await expect( page.getByText( "Imported Adventure" ) ).toBeVisible();
 
-        page.once( "dialog", ( dialog ) => dialog.accept() );
         await page.getByRole( "button", { name: "Delete" } ).click();
+
+        const dialog = page.getByRole( "dialog", { name: "Delete \"Imported Adventure\"?" } );
+        await expect( dialog ).toBeVisible();
+        await dialog.getByRole( "button", { name: "Delete" } ).click();
 
         await expect( page.getByText( "No custom story yet", { exact: false } ) ).toBeVisible();
         await expect( page.getByText( "Imported Adventure" ) ).toBeHidden();

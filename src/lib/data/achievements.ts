@@ -12,7 +12,8 @@ const EXPLORER_STORIES = 3;
 
 /**
  * The catalog of achievements, in display order. Each carries a pure `check`
- * predicate evaluated whenever a catalog ending is reached; the store supplies
+ * predicate evaluated whenever a catalog ending is reached (so `first-ending`
+ * always passes); the store supplies
  * a fully-resolved {@link AchievementContext}. Unlocking is idempotent, so a
  * predicate may safely return true again once its achievement is already earned.
  *
@@ -24,7 +25,6 @@ export const achievements: Achievement[] = [
         icon: "assets/achievements/first-ending.svg",
         name: () => m.achievement_first_ending_name(),
         description: () => m.achievement_first_ending_desc(),
-        // Reached only when sitting on an ending, so completing any story unlocks it.
         check: () => true
     },
     {

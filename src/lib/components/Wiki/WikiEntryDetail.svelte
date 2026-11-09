@@ -1,8 +1,10 @@
 <script lang="ts">
+    import { onMount } from "svelte";
+    import { resolve } from "$app/paths";
     import type { KnowledgeEntry } from "#lib";
     import * as m from "#lib/locales/messages.js";
     import { terminal } from "#lib/stores/terminal.ts";
-    import { categories, categoryLabel, getEntry } from "#lib";
+    import { categories, categoryLabel, deepLinkSearch, getEntry } from "#lib";
 
     interface Props {
         entry: KnowledgeEntry;
@@ -10,24 +12,30 @@
 
     let { entry }: Props = $props();
 
-    const categoryColors: Record<string, string> = {
-        universe: "text-terminal-cyan",
-        character: "text-terminal-amber",
-        location: "text-emerald-400",
-        era: "text-purple-400",
-        event: "text-red-400"
-    };
+    let titleEl: HTMLHeadingElement | undefined = $state();
+
+    // Focus the title so keyboard and screen reader users start on the entry.
+    onMount( () =>
+    {
+        titleEl?.focus( { preventScroll: true } );
+    } );
 
     /**
-     * Returns the Tailwind text-color class for a knowledge category.
+     * Opens a related entry in place. The anchor keeps a real `?wiki=` href
+     * (shareable, opens in a new tab with a modifier key), like the links of
+     * the story info screen; a plain click switches entries without reloading.
      *
-     * @param category - The category identifier.
-     * @returns The CSS class used to color that category.
+     * @param e - The click event.
+     * @param id - The id of the related entry.
      * @author Claude
      */
-    const color = ( category: string ): string =>
+    const openRelated = ( e: MouseEvent, id: string ) =>
     {
-        return categoryColors[ category ] ?? "text-terminal-green";
+        const opensElsewhere = e.ctrlKey || e.metaKey || e.shiftKey || e.button !== 0;
+        if ( opensElsewhere ) return;
+
+        e.preventDefault();
+        terminal.openRelatedEntry( id );
     };
 
     /**
@@ -45,8 +53,8 @@
 
 <article class="border border-terminal-dim rounded px-4 py-3 my-4 max-w-2xl mx-auto">
     <header class="flex items-baseline gap-2 flex-wrap border-b border-terminal-dim/30 pb-2 mb-3">
-        <span class="text-xs {color( entry.category )}">
-            {categories.find( ( c ) => c.id === entry.category )?.icon}
+        <span class="text-xs text-terminal-dim">
+            <span aria-hidden="true">{categories.find( ( c ) => c.id === entry.category )?.icon}</span>
             {categoryLabel( entry.category )}
         </span>
 
@@ -54,7 +62,7 @@
         <span class="text-terminal-dim text-xs">{entry.universe}</span>
     </header>
 
-    <h2 class="text-terminal-white text-lg font-bold tracking-wide mb-1">{entry.name}</h2>
+    <h2 bind:this={titleEl} class="text-terminal-white text-lg font-bold tracking-wide mb-1" tabindex="-1">{entry.name}</h2>
 
     {#if entry.aliases && entry.aliases.length > 0}
         <p class="text-terminal-dim text-xs italic mb-3">
@@ -67,12 +75,12 @@
             <img
                 src={entry.image}
                 alt={entry.name}
-                class="w-full max-h-56 object-cover grayscale opacity-80"
+                class="w-full max-h-56 object-cover grayscale"
             />
         </figure>
     {/if}
 
-    <div class="space-y-2 text-sm leading-relaxed text-terminal-green mt-3">
+    <div class="space-y-2 text-[0.9375rem] leading-[1.7] text-terminal-text mt-3 max-w-[68ch]">
         {#each descriptionLines( entry.description ) as paragraph ( paragraph )}
             <p class="whitespace-pre-wrap">{paragraph}</p>
         {/each}
@@ -90,14 +98,15 @@
 
                     {#if related}
                         <li>
-                            <button
-                                class="text-left text-terminal-cyan text-xs hover:text-terminal-white motion-safe:transition-colors motion-safe:duration-100"
-                                onclick={() => terminal.openRelatedEntry( relatedId )}
+                            <a
+                                href={resolve( `/${ deepLinkSearch( { type: "wiki", id: relatedId } ) }` )}
+                                class="inline-flex items-center gap-1 min-h-6 max-sm:min-h-11 text-terminal-cyan text-xs underline underline-offset-2 hover:text-terminal-white motion-safe:transition-colors motion-safe:duration-100"
+                                onclick={( e ) => openRelated( e, relatedId )}
                             >
-                                → {categories.find( ( c ) => c.id === related.category )?.icon}
+                                <span aria-hidden="true">→ {categories.find( ( c ) => c.id === related.category )?.icon}</span>
                                 {related.name}
-                                <span class="text-terminal-dim opacity-80">({categoryLabel( related.category )})</span>
-                            </button>
+                                <span class="text-terminal-dim">({categoryLabel( related.category )})</span>
+                            </a>
                         </li>
                     {/if}
                 {/each}

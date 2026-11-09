@@ -1,13 +1,13 @@
 <script lang="ts">
     import * as m from "#lib/locales/messages.js";
     import type { CustomStoryRecord } from "#lib";
+    import GenreTag from "../Story/GenreTag.svelte";
     import { terminal } from "#lib/stores/terminal.ts";
-    import TerminalLogo from "../Terminal/TerminalLogo.svelte";
+    import ViewTitle from "../Terminal/ViewTitle.svelte";
+    import ConfirmDialog from "../Terminal/ConfirmDialog.svelte";
     import { customStoryErrorMessage,
         deleteCustomStory,
         exportCustomStory,
-        genreColor,
-        genreLabel,
         getStory,
         importCustomStory,
         listCustomStories } from "#lib";
@@ -21,8 +21,12 @@
 
     let selectedIndex = $derived( $terminal.customSelectedIndex );
 
-    // Re-read the stored list whenever the store signals a storage change
-    // (save, import, delete), keeping this view in sync without a reload.
+    /**
+     * Stored custom stories, re-read whenever the store bumps
+     * `customStoriesVersion` (save, import, delete).
+     *
+     * @author Claude
+     */
     let records = $derived.by( () =>
     {
         void $terminal.customStoriesVersion;
@@ -101,16 +105,31 @@
         }
     };
 
+    /** The story awaiting delete confirmation, or null when none is. */
+    let pendingDelete = $state<CustomStoryRecord | null>( null );
+
     /**
-     * Deletes a custom story (with its save and endings) after confirmation.
+     * Asks to confirm the deletion of a custom story.
      *
      * @param record - The record to delete.
      * @author Claude
      */
     const handleDelete = ( record: CustomStoryRecord ) =>
     {
-        const confirmed = confirm( m.custom_delete_confirm( { title: record.story.title } ) );
-        if ( !confirmed ) return;
+        pendingDelete = record;
+    };
+
+    /**
+     * Deletes the confirmed custom story, with its save and endings.
+     *
+     * @author Claude
+     */
+    const confirmDelete = () =>
+    {
+        const record = pendingDelete;
+        pendingDelete = null;
+
+        if ( !record ) return;
 
         deleteCustomStory( record.story.id );
         terminal.bumpCustomStories();
@@ -128,7 +147,7 @@
         const input = event.currentTarget as HTMLInputElement;
         const file = input.files?.[ 0 ];
 
-        // Allow re-picking the same file later (change wouldn't fire otherwise).
+        // Reset so picking the same file again still fires `change`.
         input.value = "";
 
         if ( !file ) return;
@@ -149,20 +168,22 @@
 </script>
 
 <div class="flex-1 overflow-y-auto px-4 py-2">
-    <TerminalLogo subtitle={m.custom_subtitle()} />
+    <ViewTitle title={m.custom_subtitle()} />
 
     <p class="text-terminal-dim text-xs text-center my-4">{m.custom_intro()}</p>
 
     <div class="flex items-center gap-2 flex-wrap mb-4">
         <button
-            class="text-xs px-2 py-1.5 sm:py-1 rounded border border-terminal-green/60 text-terminal-green hover:bg-terminal-green/10 motion-safe:transition-colors motion-safe:duration-100"
+            class="inline-flex items-center text-xs min-h-11 sm:min-h-8 px-2 py-1.5 sm:py-1 rounded border border-terminal-green/60 text-terminal-green hover:bg-terminal-green/10 motion-safe:transition-colors motion-safe:duration-100"
+            aria-keyshortcuts="N"
             onclick={oncreate}
         >
             {m.custom_new_button()}
+            <kbd class="hidden sm:inline ml-2 text-terminal-dim font-[inherit]" aria-hidden="true">N</kbd>
         </button>
 
         <button
-            class="text-xs px-2 py-1.5 sm:py-1 rounded border border-terminal-cyan/50 text-terminal-cyan hover:bg-terminal-cyan/10 motion-safe:transition-colors motion-safe:duration-100"
+            class="inline-flex items-center text-xs min-h-11 sm:min-h-8 px-2 py-1.5 sm:py-1 rounded border border-terminal-cyan/50 text-terminal-cyan hover:bg-terminal-cyan/10 motion-safe:transition-colors motion-safe:duration-100"
             onclick={() => fileInputEl?.click()}
         >
             {m.custom_import_button()}
@@ -179,7 +200,7 @@
     </div>
 
     {#if actionError}
-        <p class="border border-terminal-amber/60 text-terminal-amber text-xs rounded px-3 py-2 mb-4" role="alert">
+        <p class="border border-terminal-error/60 text-terminal-error text-xs rounded px-3 py-2 mb-4" role="alert">
             {actionError}
         </p>
     {/if}
@@ -208,7 +229,7 @@
                         </header>
 
                         <p class="flex items-center gap-2 flex-wrap mb-2 pl-7">
-                            <span class="text-xs {genreColor( record.story.genre )} shrink-0">[{genreLabel( record.story.genre )}]</span>
+                            <GenreTag genre={record.story.genre} phosphor={record.story.phosphor} />
                             <span class="text-terminal-dim text-xs shrink-0">· {record.story.language}</span>
                             <span class="text-terminal-dim text-xs shrink-0">
                                 · {m.custom_scene_count( { count: record.story.scenes.length } )}
@@ -223,12 +244,12 @@
                         </p>
 
                         <p class="pl-7 mb-2">
-                            <time datetime={new Date( record.updatedAt ).toISOString()} class="text-terminal-dim/70 text-xs">
+                            <time datetime={new Date( record.updatedAt ).toISOString()} class="text-terminal-dim text-xs">
                                 {m.custom_updated_at( { date: new Date( record.updatedAt ).toLocaleDateString() } )}
                             </time>
                         </p>
 
-                        <nav class="flex items-center gap-1.5 flex-wrap pl-7">
+                        <div class="flex items-center gap-1.5 flex-wrap pl-7">
                             <button
                                 class="text-xs px-2 py-1 rounded border border-terminal-green/60 text-terminal-green hover:bg-terminal-green/10 motion-safe:transition-colors motion-safe:duration-100"
                                 onclick={() => handlePlay( record.story.id )}
@@ -256,10 +277,21 @@
                             >
                                 {m.custom_delete_button()}
                             </button>
-                        </nav>
+                        </div>
                     </article>
                 </li>
             {/each}
         </ol>
     {/if}
 </div>
+
+<ConfirmDialog
+    open={pendingDelete !== null}
+    id="custom-delete"
+    title={m.custom_delete_confirm_title( { title: pendingDelete?.story.title ?? "" } )}
+    description={m.custom_delete_confirm_desc()}
+    confirmLabel={m.confirm_delete()}
+    cancelLabel={m.confirm_cancel()}
+    onconfirm={confirmDelete}
+    oncancel={() => { pendingDelete = null; }}
+/>

@@ -69,7 +69,6 @@ export const countFullyCompletedStories = ( currentStoryId: string, currentScene
 
         const discovered = loadDiscoveredEndings( meta.id );
 
-        // Fold the just reached ending into its own story so the count is current.
         if ( meta.id === currentStoryId ) discovered.add( currentSceneId );
 
         return meta.endingIds.every( ( endingId ) => discovered.has( endingId ) );
