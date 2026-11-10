@@ -272,6 +272,7 @@
 	"help_filter_placeholder": "a key or a word...",
 	"help_global_help": "[?] Show this help",
 	"help_global_mute": "[M] Turn sound on or off",
+	"help_global_theme": "[T] Switch theme (auto, light, dark)",
 	"help_howto_1": "Pick a story in the catalog, read its info screen, then start it.",
 	"help_howto_2": "At each choice, press its number or tap it. Choices are final: replay the story to explore the others.",
 	"help_howto_3": "Progress is saved after every choice: leave whenever you like and resume later.",
@@ -351,7 +352,10 @@
 
 	"resume_recap_title": "Last scene played:",
 	"scanlines_toggle": "Scanlines",
-
+	"theme_toggle": "Theme: {mode}",
+	"theme_mode_system": "auto",
+	"theme_mode_light": "light",
+	"theme_mode_dark": "dark",
 
 	"share_close": "[ESC] Close",
 	"share_copied": "Copied!",

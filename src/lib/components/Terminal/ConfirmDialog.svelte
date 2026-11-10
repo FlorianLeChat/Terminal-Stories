@@ -71,7 +71,7 @@
     bind:this={dialog}
     aria-labelledby="{id}-title"
     aria-describedby="{id}-desc"
-    class="bg-transparent backdrop:bg-black/70 m-auto max-w-[90vw] text-terminal-green"
+    class="bg-transparent backdrop:bg-terminal-backdrop m-auto max-w-[90vw] text-terminal-green"
     onclose={handleClose}
 >
     <article class="w-80 max-w-full border border-terminal-dim/60 rounded bg-terminal-bg p-5 flex flex-col gap-4 shadow-(--shadow-dialog)">

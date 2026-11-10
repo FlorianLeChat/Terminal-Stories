@@ -156,7 +156,7 @@
     onclose={() => terminal.closeShare()}
     onclick={handleBackdropClick}
     aria-labelledby="share-title"
-    class="bg-transparent backdrop:bg-black/70 m-auto max-w-[90vw] text-terminal-green"
+    class="bg-transparent backdrop:bg-terminal-backdrop m-auto max-w-[90vw] text-terminal-green"
 >
     <article class="w-80 max-w-full border border-terminal-dim/60 rounded bg-terminal-bg p-5 flex flex-col gap-4 shadow-(--shadow-dialog)">
         <header class="flex items-center justify-between gap-3">
@@ -192,7 +192,7 @@
             <span class="text-terminal-dim text-xs tracking-widest">{m.share_link_label()}</span>
 
             <div class="flex items-stretch gap-2">
-                <output class="flex-1 min-w-0 truncate text-terminal-cyan text-xs border border-terminal-dim/40 rounded px-2 py-1.5 bg-black/30">
+                <output class="flex-1 min-w-0 truncate text-terminal-cyan text-xs border border-terminal-dim/40 rounded px-2 py-1.5 bg-terminal-bg">
                     {shareUrl}
                 </output>
 

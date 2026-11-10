@@ -19,6 +19,8 @@
     --color-terminal-panel: #001400;
     --color-terminal-glow:  #00ff46;
     --color-terminal-error: #ff6b6b;
+    --color-terminal-page: #000000;
+    --color-terminal-backdrop: rgb( 0 0 0 / 0.7 );
     --color-qr-paper: #ffffff;
     --color-qr-ink:   #1a140c;
     --color-qr-error: #a11d1d;
@@ -65,15 +67,84 @@
 }
 
 /*
+    Light scheme: the reverse-video face of an amber monitor. Every phosphor
+    keeps its hue as a dark ink on a warm amber paper, and the halo turns into
+    a brown shadow. Set by `data-theme="light"` on <html> (see colorScheme.ts
+    and the inline script in app.html).
+*/
+[data-theme="light"],
+[data-theme="light"] [data-phosphor="green"] {
+    --color-terminal-green: #1b6a2c;
+    --color-terminal-amber: #7a3c00;
+    --color-terminal-cyan:  #00607a;
+    --color-terminal-white: #14230f;
+    --color-terminal-dim:   #4f5d3a;
+    --color-terminal-text:  #2b4a2e;
+    --color-terminal-bg:    #f6eedb;
+    --color-terminal-panel: #ece0c2;
+    --color-terminal-glow:  #6b4a14;
+    --color-terminal-error: #b0201b;
+}
+
+[data-theme="light"] [data-phosphor="amber"] {
+    --color-terminal-green: #844a00;
+    --color-terminal-amber: #9c300b;
+    --color-terminal-cyan:  #005a80;
+    --color-terminal-white: #2a1704;
+    --color-terminal-dim:   #6c5027;
+    --color-terminal-text:  #4a3210;
+    --color-terminal-bg:    #f8ecd2;
+    --color-terminal-panel: #efdbb1;
+    --color-terminal-glow:  #6b4a14;
+    --color-terminal-error: #a3123a;
+}
+
+[data-theme="light"] [data-phosphor="cyan"] {
+    --color-terminal-green: #005f73;
+    --color-terminal-amber: #7a3c00;
+    --color-terminal-cyan:  #0d6a3a;
+    --color-terminal-white: #0a2128;
+    --color-terminal-dim:   #465e63;
+    --color-terminal-text:  #1e4550;
+    --color-terminal-bg:    #f2eee0;
+    --color-terminal-panel: #e3e1d1;
+    --color-terminal-glow:  #6b4a14;
+    --color-terminal-error: #b0201b;
+}
+
+:root {
+    color-scheme: dark;
+}
+
+[data-theme="light"] {
+    color-scheme: light;
+    --color-terminal-page: #e2d3b0;
+    --color-terminal-backdrop: rgb( 58 38 8 / 0.45 );
+}
+
+/*
     Composite effects built from the roles. Declared on every themed element
     (not only :root) so they are recomputed from that element's own colors.
+    `--pulse-floor` is the lowest opacity a pulsing text may reach while
+    staying at 4.5:1.
 */
 :root,
 [data-phosphor] {
     --radius-terminal: 4px;
+    --pulse-floor: 0.7;
+    --scanline-color: rgb( 0 0 0 / 0.2 );
     --shadow-toast: 0 0 20px color-mix( in srgb, var( --color-terminal-glow ) 25%, transparent );
     --shadow-dialog: 0 0 40px color-mix( in srgb, var( --color-terminal-glow ) 12%, transparent );
     --shadow-monitor: 0 0 60px color-mix( in srgb, var( --color-terminal-glow ) 8%, transparent ), inset 0 0 60px color-mix( in srgb, var( --color-terminal-bg ) 20%, #000 80% );
+}
+
+[data-theme="light"],
+[data-theme="light"] [data-phosphor] {
+    --pulse-floor: 0.85;
+    --scanline-color: color-mix( in srgb, var( --color-terminal-glow ) 5%, transparent );
+    --shadow-toast: 0 4px 16px color-mix( in srgb, var( --color-terminal-glow ) 22%, transparent );
+    --shadow-dialog: 0 10px 32px color-mix( in srgb, var( --color-terminal-glow ) 24%, transparent );
+    --shadow-monitor: 0 0 48px color-mix( in srgb, var( --color-terminal-glow ) 18%, transparent ), inset 0 0 60px color-mix( in srgb, var( --color-terminal-glow ) 14%, transparent );
 }
 
 [data-phosphor] {
@@ -90,7 +161,12 @@
         --color-terminal-error 0.6s ease;
 }
 
+body {
+    transition: background-color 0.6s ease;
+}
+
 @media (prefers-reduced-motion: reduce) {
+    body,
     [data-phosphor] {
         transition: none;
     }

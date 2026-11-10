@@ -81,7 +81,7 @@
     };
 
     /** Shortcuts that work on every view. */
-    const GLOBAL_SHORTCUTS: ( () => string )[] = [ m.help_global_help, m.help_global_mute ];
+    const GLOBAL_SHORTCUTS: ( () => string )[] = [ m.help_global_help, m.help_global_mute, m.help_global_theme ];
 
     /** Task-oriented steps for a first read. */
     const HOW_TO_PLAY: ( () => string )[] = [ m.help_howto_1, m.help_howto_2, m.help_howto_3, m.help_howto_4 ];
@@ -194,7 +194,7 @@
 <dialog
     bind:this={dialog}
     aria-labelledby="help-title"
-    class="bg-transparent backdrop:bg-black/70 m-auto max-w-[90vw] text-terminal-green"
+    class="bg-transparent backdrop:bg-terminal-backdrop m-auto max-w-[90vw] text-terminal-green"
     onclose={handleClose}
 >
     <article class="w-96 max-w-full max-h-[80vh] overflow-y-auto border border-terminal-dim/60 rounded bg-terminal-bg p-5 flex flex-col gap-4 shadow-(--shadow-dialog)">

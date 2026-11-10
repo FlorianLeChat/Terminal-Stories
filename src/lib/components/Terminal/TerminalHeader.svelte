@@ -1,6 +1,7 @@
 <script lang="ts">
     import * as m from "#lib/locales/messages.js";
     import SoundControl from "./SoundControl.svelte";
+    import ThemeControl from "./ThemeControl.svelte";
     import { terminal } from "#lib/stores/terminal.ts";
     import ScanlinesControl from "./ScanlinesControl.svelte";
 
@@ -68,6 +69,7 @@
             {/if}
         </output>
 
+        <ThemeControl />
         <ScanlinesControl />
         <SoundControl />
         <span class="cursor-blink text-terminal-green" aria-hidden="true">█</span>

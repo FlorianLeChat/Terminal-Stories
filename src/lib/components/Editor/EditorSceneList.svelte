@@ -72,7 +72,7 @@
                     type="button"
                     class="w-full text-left px-2 py-1.5 rounded text-sm motion-safe:transition-colors motion-safe:duration-100 {isSelected
                         ? "bg-terminal-green/15 text-terminal-white"
-                        : "text-terminal-dim hover:bg-white/5 hover:text-terminal-white"}"
+                        : "text-terminal-dim hover:bg-terminal-white/5 hover:text-terminal-white"}"
                     aria-current={isSelected ? "true" : undefined}
                     onclick={() => onselect( scene.id )}
                 >
