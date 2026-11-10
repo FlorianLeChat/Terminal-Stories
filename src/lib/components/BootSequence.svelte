@@ -154,7 +154,7 @@
         }
     }
 
-    /* 70% opacity keeps the amber prompt above 4.5:1 contrast on the tube black. */
+    /* The theme's pulse floor keeps the signal prompt above 4.5:1 contrast. */
     .blink-text {
         animation: fadein 0.2s ease-in, pulse 1.6s ease-in-out infinite;
     }
@@ -165,7 +165,7 @@
             opacity: 1;
         }
         50% {
-            opacity: 0.7;
+            opacity: var( --pulse-floor );
         }
     }
 

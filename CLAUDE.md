@@ -163,6 +163,7 @@ Tests live in `tests/e2e/` (config: `playwright.config.ts`) and exercise the who
 - `tests/e2e/navigation.spec.ts` — cross-view keyboard access: opening the encyclopedia/achievements/AI generator/custom stories/a story from the main menu and returning to it with ESC.
 - `tests/e2e/controls.spec.ts` — which footer the viewport gets (desktop keyboard legend vs mobile page navigation).
 - `tests/e2e/sound.spec.ts` — sound toggle, volume slider, persistence, [M] shortcut.
+- `tests/e2e/theme.spec.ts` — light/dark theme (browser preference by default, three-state toggle, persistence, [T] shortcut).
 
 Conventions to follow:
 

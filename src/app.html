@@ -26,10 +26,31 @@
         <meta name="twitter:description" content="🎭 A terminal-style website where you can read, explore, and play interactive stories created by humans and AI." />
         <meta name="twitter:image" content="https://opengraph.githubassets.com/fe14524458ca71c466b74efa0bfdb99665df8ddd/FlorianLeChat/Terminal-Stories" />
 
+        <script>
+            ( () =>
+            {
+                let preference = "system";
+
+                try
+                {
+                    preference = JSON.parse( localStorage.getItem( "terminal-stories:display-settings" ) ?? "{}" ).theme ?? "system";
+                }
+                catch
+                {
+                    preference = "system";
+                }
+
+                const prefersLight = window.matchMedia( "(prefers-color-scheme: light)" ).matches;
+                const isLight = preference === "light" || ( preference !== "dark" && prefersLight );
+
+                document.documentElement.dataset.theme = isLight ? "light" : "dark";
+            } )();
+        </script>
+
         %sveltekit.head%
     </head>
 
-    <body class="w-screen h-dvh flex items-center justify-center bg-black overflow-hidden" data-sveltekit-preload-data="hover">
+    <body class="w-screen h-dvh flex items-center justify-center bg-terminal-page overflow-hidden" data-sveltekit-preload-data="hover">
         <div style="display: contents">
             %sveltekit.body%
         </div>

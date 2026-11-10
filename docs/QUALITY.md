@@ -27,7 +27,7 @@ Every critique runs the same way, so two runs give the same score (expected gap:
 |---|---|
 | In-story strings (prompt, path recap, chosen states, story boot log) follow the story's language; the log carries its `lang`. | `story.spec`: "a story's own strings follow its language" |
 | Every boot line is translated. | `BootSequence.svelte`, `npm run check` |
-| Icons read as what they do (CRT screen for scanlines, speaker for sound). | review |
+| Icons read as what they do (CRT screen for scanlines, speaker for sound, half disc / sun / crescent for the theme). | review |
 
 ## H3. User control and freedom
 

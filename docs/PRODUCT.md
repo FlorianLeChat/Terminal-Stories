@@ -53,6 +53,7 @@ Terminal Stories is an interactive story reader styled as a retro computer termi
 - Voice: a terse system console around the stories, and the story's own narrative voice inside them. French stories address the reader with "tu", and so does the in-story choice prompt ("Que fais-tu ?"); the rest of the French UI uses "vous".
 - Vocabulary: "Encyclopedia" (never "knowledge base"), "Main menu" for the way back to the catalog, "Restart" ("Rejouer") after an ending. Music themes and sound effects are shown by translated name, stored by identifier.
 - Monospace typography (JetBrains Mono) and a phosphor terminal look are binding. Each universe has its own phosphor (amber for investigations, cyan for space, green for the system itself and every other genre), set per story with an optional `phosphor` field and otherwise derived from the genre; the editor lets authors pick it.
+- The monitor comes in a dark scheme (phosphor on a black tube) and a light one ("Amber Paper": the same phosphors as dark inks on warm amber paper). By default it follows the browser's preference; readers can force light or dark from the status bar or with `[T]`, and the choice is kept on the device.
 
 ## Evidence on Hand
 

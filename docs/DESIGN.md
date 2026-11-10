@@ -15,6 +15,12 @@ colors:
   error-red: "#ff6b6b"
   cyan-phosphor: "#00e5ff"
   cyan-tube: "#020b10"
+  amber-paper: "#f6eedb"
+  desk-tan: "#e2d3b0"
+  ink-green: "#1b6a2c"
+  ink-amber: "#844a00"
+  ink-cyan: "#005f73"
+  ink-brown: "#6b4a14"
 typography:
   title:
     fontFamily: "JetBrains Mono, Courier New, monospace"
@@ -64,7 +70,7 @@ The surface is an Operate/Read hybrid: menus and editors must be scannable and p
 
 **Key Characteristics:**
 - One monospace family for everything.
-- Phosphor-on-black palette with semantic accents.
+- Phosphor-on-black palette with semantic accents, and an "Amber Paper" light scheme that reverses it into dark inks on warm paper.
 - Flat surfaces, 1px translucent borders, 4px radius.
 - Glow only on floating layers (toasts, dialogs) and the monitor frame.
 - Motion is printing: typewriter, short fades, a blinking cursor, all removed under reduced motion.
@@ -86,7 +92,7 @@ A single phosphor family on a black tube, with two signal accents.
 - **Pale Phosphor** (#e8ffe8): titles (including the story title in the status bar, set off from the view name by a dim `|` on every width), speaker names, selected text, the hover state of every control.
 - **Reading Green** (#9be8ab): narration and long-form body text.
 - **Dim Phosphor** (#62a862): system lines, labels, inactive controls and borders (at 20% to 60% alpha). Meets 4.5:1 on Tube Black at full opacity only; never lower its opacity for text.
-- **Tube Black** (#050e05): the screen background. The page around the monitor is pure black.
+- **Tube Black** (#050e05): the screen background. The page around the monitor is pure black (Desk Tan in the light scheme, see below).
 
 ### Error
 - **Error Red** (#ff6b6b): failure messages only (refused key, broken link, import or save errors, invalid field), as `terminal-error`. Each phosphor redefines it at 4.5:1 or more.
@@ -101,6 +107,17 @@ The monitor changes phosphor with the story on screen (info and playback views);
 | cyan | sci-fi | #020b10 | #00e5ff | #9fdcec | #5f9fb0 | #ffb000 | #6dffb3 | #ff6b6b |
 
 Every text role reaches at least 4.5:1 on its theme's background and panel. The roles are registered with `@property`, so switching themes cross-fades over 0.6s (none under reduced motion).
+
+### Light scheme ("Amber Paper")
+The light scheme is the reverse-video face of an amber monitor: each phosphor keeps its hue as a dark ink on a warm amber-tinted paper, so a universe is still recognized by its color. It is set by `data-theme="light"` on `<html>`, which redefines the same roles (`[data-theme="light"] [data-phosphor="..."]`); components do not change. The reader's choice (auto, light, dark) lives in the display settings; "auto" follows `prefers-color-scheme`, live. An inline script in `app.html` applies the scheme before the first paint, then `colorScheme.ts` keeps it in sync (and updates `theme-color`).
+
+| Theme | bg | panel | primary | text | white | dim | signal | choice | error |
+|---|---|---|---|---|---|---|---|---|---|
+| green | #f6eedb | #ece0c2 | #1b6a2c | #2b4a2e | #14230f | #4f5d3a | #7a3c00 | #00607a | #b0201b |
+| amber | #f8ecd2 | #efdbb1 | #844a00 | #4a3210 | #2a1704 | #6c5027 | #9c300b | #005a80 | #a3123a |
+| cyan | #f2eee0 | #e3e1d1 | #005f73 | #1e4550 | #0a2128 | #465e63 | #7a3c00 | #0d6a3a | #b0201b |
+
+Light-only adjustments: the page around the monitor is Desk Tan (#e2d3b0, `--color-terminal-page`, black in dark); the glow role is Ink Brown (#6b4a14) for every phosphor, so the halo becomes a soft offset shadow (`--shadow-toast`, `--shadow-dialog`) and the monitor gets a brown inner vignette; scanlines are ink lines at 5% (`--scanline-color`) instead of 20% black; dialog backdrops are a 45% brown wash (`--color-terminal-backdrop`); pulsing text never drops under 85% opacity (`--pulse-floor`, 70% in dark). Every text role stays at 4.5:1 on bg, panel and under a scanline. Hovers on list rows tint with the strongest-text role (`terminal-white/5`), never a raw white.
 
 The catalog previews each universe: a story's genre tag is a small outlined chip carrying `data-phosphor`, printed in that theme's primary (green, amber, cyan) on the list's dark tube, with no fill of its own, never a hue outside the roles. Encyclopedia categories are told apart by their icon alone. Toast, dialog and monitor shadows are `--shadow-toast`, `--shadow-dialog`, `--shadow-monitor`, recomputed per theme.
 
@@ -124,7 +141,7 @@ The catalog previews each universe: a story's genre tag is a small outlined chip
 
 ## Layout
 
-The app is one monitor: a full-height column capped at `max-w-4xl`, centered on black. Top to bottom: a skip link (visible on focus), the 44px status bar (title, view name, scanlines and sound toggles), the view's scrolling content, an optional action bar (story views), then the footer. The footer is a keyboard legend from `sm` up and a row of page-navigation buttons below `sm` (two by two on the menu, in the same order as the desktop navigation: Encyclopedia, My stories, AI, Achievements). While a story is read on a phone the footer folds into the action bar, which then holds the main action (Skip or Restart), "Main menu" and a "⋯" menu (Share, Help): about 56px of chrome. Side gutter 16px; safe-area insets are honored at the top and bottom.
+The app is one monitor: a full-height column capped at `max-w-4xl`, centered on black. Top to bottom: a skip link (visible on focus), the 44px status bar (title, view name, theme, scanlines and sound controls), the view's scrolling content, an optional action bar (story views), then the footer. The footer is a keyboard legend from `sm` up and a row of page-navigation buttons below `sm` (two by two on the menu, in the same order as the desktop navigation: Encyclopedia, My stories, AI, Achievements). While a story is read on a phone the footer folds into the action bar, which then holds the main action (Skip or Restart), "Main menu" and a "⋯" menu (Share, Help): about 56px of chrome. Side gutter 16px; safe-area insets are honored at the top and bottom.
 
 The status bar confirms every automatic save with an amber "◉ SAVED" that lights up white and settles (a polite live region; the label is screen-reader-only on phones).
 
@@ -153,6 +170,7 @@ Rounded corners stay at 4px (`rounded`, and `--radius-terminal` for the custom s
 - **Path taken:** printed under an ending, between two dim rules: an amber label heading ("PATH TAKEN · n choices"), then a two-digit numbered list of every branching point, the pick in Pale Phosphor with `▸`, the branches left behind struck through in dim, and `✧` on a discarded branch that still leads to an ending not found yet (with a one-line legend), shown only once another ending was already found. Screen readers get the count of such branches, then only the pick and those branches per step.
 - **Catalog endings:** one `●` per ending found and `○` per ending left, with "n / N found" in text: the shape carries the state, not the color. Catalog cards are named by their title (`aria-labelledby`); the meta line, universe and description are their description.
 - **Toggles (scanlines, sound):** one model: a fixed label ("Scanlines", "Sound") and `aria-pressed`. The scanlines icon is a small CRT screen with two lines across it (struck through when off).
+- **Theme control:** a three-state button in the status bar, before the scanlines toggle, cycling auto, light, dark (also `[T]`, listed with the global keys in the help). Its label names the current state ("Theme: auto"); the icon is a half-filled disc (auto), a sun (light) or a crescent (dark), dim on auto and in the primary phosphor once the reader forces a scheme.
 - **Toasts:** top-centered stack, opaque panel fill (the theme's `panel` role), border at 60% alpha (green, or amber for a tragic ending, dim for a neutral one), toast glow, slide-in 250ms, 44×44px close button. Achievement icons are CSS masks over the theme's primary, so they match every phosphor. They appear only once the ending has finished typing: the ending toast first, the achievement toast 1.5s later. Their copy follows the ending's tone, never a celebration after a tragic ending.
 - **Dialogs:** native `<dialog>`, focus on the safe action, destructive action in amber. The share dialog's QR sits on a white card on every phosphor; text on that card uses the fixed `qr-ink` (#1a140c) and `qr-error` (#a11d1d) colors, never a role. The help dialog (`?`, the `[?] Help` legend entry, the `?` square on phones, or the reading "⋯" menu) opens on a filter field (focused; case and accents ignored), then "How to play" (or "Writing a story" in the editor and My stories), the current screen's shortcuts and the global ones, as `[KEY] Description` lines; closing it returns focus to where it was.
 - **Resume recap:** when a save is resumed, the last scene played and the choice taken print instantly in Dim Phosphor under a "Last scene played:" system line, then the current scene types as usual.

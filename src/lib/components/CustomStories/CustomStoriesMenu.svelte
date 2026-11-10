@@ -219,7 +219,7 @@
                     <article
                         class="w-full text-left px-3 py-3 rounded motion-safe:transition-all motion-safe:duration-100 {isSelected
                             ? "bg-terminal-green/15 border-l-2 border-terminal-green"
-                            : "border-l-2 border-transparent hover:bg-white/5"}"
+                            : "border-l-2 border-transparent hover:bg-terminal-white/5"}"
                         aria-current={isSelected ? "true" : undefined}
                         onpointerenter={( e ) => { if ( e.pointerType === "mouse" ) terminal.navigateCustom( i ); }}
                     >

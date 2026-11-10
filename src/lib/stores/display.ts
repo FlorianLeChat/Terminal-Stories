@@ -1,4 +1,5 @@
 import { writable } from "svelte/store";
+import { isThemePreference, nextThemePreference, type ThemePreference } from "#lib/utilities/colorScheme.ts";
 
 /** User display preferences, persisted across sessions. */
 export interface DisplaySettings {
@@ -6,11 +7,13 @@ export interface DisplaySettings {
     scanlines: boolean;
     /** Whether the reader closed the first-launch tip on the menu. */
     welcomeDismissed: boolean;
+    /** The reader's theme choice: follow the browser, or force light or dark. */
+    theme: ThemePreference;
 }
 
 const SETTINGS_KEY = "terminal-stories:display-settings";
 
-const DEFAULT_DISPLAY_SETTINGS: DisplaySettings = { scanlines: true, welcomeDismissed: false };
+const DEFAULT_DISPLAY_SETTINGS: DisplaySettings = { scanlines: true, welcomeDismissed: false, theme: "system" };
 
 /**
  * Reads the persisted display settings, falling back to the defaults when
@@ -34,7 +37,8 @@ const loadDisplaySettings = (): DisplaySettings =>
 
         return {
             scanlines: hasScanlinesFlag ? parsed.scanlines as boolean : DEFAULT_DISPLAY_SETTINGS.scanlines,
-            welcomeDismissed: hasWelcomeFlag ? parsed.welcomeDismissed as boolean : DEFAULT_DISPLAY_SETTINGS.welcomeDismissed
+            welcomeDismissed: hasWelcomeFlag ? parsed.welcomeDismissed as boolean : DEFAULT_DISPLAY_SETTINGS.welcomeDismissed,
+            theme: isThemePreference( parsed.theme ) ? parsed.theme : DEFAULT_DISPLAY_SETTINGS.theme
         };
     }
     catch
@@ -91,7 +95,17 @@ const createDisplayStore = () =>
         persist( ( s ) => ( { ...s, welcomeDismissed: true } ) );
     };
 
-    return { subscribe, toggleScanlines, dismissWelcome };
+    /**
+     * Moves the theme to the next choice (system, light, dark) and persists it.
+     *
+     * @author Claude
+     */
+    const cycleTheme = (): void =>
+    {
+        persist( ( s ) => ( { ...s, theme: nextThemePreference( s.theme ) } ) );
+    };
+
+    return { subscribe, toggleScanlines, dismissWelcome, cycleTheme };
 };
 
 export const display = createDisplayStore();

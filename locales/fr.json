@@ -272,6 +272,7 @@
 	"help_filter_placeholder": "une touche ou un mot...",
 	"help_global_help": "[?] Afficher cette aide",
 	"help_global_mute": "[M] Activer ou couper le son",
+	"help_global_theme": "[T] Changer de thème (auto, clair, sombre)",
 	"help_howto_1": "Choisissez une histoire dans le catalogue, lisez sa fiche, puis lancez-la.",
 	"help_howto_2": "À chaque choix, appuyez sur son numéro ou touchez-le. Les choix sont définitifs : rejouez l'histoire pour explorer les autres.",
 	"help_howto_3": "La progression est sauvegardée après chaque choix : partez quand vous voulez et reprenez plus tard.",
@@ -351,7 +352,10 @@
 
 	"resume_recap_title": "Dernière scène jouée :",
 	"scanlines_toggle": "Lignes de balayage",
-
+	"theme_toggle": "Thème : {mode}",
+	"theme_mode_system": "auto",
+	"theme_mode_light": "clair",
+	"theme_mode_dark": "sombre",
 
 	"share_close": "[ÉCHAP] Fermer",
 	"share_copied": "Copié !",

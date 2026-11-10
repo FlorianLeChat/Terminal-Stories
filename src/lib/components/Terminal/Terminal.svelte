@@ -19,6 +19,7 @@
     import StoryEditor from "../Editor/StoryEditor.svelte";
     import TerminalControls from "./TerminalControls.svelte";
     import StoryActionBar from "../Story/StoryActionBar.svelte";
+    import { watchColorScheme } from "#lib/utilities/colorScheme.ts";
     import AchievementToast from "../Achievements/AchievementToast.svelte";
     import CustomStoriesMenu from "../CustomStories/CustomStoriesMenu.svelte";
     import AchievementsBrowser from "../Achievements/AchievementsBrowser.svelte";
@@ -89,6 +90,8 @@
      * @author Claude
      */
     let isAnimating = $state( false );
+
+    $effect( () => watchColorScheme( $display.theme ) );
 
     $effect( () =>
     {
@@ -461,6 +464,13 @@
         {
             e.preventDefault();
             sound.toggle();
+            return;
+        }
+
+        if ( ( e.key === "t" || e.key === "T" ) && !isInputFocused )
+        {
+            e.preventDefault();
+            display.cycleTheme();
             return;
         }
 
@@ -1004,8 +1014,8 @@
             to bottom,
             transparent 0px,
             transparent 2px,
-            rgba(0, 0, 0, 0.20) 2px,
-            rgba(0, 0, 0, 0.20) 4px
+            var( --scanline-color ) 2px,
+            var( --scanline-color ) 4px
         );
     }
 
