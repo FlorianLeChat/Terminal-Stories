@@ -1,28 +1,25 @@
 <script lang="ts">
-    import type { DeepLinkErrorCode } from "#lib";
     import * as m from "#lib/locales/messages.js";
     import { display } from "#lib/stores/display.ts";
     import { terminal } from "#lib/stores/terminal.ts";
     import StoryListItem from "./StoryListItem.svelte";
+    import type { DeepLinkErrorCode, StoryMeta } from "#lib";
     import TerminalLogo from "../Terminal/TerminalLogo.svelte";
-    import { storiesMeta, filterStories, availableGenres, availableLanguages, searchStories, genreLabel, truncateQueryForDisplay } from "#lib";
+    import { storiesMeta, availableGenres, availableLanguages, genreLabel, truncateQueryForDisplay } from "#lib";
 
     interface Props {
         selectedIndex?: number;
+        /** Catalog stories to list, already filtered and searched by the parent. */
+        visibleStories: StoryMeta[];
         onselect: ( id: string ) => void;
         onnavigate: ( index: number ) => void;
     }
 
-    let { selectedIndex = 0, onselect, onnavigate }: Props = $props();
+    let { selectedIndex = 0, visibleStories, onselect, onnavigate }: Props = $props();
 
     let filters = $derived( $terminal.filters );
     let searchActive = $derived( $terminal.searchActive );
     let searchQuery = $derived( $terminal.searchQuery );
-    let visibleStories = $derived(
-        searchActive && searchQuery !== ""
-            ? filterStories( searchStories( searchQuery ), filters )
-            : filterStories( storiesMeta, filters )
-    );
     let hasFilters = $derived( filters.genre !== null || filters.language !== null );
     let activeFilterCount = $derived( ( filters.genre !== null ? 1 : 0 ) + ( filters.language !== null ? 1 : 0 ) );
 

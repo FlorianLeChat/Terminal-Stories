@@ -1,8 +1,8 @@
 import { genreLabel } from "#lib/utilities/genre.ts";
 import type { StoryMeta } from "#lib/types/story.ts";
 import { stories, storiesMeta } from "#lib/data/index.ts";
-import { knowledgeEntries } from "#lib/data/knowledge.ts";
-import type { KnowledgeEntry } from "#lib/types/knowledge.ts";
+import type { KnowledgeCategory, KnowledgeEntry } from "#lib/types/knowledge.ts";
+import { filterEntries, getLanguageForUniverse, knowledgeEntries } from "#lib/data/knowledge.ts";
 
 /**
  * Normalizes text for indexing: lowercase and strip diacritics so
@@ -204,4 +204,48 @@ export const searchWikiEntries = ( query: string ): KnowledgeEntry[] =>
         .filter( ( { score } ) => score > 0 )
         .sort( ( a, b ) => b.score - a.score )
         .map( ( { entry } ) => entry );
+};
+
+/** Filters that decide which wiki entries the encyclopedia lists. */
+export interface WikiListFilters {
+    category: KnowledgeCategory;
+    language: string | null;
+    universe: string | null;
+}
+
+let lastWikiListKey: string | null = null;
+let lastWikiList: KnowledgeEntry[] = [];
+
+/**
+ * Lists the wiki entries visible under the given filters. A non-blank query
+ * searches across all categories (ignoring the category tab) and keeps only the
+ * language/universe filters. The last result is memoized, so the store's
+ * keyboard navigation and the wiki view share one computation per change.
+ *
+ * @param filters - The active category, language and universe filters.
+ * @param query - The active search query, or `""` when search is off.
+ * @returns The filtered and/or ranked list of knowledge entries.
+ * @author Claude
+ */
+export const visibleWikiEntries = ( filters: WikiListFilters, query: string ): KnowledgeEntry[] =>
+{
+    const key = JSON.stringify( [ filters.category, filters.language, filters.universe, query ] );
+    const isCached = key === lastWikiListKey;
+    if ( isCached ) return lastWikiList;
+
+    const { category, language, universe } = filters;
+    const hasQuery = query !== "";
+
+    lastWikiList = hasQuery
+        ? searchWikiEntries( query ).filter( ( e ) =>
+        {
+            if ( language && getLanguageForUniverse( e.universe ) !== language ) return false;
+            if ( universe && e.universe !== universe ) return false;
+
+            return true;
+        } )
+        : filterEntries( category, language, universe );
+    lastWikiListKey = key;
+
+    return lastWikiList;
 };

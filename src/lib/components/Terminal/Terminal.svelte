@@ -28,10 +28,20 @@
     let view = $derived( $terminal.view );
     let lines = $derived( $terminal.lines );
     let selectedIndex = $derived( $terminal.selectedStoryIndex );
+    let filters = $derived( $terminal.filters );
+    let searchActive = $derived( $terminal.searchActive );
+    let searchQuery = $derived( $terminal.searchQuery );
+
+    /**
+     * Catalog stories listed by the menu under the active filters and search,
+     * shared with {@link StoryMenu} so the list is computed once per change.
+     *
+     * @author Claude
+     */
     let visibleStories = $derived(
-        $terminal.searchActive && $terminal.searchQuery !== ""
-            ? filterStories( searchStories( $terminal.searchQuery ), $terminal.filters )
-            : filterStories( storiesMeta, $terminal.filters )
+        searchActive && searchQuery !== ""
+            ? filterStories( searchStories( searchQuery ), filters )
+            : filterStories( storiesMeta, filters )
     );
 
     /**
@@ -938,7 +948,7 @@
         {#if view === "boot"}
             <BootSequence ondone={handleBoot} />
         {:else if view === "menu"}
-            <StoryMenu {selectedIndex} onselect={handleMenuSelect} onnavigate={handleMenuNavigate} />
+            <StoryMenu {selectedIndex} {visibleStories} onselect={handleMenuSelect} onnavigate={handleMenuNavigate} />
         {:else if view === "story-info" || view === "story"}
             {#key $terminal.storyKey}
                 <TerminalOutput {lines} animated={view === "story"} skipSignal={effectiveSkipSignal} bind:isAnimating onchoice={terminal.makeChoice} locale={currentStoryLocale} />

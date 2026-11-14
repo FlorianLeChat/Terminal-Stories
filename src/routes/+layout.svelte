@@ -8,6 +8,7 @@
 </script>
 
 <svelte:head>
+    <link rel="preload" href={asset( "assets/fonts/jetbrains-mono-regular-latin.woff2" )} as="font" type="font/woff2" crossorigin="anonymous" />
     <link rel="icon" href={asset( "assets/favicon.svg" )} type="image/svg+xml" sizes="any" />
     <link rel="manifest" href={asset( "manifest.webmanifest" )} crossorigin="use-credentials" />
 

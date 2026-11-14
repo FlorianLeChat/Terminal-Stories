@@ -41,7 +41,6 @@ import { aiErrorMessage,
     genreLabel,
     getCustomStoryAsStory,
     getEntry,
-    getLanguageForUniverse,
     getStory,
     hasSave,
     isCustomStoryId,
@@ -54,9 +53,9 @@ import { aiErrorMessage,
     saveDiscoveredEnding,
     saveCompletion,
     saveProgress,
-    searchWikiEntries,
     storiesMeta,
-    totalStoriesCount } from "#lib";
+    totalStoriesCount,
+    visibleWikiEntries } from "#lib";
 
 export type TerminalView
     = | "boot"
@@ -1216,21 +1215,9 @@ const createTerminalStore = () =>
     const wikiVisibleEntries = () =>
     {
         const { wiki, searchActive, searchQuery } = snapshot();
+        const activeQuery = searchActive ? searchQuery : "";
 
-        const hasQuery = searchActive && searchQuery !== "";
-
-        if ( hasQuery )
-        {
-            return searchWikiEntries( searchQuery ).filter( ( e ) =>
-            {
-                if ( wiki.language && getLanguageForUniverse( e.universe ) !== wiki.language ) return false;
-                if ( wiki.universe && e.universe !== wiki.universe ) return false;
-
-                return true;
-            } );
-        }
-
-        return filterEntries( wiki.category, wiki.language, wiki.universe );
+        return visibleWikiEntries( wiki, activeQuery );
     };
 
     /**

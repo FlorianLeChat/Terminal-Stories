@@ -8,28 +8,26 @@
         categories,
         categoryIconMap,
         countAllCategories,
-        filterEntries,
         getEntry,
         getLanguageForUniverse,
-        searchWikiEntries,
-        truncateQueryForDisplay } from "#lib";
+        truncateQueryForDisplay,
+        visibleWikiEntries } from "#lib";
 
     let wiki = $derived( $terminal.wiki );
     let searchActive = $derived( $terminal.searchActive );
     let searchQuery = $derived( $terminal.searchQuery );
-    let entries = $derived(
-        searchActive && searchQuery !== ""
-            ? searchWikiEntries( searchQuery ).filter( ( e ) =>
-                ( !wiki.language || getLanguageForUniverse( e.universe ) === wiki.language )
-                && ( !wiki.universe || e.universe === wiki.universe )
-            )
-            : filterEntries( wiki.category, wiki.language, wiki.universe )
-    );
+    let wikiCategory = $derived( wiki.category );
+    let wikiLanguage = $derived( wiki.language );
+    let wikiUniverse = $derived( wiki.universe );
+    let entries = $derived( visibleWikiEntries(
+        { category: wikiCategory, language: wikiLanguage, universe: wikiUniverse },
+        searchActive ? searchQuery : ""
+    ) );
     let currentEntry = $derived( wiki.selectedEntryId ? getEntry( wiki.selectedEntryId ) : null );
     let displayQuery = $derived( truncateQueryForDisplay( searchQuery ) );
-    let categoryCounts = $derived( countAllCategories( wiki.language, wiki.universe ) );
-    let filteredUniverses = $derived( wiki.language
-        ? availableUniverses.filter( ( u ) => getLanguageForUniverse( u ) === wiki.language )
+    let categoryCounts = $derived( countAllCategories( wikiLanguage, wikiUniverse ) );
+    let filteredUniverses = $derived( wikiLanguage
+        ? availableUniverses.filter( ( u ) => getLanguageForUniverse( u ) === wikiLanguage )
         : availableUniverses );
 
     let searchInputEl: HTMLInputElement | undefined = $state();

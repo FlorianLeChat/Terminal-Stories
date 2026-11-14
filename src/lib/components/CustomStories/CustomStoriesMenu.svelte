@@ -22,14 +22,22 @@
     let selectedIndex = $derived( $terminal.customSelectedIndex );
 
     /**
-     * Stored custom stories, re-read whenever the store bumps
-     * `customStoriesVersion` (save, import, delete).
+     * Store counter bumped on every custom story save, import or delete. Read
+     * through its own derived so unrelated store updates (arrow keys...) do not
+     * re-parse the stored stories.
+     *
+     * @author Claude
+     */
+    let customStoriesVersion = $derived( $terminal.customStoriesVersion );
+
+    /**
+     * Stored custom stories, re-read whenever `customStoriesVersion` changes.
      *
      * @author Claude
      */
     let records = $derived.by( () =>
     {
-        void $terminal.customStoriesVersion;
+        void customStoriesVersion;
 
         return listCustomStories();
     } );

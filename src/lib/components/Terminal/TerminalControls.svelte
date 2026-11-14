@@ -66,13 +66,22 @@
     } );
 
     /**
+     * Store counter bumped on every custom story save, import or delete. Read
+     * through its own derived so unrelated store updates (arrow keys...) do not
+     * re-parse the stored stories.
+     *
+     * @author Claude
+     */
+    let customStoriesVersion = $derived( $terminal.customStoriesVersion );
+
+    /**
      * True when the custom story list has an entry for the list keys to act on.
      *
      * @author Claude
      */
     let hasCustomStories = $derived.by( () =>
     {
-        void $terminal.customStoriesVersion;
+        void customStoriesVersion;
 
         return view === "custom-stories" && listCustomStories().length > 0;
     } );
