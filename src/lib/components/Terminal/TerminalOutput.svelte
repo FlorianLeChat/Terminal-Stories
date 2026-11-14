@@ -106,8 +106,14 @@
      * @author Claude
      */
     let generation = 0;
-    /** IDs already queued or rendered; prevents double-processing. */
-    const knownIds = new SvelteSet<number>();
+    /**
+     * Highest line id already queued or rendered; prevents double-processing.
+     * Line ids are strictly increasing (see `nextId` in the terminal store), so
+     * a high-water mark replaces a reactive set of every id seen.
+     *
+     * @author Claude
+     */
+    let lastKnownId = 0;
     /** IDs of lines that were revealed via typewriter — no fade-in on transfer to displayed. */
     const typedIds = new SvelteSet<number>();
 
@@ -161,15 +167,20 @@
                 pendingQueue = [];
                 isProcessing = false;
                 isAnimating = false;
-                knownIds.clear();
+                lastKnownId = 0;
                 typedIds.clear();
                 return;
             }
 
-            const newLines = incoming.filter( ( l ) => !knownIds.has( l.id ) );
+            // The store drops its oldest lines past a cap: mirror the trim on the rendered copy.
+            const oldestId = incoming[ 0 ].id;
+            const hasTrimmedLines = displayed.length > 0 && displayed[ 0 ].id < oldestId;
+            if ( hasTrimmedLines ) displayed = displayed.filter( ( l ) => l.id >= oldestId );
+
+            const newLines = incoming.filter( ( l ) => l.id > lastKnownId );
             if ( newLines.length === 0 ) return;
 
-            newLines.forEach( ( l ) => knownIds.add( l.id ) );
+            lastKnownId = newLines[ newLines.length - 1 ].id;
             pendingQueue.push( ...newLines );
 
             if ( !isProcessing )

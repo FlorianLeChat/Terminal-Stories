@@ -132,16 +132,26 @@
     );
 
     /**
-     * Whether the previewed story has a save to resume, read from localStorage
-     * each time the story-info screen opens.
+     * Id of the story currently previewed or played, read through its own
+     * derived so unrelated store updates do not re-run what depends on it.
      *
      * @author Claude
      */
-    let currentStoryHasSave = $derived(
-        $terminal.view === "story-info" && $terminal.currentStory
-            ? hasSave( $terminal.currentStory.id )
-            : false
-    );
+    let currentStoryId = $derived( $terminal.currentStory?.id ?? null );
+
+    /**
+     * Whether the previewed story has a save to resume, read from localStorage
+     * only when the story-info screen opens or the previewed story changes.
+     *
+     * @author Claude
+     */
+    let currentStoryHasSave = $derived.by( () =>
+    {
+        const storyId = currentStoryId;
+        const isPreviewing = view === "story-info" && storyId !== null;
+
+        return isPreviewing ? hasSave( storyId ) : false;
+    } );
 
     /**
      * Shareable location of the current view: a story (info or playback) or

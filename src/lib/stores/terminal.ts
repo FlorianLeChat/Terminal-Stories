@@ -232,6 +232,33 @@ const nextId = (): number =>
 };
 
 /**
+ * Most terminal lines kept during a playthrough. A long session would
+ * otherwise grow the log (and the DOM) without bound; the oldest lines, far
+ * above the current scene, are dropped first.
+ *
+ * @author Claude
+ */
+const MAX_TERMINAL_LINES = 500;
+
+/**
+ * Appends freshly built lines to the log, giving each a unique id and keeping
+ * only the {@link MAX_TERMINAL_LINES} most recent.
+ *
+ * @param existing - The lines already in the log.
+ * @param added - The new lines, without ids.
+ * @returns The new log.
+ * @author Claude
+ */
+const appendLines = ( existing: TerminalLine[], added: Omit<TerminalLine, "id">[] ): TerminalLine[] =>
+{
+    const withIds = added.map( ( line ) => ( { ...line, id: nextId() } ) );
+    const overflow = existing.length + withIds.length - MAX_TERMINAL_LINES;
+    const kept = overflow > 0 ? existing.slice( overflow ) : existing;
+
+    return [ ...kept, ...withIds ];
+};
+
+/**
  * Keeps only the choices the player is allowed to take given their current
  * flags. A choice gated behind a flag stays hidden until that flag is set.
  *
@@ -966,9 +993,9 @@ const createTerminalStore = () =>
      */
     const printStoryBoot = ( story: Story ) =>
     {
-        const bootLines = buildStoryBootLines( story ).map( ( l ) => ( { ...l, id: nextId() } ) );
+        const bootLines = buildStoryBootLines( story );
 
-        update( ( s ) => ( { ...s, lines: [ ...s.lines, ...bootLines ] } ) );
+        update( ( s ) => ( { ...s, lines: appendLines( s.lines, bootLines ) } ) );
     };
 
     /**
@@ -1070,7 +1097,7 @@ const createTerminalStore = () =>
             endingsTotal,
             unlockedAchievements: nextUnlockedAchievements ?? s.unlockedAchievements,
             pendingEndingReveal: nextPendingEndingReveal ?? s.pendingEndingReveal,
-            lines: [ ...s.lines, ...lines.map( ( l ) => ( { ...l, id: nextId() } ) ) ]
+            lines: appendLines( s.lines, lines )
         } ) );
     };
 
@@ -1174,7 +1201,7 @@ const createTerminalStore = () =>
             return {
                 ...s,
                 gameState: newState,
-                lines: [ ...s.lines, ...actionLines.map( ( l ) => ( { ...l, id: nextId() } ) ) ]
+                lines: appendLines( s.lines, actionLines )
             };
         } );
 
