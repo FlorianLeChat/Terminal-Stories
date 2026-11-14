@@ -1,19 +1,82 @@
-import { storiesMeta } from "#lib/data/index.ts";
-import type { KnowledgeBase, KnowledgeCategory, KnowledgeEntry, CategoryMeta } from "#lib/types/knowledge.ts";
-
-const knowledgeModules = import.meta.glob<KnowledgeBase>( "./knowledge/*.json", { eager: true, import: "default" } );
-
-export const knowledgeBases: KnowledgeBase[] = Object.values( knowledgeModules );
+import catalog from "virtual:catalog";
+import type { StoryWikiLinks } from "#lib/types/catalog.ts";
+import type { KnowledgeCategory, KnowledgeEntry, CategoryMeta } from "#lib/types/knowledge.ts";
 
 /**
- * Every wiki entry across all knowledge bases (each JSON file in ./knowledge),
- * with `universe` and `storyId` defaulting to the base's own values.
+ * Every wiki entry, empty until {@link loadKnowledge} resolves. The entry
+ * lookups below read it, so they only make sense in the views opened after
+ * that load (the encyclopedia and its entries).
  *
  * @author Claude
  */
-export const knowledgeEntries: KnowledgeEntry[] = knowledgeBases.flatMap( ( base ) =>
-    base.entries.map( ( entry ) => ( { ...entry, universe: entry.universe ?? base.universe, storyId: entry.storyId ?? base.storyId } ) )
-);
+let knowledgeEntries: KnowledgeEntry[] = [];
+
+let knowledgeLoad: Promise<void> | null = null;
+
+/** Ids of every wiki entry, known without downloading the entries. */
+const wikiEntryIds = new Set( catalog.wikiEntryIds );
+
+/**
+ * Downloads (once) every wiki entry, kept in a chunk of its own so the menu
+ * never waits on it. A failed download is forgotten, so the next call retries.
+ *
+ * @returns A promise settled once the entries are available.
+ * @author Claude
+ */
+export const loadKnowledge = (): Promise<void> =>
+{
+    knowledgeLoad ??= import( "#lib/data/knowledgeEntries.ts" )
+        .then( ( module ) =>
+        {
+            knowledgeEntries = module.knowledgeEntries;
+        } )
+        .catch( ( error: unknown ) =>
+        {
+            knowledgeLoad = null;
+            throw error;
+        } );
+
+    return knowledgeLoad;
+};
+
+/**
+ * Returns the downloaded wiki entries (empty before {@link loadKnowledge}).
+ *
+ * @returns Every wiki entry, in source order.
+ * @author Claude
+ */
+export const getKnowledgeEntries = (): KnowledgeEntry[] =>
+{
+    return knowledgeEntries;
+};
+
+/**
+ * Returns whether an id designates an existing wiki entry, without needing the
+ * entries to be downloaded (used to validate deep links).
+ *
+ * @param id - The entry identifier.
+ * @returns `true` when the encyclopedia holds an entry with this id.
+ * @author Claude
+ */
+export const isWikiEntryId = ( id: string ): boolean =>
+{
+    return wikiEntryIds.has( id );
+};
+
+/**
+ * Returns the encyclopedia entries a catalog story links to from its info
+ * screen, without needing the entries to be downloaded.
+ *
+ * @param storyId - The story identifier.
+ * @returns The story's universe and character entries (none for other stories).
+ * @author Claude
+ */
+export const getStoryWikiLinks = ( storyId: string ): StoryWikiLinks =>
+{
+    const hasLinks = Object.hasOwn( catalog.wikiLinks, storyId );
+
+    return hasLinks ? catalog.wikiLinks[ storyId ] : { universe: null, characters: [] };
+};
 
 export const categories: CategoryMeta[] = [
     { id: "universe", label: "Univers", icon: "✦" },
@@ -31,7 +94,7 @@ export const categoryIconMap: Record<KnowledgeCategory, string> = Object.fromEnt
     categories.map( ( c ) => [ c.id, c.icon ] )
 ) as Record<KnowledgeCategory, string>;
 
-export const availableUniverses: string[] = [ ...new Set( knowledgeEntries.map( ( e ) => e.universe ) ) ];
+export const availableUniverses: string[] = catalog.universes;
 
 /**
  * Maps each universe to the language of its story, so wiki entries can be
@@ -39,12 +102,7 @@ export const availableUniverses: string[] = [ ...new Set( knowledgeEntries.map( 
  *
  * @author Claude
  */
-const universeLanguageMap = new Map<string, string>(
-    knowledgeBases.map( ( base ) => [
-        base.universe,
-        storiesMeta.find( ( s ) => s.id === base.storyId )?.language ?? "?"
-    ] )
-);
+const universeLanguageMap = new Map<string, string>( catalog.universeLanguages );
 
 export const availableWikiLanguages: string[] = [ ...new Set( universeLanguageMap.values() ) ];
 

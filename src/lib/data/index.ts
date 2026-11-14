@@ -1,70 +1,73 @@
-import { resolvePhosphor } from "#lib/utilities/phosphor.ts";
-import { computeStoryStats } from "#lib/utilities/readingTime.ts";
-import type { Scene, Story, StoryFile, StoryMeta, StoryFilters } from "#lib/types/story.ts";
-
-const storyModules = import.meta.glob<StoryFile>( "./stories/*.json", { eager: true, import: "default" } );
+import catalog from "virtual:catalog";
+import { toStory } from "#lib/data/catalog.ts";
+import type { Story, StoryFile, StoryMeta, StoryFilters } from "#lib/types/story.ts";
 
 /**
- * Turns a story file's flat `scenes` array into the keyed map the engine
- * looks up scenes by id with.
+ * One lazy loader per story JSON file: a story's scene graph is only
+ * downloaded when the story is opened, in a chunk of its own.
  *
- * @param file - The raw story as authored in JSON.
- * @returns The story with its scene array converted to a `Record`.
  * @author Claude
  */
-const toStory = ( file: StoryFile ): Story =>
-{
-    const scenes: Record<string, Scene> = {};
-    for ( const scene of file.scenes ) scenes[ scene.id ] = scene;
+const storyLoaders = import.meta.glob<StoryFile>( "./stories/*.json", { import: "default" } );
 
-    return { ...file, scenes };
+/** Stories already downloaded, by id. */
+const loadedStories = new Map<string, Story>();
+
+/**
+ * Lightweight metadata used by the menu, the filters and the search, built at
+ * compile time so no scene graph is walked (or downloaded) to render the menu.
+ *
+ * @author Claude
+ */
+export const storiesMeta: StoryMeta[] = catalog.stories;
+
+/**
+ * Returns whether an id designates a story bundled with the application.
+ *
+ * @param id - The story identifier.
+ * @returns `true` when the catalog holds a story with this id.
+ * @author Claude
+ */
+export const isCatalogStory = ( id: string ): boolean =>
+{
+    return Object.hasOwn( catalog.storyFiles, id );
 };
 
 /**
- * All stories bundled with the application: every JSON file in ./stories is
- * picked up automatically, with no import to add by hand.
- *
- * @author Claude
- */
-export const stories: Story[] = Object.values( storyModules ).map( toStory );
-
-/**
- * Lightweight metadata used by the menu and filters, with precomputed reading
- * stats so the full scene graph never has to be walked during rendering.
- *
- * @author Claude
- */
-export const storiesMeta: StoryMeta[] = stories.map( ( story ) =>
-{
-    const { id, title, genre, language, universe, description } = story;
-
-    const endingIds = Object.entries( story.scenes )
-        .filter( ( [ , s ] ) => s.isEnding )
-        .map( ( [ id ] ) => id );
-
-    return {
-        id,
-        title,
-        genre,
-        language,
-        universe,
-        description,
-        stats: computeStoryStats( story ),
-        endingIds,
-        phosphor: resolvePhosphor( story )
-    };
-} );
-
-/**
- * Looks up a full story (including its scene graph) by id.
+ * Downloads (once) and returns a bundled story with its full scene graph.
  *
  * @param id - The story identifier.
  * @returns The matching story, or `undefined` if none exists.
  * @author Claude
  */
-export const getStory = ( id: string ): Story | undefined =>
+export const loadStory = async ( id: string ): Promise<Story | undefined> =>
 {
-    return stories.find( ( s ) => s.id === id );
+    const cached = loadedStories.get( id );
+    if ( cached ) return cached;
+
+    if ( !isCatalogStory( id ) ) return undefined;
+
+    const loader = storyLoaders[ `./stories/${ catalog.storyFiles[ id ] }` ];
+    if ( !loader ) return undefined;
+
+    const story = toStory( await loader() );
+    loadedStories.set( id, story );
+
+    return story;
+};
+
+/**
+ * Returns a bundled story already downloaded by {@link loadStory}, for the
+ * synchronous paths that always run after it (starting or resuming the story
+ * whose info screen is open).
+ *
+ * @param id - The story identifier.
+ * @returns The downloaded story, or `undefined` if it was never loaded.
+ * @author Claude
+ */
+export const getLoadedStory = ( id: string ): Story | undefined =>
+{
+    return loadedStories.get( id );
 };
 
 /** Distinct genres across all stories, for the genre filter. */

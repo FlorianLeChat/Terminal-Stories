@@ -8,9 +8,9 @@
     import { customStoryErrorMessage,
         deleteCustomStory,
         exportCustomStory,
-        getStory,
         importCustomStory,
-        listCustomStories } from "#lib";
+        listCustomStories,
+        storiesMeta } from "#lib";
 
     interface Props {
         /** Creates a blank custom story and opens it in the editor. */
@@ -59,7 +59,7 @@
     {
         if ( !record.forkedFrom ) return null;
 
-        const origin = getStory( record.forkedFrom );
+        const origin = storiesMeta.find( ( meta ) => meta.id === record.forkedFrom );
 
         return origin ? origin.title : null;
     };

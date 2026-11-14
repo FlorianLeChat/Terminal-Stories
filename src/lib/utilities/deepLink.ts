@@ -1,4 +1,4 @@
-import { getEntry, getStory } from "#lib";
+import { isCatalogStory, isWikiEntryId } from "#lib";
 import type { ReadonlyURLSearchParams } from "$app/state";
 
 /**
@@ -23,14 +23,14 @@ export const parseDeepLink = ( params: ReadonlyURLSearchParams ): DeepLinkTarget
 {
     const storyId = params.get( STORY_PARAM );
 
-    if ( storyId && getStory( storyId ) )
+    if ( storyId && isCatalogStory( storyId ) )
     {
         return { type: "story", id: storyId };
     }
 
     const wikiId = params.get( WIKI_PARAM );
 
-    if ( wikiId && getEntry( wikiId ) )
+    if ( wikiId && isWikiEntryId( wikiId ) )
     {
         return { type: "wiki", id: wikiId };
     }

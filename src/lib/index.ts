@@ -1,6 +1,7 @@
 export * from "#lib/types/achievement.ts";
 export * from "#lib/types/ai.ts";
 export * from "#lib/types/audio.ts";
+export * from "#lib/types/catalog.ts";
 export * from "#lib/types/customStory.ts";
 export * from "#lib/types/story.ts";
 export * from "#lib/types/knowledge.ts";
@@ -22,7 +23,6 @@ export * from "#lib/utilities/endingPath.ts";
 export * from "#lib/utilities/genre.ts";
 export * from "#lib/utilities/hideOnError.ts";
 export * from "#lib/utilities/phosphor.ts";
-export * from "#lib/utilities/progressBar.ts";
 export * from "#lib/utilities/readingTime.ts";
 export * from "#lib/utilities/saveService.ts";
 export * from "#lib/utilities/searchIndex.ts";

@@ -41,13 +41,15 @@ import { aiErrorMessage,
     genreLabel,
     getCustomStoryAsStory,
     getEntry,
-    getStory,
+    getLoadedStory,
     hasSave,
     isCustomStoryId,
     listCustomStories,
     loadAiSettings,
     loadDiscoveredEndings,
+    loadKnowledge,
     loadSave,
+    loadStory,
     loadUnlockedAchievements,
     resetAchievements as resetAchievementsStorage,
     saveDiscoveredEnding,
@@ -679,16 +681,29 @@ const menuStartIndex = (): number =>
 };
 
 /**
- * Resolves a playable story by id from every source: the bundled catalog
- * first, then the user's private custom stories.
+ * Resolves an already available story by id: a bundled story downloaded by
+ * {@link loadStoryById}, then the user's private custom stories.
+ *
+ * @param id - The story identifier.
+ * @returns The matching story, or `undefined` if none is available.
+ * @author Claude
+ */
+const findStoryById = ( id: string ): Story | undefined =>
+{
+    return getLoadedStory( id ) ?? getCustomStoryAsStory( id );
+};
+
+/**
+ * Resolves a playable story by id from every source, downloading a bundled
+ * story's scenes on first use.
  *
  * @param id - The story identifier.
  * @returns The matching story, or `undefined` if none exists.
  * @author Claude
  */
-const findStoryById = ( id: string ): Story | undefined =>
+const loadStoryById = async ( id: string ): Promise<Story | undefined> =>
 {
-    return getStory( id ) ?? getCustomStoryAsStory( id );
+    return isCustomStoryId( id ) ? getCustomStoryAsStory( id ) : loadStory( id );
 };
 
 /**
@@ -738,6 +753,9 @@ const createTerminalStore = () =>
     const { subscribe, update } = writable<TerminalStore>( initial );
 
     let generationAbort: AbortController | null = null;
+
+    /** Counter of story openings, so a slow download never overrides a later pick. */
+    let storyRequest = 0;
 
     /**
      * Reads the current store state synchronously. Wraps the `get`/`subscribe`
@@ -863,15 +881,20 @@ const createTerminalStore = () =>
      * When a save exists for the story, shows resume and new-game options
      * instead of the default start prompt. Reuses the reading stats
      * precomputed in the catalog metadata, computing them live only for a
-     * story missing from it.
+     * story missing from it. A bundled story's scenes are downloaded first;
+     * when several stories are picked during that wait, only the last opens.
      *
      * @param id - The id of the story to present.
+     * @returns A promise settled once the info screen is shown.
      * @author Claude
      */
-    const selectStory = ( id: string ) =>
+    const selectStory = async ( id: string ) =>
     {
-        const story = findStoryById( id );
-        if ( !story ) return;
+        const request = ++storyRequest;
+        const story = await loadStoryById( id );
+
+        const isStale = request !== storyRequest;
+        if ( isStale || !story ) return;
 
         const meta = storiesMeta.find( ( m ) => m.id === id );
         const stats = meta ? meta.stats : computeStoryStats( story );
@@ -1327,12 +1350,16 @@ const createTerminalStore = () =>
     };
 
     /**
-     * Opens the knowledge base (wiki), resetting its selection.
+     * Opens the knowledge base (wiki), resetting its selection, once its
+     * entries are downloaded.
      *
+     * @returns A promise settled once the wiki is shown.
      * @author Claude
      */
-    const openWiki = () =>
+    const openWiki = async () =>
     {
+        await loadKnowledge();
+
         clearLines();
         update( ( s ) => ( {
             ...s,
@@ -1510,6 +1537,21 @@ const createTerminalStore = () =>
                 selectedEntryId: id
             }
         } ) );
+    };
+
+    /**
+     * Opens the wiki straight on an entry, within its own category (used by
+     * deep links and the info screen's entry links).
+     *
+     * @param id - The id of the entry to open.
+     * @returns A promise settled once the entry is shown.
+     * @author Claude
+     */
+    const openWikiAt = async ( id: string ) =>
+    {
+        await openWiki();
+
+        openRelatedEntry( id );
     };
 
     /**
@@ -1928,6 +1970,7 @@ const createTerminalStore = () =>
         selectWikiEntryAt,
         backToWikiList,
         openRelatedEntry,
+        openWikiAt,
         activateSearch,
         setSearchQuery,
         deactivateSearch

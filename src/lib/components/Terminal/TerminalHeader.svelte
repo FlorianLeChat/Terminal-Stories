@@ -36,7 +36,7 @@
     class="status-bar flex items-center justify-between min-h-11 pl-4 pr-2 text-xs text-terminal-dim border-b border-terminal-dim/30 select-none shrink-0"
     aria-label={m.header_aria()}
 >
-    <h1 class="shrink-0 {isReadingStory ? "sr-only sm:not-sr-only" : ""}">TERMINAL STORIES</h1>
+    <h1 class="shrink-0 max-sm:w-min py-1 {isReadingStory ? "sr-only sm:not-sr-only" : ""}">TERMINAL STORIES</h1>
 
     <span class="flex items-center gap-2 sm:gap-4 min-w-0 {isReadingStory ? "pr-2 sm:px-2" : "px-2"}">
         {#if isReadingStory && currentStory}
@@ -44,7 +44,7 @@
             <span class="shrink-0 text-terminal-dim" aria-hidden="true">|</span>
         {/if}
 
-        <span class="text-terminal-green shrink-0">
+        <span class="text-terminal-green min-w-0 max-sm:text-center">
             {#if view === "boot"}{m.header_view_boot()}{/if}
             {#if view === "menu"}{m.header_view_menu()}{/if}
             {#if view === "story-info"}{m.header_view_story_info()}{/if}

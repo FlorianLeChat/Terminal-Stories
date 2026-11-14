@@ -1,8 +1,8 @@
+import { storiesMeta } from "#lib/data/index.ts";
 import { genreLabel } from "#lib/utilities/genre.ts";
 import type { StoryMeta } from "#lib/types/story.ts";
-import { stories, storiesMeta } from "#lib/data/index.ts";
 import type { KnowledgeCategory, KnowledgeEntry } from "#lib/types/knowledge.ts";
-import { filterEntries, getLanguageForUniverse, knowledgeEntries } from "#lib/data/knowledge.ts";
+import { filterEntries, getKnowledgeEntries, getLanguageForUniverse } from "#lib/data/knowledge.ts";
 
 /**
  * Normalizes text for indexing: lowercase and strip diacritics so
@@ -90,9 +90,8 @@ interface StorySearchDoc {
 let _storyDocs: StorySearchDoc[] | null = null;
 
 /**
- * Lazily builds and caches the story search documents.
- * Includes full-story character names (not present in StoryMeta) by
- * cross-referencing the bundled story list.
+ * Lazily builds and caches the story search documents, character names
+ * included.
  *
  * @returns The list of story search documents.
  * @author Claude
@@ -103,10 +102,7 @@ const getStorySearchDocs = (): StorySearchDoc[] =>
 
     _storyDocs = storiesMeta.map( ( meta ) =>
     {
-        const full = stories.find( ( s ) => s.id === meta.id );
-        const characterNames = full
-            ? full.characters.map( ( c ) => c.name ).join( " " )
-            : "";
+        const characterNames = meta.characterNames.join( " " );
 
         return {
             meta,
@@ -131,7 +127,9 @@ interface WikiSearchDoc {
 let _wikiDocs: WikiSearchDoc[] | null = null;
 
 /**
- * Lazily builds and caches the wiki entry search documents.
+ * Lazily builds and caches the wiki entry search documents. Nothing is cached
+ * before the entries are downloaded, so a search run too early never pins an
+ * empty index.
  *
  * @returns The list of wiki entry search documents.
  * @author Claude
@@ -139,6 +137,9 @@ let _wikiDocs: WikiSearchDoc[] | null = null;
 const getWikiSearchDocs = (): WikiSearchDoc[] =>
 {
     if ( _wikiDocs ) return _wikiDocs;
+
+    const knowledgeEntries = getKnowledgeEntries();
+    if ( knowledgeEntries.length === 0 ) return [];
 
     _wikiDocs = knowledgeEntries.map( ( entry ) =>
     {
@@ -229,7 +230,8 @@ let lastWikiList: KnowledgeEntry[] = [];
  */
 export const visibleWikiEntries = ( filters: WikiListFilters, query: string ): KnowledgeEntry[] =>
 {
-    const key = JSON.stringify( [ filters.category, filters.language, filters.universe, query ] );
+    const entryCount = getKnowledgeEntries().length;
+    const key = JSON.stringify( [ filters.category, filters.language, filters.universe, query, entryCount ] );
     const isCached = key === lastWikiListKey;
     if ( isCached ) return lastWikiList;
 

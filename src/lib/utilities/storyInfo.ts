@@ -1,12 +1,7 @@
-import { knowledgeBases } from "#lib/data/knowledge.ts";
+import type { EntryLink } from "#lib/types/catalog.ts";
+import { getStoryWikiLinks } from "#lib/data/knowledge.ts";
 import type { Story, StoryStats } from "#lib/types/story.ts";
 import { loadDiscoveredEndings } from "#lib/utilities/saveService.ts";
-
-/** A link to an encyclopedia entry: its id and display name. */
-export interface EntryLink {
-    id: string;
-    name: string;
-}
 
 /** Extra facts shown on a story's info screen. */
 export interface StoryInfoDetails {
@@ -46,19 +41,14 @@ export const buildStoryInfoDetails = ( story: Story, stats: StoryStats ): StoryI
     const endingsTotal = Object.values( story.scenes ).filter( ( scene ) => scene.isEnding === true ).length;
     const endingsFound = loadDiscoveredEndings( story.id ).size;
 
-    const base = knowledgeBases.find( ( kb ) => kb.storyId === story.id );
-    const entries = base?.entries ?? [];
-
-    const universeEntry = entries.find( ( entry ) => entry.category === "universe" );
-    const characterEntries = entries.filter( ( entry ) => entry.category === "character" );
+    const links = getStoryWikiLinks( story.id );
 
     const rankedCast = MAIN_ROLES.flatMap( ( role ) => story.characters.filter( ( c ) => c.role === role ) );
 
     const characters = rankedCast
-        .map( ( character ) => characterEntries.find( ( entry ) => entry.name === character.name ) )
+        .map( ( character ) => links.characters.find( ( entry ) => entry.name === character.name ) )
         .filter( ( entry ) => entry !== undefined )
-        .slice( 0, MAX_CHARACTERS )
-        .map( ( entry ): EntryLink => ( { id: entry.id, name: entry.name } ) );
+        .slice( 0, MAX_CHARACTERS );
 
     return {
         endingsFound,
@@ -66,6 +56,6 @@ export const buildStoryInfoDetails = ( story: Story, stats: StoryStats ): StoryI
         readingMinutes: stats.minutes,
         fullMinutes: stats.fullMinutes,
         characters,
-        universe: universeEntry ? { id: universeEntry.id, name: universeEntry.name } : null
+        universe: links.universe
     };
 };

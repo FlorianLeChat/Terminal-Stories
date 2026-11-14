@@ -34,8 +34,7 @@
         if ( opensElsewhere ) return;
 
         e.preventDefault();
-        terminal.openWiki();
-        terminal.openRelatedEntry( entry.id );
+        terminal.openWikiAt( entry.id );
     };
 </script>
 

@@ -2,7 +2,8 @@
     import type { StoryMeta } from "#lib";
     import GenreTag from "./GenreTag.svelte";
     import * as m from "#lib/locales/messages.js";
-    import { formatReadingTime, buildProgressBar, loadSave, loadDiscoveredEndings, saveCompletion } from "#lib";
+    import ProgressBar from "../Terminal/ProgressBar.svelte";
+    import { formatReadingTime, loadSave, loadDiscoveredEndings, saveCompletion } from "#lib";
 
     interface Props {
         story: StoryMeta;
@@ -120,11 +121,10 @@
                     </span>
 
                     {#if completion !== null}
-                        {@const bar = buildProgressBar( completion, 6 )}
-
-                        <span class="flex items-center mb-1 mt-3 text-xs" title={m.story_item_progress_title()}>
-                            <span class="text-terminal-amber">◉ {bar.filled}</span><span class="text-terminal-dim">{bar.empty}</span>
-                            <span class="ml-2 text-terminal-amber">{m.story_item_progress_value( { value: completion / 100 } )}</span>
+                        <span class="flex items-center gap-2 mb-1 mt-3 text-xs" title={m.story_item_progress_title()}>
+                            <span class="text-terminal-amber" aria-hidden="true">◉</span>
+                            <ProgressBar percent={completion} width={6} />
+                            <span class="text-terminal-amber">{m.story_item_progress_value( { value: completion / 100 } )}</span>
                         </span>
                     {/if}
 

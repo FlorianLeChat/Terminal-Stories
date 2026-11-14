@@ -7,7 +7,8 @@
     import EndingPath from "../Story/EndingPath.svelte";
     import type { TerminalLine } from "#lib/stores/terminal.ts";
     import StoryInfoDetails from "../Story/StoryInfoDetails.svelte";
-    import { buildProgressBar, playTypingTick, type StoryLocale } from "#lib";
+    import ProgressBar from "./ProgressBar.svelte";
+    import { playTypingTick, type StoryLocale } from "#lib";
 
     /**
      * Maps a terminal line type to its Tailwind styling classes.
@@ -573,8 +574,6 @@
                     <img src={asset( toAssetPath( line.imageSrc ) )} alt={line.imageAlt ?? ""} class="w-full max-h-44 object-cover grayscale opacity-75" />
                 </figure>
             {:else if line.type === "save"}
-                {@const bar = buildProgressBar( line.savePercent ?? 0 )}
-
                 <aside class="my-2 border border-terminal-amber rounded px-3 py-2 bg-terminal-amber/8 animate-fadein select-none" aria-label={m.terminal_save_aria()}>
                     <p class="flex items-center gap-2 text-terminal-amber font-bold text-xs tracking-widest">
                         <span>◉</span>
@@ -582,9 +581,7 @@
                     </p>
 
                     <div class="flex items-center gap-2 mt-1.5">
-                        <span class="text-xs">
-                            <span class="text-terminal-amber">{bar.filled}</span><span class="text-terminal-dim">{bar.empty}</span>
-                        </span>
+                        <ProgressBar percent={line.savePercent ?? 0} />
 
                         <output class="text-terminal-amber text-xs font-bold">{m.story_item_progress_value( { value: ( line.savePercent ?? 0 ) / 100 } )}</output>
                         <span class="text-terminal-dim text-xs">{m.terminal_save_progress()}</span>

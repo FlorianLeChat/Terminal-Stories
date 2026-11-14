@@ -212,8 +212,7 @@
         }
         else
         {
-            terminal.openWiki();
-            terminal.openRelatedEntry( target.id );
+            terminal.openWikiAt( target.id );
         }
     };
 

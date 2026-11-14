@@ -114,6 +114,8 @@ export interface StoryMeta {
     description: string;
     stats: StoryStats;
     endingIds: string[];
+    /** Names of the story's characters, indexed by the menu search. */
+    characterNames: string[];
     /** The phosphor the story is shown in (its own, or its genre's). */
     phosphor: PhosphorTheme;
 }

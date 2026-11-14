@@ -145,7 +145,7 @@ The app is one monitor: a full-height column capped at `max-w-4xl`, centered on 
 
 The status bar confirms every automatic save with an amber "◉ SAVED" that lights up white and settles (a polite live region; the label is screen-reader-only on phones).
 
-The ASCII logo appears on the main menu only, from `sm` up and above 1000px of height; every other screen gets the plain title (one line from `sm` up or under 700px of height, two lines on tall phones) so the first stories stay in view on a laptop. Every other view opens on a centered `ViewTitle` heading. A dead shared link's notice sits at the very top of the menu, in the error role. A first-launch tip (one unboxed line, closable, remembered) sits under the subtitle. The main menu shows its other destinations (Encyclopedia, My stories, AI, Achievements) as an in-page navigation row from `sm` up; phones get them in the footer.
+The ASCII logo appears on the main menu only, from `sm` up; phones get the plain title instead (one line under 700px of height, two lines on tall phones). Every other view opens on a centered `ViewTitle` heading. A dead shared link's notice sits at the very top of the menu, in the error role. A first-launch tip (one unboxed line, closable, remembered) sits under the subtitle. The main menu shows its other destinations (Encyclopedia, My stories, AI, Achievements) as an in-page navigation row from `sm` up; phones get them in the footer.
 
 ## Elevation & Depth
 

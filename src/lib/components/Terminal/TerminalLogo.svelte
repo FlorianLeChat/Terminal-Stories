@@ -34,7 +34,7 @@
         display: none;
     }
 
-    @media (min-width: 640px) and (min-height: 1001px) {
+    @media (min-width: 640px) {
         .ascii-banner {
             display: block;
         }
