@@ -7,7 +7,10 @@
 
     /**
      * Native dialog mirroring the store's `shareOpen`: showModal traps focus
-     * and closes on ESC.
+     * and closes on ESC. The share overlay offers a scannable QR code (on a
+     * white card for scanner contrast), the raw link, and a note that progress
+     * is local to the device. ESC, the backdrop and the close button all funnel
+     * through the store's `closeShare`.
      *
      * @author Claude
      */
@@ -59,7 +62,6 @@
 
         if ( !isOpen || url === "" ) return;
 
-        // Guards against a stale async result overwriting a newer one.
         let cancelled = false;
         status = "loading";
 
@@ -145,12 +147,6 @@
     };
 </script>
 
-<!--
-    Share overlay: a modal native <dialog> offering a scannable QR code (on a
-    white card for scanner contrast), the raw link, and a note that progress is
-    local to the device. ESC, the backdrop and the close button all funnel
-    through the store's closeShare.
--->
 <dialog
     bind:this={dialog}
     onclose={() => terminal.closeShare()}

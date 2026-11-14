@@ -34,10 +34,15 @@
         { text: startPrompt, delay: 1600, blink: true }
     ];
 
+    /**
+     * Which boot lines are shown. Each line is revealed on its own delay (all
+     * at once under reduced motion); the last one sets `done`.
+     *
+     * @author Claude
+     */
     let visible = $state( bootLines.map( () => false ) );
     let done = $state( false );
 
-    // Reveal each line on its own delay (all at once under reduced motion); the last one sets `done`.
     onMount( () =>
     {
         const prefersReducedMotion = window.matchMedia( "(prefers-reduced-motion: reduce)" ).matches;
@@ -154,7 +159,6 @@
         }
     }
 
-    /* The theme's pulse floor keeps the signal prompt above 4.5:1 contrast. */
     .blink-text {
         animation: fadein 0.2s ease-in, pulse 1.6s ease-in-out infinite;
     }

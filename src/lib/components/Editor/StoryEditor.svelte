@@ -72,7 +72,8 @@
     /**
      * Undo stack of serialized drafts (`future` is the redo stack). A burst of
      * edits (typing a word, a sentence) becomes a single step, closed after
-     * `BURST_DELAY` of quiet.
+     * `BURST_DELAY` of quiet. A step restored by undo or redo is not a new
+     * edit: it only becomes the baseline.
      *
      * @author Claude
      */
@@ -92,7 +93,6 @@
             const isUnchanged = current === lastSnapshot;
             if ( isUnchanged ) return;
 
-            // A restored step is not a new edit: it only becomes the baseline.
             if ( isApplyingHistory )
             {
                 isApplyingHistory = false;
@@ -165,7 +165,6 @@
 
     onDestroy( flushDraftMirror );
 
-    // A story just created starts with its title selected, ready to be named.
     onMount( () =>
     {
         if ( !$terminal.editorIsNew ) return;
@@ -409,7 +408,6 @@
 
 <svelte:window onkeydown={handleEditorShortcut} onpagehide={flushDraftMirror} />
 
-<!-- data-editor-root: where focus lands when ESC leaves a field, instead of the page body. -->
 <div class="flex-1 overflow-y-auto px-4 py-2" tabindex="-1" data-editor-root>
     <ViewTitle title={m.editor_subtitle()} />
 

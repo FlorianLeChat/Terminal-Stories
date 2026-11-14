@@ -1,21 +1,29 @@
+/**
+ * Public audio facade. Every sound (interface SFX and background music) is
+ * synthesized on the fly with the Web Audio API; the project ships no audio
+ * files. The low-level primitives live in `audioCore.ts` and the procedural
+ * music in `musicEngine.ts`; this module composes the one-shot sound effects
+ * and re-exports the whole public surface (it is the only audio module
+ * exposed through `#lib`). Free of reactivity, persistence and user-facing
+ * strings: it speaks only in codes and enums.
+ *
+ * @module
+ * @author Claude
+ */
+
 import { handleEnabledChange } from "#lib/utilities/musicEngine.ts";
 import type { EndingSoundType, SceneSoundEffect } from "#lib/types/audio.ts";
 import { ensureContext, isAudioEnabled, jitter, midiToFrequency, playNoise, playTone, resumeAudio as resumeCore, setEnabledState } from "#lib/utilities/audioCore.ts";
 
-// Public audio facade. Every sound (interface SFX and background music) is
-// synthesized on the fly with the Web Audio API — the project ships no audio
-// files. The low-level context/primitives live in `audioCore.ts` and the
-// procedural music engine in `musicEngine.ts`; this module composes the
-// one-shot sound effects from the core primitives and re-exports the whole
-// public surface (it is the only audio module exposed through `#lib`). It is
-// intentionally free of any reactivity or persistence (the sound store layers
-// those on top) and of any user-facing string (it speaks only in codes/enums).
-
 export { setVolume } from "#lib/utilities/audioCore.ts";
 export { startMusic } from "#lib/utilities/musicEngine.ts";
 
-// Set when the boot fanfare is requested before the first user gesture (no
-// audio context can exist yet), so it plays as soon as that gesture arrives.
+/**
+ * Set when the boot fanfare is requested before the first user gesture (no
+ * audio context can exist yet), so it plays as soon as that gesture arrives.
+ *
+ * @author Claude
+ */
 let isBootFanfarePending = false;
 
 /**

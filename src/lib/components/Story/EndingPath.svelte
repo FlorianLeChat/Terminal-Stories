@@ -2,6 +2,14 @@
     import * as m from "#lib/locales/messages.js";
     import type { EndingPathStep, StoryLocale } from "#lib";
 
+    /**
+     * Recap printed under an ending: one entry per choice made, the pick in
+     * pale phosphor, the branches left behind struck through, a ✧ on those
+     * still hiding an unfound ending. Screen readers only hear the pick and the
+     * ✧ branches; the other discarded branches are visual context.
+     *
+     * @author Claude
+     */
     interface Props {
         /** Heading of the recap, e.g. "PATH TAKEN". */
         title: string;
@@ -39,12 +47,6 @@
     };
 </script>
 
-<!--
-    Recap printed under an ending: one entry per choice made, the pick in
-    pale phosphor, the branches left behind struck through, a ✧ on those still
-    hiding an unfound ending. Screen readers only hear the pick and the ✧
-    branches; the other discarded branches are visual context.
--->
 <section class="my-3 border-t border-b border-terminal-dim/40 py-3 animate-fadein" aria-labelledby={headingId}>
     <h2 id={headingId} class="text-terminal-amber text-xs font-bold tracking-widest mb-2">
         {title} · {m.ending_path_count( { count: steps.length }, { locale } )}

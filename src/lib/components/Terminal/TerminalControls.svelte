@@ -5,6 +5,22 @@
     import { isCustomStoryId, listCustomStories } from "#lib";
     import type { TerminalView } from "#lib/stores/terminal.ts";
 
+    /**
+     * Two footers in one, chosen by screen size (the keyboard shortcuts
+     * themselves are handled in Terminal.svelte):
+     * - Desktop (>= sm): the keyboard-shortcut legend. Every hint keeps its
+     *   [KEY] label and stays clickable (`control`); entries with no single
+     *   target, like the number keys picking a choice, are plain text with the
+     *   same pill look (`hint`). It only lists what the page does not already
+     *   offer: during a story, what the action bar does not carry (share moves
+     *   here while choices wait and the bar is hidden).
+     * - Mobile (< sm): page-navigation buttons only (`navButton`: short labels,
+     *   no [KEY], full-size touch targets filling the row). Every other action
+     *   is done through its on-page control, and the footer folds away during a
+     *   story, whose action bar carries the way back and the help.
+     *
+     * @author Claude
+     */
     interface Props {
         view: TerminalView;
         /** True while the typewriter animation is running. */
@@ -87,23 +103,6 @@
     } );
 </script>
 
-<!--
-    Two footers in one, chosen by screen size (the keyboard shortcuts
-    themselves are handled in Terminal.svelte):
-      - Desktop (>= sm): the keyboard-shortcut legend. Every hint keeps its
-        [KEY] label and stays clickable for mouse users. It only lists what the
-        page does not already offer: during a story, what the action bar does
-        not carry (share moves here while choices wait and the bar is hidden).
-      - Mobile (< sm): page-navigation buttons only (short labels, no [KEY]).
-        Every other action is done through its on-page control, and the footer
-        folds away during a story, whose action bar carries the way back and
-        the help.
--->
-
-<!--
-    A clickable legend hint. It only renders in the desktop legend, where
-    `sm:flex-none` gives it its natural pill width.
--->
 {#snippet control( label: string, onclick: () => void )}
     <button
         type="button"
@@ -114,21 +113,12 @@
     </button>
 {/snippet}
 
-<!--
-    A legend entry with no single target (e.g. the number keys picking a
-    choice): same pill look as `control`, but plain text since there is
-    nothing to click.
--->
 {#snippet hint( label: string )}
     <span class="inline-flex items-center justify-center min-h-8 px-2 py-1 border border-terminal-dim/30 rounded whitespace-nowrap text-terminal-dim">
         {label}
     </span>
 {/snippet}
 
-<!--
-    Mobile page-navigation button: fills the row equally with its siblings and
-    reads as a real touch target (larger hit area, no [KEY] prefix).
--->
 {#snippet navButton( label: string, onclick: () => void )}
     <button
         type="button"

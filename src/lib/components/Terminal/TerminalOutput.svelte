@@ -62,6 +62,17 @@
         return relativePath as AssetPath;
     };
 
+    /**
+     * Story log. `role="log"` announces each completed line once; the line
+     * being typed is hidden from assistive tech, so readers never hear it
+     * letter by letter. Each choice stays the same `<button>` for its whole
+     * life (only classes and attributes change once answered), so the log
+     * never re-announces a list; its chosen state lives in the accessible
+     * name, which the log does not announce, since the echo of the pick
+     * already says it once.
+     *
+     * @author Claude
+     */
     interface Props {
         lines?: TerminalLine[];
         /** When false, all lines appear instantly with no typewriter effect. */
@@ -86,7 +97,12 @@
 
     let container: HTMLElement;
 
-    /** Lines fully rendered to the terminal. */
+    /**
+     * Lines fully rendered to the terminal. The store drops its oldest lines
+     * past a cap, and the same trim is mirrored here.
+     *
+     * @author Claude
+     */
     let displayed = $state<TerminalLine[]>( [] );
     /** The line currently being typed out character by character. */
     let typingLine = $state<TerminalLine | null>( null );
@@ -159,7 +175,6 @@
         {
             if ( incoming.length === 0 )
             {
-                // Full reset: the generation bump also cancels any running timeout.
                 generation++;
                 displayed = [];
                 typingLine = null;
@@ -172,7 +187,6 @@
                 return;
             }
 
-            // The store drops its oldest lines past a cap: mirror the trim on the rendered copy.
             const oldestId = incoming[ 0 ].id;
             const hasTrimmedLines = displayed.length > 0 && displayed[ 0 ].id < oldestId;
             if ( hasTrimmedLines ) displayed = displayed.filter( ( l ) => l.id >= oldestId );
@@ -515,14 +529,6 @@
 
 </script>
 
-<!--
-    role="log" announces each completed line once. The line being typed is
-    hidden from assistive tech, so readers never hear it letter by letter.
-    Each choice stays the same <button> for its whole life (only classes and
-    attributes change once answered), so the log never re-announces a list;
-    its chosen state lives in the accessible name, which the log does not
-    announce, since the echo of the pick already says it once.
--->
 <div
     bind:this={container}
     class="flex-1 overflow-y-auto px-4 py-2 text-[0.9375rem] leading-[1.7] scrollbar-terminal [&>*]:max-w-[68ch]"

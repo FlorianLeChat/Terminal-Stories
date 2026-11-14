@@ -41,7 +41,6 @@
         <ul class="space-y-2 pr-2">
             {#each unlocked as achievement ( achievement.id )}
                 <li class="flex items-center gap-3">
-                    <!-- Masked so the icon takes the theme's primary instead of its fixed green. -->
                     <span
                         class="w-6 h-6 shrink-0 bg-terminal-green mask-contain mask-center mask-no-repeat"
                         style:mask-image="url({asset( achievement.icon )})"

@@ -79,7 +79,6 @@
 <style>
     .status-bar {
         background: color-mix( in srgb, var( --color-terminal-panel ) 80%, transparent );
-        /* Clear the notch / status bar when installed as a standalone PWA. */
         padding-top: env( safe-area-inset-top );
     }
 

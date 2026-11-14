@@ -26,6 +26,14 @@
      */
     let knownFlags = $derived( [ ...new Set( draft.scenes.flatMap( ( s ) => s.choices.flatMap( ( c ) => [ c.setsFlag, c.requiresFlag ] ) ) ) ].filter( ( flag ) => flag !== undefined && flag !== "" ) );
     const flagListId = $props.id();
+
+    /**
+     * Why the choice's target cannot be used, or null. While set, the target
+     * picker keeps the broken id as an extra option so it is not silently
+     * shown as another scene.
+     *
+     * @author Claude
+     */
     let targetIssue = $derived( choice ? choiceTargetIssue( sceneIds, choice.nextScene ) : null );
 
     /** Translated message for each choice issue code. */
@@ -99,7 +107,6 @@
                         class="w-full bg-terminal-bg border border-terminal-dim rounded px-2 py-1 text-terminal-green text-sm focus:border-terminal-green"
                     >
                         {#if targetIssue}
-                            <!-- Keeps the broken id visible instead of silently showing another scene. -->
                             <option value={choice.nextScene}>{choice.nextScene}</option>
                         {/if}
 

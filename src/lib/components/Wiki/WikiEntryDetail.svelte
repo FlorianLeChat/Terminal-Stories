@@ -12,9 +12,14 @@
 
     let { entry }: Props = $props();
 
+    /**
+     * Entry title, focused on mount so keyboard and screen reader users start
+     * on the entry.
+     *
+     * @author Claude
+     */
     let titleEl: HTMLHeadingElement | undefined = $state();
 
-    // Focus the title so keyboard and screen reader users start on the entry.
     onMount( () =>
     {
         titleEl?.focus( { preventScroll: true } );

@@ -1,4 +1,11 @@
 <script lang="ts">
+    /**
+     * Shared confirmation step for every destructive action (new game over a
+     * save, leaving the editor with unsaved changes, deleting a story, resetting
+     * achievements), so they all look and behave the same.
+     *
+     * @author Claude
+     */
     interface Props {
         /** Whether the dialog is shown; the parent owns this state. */
         open: boolean;
@@ -62,11 +69,6 @@
     };
 </script>
 
-<!--
-    Shared confirmation step for every destructive action (new game over a
-    save, leaving the editor with unsaved changes, deleting a story, resetting
-    achievements), so they all look and behave the same.
--->
 <dialog
     bind:this={dialog}
     aria-labelledby="{id}-title"

@@ -1,13 +1,17 @@
+/**
+ * Procedural background-music engine. Every theme is a small parameter set
+ * rather than a track: a lookahead scheduler turns it into an endless piece
+ * with long-form structure (a chord progression cycling bar after bar, a
+ * 16-bar intensity arc, a melodic random walk resolving onto chord tones,
+ * optional percussion, and a shared stereo echo). Internal: never re-export
+ * it from `src/lib/index.ts`; callers go through the `audioEngine.ts` facade.
+ *
+ * @module
+ * @author Claude
+ */
+
 import type { MusicTheme } from "#lib/types/audio.ts";
 import { ensureContext, getAudioContext, getMasterBus, isAudioEnabled, jitter, midiToFrequency } from "#lib/utilities/audioCore.ts";
-
-// Procedural background-music engine. Every theme is a small parameter set
-// rather than a track: a lookahead scheduler turns it into an endless piece
-// with real long-form structure — a chord progression cycling bar after bar,
-// a 16-bar intensity arc (sparse intro, build, peak, breakdown), a melodic
-// random walk resolving onto chord tones, optional percussion, and a shared
-// stereo echo. This module is internal: it must NOT be re-exported from
-// `src/lib/index.ts` — callers go through the `audioEngine.ts` facade.
 
 /** Parameters that fully describe a synthesized music ambiance. */
 interface ThemeSpec {
@@ -40,11 +44,15 @@ interface ThemeSpec {
     readonly echo?: number;
 }
 
-// Each progression cycles one chord per bar (4 beats). Offsets are semitones
-// from the theme root, so `[ 0, 4, 7 ]` is the major tonic triad.
+/**
+ * Parameters of every music theme. Each progression cycles one chord per bar
+ * (4 beats); offsets are semitones from the theme root, so `[ 0, 4, 7 ]` is
+ * the major tonic triad.
+ *
+ * @author Claude
+ */
 const THEME_SPECS: Record<MusicTheme, ThemeSpec> = {
-    // Neutral, sparse backdrop for stories that declare no specific ambiance.
-    // Minor i–VI–iv–VII: present but unobtrusive movement.
+    /** Sparse backdrop for stories that declare no ambiance: minor i-VI-iv-VII. */
     default: {
         scale: [ 0, 3, 5, 7, 10 ],
         root: 50,
@@ -53,10 +61,10 @@ const THEME_SPECS: Record<MusicTheme, ThemeSpec> = {
         noteGain: 0.06,
         progression: [ [ 0, 3, 7 ], [ 8, 12, 15 ], [ 5, 8, 12 ], [ 10, 14, 17 ] ]
     },
-    // Welcoming retro loop for the shell (boot screen and main menu): bright
-    // major pentatonic, a lively step, and a wide range for a playful feel.
-    // Kept as a clean single line with an open filter so it stays crisp and
-    // clear on the home screen rather than muddy. I–IV–V–IV keeps it sunny.
+    /**
+     * Retro loop for the boot screen and main menu: bright major pentatonic
+     * over I-IV-V-IV, a single line with an open filter.
+     */
     menu: {
         scale: [ 0, 2, 4, 7, 9, 12 ],
         root: 55,
@@ -68,7 +76,7 @@ const THEME_SPECS: Record<MusicTheme, ThemeSpec> = {
         progression: [ [ 0, 4, 7 ], [ 5, 9, 12 ], [ 7, 11, 14 ], [ 5, 9, 12 ] ],
         echo: 0.15
     },
-    // Bright, open major pentatonic over the classic I–vi–IV–V.
+    /** Open major pentatonic over I-vi-IV-V. */
     calm: {
         scale: [ 0, 2, 4, 7, 9 ],
         root: 52,
@@ -78,7 +86,7 @@ const THEME_SPECS: Record<MusicTheme, ThemeSpec> = {
         progression: [ [ 0, 4, 7 ], [ 9, 12, 16 ], [ 5, 9, 12 ], [ 7, 11, 14 ] ],
         echo: 0.25
     },
-    // Low, fast, dissonant — a driving unease. i–bII–i–bV never settles.
+    /** Low, fast and dissonant over i-bII-i-bV, which never settles. */
     tense: {
         scale: [ 0, 1, 5, 6, 8 ],
         root: 43,
@@ -89,7 +97,7 @@ const THEME_SPECS: Record<MusicTheme, ThemeSpec> = {
         percussion: true,
         echo: 0.15
     },
-    // Whole-tone haze with no clear resolution: drifting augmented triads.
+    /** Whole-tone haze of drifting augmented triads, with no clear resolution. */
     mystery: {
         scale: [ 0, 2, 4, 6, 8, 10 ],
         root: 49,
@@ -99,7 +107,7 @@ const THEME_SPECS: Record<MusicTheme, ThemeSpec> = {
         progression: [ [ 0, 4, 8 ], [ 2, 6, 10 ], [ 4, 8, 12 ], [ 10, 14, 18 ] ],
         echo: 0.3
     },
-    // Slow natural-minor lament over i–VI–III–VII.
+    /** Slow natural-minor lament over i-VI-III-VII. */
     melancholic: {
         scale: [ 0, 2, 3, 7, 8 ],
         root: 45,
@@ -109,8 +117,7 @@ const THEME_SPECS: Record<MusicTheme, ThemeSpec> = {
         progression: [ [ 0, 3, 7 ], [ 8, 12, 15 ], [ 3, 7, 10 ], [ 10, 14, 17 ] ],
         echo: 0.3
     },
-    // Bright, brassy major sixth — adventurous and uplifting, on the epic
-    // I–V–vi–IV progression.
+    /** Brassy major sixth over I-V-vi-IV. */
     heroic: {
         scale: [ 0, 4, 7, 9, 12 ],
         root: 52,
@@ -121,8 +128,7 @@ const THEME_SPECS: Record<MusicTheme, ThemeSpec> = {
         percussion: true,
         echo: 0.2
     },
-    // Sparse minor-second/tritone clusters — unsettling and cold; the chords
-    // are drifting open shapes rather than functional harmony.
+    /** Sparse minor-second and tritone clusters over open, non-functional chord shapes. */
     eerie: {
         scale: [ 0, 1, 6, 7, 11 ],
         root: 44,
@@ -132,7 +138,7 @@ const THEME_SPECS: Record<MusicTheme, ThemeSpec> = {
         progression: [ [ 0, 7, 12 ], [ 1, 7, 13 ], [ 0, 6, 11 ], [ 1, 6, 8 ] ],
         echo: 0.35
     },
-    // Soft lydian shimmer — weightless and oneiric I–II colours.
+    /** Soft lydian shimmer over I-II colors. */
     dreamy: {
         scale: [ 0, 2, 4, 6, 9, 11 ],
         root: 57,
@@ -142,8 +148,7 @@ const THEME_SPECS: Record<MusicTheme, ThemeSpec> = {
         progression: [ [ 0, 4, 11 ], [ 2, 6, 9 ], [ 0, 4, 7 ], [ 2, 9, 14 ] ],
         echo: 0.35
     },
-    // Fast, driving minor pentatonic riff (i–i–VI–VII) — chases and
-    // confrontations, with the full percussion layer.
+    /** Fast minor pentatonic riff over i-i-VI-VII, with the full percussion layer. */
     action: {
         scale: [ 0, 3, 5, 7, 10 ],
         root: 45,
@@ -156,34 +161,58 @@ const THEME_SPECS: Record<MusicTheme, ThemeSpec> = {
     }
 };
 
-// Fade applied when starting or stopping music, in seconds, to avoid clicks.
+/**
+ * Fade applied when starting or stopping music, in seconds, to avoid clicks.
+ *
+ * @author Claude
+ */
 const MUSIC_FADE = 0.8;
 
-// Lookahead scheduling ("A Tale of Two Clocks" pattern): a coarse timer pump
-// schedules every event up to LOOKAHEAD seconds ahead on the sample-accurate
-// audio clock. The wide horizon keeps music steady even when background tabs
-// throttle timers to one tick per second.
+/**
+ * Lookahead scheduling ("A Tale of Two Clocks" pattern): a coarse timer pump
+ * schedules every event up to `LOOKAHEAD` seconds ahead on the sample-accurate
+ * audio clock. The wide horizon keeps music steady even when background tabs
+ * throttle timers to one tick per second.
+ *
+ * @author Claude
+ */
 const LOOKAHEAD = 1.5;
 const PUMP_INTERVAL_MS = 250;
 const BEATS_PER_BAR = 4;
 
-// Long-form intensity arc, one value per bar over a 16-bar cycle (four loops
-// of a 4-chord progression): sparse intro, gradual build, peak, breakdown.
-// It modulates note density, velocity, octave lifts, harmony, pad level,
-// filter brightness, and percussion so the piece breathes over minutes.
+/**
+ * Long-form intensity arc, one value per bar over a 16-bar cycle (four loops
+ * of a 4-chord progression): sparse intro, gradual build, peak, breakdown.
+ * It modulates note density, velocity, octave lifts, harmony, pad level,
+ * filter brightness, and percussion.
+ *
+ * @author Claude
+ */
 const INTENSITY_CURVE = [ 0.2, 0.25, 0.3, 0.35, 0.45, 0.5, 0.6, 0.65, 0.75, 0.85, 0.95, 1, 0.9, 0.7, 0.45, 0.3 ];
 
-// Remembered music request, independent of the enabled flag: toggling sound
-// on resumes exactly this theme, toggling off stops it without forgetting it.
+/**
+ * Remembered music request, independent of the enabled flag: toggling sound
+ * on resumes exactly this theme, toggling off stops it without forgetting it.
+ *
+ * @author Claude
+ */
 let currentTheme: MusicTheme | null = null;
 
-// Live music voice: the fade gain everything music-related passes through,
-// every persistent node of the voice graph (for teardown), and the pump timer.
+/**
+ * Live music voice: the fade gain everything music-related passes through,
+ * every persistent node of the voice graph (for teardown), and the pump timer.
+ *
+ * @author Claude
+ */
 let musicGain: GainNode | null = null;
 let musicNodes: AudioNode[] = [];
 let musicTimer: ReturnType<typeof setTimeout> | null = null;
 
-// Shared 50 ms white-noise buffer for hi-hats, built once per context.
+/**
+ * Shared 50 ms white-noise buffer for hi-hats, built once per context.
+ *
+ * @author Claude
+ */
 let hatBuffer: AudioBuffer | null = null;
 
 /**

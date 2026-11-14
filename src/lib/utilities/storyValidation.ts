@@ -79,9 +79,13 @@ class StoryGraphError extends Error
     }
 }
 
-// Hard caps applied to every normalized story. User-generated content is
-// clamped (never rejected) so a slightly oversized story still imports, while
-// a hostile payload cannot blow up localStorage or the rendering pipeline.
+/**
+ * Hard caps applied to every normalized story. User-generated content is
+ * clamped (never rejected) so a slightly oversized story still imports, while
+ * a hostile payload cannot blow up localStorage or the rendering pipeline.
+ *
+ * @author Claude
+ */
 const MAX_SCENES = 300;
 const MAX_CHOICES_PER_SCENE = 12;
 const MAX_TEXT_ENTRIES_PER_SCENE = 80;

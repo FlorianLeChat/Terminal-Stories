@@ -273,7 +273,8 @@
     /**
      * Steps the highlighted menu story up or down by one position, wrapping
      * around the visible list. Shared by the ArrowUp/ArrowDown keys and the
-     * footer's navigation buttons so both stay in sync.
+     * footer's navigation buttons so both stay in sync. From "no highlight"
+     * (-1, touch screens), it steps onto the first or last story.
      *
      * @param delta - -1 to move to the previous story, 1 for the next one.
      * @author Claude
@@ -285,7 +286,6 @@
 
         terminal.update( ( s ) =>
         {
-            // From "no highlight" (-1, touch screens), step onto the first or last story.
             const hasNoHighlight = s.selectedStoryIndex < 0;
             const fromIndex = hasNoHighlight && delta === -1 ? 0 : s.selectedStoryIndex;
             const nextIndex = ( fromIndex + delta + count ) % count;
@@ -926,7 +926,6 @@
     {
         window.focus();
 
-        // A shared link skips the system boot and goes straight to its target.
         const params = new URLSearchParams( window.location.search );
         const isSharedLink = parseDeepLink( params ) !== null || deepLinkError( params ) !== null;
 

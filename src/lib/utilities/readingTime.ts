@@ -77,7 +77,6 @@ const choiceWords = ( choice: Choice ): number =>
  */
 const expectedWords = ( story: Story, sceneId: string, memo: Map<string, number>, stack: Set<string> ): number =>
 {
-    // Scene already on the current path: stop here to avoid counting a loop.
     if ( stack.has( sceneId ) ) return 0;
 
     const cached = memo.get( sceneId );

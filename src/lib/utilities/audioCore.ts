@@ -1,21 +1,33 @@
-// Shared low-level audio core. It owns the single AudioContext, the master
-// gain + safety-compressor output chain, the enabled/volume state, and the
-// tone/noise synthesis primitives every other audio module builds on. This
-// module is intentionally free of any reactivity or persistence (the sound
-// store layers those on top) and of any user-facing string. It is internal:
-// it must NOT be re-exported from `src/lib/index.ts` — the public audio
-// surface lives in `audioEngine.ts`.
+/**
+ * Shared low-level audio core: the single AudioContext, the master gain and
+ * safety-compressor output chain, the enabled/volume state, and the tone/noise
+ * synthesis primitives every other audio module builds on. Free of reactivity,
+ * persistence and user-facing strings (the sound store layers those on top).
+ * Internal: never re-export it from `src/lib/index.ts`; the public audio
+ * surface is `audioEngine.ts`.
+ *
+ * @module
+ * @author Claude
+ */
 
 let context: AudioContext | null = null;
 let masterGain: GainNode | null = null;
 
-// Cached preferences mirrored from the sound store. The core never reads
-// storage itself; the engine facade pushes the current values in.
+/**
+ * Cached preferences mirrored from the sound store. The core never reads
+ * storage itself; the engine facade pushes the current values in.
+ *
+ * @author Claude
+ */
 let enabled = false;
 let volume = 0.5;
 
-// Guards against attaching the visibility listener more than once across
-// repeated `ensureContext` calls (the context itself is a lasting singleton).
+/**
+ * Guards against attaching the visibility listener more than once across
+ * repeated `ensureContext` calls (the context itself is a lasting singleton).
+ *
+ * @author Claude
+ */
 let visibilityListenerAttached = false;
 
 /**

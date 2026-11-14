@@ -34,7 +34,6 @@
         display: none;
     }
 
-    /* The banner overflows narrow phones and crowds the catalog under 1000px tall. */
     @media (min-width: 640px) and (min-height: 1001px) {
         .ascii-banner {
             display: block;

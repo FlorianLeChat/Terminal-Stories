@@ -41,7 +41,6 @@
         }
     } );
 
-    // Open each entry at its top, not at the list's scroll position.
     $effect( () =>
     {
         if ( currentEntry )

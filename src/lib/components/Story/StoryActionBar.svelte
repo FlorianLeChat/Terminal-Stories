@@ -3,6 +3,12 @@
     import * as m from "#lib/locales/messages.js";
     import { terminal } from "#lib/stores/terminal.ts";
 
+    /**
+     * Action bar between the terminal output and the footer: touch-friendly
+     * controls to start, skip, restart, share or fork a story without the footer.
+     *
+     * @author Claude
+     */
     interface Props {
         /** Either the story-info preview screen or active playback. */
         view: "story-info" | "story";
@@ -86,7 +92,6 @@
         run();
     };
 
-    // Once an ending has finished printing, focus the restart button.
     $effect( () =>
     {
         const isEndingSettled = atEnding && !isAnimating;
@@ -124,10 +129,6 @@
     };
 </script>
 
-<!--
-    Action bar between the terminal output and the footer: touch-friendly
-    controls to start, skip, restart, share or fork a story without the footer.
--->
 {#snippet action( label: string, onclick: () => void, shortcut: Shortcut, primary: boolean = false, id: string = "" )}
     {@const variant = primary
         ? "border-terminal-green bg-terminal-green/15 text-terminal-white hover:bg-terminal-green/25"

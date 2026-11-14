@@ -1,13 +1,5 @@
 @import "tailwindcss";
 
-/*
-    Color roles of the monitor. Names are roles, not hues: "green" is the
-    primary phosphor (focus, accents, borders), "amber" the signal color,
-    "cyan" the pickable choices, "white" the strongest text, "error" failure messages, "panel"
-    the tint of the status bar and footer, "glow" the halo color. Each phosphor theme
-    below redefines the roles; every pair stays at 4.5:1 or more on both the
-    background and the panel.
-*/
 @theme {
     --color-terminal-green: #00ff46;
     --color-terminal-amber: #ffb000;
@@ -38,7 +30,6 @@
 @property --color-terminal-glow { syntax: "<color>"; inherits: true; initial-value: #00ff46; }
 @property --color-terminal-error { syntax: "<color>"; inherits: true; initial-value: #ff6b6b; }
 
-/* Investigations: warm amber phosphor. */
 [data-phosphor="amber"] {
     --color-terminal-green: #ffb000;
     --color-terminal-amber: #ff7f50;
@@ -52,7 +43,6 @@
     --color-terminal-error: #ff5c7a;
 }
 
-/* Space: cold cyan phosphor. */
 [data-phosphor="cyan"] {
     --color-terminal-green: #00e5ff;
     --color-terminal-amber: #ffb000;
@@ -66,12 +56,6 @@
     --color-terminal-error: #ff6b6b;
 }
 
-/*
-    Light scheme: the reverse-video face of an amber monitor. Every phosphor
-    keeps its hue as a dark ink on a warm amber paper, and the halo turns into
-    a brown shadow. Set by `data-theme="light"` on <html> (see colorScheme.ts
-    and the inline script in app.html).
-*/
 [data-theme="light"],
 [data-theme="light"] [data-phosphor="green"] {
     --color-terminal-green: #1b6a2c;
@@ -122,12 +106,7 @@
     --color-terminal-backdrop: rgb( 58 38 8 / 0.45 );
 }
 
-/*
-    Composite effects built from the roles. Declared on every themed element
-    (not only :root) so they are recomputed from that element's own colors.
-    `--pulse-floor` is the lowest opacity a pulsing text may reach while
-    staying at 4.5:1.
-*/
+/* Not only :root: each themed element recomputes these from its own colors. */
 :root,
 [data-phosphor] {
     --radius-terminal: 4px;
@@ -183,7 +162,6 @@ body {
         outline-offset: 2px;
     }
 
-    /* Removes the 300ms tap delay and grey flash on touch controls. */
     button, [role="button"], a {
         touch-action: manipulation;
         -webkit-tap-highlight-color: transparent;
