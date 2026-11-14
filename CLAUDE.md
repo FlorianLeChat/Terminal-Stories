@@ -17,15 +17,15 @@ A terminal-style interactive fiction system, built with SvelteKit + TypeScript +
 
 ## Comments and JSDoc
 
-- Document **functions, and especially exported functions**, with a JSDoc block.
-- Every JSDoc block that **I** (the assistant) write must end with `@author Claude`.
-- Document parameters with `@param` and the return value with `@returns` when the function takes arguments or returns a value.
-- Add logic comments (`// ...`) where behavior is not obvious (loop guards, side effects, non-trivial shortcuts). Do not paraphrase trivial code.
-- **Keep comments inside function bodies, components and markup to a minimum.** Doc blocks on declarations (functions, methods, classes, types, props, constants) stay; anything else is either merged into the nearest doc block or deleted. Never add:
-  - comments that restate the code or label an obvious section;
-  - comments that narrate a fix or a change ("now", "no longer", "instead of", "so X never happens again", a removed feature): that history belongs in the commit message;
-  - design rationale (why this color, why this layout): it belongs in `docs/DESIGN.md` or `docs/PRODUCT.md`.
-  An inline comment is only kept for non-obvious logic at that exact line that cannot live in a doc block (a browser quirk, a loop guard, a subtle side effect), in one short line.
+Document functions, and especially exported functions, with a JSDoc block covering parameters (`@param`) and return value (`@returns`). Close blocks written by the assistant with `@author Claude`.
+
+Documentation lives in the JSDoc of declarations. **No inline comment** (`//`, `/* */` inside a body, `<!-- -->` in markup or a style block) is written beside the lines of a change or a fix to explain a choice of design, layout, wording or behaviour: when a decision needs recording, it goes in the JSDoc of the enclosing function. The one exception is a technical trap, a line that looks wrong and would be "fixed" into a bug without its comment: a browser quirk, an API that behaves unexpectedly, a cast the types cannot express.
+
+**No HTML comment** (`<!-- -->`) exists anywhere in the markup, technical traps included: a reason that matters goes in the JSDoc of the script or the function behind it.
+
+Never add a comment that repeats what the code or the JSDoc above it already says, and never narrate a change ("now uses", "used to", "added for"): the git history owns that. Commented out code goes, and so does a comment that would still be true if the code changed underneath it.
+
+Before finishing a change, reread the diff for the comments it added and delete the ones that fail the rule above.
 
 Example:
 
@@ -131,6 +131,15 @@ For any non-trivial request (new feature, refactor, multi-file change), draft a 
 
 Trivial changes (typo fixes, small isolated edits, one-line corrections) don't need this step.
 
+## Security and performance audit
+
+After every major change (new view, new service or external call, new persisted data, data-loading or store refactor, dependency upgrade), audit the code it touches before considering the work finished, and report the findings with `file:line`, severity and suggested fix:
+
+- **Security**: user- or AI-supplied content reaching an HTML/URL/style sink (`{@html}`, `href`, `src`, `style`), validation and size limits on imported or generated data, secrets (the Anthropic key) and what can read them, third-party scripts, new network endpoints, `npm audit` on production dependencies.
+- **Performance**: bundle and chunk sizes from `npm run build` (anything eagerly bundled that could load lazily), `$derived`/`$effect` reading the whole `$terminal` store instead of the one field they need, repeated `localStorage` reads/writes or `JSON.stringify`/`JSON.parse` on hot paths (keystrokes, arrow keys, typewriter ticks), quadratic loops over scenes or entries, unbounded arrays, timers, listeners or audio nodes not cleaned up.
+
+Fix what is in scope; list the rest for the user rather than silently skipping it.
+
 ## Preview / dev server
 
 **Never start a preview or dev server.** Do not call `preview_start`, `npm run dev`, or any equivalent. The user runs the server manually. Verification is limited to `npm run check` and `npm run lint`.
@@ -141,7 +150,7 @@ Trivial changes (typo fixes, small isolated edits, one-line corrections) don't n
 
 Before considering any development finished, check for and fix all of the following (in addition to `npm run check` and `npm run lint`):
 
-- **Useless or superfluous comments.** Remove comments that only restate what the code already says, commented-out code, and leftover TODO/debug comments that are no longer relevant. Keep only the logic comments described in [Comments and JSDoc](#comments-and-jsdoc).
+- **Useless or superfluous comments.** Remove comments that only restate what the code already says, commented-out code, and leftover TODO/debug comments that are no longer relevant. Keep only the JSDoc blocks and technical-trap comments described in [Comments and JSDoc](#comments-and-jsdoc), and no HTML comment at all.
 - **Dead code.** Remove unused functions, variables, imports, exports, components, and files that are no longer referenced anywhere, as well as Paraglide message keys no longer used by any component (delete them from `locales/en.json` **and** `locales/fr.json`, then recompile).
 - **Performance.** Watch for avoidable re-renders, unnecessary reactive recomputation, unbounded loops over large data, and repeated work that could be memoized or hoisted.
 - **Accessibility.** Check semantic HTML (see [Semantic HTML](#semantic-html)), labels/`aria-*` attributes, keyboard navigability, and focus handling for anything touched.

@@ -286,6 +286,43 @@ export const playTone = (
 };
 
 /**
+ * Minimum length (in seconds) of the shared white-noise buffer: long enough
+ * for the longest burst, so a random slice of it can serve every call.
+ *
+ * @author Claude
+ */
+const NOISE_BUFFER_SECONDS = 3;
+
+/** Shared white-noise buffer sliced by every {@link playNoise} burst. */
+let noiseBuffer: AudioBuffer | null = null;
+
+/**
+ * Returns the shared white-noise buffer, (re)building it when missing, when
+ * the sample rate changed (a different context), or when a burst is longer
+ * than the cached buffer.
+ *
+ * @param ctx - The live AudioContext.
+ * @param duration - Length of the burst about to be played, in seconds.
+ * @returns A white-noise buffer at least `duration` seconds long.
+ * @author Claude
+ */
+const ensureNoiseBuffer = ( ctx: AudioContext, duration: number ): AudioBuffer =>
+{
+    const isCurrent = noiseBuffer !== null && noiseBuffer.sampleRate === ctx.sampleRate && noiseBuffer.duration >= duration;
+    if ( isCurrent && noiseBuffer ) return noiseBuffer;
+
+    const seconds = Math.max( NOISE_BUFFER_SECONDS, duration );
+    const frameCount = Math.ceil( ctx.sampleRate * seconds );
+    const buffer = ctx.createBuffer( 1, frameCount, ctx.sampleRate );
+    const channel = buffer.getChannelData( 0 );
+    for ( let i = 0; i < frameCount; i++ ) channel[ i ] = Math.random() * 2 - 1;
+
+    noiseBuffer = buffer;
+
+    return buffer;
+};
+
+/**
  * Plays a burst of filtered white noise, the basis for non-pitched effects
  * such as impacts and whooshes. The optional cutoff glide turns a flat hiss
  * into a whoosh or an impact. No-op when audio is disabled/unsupported.
@@ -308,10 +345,8 @@ export const playNoise = (
     const delay = options.delay ?? 0;
     const start = ctx.currentTime + delay;
 
-    const frameCount = Math.ceil( ctx.sampleRate * duration );
-    const buffer = ctx.createBuffer( 1, frameCount, ctx.sampleRate );
-    const channel = buffer.getChannelData( 0 );
-    for ( let i = 0; i < frameCount; i++ ) channel[ i ] = Math.random() * 2 - 1;
+    const buffer = ensureNoiseBuffer( ctx, duration );
+    const offset = Math.random() * ( buffer.duration - duration );
 
     const source = ctx.createBufferSource();
     source.buffer = buffer;
@@ -333,7 +368,7 @@ export const playNoise = (
     filter.connect( envelope );
     envelope.connect( masterGain );
 
-    source.start( start );
+    source.start( start, offset, duration );
     source.stop( start + duration + 0.05 );
 };
 
