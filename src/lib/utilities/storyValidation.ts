@@ -357,9 +357,9 @@ export const hasReachableEnding = ( scenes: Record<string, Scene>, startScene: s
     const visited = new Set<string>();
     const queue: string[] = [ startScene ];
 
-    while ( queue.length > 0 )
+    // Array iterators re-read `length`, so ids pushed mid-loop are visited too (no O(n) `shift()`).
+    for ( const sceneId of queue )
     {
-        const sceneId = queue.shift() as string;
         if ( visited.has( sceneId ) ) continue;
         visited.add( sceneId );
 
@@ -376,6 +376,63 @@ export const hasReachableEnding = ( scenes: Record<string, Scene>, startScene: s
     }
 
     return false;
+};
+
+/**
+ * Lists the ids of the scenes holding at least one choice that points to a
+ * scene missing from the list, in O(scenes + choices).
+ *
+ * @param scenes - The scenes of a story draft, in file (array) shape.
+ * @returns The ids of the scenes with a broken choice target.
+ * @author Claude
+ */
+export const scenesWithBrokenChoice = ( scenes: Scene[] ): Set<string> =>
+{
+    const sceneIds = new Set( scenes.map( ( scene ) => scene.id ) );
+    const broken = new Set<string>();
+
+    for ( const scene of scenes )
+    {
+        const hasBrokenTarget = scene.choices.some( ( choice ) => !sceneIds.has( choice.nextScene ) );
+
+        if ( hasBrokenTarget ) broken.add( scene.id );
+    }
+
+    return broken;
+};
+
+/**
+ * Lists the ids of every scene reachable from `startScene` by following
+ * choices, in O(scenes + choices). Missing targets are visited but not
+ * expanded, so a broken choice never throws.
+ *
+ * @param scenes - The scenes of a story draft, in file (array) shape.
+ * @param startScene - The id of the opening scene.
+ * @returns The reachable scene ids, including `startScene`.
+ * @author Claude
+ */
+export const reachableSceneIds = ( scenes: Scene[], startScene: string ): Set<string> =>
+{
+    const byId = new Map( scenes.map( ( scene ) => [ scene.id, scene ] ) );
+    const visited = new Set<string>();
+    const queue: string[] = [ startScene ];
+
+    // Array iterators re-read `length`, so ids pushed mid-loop are visited too.
+    for ( const sceneId of queue )
+    {
+        if ( visited.has( sceneId ) ) continue;
+        visited.add( sceneId );
+
+        const scene = byId.get( sceneId );
+        if ( !scene ) continue;
+
+        for ( const choice of scene.choices )
+        {
+            queue.push( choice.nextScene );
+        }
+    }
+
+    return visited;
 };
 
 /**

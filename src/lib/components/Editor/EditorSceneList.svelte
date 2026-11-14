@@ -1,7 +1,6 @@
 <script lang="ts">
-    import type { StoryFile } from "#lib";
     import * as m from "#lib/locales/messages.js";
-    import { SvelteSet } from "svelte/reactivity";
+    import { reachableSceneIds, scenesWithBrokenChoice, type StoryFile } from "#lib";
 
     interface Props {
         /** The story draft being edited (read-only here). */
@@ -16,45 +15,11 @@
 
     let { draft, selectedSceneId, onselect, onadd }: Props = $props();
 
-    /** Ids present in the draft, used to flag choices whose target is missing. */
-    let sceneIds = $derived( new SvelteSet( draft.scenes.map( ( scene ) => scene.id ) ) );
+    /** Scenes holding a choice whose target is missing, flagged with a warning. */
+    let brokenIds = $derived( scenesWithBrokenChoice( draft.scenes ) );
 
     /** Scenes reachable from the start scene, used to flag orphaned scenes. */
-    let reachableIds = $derived.by( () =>
-    {
-        const visited = new SvelteSet<string>();
-        const queue = [ draft.startScene ];
-
-        while ( queue.length > 0 )
-        {
-            const id = queue.shift() as string;
-            if ( visited.has( id ) ) continue;
-            visited.add( id );
-
-            const scene = draft.scenes.find( ( s ) => s.id === id );
-            if ( !scene ) continue;
-
-            for ( const choice of scene.choices ) queue.push( choice.nextScene );
-        }
-
-        return visited;
-    } );
-
-    /**
-     * Returns whether a scene holds at least one choice pointing to a scene
-     * that no longer exists in the draft.
-     *
-     * @param sceneId - The scene to inspect.
-     * @returns `true` when a broken choice target is present.
-     * @author Claude
-     */
-    const hasBrokenChoice = ( sceneId: string ): boolean =>
-    {
-        const scene = draft.scenes.find( ( s ) => s.id === sceneId );
-        if ( !scene ) return false;
-
-        return scene.choices.some( ( choice ) => !sceneIds.has( choice.nextScene ) );
-    };
+    let reachableIds = $derived( reachableSceneIds( draft.scenes, draft.startScene ) );
 </script>
 
 <aside class="border border-terminal-dim/40 rounded px-2 py-2 sm:w-56 shrink-0" aria-labelledby="editor-scenes-title">
@@ -91,7 +56,7 @@
                             </span>
                         {/if}
 
-                        {#if hasBrokenChoice( scene.id )}
+                        {#if brokenIds.has( scene.id )}
                             <span class="text-terminal-amber text-xs shrink-0" title={m.editor_scene_broken_title()}>⚠</span>
                         {/if}
 

@@ -1,8 +1,8 @@
 <script lang="ts">
-    import { onMount, untrack } from "svelte";
     import type { Scene, StoryFile } from "#lib";
     import * as m from "#lib/locales/messages.js";
     import { terminal } from "#lib/stores/terminal.ts";
+    import { onDestroy, onMount, untrack } from "svelte";
     import ViewTitle from "../Terminal/ViewTitle.svelte";
     import EditorSceneList from "./EditorSceneList.svelte";
     import EditorSceneForm from "./EditorSceneForm.svelte";
@@ -38,7 +38,15 @@
      * @author Claude
      */
     let savedSnapshot = $state( record ? JSON.stringify( record.story ) : "" );
-    let isDirty = $derived( !missing && JSON.stringify( draft ) !== savedSnapshot );
+
+    /**
+     * Serialized draft, computed once per edit and shared by the dirty check,
+     * the undo history and the draft mirror.
+     *
+     * @author Claude
+     */
+    let serializedDraft = $derived( JSON.stringify( draft ) );
+    let isDirty = $derived( !missing && serializedDraft !== savedSnapshot );
 
     $effect( () =>
     {
@@ -70,14 +78,14 @@
      */
     let past = $state<string[]>( [] );
     let future = $state<string[]>( [] );
-    let lastSnapshot = untrack( () => JSON.stringify( draft ) );
+    let lastSnapshot = untrack( () => serializedDraft );
     let isBurstOpen = false;
     let burstTimer: ReturnType<typeof setTimeout> | undefined;
     let isApplyingHistory = false;
 
     $effect( () =>
     {
-        const current = JSON.stringify( draft );
+        const current = serializedDraft;
 
         untrack( () =>
         {
@@ -109,14 +117,53 @@
         } );
     } );
 
-    // Mirror the dirty draft to the device; held back while a leftover draft is offered, not to overwrite it.
-    $effect( () =>
+    /** Quiet time (ms) before the draft is mirrored to the device. */
+    const DRAFT_SAVE_DELAY = 500;
+
+    let draftSaveTimer: ReturnType<typeof setTimeout> | undefined;
+
+    /**
+     * Mirrors the dirty draft to the device (or clears the mirror once saved),
+     * cancelling any pending delayed write. Held back while a leftover draft is
+     * offered, so it is not overwritten.
+     *
+     * @author Claude
+     */
+    const writeDraftMirror = () =>
     {
+        clearTimeout( draftSaveTimer );
+        draftSaveTimer = undefined;
+
         if ( !record || draftOffer ) return;
 
         if ( isDirty ) saveEditorDraft( record.story.id, $state.snapshot( draft ) as StoryFile );
         else clearEditorDraft( record.story.id );
+    };
+
+    /**
+     * Writes a pending draft mirror right away, so a reload, a closed tab or
+     * leaving the view never loses the last edits of a burst.
+     *
+     * @author Claude
+     */
+    const flushDraftMirror = () =>
+    {
+        const hasPendingWrite = draftSaveTimer !== undefined;
+
+        if ( hasPendingWrite ) writeDraftMirror();
+    };
+
+    $effect( () =>
+    {
+        void serializedDraft;
+        void isDirty;
+        void draftOffer;
+
+        clearTimeout( draftSaveTimer );
+        draftSaveTimer = setTimeout( writeDraftMirror, DRAFT_SAVE_DELAY );
     } );
+
+    onDestroy( flushDraftMirror );
 
     // A story just created starts with its title selected, ready to be named.
     onMount( () =>
@@ -170,7 +217,7 @@
         const target = source[ source.length - 1 ];
         if ( target === undefined ) return;
 
-        const current = JSON.stringify( draft );
+        const current = serializedDraft;
 
         if ( direction === -1 )
         {
@@ -320,6 +367,9 @@
      */
     const discardAndClose = () =>
     {
+        clearTimeout( draftSaveTimer );
+        draftSaveTimer = undefined;
+
         if ( record ) clearEditorDraft( record.story.id );
 
         terminal.closeEditor();
@@ -357,7 +407,7 @@
     };
 </script>
 
-<svelte:window onkeydown={handleEditorShortcut} />
+<svelte:window onkeydown={handleEditorShortcut} onpagehide={flushDraftMirror} />
 
 <!-- data-editor-root: where focus lands when ESC leaves a field, instead of the page body. -->
 <div class="flex-1 overflow-y-auto px-4 py-2" tabindex="-1" data-editor-root>
