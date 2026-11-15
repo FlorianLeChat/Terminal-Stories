@@ -1,10 +1,43 @@
 <script lang="ts">
     import "../app.css";
     import { asset } from "$app/paths";
-    import type { Snippet } from "svelte";
-    import { PUBLIC_ANALYTICS_ENABLED, PUBLIC_ANALYTICS_ENDPOINT, PUBLIC_ANALYTICS_PROJECT_ID, PUBLIC_ANALYTICS_RESPECT_DNT } from "$app/env/public";
+    import { onMount, type Snippet } from "svelte";
+    import { PUBLIC_VERSION,
+        PUBLIC_ANALYTICS_ENABLED,
+        PUBLIC_ANALYTICS_ENDPOINT,
+        PUBLIC_ANALYTICS_PROJECT_ID,
+        PUBLIC_ANALYTICS_RESPECT_DNT,
+        PUBLIC_ANALYTICS_ENVIRONMENT } from "$app/env/public";
 
     let { children }: { children: Snippet } = $props();
+    let canTrack = $state( false );
+
+    /**
+     * Tells whether the analytics scripts may load for this visitor.
+     *
+     * The recorder has no privacy option and the tracker ignores Global Privacy
+     * Control, so honouring Do Not Track or GPC means never loading them. Runs
+     * in `onMount` since the prerender cannot read the browser's preference.
+     * The cast covers GPC, missing from TypeScript's DOM library.
+     *
+     * @returns `true` when the visitor sends no opt-out signal that applies.
+     * @author Claude
+     */
+    const isTrackingAllowed = (): boolean =>
+    {
+        const privacyNavigator = navigator as Navigator & { globalPrivacyControl?: boolean };
+        const respectOptOut = PUBLIC_ANALYTICS_RESPECT_DNT;
+        const dntRequested = [ "1", "yes" ].includes( privacyNavigator.doNotTrack ?? "" );
+        const gpcRequested = privacyNavigator.globalPrivacyControl === true;
+        const optedOut = dntRequested || gpcRequested;
+
+        return !( respectOptOut && optedOut );
+    };
+
+    onMount( () =>
+    {
+        canTrack = isTrackingAllowed();
+    } );
 </script>
 
 <svelte:head>
@@ -12,12 +45,15 @@
     <link rel="icon" href={asset( "assets/favicon.svg" )} type="image/svg+xml" sizes="any" />
     <link rel="manifest" href={asset( "manifest.webmanifest" )} />
 
-    {#if PUBLIC_ANALYTICS_ENABLED}
+    {#if PUBLIC_ANALYTICS_ENABLED && canTrack}
         <script
             src={PUBLIC_ANALYTICS_ENDPOINT + "/script.js"}
             defer
+            data-errors="true"
+            data-release={PUBLIC_VERSION}
             data-website-id={PUBLIC_ANALYTICS_PROJECT_ID}
             data-performance="true"
+            data-environment={PUBLIC_ANALYTICS_ENVIRONMENT}
             data-do-not-track={PUBLIC_ANALYTICS_RESPECT_DNT}
             data-exclude-hash="true"
             data-exclude-search="true"
